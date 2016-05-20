@@ -13,4 +13,5 @@ int main()
     }
 
     Parser parser;
+    auto result = parser.parse("hello cruel world");
 }
