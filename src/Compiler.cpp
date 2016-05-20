@@ -1,5 +1,7 @@
 #include "Compiler.hpp"
-#include "readFile.hpp"
+#include "Utilities/IO/readFile.hpp"
+#include "Utilities/Parser/Parser.hpp"
+#include <iostream>
 
 int main()
 {
@@ -9,4 +11,6 @@ int main()
     {
         std::cout << line << std::endl;
     }
+
+    Parser parser;
 }
