@@ -6,7 +6,7 @@
 int main()
 {
     using namespace Parse;
-    
+
     auto file = readFile("test_file.txt");
     for (auto line : file)
     {
@@ -14,11 +14,12 @@ int main()
     }
 
     std::vector<ParseFunction> test_functions;
-    ParseFunction hello = just("hello");
-    test_functions.push_back(hello);
+    auto hello = just("hello");
+    auto manyhello = many(hello);
+    test_functions.push_back(manyhello);
 
     Parser<ParseFunction> parser(test_functions, "test_parser");
-    auto result = parser.parse("hello cruel world");
+    auto result = parser.parse("hello hello world");
     std::cout << result.result << std::endl;
     for (auto p : result.parsed)
     {

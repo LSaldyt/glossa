@@ -13,7 +13,6 @@ public:
 
     Parser()
     {
-
     }
 
     Parser(const std::vector<T>& set_parsers, const std::string& set_name)

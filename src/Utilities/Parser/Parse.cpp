@@ -33,23 +33,73 @@ namespace Parse
         return results;
     };
 
-    ParseFunction singleTemplate(TokenComparator comparator)
+    ParseFunction parseTemplate(Consumer consumer)
     {
-        ParseFunction func_template = [comparator](Tokens tokens)
+        ParseFunction func_template = [consumer](Tokens tokens)
             {
                 auto result = Result(false, std::vector<std::string>(), tokens);
-                if (tokens.size() > 0)
+
+                auto consumer_result = consumer(tokens);
+                if (consumer_result.result)
                 {
-                    if (comparator(tokens[0]))
-                    {
-                        Tokens parsed    (tokens.begin(), tokens.begin() + 1);
-                        Tokens remaining (tokens.begin() + 1, tokens.end());
-                        result = Result(true, parsed, remaining);
-                    }
+                    Tokens parsed    = consumer_result.parsed;
+                    Tokens remaining (tokens.begin() + parsed.size(), tokens.end());
+                    result = Result(true, parsed, remaining);
                 }
                 return result;
             };
         return func_template;
+    }
+
+    ParseFunction singleTemplate(TokenComparator comparator)
+    {
+        Consumer consumer = [comparator](Tokens tokens)
+        {
+            Consumed consumed =  Consumed(false, Tokens()); //An empty list of tokens, as nothing was yet consumed
+            if (tokens.size() > 0)
+            {
+                auto result = comparator(tokens[0]);
+                if (result)
+                {
+                    consumed =  Consumed(result, Tokens(tokens.begin(), tokens.begin() + 1));
+                }
+            }
+            return consumed;
+        };
+        return parseTemplate(consumer);
+    }
+
+    ParseFunction multiTemplate(Consumer consumer)
+    {
+        Consumer template_consumer = [consumer](Tokens tokens)
+        {
+            auto     parsed   = Tokens(); //An empty list of tokens
+            while(tokens.size() > 0)
+            {
+                auto consumer_result = consumer(tokens);
+                if (consumer_result.result)
+                {
+                    parsed.insert(parsed.end(), consumer_result.parsed.begin(), consumer_result.parsed.end());
+                    tokens = Tokens(tokens.begin() + consumer_result.parsed.size(), tokens.end());
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return Consumed(true, parsed);
+        };
+        return parseTemplate(template_consumer);
+    }
+
+    ParseFunction many(ParseFunction parser)
+    {
+        Consumer consumer = [parser](Tokens tokens)
+        {
+            auto result = parser(tokens);
+            return Consumed(result.result, result.parsed);
+        };
+        return multiTemplate(consumer);
     }
 
     ParseFunction just(std::string value)
@@ -57,25 +107,5 @@ namespace Parse
         auto comparator = [value](std::string token){ return value == token; };
         return singleTemplate(comparator);
     }
+
 }
-//Actual parsers
-
-
-//
-// auto  just(std::string token)
-// {
-//     auto func_template = lambda[](std::vector<std::string> tokens)
-//     {
-//         if (tokens.size() > 0)
-//         {
-//             if (tokens[0] == token)
-//             {
-//                 std::vector<std::string> parsed    (tokens.begin(), tokens.begin() + 1);
-//                 std::vector<std::string> remaining (tokens.begin() + 1, tokens.end());
-//                 return Result(true, parsed, remaining);
-//             }
-//         }
-//         return Result(false, std::vector<std::string>(), tokens);
-//     }
-//     return func_template
-// }
