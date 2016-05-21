@@ -2,30 +2,31 @@
 #include <string>
 #include <vector>
 #include "Parse.hpp"
-#include "Result.hpp"
 
-
-//typedef Result (*ParseFunction)(std::vector<std::string> tokens);
-
-//std::vector<ParseFunction> functions;
-
-//Result test(std::vector<std::string> tokens);
-
-//functions.append(test);
-
-
+template <typename T>
 class Parser
 {
 public:
-    Parser(/*parsers=[], name=""*/){}
+
+    std::vector<T> parsers;
+    std::string name;
+
+    Parser()
+    {
+
+    }
+
+    Parser(const std::vector<T>& set_parsers, const std::string& set_name)
+    {
+        parsers = set_parsers;
+        name    = set_name;
+    }
     ~Parser(){}
 
-    std::vector<Parser> parsers;
-    std::string name;
 
     NamedResult parse(const std::string& sentence)
     {
-        return parse(tokenize(sentence));
+        return parse(Parse::tokenize(sentence));
     }
 
     NamedResult parse(const std::vector<std::string>& original_tokens)
@@ -35,7 +36,7 @@ public:
 
         for (auto parser : parsers)
         {
-            auto parse_result = parser.parse(tokens);
+            auto parse_result = parser(tokens);
             if(parse_result.result)
             {
                 parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );

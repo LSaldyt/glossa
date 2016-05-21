@@ -5,13 +5,23 @@
 
 int main()
 {
-    std::cout << "Starting" << std::endl;
+    using namespace Parse;
+    
     auto file = readFile("test_file.txt");
     for (auto line : file)
     {
-        std::cout << line << std::endl;
+        //pass
     }
 
-    Parser parser;
+    std::vector<ParseFunction> test_functions;
+    ParseFunction hello = just("hello");
+    test_functions.push_back(hello);
+
+    Parser<ParseFunction> parser(test_functions, "test_parser");
     auto result = parser.parse("hello cruel world");
+    std::cout << result.result << std::endl;
+    for (auto p : result.parsed)
+    {
+        std::cout << p << std::endl;
+    }
 }
