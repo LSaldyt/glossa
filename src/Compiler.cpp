@@ -7,34 +7,33 @@ int main()
 {
     using namespace Parse;
 
-    Seperators whitespace = Seperators();
-    whitespace.push_back(std::make_tuple(' ',  false));
-    whitespace.push_back(std::make_tuple('\n', true));
-    whitespace.push_back(std::make_tuple('\t', true));
+    auto file = readFile("test_file.txt");
 
-    auto test_string = "this is a test";
-    auto tokens = seperate(test_string, whitespace);
-    for (auto t : tokens)
+    Seperators mathematical = Seperators();
+    mathematical.push_back(std::make_tuple('+', true));
+    mathematical.push_back(std::make_tuple('-', true));
+    mathematical.push_back(std::make_tuple('*', true));
+    mathematical.push_back(std::make_tuple('/', true));
+
+    std::vector<ParseFunction> functions;
+    functions.push_back(many(any));
+
+    Parser<ParseFunction> parser(functions, "test_parser", mathematical);
+
+
+    for (auto line : file)
     {
-        std::cout << "-" << t << "-" << std::endl;
-    }
+        std::cout << line << std::endl;
+        for (auto token : seperate(line, mathematical))
+        {
+            std::cout << token;
+        }
+        std::cout << std::endl;
 
-    // auto file = readFile("test_file.txt");
-    // for (auto line : file)
-    // {
-    //     //pass
-    // }
-    //
-    // std::vector<ParseFunction> test_functions;
-    // auto hello = just("hello");
-    // auto manyhello = many(hello);
-    // test_functions.push_back(manyhello);
-    //
-    // Parser<ParseFunction> parser(test_functions, "test_parser");
-    // auto result = parser.parse("hello hello world");
-    // std::cout << result.result << std::endl;
-    // for (auto p : result.parsed)
-    // {
-    //     std::cout << p << std::endl;
-    // }
+        auto result = parser.parse(line);
+        for (auto p : result.parsed)
+        {
+            std::cout << p << std::endl;
+        }
+    }
 }

@@ -13,8 +13,23 @@ namespace Parse
     std::string strip_punctuation (const std::string& sentence);
     Tokens      tokenize          (const std::string& sentence);
 
+    ParseFunction parseTemplate(Consumer consumer);
+
     ParseFunction just(std::string value);
     ParseFunction many(ParseFunction parser);
 
     Tokens seperate(const std::string& sentence, const Seperators &seperators);
+
+    const ParseFunction any = parseTemplate([](Tokens tokens)
+        {
+            if(tokens.size() > 0)
+            {
+                return Consumed(true, Tokens(tokens.begin(), tokens.begin() + 1));
+            }
+            else
+            {
+                return Consumed(false, Tokens());
+            }
+        }
+    );
 }

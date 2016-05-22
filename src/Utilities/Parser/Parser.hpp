@@ -10,22 +10,26 @@ public:
 
     std::vector<T> parsers;
     std::string name;
+    Parse::Seperators seperators;
 
     Parser()
     {
     }
 
-    Parser(const std::vector<T>& set_parsers, const std::string& set_name)
+    Parser(const std::vector<T>& set_parsers,
+           const std::string& set_name,
+           const Parse::Seperators& set_seperators)
     {
-        parsers = set_parsers;
-        name    = set_name;
+        parsers    = set_parsers;
+        name       = set_name;
+        seperators = set_seperators;
     }
     ~Parser(){}
 
 
     NamedResult parse(const std::string& sentence)
     {
-        return parse(Parse::tokenize(sentence));
+        return parse(Parse::seperate(sentence, seperators));
     }
 
     NamedResult parse(const std::vector<std::string>& original_tokens)

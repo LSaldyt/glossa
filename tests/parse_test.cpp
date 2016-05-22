@@ -1,9 +1,28 @@
 #include "catch.hpp"
 #include "../src/Utilities/Parser/Parse.hpp"
+#include "../src/Utilities/Parser/Parser.hpp"
 
-TEST_CASE( "Tokenizer acts as expected")
+TEST_CASE( "Basic mathematical expressions can be parsed")
 {
-    auto test_tokens = Parse::Tokens();
-    test_tokens.push_back("hello");
-    REQUIRE(test_tokens == Parse::tokenize("hello"));
+    using namespace Parse;
+    Seperators mathematical = Seperators();
+    mathematical.push_back(std::make_tuple('+', true));
+    mathematical.push_back(std::make_tuple('-', true));
+    mathematical.push_back(std::make_tuple('*', true));
+    mathematical.push_back(std::make_tuple('/', true));
+
+    std::vector<ParseFunction> functions;
+    functions.push_back(many(any));
+
+    Parser<ParseFunction> parser(functions, "test_parser", mathematical);
+
+    auto test_expression = "2*2+7";
+    auto expected = Tokens();
+    expected.push_back("2");
+    expected.push_back("*");
+    expected.push_back("2");
+    expected.push_back("+");
+    expected.push_back("7");
+
+    REQUIRE( parser.parse(test_expression).parsed == expected);
 }

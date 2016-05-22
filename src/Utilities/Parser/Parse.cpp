@@ -51,24 +51,13 @@ namespace Parse
                 }
                 current = it+1;
             }
+            else if(it+1 == sentence.end())
+            {
+                tokens.push_back(std::string(current, it+1));
+            }
         }
         return tokens;
     }
-
-    Tokens tokenize(const std::string& sentence)
-    {
-        std::string str = strip_punctuation(sentence);
-
-        // construct a stream from the string
-        std::stringstream strstr(str);
-
-        // use stream iterators to copy the stream to the vector as whitespace separated strings
-        std::istream_iterator<std::string> it(strstr);
-        std::istream_iterator<std::string> end;
-        Tokens results(it, end);
-
-        return results;
-    };
 
     ParseFunction parseTemplate(Consumer consumer)
     {
@@ -144,5 +133,4 @@ namespace Parse
         auto comparator = [value](std::string token){ return value == token; };
         return singleTemplate(comparator);
     }
-
 }
