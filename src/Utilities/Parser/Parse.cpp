@@ -9,7 +9,6 @@
 
 namespace Parse
 {
-
     std::string strip_punctuation(const std::string& sentence)
     {
         std::string result;
@@ -44,7 +43,10 @@ namespace Parse
             auto found = find_seperator(*it, seperators);
             if(std::get<0>(found))
             {
-                tokens.push_back(std::string(current, it));
+                if(current != it)
+                {
+                    tokens.push_back(std::string(current, it));
+                }
                 if(std::get<1>(found))
                 {
                     tokens.push_back(std::string(1, *it));
