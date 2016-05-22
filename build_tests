@@ -4,8 +4,8 @@ LDFLAGS   =
 BDIR      = tests/build
 VPATH     = tests src src/Utilities/Parser src/Utilities/IO
 SOURCES   = parse_test.cpp Parse.cpp Parser.cpp suite.cpp
-OBJECTS   = $(SOURCES:.cpp=.o)
 EXECUTABLE= $(BDIR)/suite
+OBJECTS   = $(SOURCES:.cpp=.o)
 
 all: $(SOURCES) $(EXECUTABLE)
 

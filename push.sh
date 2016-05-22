@@ -11,6 +11,6 @@ echo Running Tests..
 ./run_tests.sh
 result=$?
 case $result in
-    0 ) push; break;;
+    0 ) push ;;
     * ) exit ;;
 esac
