@@ -9,9 +9,8 @@ function push {
 
 echo Running Tests..
 ./run_tests.sh
-read -p "Tests Completed. Are you satisfied with the results?" answer
-    case $answer in
-        [Yy]* ) push; break;;
-        [Nn]* ) echo Exiting..; break;;
-        * ) echo "Please answer yes or no.";;
-    esac
+result=$?
+case $result in
+    0 ) push; break;;
+    * ) exit ;;
+esac
