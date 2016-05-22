@@ -1,5 +1,5 @@
 echo Running application ..
-make all
-cd build
-./Compiler
+make test_suite
+cd tests/build
+./suite
 echo Finished
