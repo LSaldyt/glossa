@@ -45,6 +45,14 @@ namespace Parse
     std::make_tuple('^', true),
     std::make_tuple('=', true)
     };
+
+
+    const auto digits = singleTemplate(is_digits);
+    const auto alphas = singleTemplate(is_alphas);
+    const auto puncts = singleTemplate(is_puncts);
+    const auto uppers = singleTemplate(is_uppers);
+    const auto lowers = singleTemplate(is_lowers);
+
 }
 
 // until() -parsers with a second parser (wildcard by default) until it's first parser is true, optionally returning either or both results
