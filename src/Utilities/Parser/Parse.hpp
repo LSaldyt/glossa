@@ -1,30 +1,18 @@
 #pragma once
-#include "Types/NamedResult.hpp" //NamedResult will automatically include its subclasses (Consumed and Result)
-//Types/Types.hpp is also automatically included, since the types it defines are used to build the Result types
-
 #include "Locale.hpp"
+#include "Seperate.hpp"
+#include "Templates.hpp"
 
 namespace Parse
 {
-    using ParseFunction   = std::function<Result(Tokens)>;
-    using ParseFunctions  = std::vector<ParseFunction>;
-    using Consumer        = std::function<Consumed(Tokens)>;
+    const auto just = [](std::string value)
+    {
+        auto comparator = [value](std::string token){ return value == token; };
+        return singleTemplate(comparator);
+    };
 
-    using Seperator       = std::tuple<char, bool>;
-    using Seperators      = std::vector<Seperator>;
+    const auto wildcard = singleTemplate([](Token t) { return true; } );
 
-    std::string strip_punctuation (const std::string& sentence);
-    Tokens      tokenize          (const std::string& sentence);
-
-    ParseFunction parseTemplate(Consumer consumer);
-    ParseFunction singleTemplate(TokenComparator comparator);
-
-    ParseFunction just(std::string value);
-    ParseFunction many(ParseFunction parser);
-
-    Tokens seperate(const std::string& sentence, const Seperators &seperators);
-
-    const ParseFunction any = singleTemplate([](Token t) { return true; } );
     const auto subsetOf = [](std::string symbols)
     {
         return singleTemplate([symbols](Token token)
@@ -33,17 +21,31 @@ namespace Parse
         });
     };
 
-    const Seperators mathematical =
+    const auto anyOf = [](ParseFunctions functions)
     {
-    std::make_tuple(' ', false),
-    std::make_tuple('+', true),
-    std::make_tuple('-', true),
-    std::make_tuple('*', true),
-    std::make_tuple('/', true),
-    std::make_tuple('(', true),
-    std::make_tuple(')', true),
-    std::make_tuple('^', true),
-    std::make_tuple('=', true)
+        return parseTemplate([functions](Tokens tokens)
+        {
+            auto result = Result(false, Tokens(), tokens);
+            for (auto function : functions)
+            {
+                auto func_result = function(tokens);
+                if(func_result.result)
+                {
+                    result = func_result;
+                }
+            }
+            return result;
+        });
+    };
+
+    const auto many = [](ParseFunction parser)
+    {
+        Consumer consumer = [parser](Tokens tokens)
+        {
+            auto result = parser(tokens);
+            return Consumed(result.result, result.parsed);
+        };
+        return multiTemplate(consumer);
     };
 
 
@@ -52,7 +54,15 @@ namespace Parse
     const auto puncts = singleTemplate(is_puncts);
     const auto uppers = singleTemplate(is_uppers);
     const auto lowers = singleTemplate(is_lowers);
-
 }
 
+// Single Token Parsers:
+// just()     -returns a function that parses a string exactly,
+// wildcard() -parses single string (non whitespace),
+// noneOf()   -takes a list of parsers and tries them against a single string
+// allOf()    -does the same, but ensuring all parsers pass
+// subsetOf() -takes any container of characters and ensures that the string consists entirely of those characters
+// parseAny() -returns the result of the first matching parser out of a list of parsers it is given
+// Multi Token Parsers:
+// many()  -repeats a single parser until it fails, but returns true no matter what
 // until() -parsers with a second parser (wildcard by default) until it's first parser is true, optionally returning either or both results

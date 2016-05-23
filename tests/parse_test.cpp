@@ -12,7 +12,7 @@ TEST_CASE( "Basic mathematical expressions can be parsed")
     mathematical.push_back(std::make_tuple('/', true));
 
     std::vector<ParseFunction> functions;
-    functions.push_back(many(any));
+    functions.push_back(many(wildcard));
 
     Parser<ParseFunction> parser(functions, "test_parser", mathematical);
 

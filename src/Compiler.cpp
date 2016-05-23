@@ -11,7 +11,7 @@ int main()
     auto file = readFile("test_file.txt");
 
     std::vector<ParseFunction> functions;
-    functions.push_back(many(any));
+    functions.push_back(many(wildcard));
 
     Parser<ParseFunction> parser(functions, "test_parser", mathematical);
 
