@@ -10,17 +10,6 @@ int main()
 
     auto file = readFile("test_file.txt");
 
-    Seperators mathematical = Seperators();
-    mathematical.push_back(std::make_tuple(' ', false));
-    mathematical.push_back(std::make_tuple('+', true));
-    mathematical.push_back(std::make_tuple('-', true));
-    mathematical.push_back(std::make_tuple('*', true));
-    mathematical.push_back(std::make_tuple('/', true));
-    mathematical.push_back(std::make_tuple('(', true));
-    mathematical.push_back(std::make_tuple(')', true));
-    mathematical.push_back(std::make_tuple('^', true));
-    mathematical.push_back(std::make_tuple('=', true));
-
     std::vector<ParseFunction> functions;
     functions.push_back(many(any));
 
