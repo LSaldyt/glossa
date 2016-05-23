@@ -1,7 +1,7 @@
 #pragma once
-#include "Locale.hpp"
-#include "Seperate.hpp"
-#include "Templates.hpp"
+#include "ParserBase/Locale.hpp"
+#include "ParserBase/Seperate.hpp"
+#include "ParserBase/Templates.hpp"
 
 namespace Parse
 {
