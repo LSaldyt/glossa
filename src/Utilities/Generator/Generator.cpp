@@ -1,6 +1,6 @@
 #include "Generator.hpp"
 
-Expression generateExpression(Tokens tokens)
+Expression generateExpression(Parse::Tokens tokens)
 {
     // ParseFunctions operators = { just("+"), just("-"), just("/"), just("*") };
     // Parser<ParseFunction> op(operators, "operator_parser", mathematical);

@@ -2,4 +2,4 @@
 #include "../Parser/Parser.hpp"
 #include "../Parser/Locale.hpp"
 
-Expression generateExpression(Tokens tokens);
+Expression generateExpression(Parse::Tokens tokens);

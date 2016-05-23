@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include "Parse.hpp"
 
 bool is_digits(const std::string &str);
 bool is_alphas(const std::string &str);
