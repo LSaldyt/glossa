@@ -12,7 +12,7 @@ int main()
 
     std::vector<ParseFunction> functions = { digits, parseOp, digits };
 
-    Parser<ParseFunction> parser(functions, "test_parser", mathematical);
+    Parser<ParseFunction> parser(functions, mathematical);
 
     Symbols symbols = {Integer(), Operator(), Integer()};
 

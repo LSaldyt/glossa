@@ -22,7 +22,7 @@ LexResult Lexer::lex(Parse::Terms terms)
     return match(parse_result);
 }
 
-LexResult Lexer::match(Parse::NamedResult parse_result)
+LexResult Lexer::match(Parse::Result parse_result)
 {
     LexResult result = { false, Syntax::Tokens()};
 

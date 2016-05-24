@@ -14,7 +14,7 @@ TEST_CASE( "Basic mathematical expressions can be parsed")
     std::vector<ParseFunction> functions;
     functions.push_back(many(wildcard));
 
-    Parser<ParseFunction> parser(functions, "test_parser", mathematical);
+    Parser<ParseFunction> parser(functions, mathematical);
 
     auto test_expression = "2*2+7";
     auto expected = Terms();

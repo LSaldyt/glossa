@@ -16,6 +16,6 @@ public:
     LexResult lex(Parse::Terms terms);
 
 private:
-    LexResult match(Parse::NamedResult parse_result);
+    LexResult match(Parse::Result parse_result);
 
 };

@@ -11,7 +11,6 @@ namespace Parse
     public:
 
         std::vector<T> parsers;
-        std::string name;
         Seperators seperators;
 
         Parser()
@@ -19,22 +18,20 @@ namespace Parse
         }
 
         Parser(const std::vector<T>& set_parsers,
-               const std::string& set_name,
                const Seperators& set_seperators)
         {
             parsers    = set_parsers;
-            name       = set_name;
             seperators = set_seperators;
         }
         ~Parser(){}
 
 
-        NamedResult parse(const std::string& sentence)
+        Result parse(const std::string& sentence)
         {
             return parse(seperate(sentence, seperators));
         }
 
-        NamedResult parse(const Terms& original_terms)
+        Result parse(const Terms& original_terms)
         {
             Terms parsed;
             Terms terms = original_terms;
@@ -49,19 +46,19 @@ namespace Parse
                 }
                 else
                 {
-                    return NamedResult(false, Terms(), original_terms, name);
+                    return Result (false, Terms(), original_terms);
                 }
             }
-            return NamedResult(true, parsed, terms, name);
+            return Result(true, parsed, terms);
         }
 
 
-        NamedResult operator()(const std::string& sentence)
+        Result operator()(const std::string& sentence)
         {
             return parse(sentence);
         }
 
-        NamedResult operator()(const std::vector<std::string>& tokens)
+        Result operator()(const std::vector<std::string>& tokens)
         {
             return parse(tokens);
         }
