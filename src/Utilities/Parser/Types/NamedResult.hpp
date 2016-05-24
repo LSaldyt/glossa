@@ -1,16 +1,19 @@
 #pragma once
 #include "Result.hpp"
 
-struct NamedResult : public Result
+namespace Parse
 {
-    std::string name;
-
-    NamedResult(bool set_result=false,
-                Parse::Tokens set_parsed    = std::vector<std::string>(),
-                Parse::Tokens set_remaining = std::vector<std::string>(),
-                std::string set_name="")
-        : Result(set_result, set_parsed, set_remaining)
+    struct NamedResult : public Result
     {
-        name = set_name;
-    }
-};
+        std::string name;
+
+        NamedResult(bool set_result=false,
+                    Terms set_parsed    = Terms(),
+                    Terms set_remaining = Terms(),
+                    std::string set_name="")
+            : Result(set_result, set_parsed, set_remaining)
+        {
+            name = set_name;
+        }
+    };
+}

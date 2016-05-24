@@ -1,15 +1,18 @@
 #pragma once
 #include "Consumed.hpp"
 
-struct Result : public Consumed
+namespace Parse
 {
-    Parse::Tokens remaining;
-
-    Result(bool set_result=false,
-           Parse::Tokens set_parsed    = std::vector<std::string>(),
-           Parse::Tokens set_remaining = std::vector<std::string>())
-           : Consumed(set_result, set_parsed)
+    struct Result : public Consumed
     {
-        remaining = set_remaining;
-    }
-};
+        Terms remaining;
+
+        Result(bool set_result=false,
+               Terms set_parsed    = Terms(),
+               Terms set_remaining = Terms())
+               : Consumed(set_result, set_parsed)
+        {
+            remaining = set_remaining;
+        }
+    };
+}

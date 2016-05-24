@@ -5,7 +5,7 @@
 
 namespace Parse
 {
-    using TokenComparator = std::function<bool(const std::string&)>;
-    using Tokens          = std::vector<std::string>;
-    using Token           = std::string;
+    using Comparator = std::function<bool(const std::string&)>;
+    using Terms      = std::vector<std::string>;
+    using Term       = std::string;
 }

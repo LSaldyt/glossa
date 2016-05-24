@@ -1,15 +1,19 @@
 #pragma once
 #include "Types.hpp"
 
-struct Consumed
+namespace Parse
 {
-    bool   result;
-    Parse::Tokens parsed;
 
-    Consumed(bool set_result = false,
-             Parse::Tokens set_parsed = std::vector<std::string>())
+    struct Consumed
     {
-        result = set_result;
-        parsed = set_parsed;
-    }
-};
+        bool   result;
+        Terms parsed;
+
+        Consumed(bool set_result = false,
+                 Terms set_parsed = Terms())
+        {
+            result = set_result;
+            parsed = set_parsed;
+        }
+    };
+}

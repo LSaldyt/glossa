@@ -17,7 +17,7 @@ TEST_CASE( "Basic mathematical expressions can be parsed")
     Parser<ParseFunction> parser(functions, "test_parser", mathematical);
 
     auto test_expression = "2*2+7";
-    auto expected = Tokens();
+    auto expected = Terms();
     expected.push_back("2");
     expected.push_back("*");
     expected.push_back("2");

@@ -28,9 +28,9 @@ namespace Parse
         return found;
     }
 
-    Tokens seperate(const std::string& sentence, const Seperators &seperators)
+    Terms seperate(const std::string& sentence, const Seperators &seperators)
     {
-        auto tokens = Tokens();
+        auto terms = Terms();
         auto current = sentence.begin();
 
         for(auto it = sentence.begin(); it != sentence.end(); ++it)
@@ -40,19 +40,19 @@ namespace Parse
             {
                 if(current != it)
                 {
-                    tokens.push_back(std::string(current, it));
+                    terms.push_back(std::string(current, it));
                 }
                 if(std::get<1>(found))
                 {
-                    tokens.push_back(std::string(1, *it));
+                    terms.push_back(std::string(1, *it));
                 }
                 current = it+1;
             }
             else if(it+1 == sentence.end())
             {
-                tokens.push_back(std::string(current, it+1));
+                terms.push_back(std::string(current, it+1));
             }
         }
-        return tokens;
+        return terms;
     }
 }

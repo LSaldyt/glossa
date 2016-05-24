@@ -2,8 +2,8 @@ CXX       = g++
 CXXFLAGS  = -c -Wall -std=c++14
 LDFLAGS   =
 BDIR      = build
-VPATH     = src src/Utilities/Parser src/Utilities/IO src/Utilities/Parser/ParserBase
-SOURCES   = Compiler.cpp readFile.cpp Seperate.cpp Locale.cpp Templates.cpp
+VPATH     = src src/Utilities/Parser src/Utilities/IO src/Utilities/Parser/ParserBase src/Utilities/Lexer
+SOURCES   = Compiler.cpp readFile.cpp Seperate.cpp Locale.cpp Templates.cpp Lexer.cpp
 OBJECTS   = $(SOURCES:.cpp=.o)
 # OBJECTS   =
 EXECUTABLE= $(BDIR)/Compiler

@@ -7,7 +7,7 @@ namespace Parse
     using Seperators      = std::vector<Seperator>;
 
     std::string strip_punctuation (const std::string& sentence);
-    Tokens seperate(const std::string& sentence, const Seperators &seperators);
+    Terms seperate(const std::string& sentence, const Seperators &seperators);
 
     const Seperators mathematical =
     {

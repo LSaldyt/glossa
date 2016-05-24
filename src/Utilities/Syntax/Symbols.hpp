@@ -1,28 +1,43 @@
 #pragma once
-enum Operator
-{
-    Add,
-    Sub,
-    Mul,
-    Div,
-    Exp
-};
+#include <vector>
 
-struct Expression {};
-
-struct Integer : public Expression
+namespace Syntax
 {
-    int value;
-};
+    enum Op
+    {
+        Add,
+        Sub,
+        Mul,
+        Div,
+        Exp
+    };
 
-struct BinaryExpression : public Expression
-{
-    Operator    op;
-    Expression* e1;
-    Expression* e2;
-};
+    struct Statement {};
 
-struct Parens : public Expression
-{
-    Expression* e;
-};
+    struct Symbol {};
+    using Symbols = std::vector<Symbol>;
+
+    struct Expression : public Symbol {};
+
+    struct Operator : public Symbol
+    {
+        Op op;
+    };
+
+    struct BinaryExpression : public Expression
+    {
+        Operator    op;
+        Expression* e1;
+        Expression* e2;
+    };
+
+    struct Literal : public Expression
+    {
+
+    };
+
+    struct Integer : public Literal
+    {
+        int value;
+    };
+}

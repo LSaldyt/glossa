@@ -4,15 +4,15 @@ namespace Parse
 {
     ParseFunction parseTemplate(Consumer consumer)
     {
-        ParseFunction func_template = [consumer](Tokens tokens)
+        ParseFunction func_template = [consumer](Terms terms)
             {
-                auto result = Result(false, std::vector<std::string>(), tokens);
+                auto result = Result(false, Terms(), terms);
 
-                auto consumer_result = consumer(tokens);
+                auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
-                    Tokens parsed    = consumer_result.parsed;
-                    Tokens remaining (tokens.begin() + parsed.size(), tokens.end());
+                    Terms parsed    = consumer_result.parsed;
+                    Terms remaining (terms.begin() + parsed.size(), terms.end());
                     result = Result(true, parsed, remaining);
                 }
                 return result;
@@ -20,17 +20,17 @@ namespace Parse
         return func_template;
     }
 
-    ParseFunction singleTemplate(TokenComparator comparator)
+    ParseFunction singleTemplate(Comparator comparator)
     {
-        Consumer consumer = [comparator](Tokens tokens)
+        Consumer consumer = [comparator](Terms terms)
         {
-            Consumed consumed =  Consumed(false, Tokens()); //An empty list of tokens, as nothing was yet consumed
-            if (tokens.size() > 0)
+            Consumed consumed =  Consumed(false, Terms()); //An empty list of terms, as nothing was yet consumed
+            if (terms.size() > 0)
             {
-                auto result = comparator(tokens[0]);
+                auto result = comparator(terms[0]);
                 if (result)
                 {
-                    consumed =  Consumed(result, Tokens(tokens.begin(), tokens.begin() + 1));
+                    consumed =  Consumed(result, Terms(terms.begin(), terms.begin() + 1));
                 }
             }
             return consumed;
@@ -40,16 +40,16 @@ namespace Parse
 
     ParseFunction multiTemplate(Consumer consumer)
     {
-        Consumer template_consumer = [consumer](Tokens tokens)
+        Consumer template_consumer = [consumer](Terms terms)
         {
-            auto     parsed   = Tokens(); //An empty list of tokens
-            while(tokens.size() > 0)
+            auto parsed = Terms(); //An empty list of terms
+            while(terms.size() > 0)
             {
-                auto consumer_result = consumer(tokens);
+                auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
                     parsed.insert(parsed.end(), consumer_result.parsed.begin(), consumer_result.parsed.end());
-                    tokens = Tokens(tokens.begin() + consumer_result.parsed.size(), tokens.end());
+                    terms = Terms(terms.begin() + consumer_result.parsed.size(), terms.end());
                 }
                 else
                 {

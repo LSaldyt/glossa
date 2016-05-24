@@ -7,28 +7,28 @@ namespace Parse
 {
     const auto just = [](std::string value)
     {
-        auto comparator = [value](std::string token){ return value == token; };
+        auto comparator = [value](Term term){ return value == term; };
         return singleTemplate(comparator);
     };
 
-    const auto wildcard = singleTemplate([](Token t) { return true; } );
+    const auto wildcard = singleTemplate([](Term t) { return true; } );
 
     const auto subsetOf = [](std::string symbols)
     {
-        return singleTemplate([symbols](Token token)
+        return singleTemplate([symbols](Term term)
         {
-            return (symbols.find(token) != std::string::npos);
+            return (symbols.find(term) != std::string::npos);
         });
     };
 
     const auto anyOf = [](ParseFunctions functions)
     {
-        return parseTemplate([functions](Tokens tokens)
+        return parseTemplate([functions](Terms terms)
         {
-            auto result = Result(false, Tokens(), tokens);
+            auto result = Result(false, Terms(), terms);
             for (auto function : functions)
             {
-                auto func_result = function(tokens);
+                auto func_result = function(terms);
                 if(func_result.result)
                 {
                     result = func_result;
@@ -40,9 +40,9 @@ namespace Parse
 
     const auto many = [](ParseFunction parser)
     {
-        Consumer consumer = [parser](Tokens tokens)
+        Consumer consumer = [parser](Terms terms)
         {
-            auto result = parser(tokens);
+            auto result = parser(terms);
             return Consumed(result.result, result.parsed);
         };
         return multiTemplate(consumer);
@@ -54,6 +54,8 @@ namespace Parse
     const auto puncts = singleTemplate(is_puncts);
     const auto uppers = singleTemplate(is_uppers);
     const auto lowers = singleTemplate(is_lowers);
+
+    const auto parseOp = subsetOf("+-/*");
 }
 
 // Single Token Parsers:
