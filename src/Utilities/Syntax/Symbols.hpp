@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 
 namespace Syntax
 {
@@ -15,7 +16,9 @@ namespace Syntax
     struct Statement {};
 
     struct Symbol {};
-    using Symbols = std::vector<Symbol>;
+
+    using SymbolGenerator  = std::function<Symbol(void)>;
+    using SymbolGenerators = std::vector<SymbolGenerator>;
 
     struct Expression : public Symbol {};
 

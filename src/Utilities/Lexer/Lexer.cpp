@@ -1,7 +1,7 @@
 #include "Lexer.hpp"
 
 
-Lexer::Lexer(Syntax::Symbols set_symbols, Parse::Parser<Parse::ParseFunction> set_parser)
+Lexer::Lexer(Syntax::SymbolGenerators set_symbols, Parse::Parser<Parse::ParseFunction> set_parser)
 {
     symbols = set_symbols;
     parser  = set_parser;
@@ -13,7 +13,6 @@ LexResult Lexer::lex(const std::string& sentence)
 {
     auto parse_result = parser(sentence);
     return match(parse_result);
-
 }
 
 LexResult Lexer::lex(Parse::Terms terms)

@@ -5,11 +5,11 @@
 
 class Lexer
 {
-    Syntax::Symbols symbols;
+    Syntax::SymbolGenerators symbols;
     Parse::Parser<Parse::ParseFunction>   parser;
 
 public:
-    Lexer (Syntax::Symbols set_symbols=Syntax::Symbols(), Parse::Parser<Parse::ParseFunction> set_parser = Parse::Parser<Parse::ParseFunction>());
+    Lexer (Syntax::SymbolGenerators set_symbols=Syntax::SymbolGenerators(), Parse::Parser<Parse::ParseFunction> set_parser = Parse::Parser<Parse::ParseFunction>());
     ~Lexer();
 
     LexResult lex(const std::string& sentence);

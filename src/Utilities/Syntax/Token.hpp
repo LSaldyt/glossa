@@ -4,6 +4,6 @@
 
 namespace Syntax
 {
-    using Token  = std::tuple<Parse::Term, Symbol>;
+    using Token  = std::tuple<Parse::Term, SymbolGenerator>;
     using Tokens = std::vector<Token>;
 }

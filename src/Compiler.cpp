@@ -4,6 +4,7 @@
 #include "Utilities/Syntax/Symbols.hpp"
 #include "Utilities/Lexer/Lexer.hpp"
 #include <iostream>
+#include <typeinfo>
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
 
     Parser<ParseFunction> parser(functions, mathematical);
 
-    Symbols symbols = {Integer(), Operator(), Integer()};
+    SymbolGenerators symbols = {[](void) { return Symbol(); }, [](void) { return Symbol(); }, [](void) { return Symbol(); }};
 
     Lexer ExpressionLexer(symbols, parser);
 
