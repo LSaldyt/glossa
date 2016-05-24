@@ -1,7 +1,16 @@
+function runtests {
+    cd tests/build
+    ./suite
+    result=$?
+    echo Finished
+    exit $result
+}
+
 echo Running application ..
 make test_suite
-cd tests/build
-./suite
-result=$?
-echo Finished
-exit $result
+makesuccess=$?
+
+case $makesuccess in
+    0 ) runtests ;;
+    * ) exit $makesuccess;;
+esac

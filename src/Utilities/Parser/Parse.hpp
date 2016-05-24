@@ -17,7 +17,14 @@ namespace Parse
     {
         return singleTemplate([symbols](Term term)
         {
-            return (symbols.find(term) != std::string::npos);
+            for(auto c : term)
+            {
+                if(symbols.empty() || (symbols.find_first_not_of(c) == std::string::npos))
+                {
+                    return false;
+                }
+            }
+            return true;
         });
     };
 
