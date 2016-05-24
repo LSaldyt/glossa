@@ -4,20 +4,20 @@
 
 namespace Syntax
 {
-    enum Op
+    enum class Op : char
     {
-        Add,
-        Sub,
-        Mul,
-        Div,
-        Exp
+        Add = '+',
+        Sub = '-',
+        Mul = '*',
+        Div = '/',
+        Exp = '^'
     };
 
     struct Statement {};
 
     struct Symbol {};
 
-    using SymbolGenerator  = std::function<Symbol(void)>;
+    using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
     using SymbolGenerators = std::vector<SymbolGenerator>;
 
     struct Expression : public Symbol {};
@@ -25,7 +25,10 @@ namespace Syntax
     struct Operator : public Symbol
     {
         Op op;
+        Operator(Op set_op){op = set_op;}
     };
+
+    SymbolGenerator opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(Op(term[0])));};
 
     struct BinaryExpression : public Expression
     {

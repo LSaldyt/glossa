@@ -55,7 +55,6 @@ namespace Parse
         return multiTemplate(consumer);
     };
 
-
     const auto digits = singleTemplate(is_digits);
     const auto alphas = singleTemplate(is_alphas);
     const auto puncts = singleTemplate(is_puncts);

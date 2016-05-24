@@ -15,7 +15,9 @@ int main()
 
     Parser<ParseFunction> parser(functions, mathematical);
 
-    SymbolGenerators symbols = {[](void) { return Symbol(); }, [](void) { return Symbol(); }, [](void) { return Symbol(); }};
+    auto symbolgen = [] (void) { return std::make_shared<Symbol>(Symbol()); };
+
+    SymbolGenerators symbols = {symbolgen, symbolgen, symbolgen};
 
     Lexer ExpressionLexer(symbols, parser);
 
