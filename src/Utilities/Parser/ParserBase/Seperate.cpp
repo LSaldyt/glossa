@@ -1,28 +1,36 @@
 #include <algorithm>
 #include <tuple>
 #include "Seperate.hpp"
+#include <iostream>
 
 namespace Parse
 {
-    std::string strip_punctuation(const std::string& sentence)
-    {
-        std::string result;
-        std::remove_copy_if(sentence.begin(), sentence.end(),
-                                std::back_inserter(result), //Store output
-                                std::ptr_fun<int, int>(&std::ispunct)
-                               );
-        return result;
-    }
 
-    std::tuple<bool, bool> find_seperator(char c, const Seperators &seperators)
+    std::tuple<bool, bool, int> find_seperator(std::string s, const Seperators &seperators)
     {
-        auto found = std::make_tuple(false, false);
+        std::cout << "Finding seperator in" << s << std::endl;
+        auto found = std::make_tuple(false, false, 0);
         for (auto seperator : seperators)
         {
-            if (std::get<0>(seperator) == c)
+            auto seperator_string = std::get<0>(seperator);
+            if (seperator_string.size() < s.size())
             {
-                found = std::make_tuple(true, std::get<1>(seperator));
-                break;
+                bool exited_early = false;
+                for (unsigned i = 0; i < seperator_string.size(); i++)
+                {
+                    std::cout << "Comparing " << seperator_string[i] << " and " << s[i] << std::endl;
+                    if (seperator_string[i] != s[i])
+                    {
+                        exited_early = true;
+                        break;
+                    }
+                }
+
+                if (!exited_early)
+                {
+                    found = std::make_tuple(true, std::get<1>(seperator), seperator_string.size());
+                    break;
+                }
             }
         }
         return found;
@@ -35,18 +43,22 @@ namespace Parse
 
         for(auto it = sentence.begin(); it != sentence.end(); ++it)
         {
-            auto found = find_seperator(*it, seperators);
+            auto found = find_seperator(std::string(it, sentence.end()), seperators);
             if(std::get<0>(found))
             {
-                if(current != it)
+                if (current != it)
                 {
                     terms.push_back(std::string(current, it));
                 }
                 if(std::get<1>(found))
                 {
-                    terms.push_back(std::string(1, *it));
+                    terms.push_back(std::string(it, it+std::get<2>(found)));
                 }
-                current = it+1;
+                current = it + std::get<2>(found);
+                if (std::get<2>(found) > 0)
+                {
+                    it += std::get<2>(found) - 1;
+                }
             }
             else if(it+1 == sentence.end())
             {
