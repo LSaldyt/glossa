@@ -1,9 +1,9 @@
 #include "Compiler.hpp"
 #include "Utilities/IO/readFile.hpp"
 #include "Utilities/Parser/Parse.hpp"
-#include "Utilities/Parser/ParserBase/Seperate.hpp"
 #include "Utilities/Syntax/Symbols.hpp"
 #include "Utilities/Lexer/Lexer.hpp"
+#include "Utilities/Lexer/Seperate.hpp"
 #include <iostream>
 
 int main()

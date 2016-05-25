@@ -2,7 +2,7 @@
 #include <tuple>
 #include <string>
 #include "Symbols.hpp"
-#include "../Parser/Types/Types.hpp"
+#include "../Parser/ParserBase/Types.hpp"
 
 namespace Syntax
 {

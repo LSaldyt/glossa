@@ -1,6 +1,6 @@
 #pragma once
-#include "../Parser/Types/Types.hpp"
-#include "../Parser/ParserBase/Seperate.hpp"
+#include "../Parser/ParserBase/Types.hpp"
+#include "Seperate.hpp"
 
 
 namespace Lexer

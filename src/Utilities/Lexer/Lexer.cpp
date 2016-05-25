@@ -9,9 +9,9 @@ namespace Lexer
 
     Lexer::~Lexer(){}
 
-    LexResult Lexer::lex(const std::string& sentence)
+    Tokens Lexer::lex(const std::string& sentence)
     {
         auto terms = seperate(sentence, language.seperators);
-        return LexResult();
+        return Tokens();
     }
 }

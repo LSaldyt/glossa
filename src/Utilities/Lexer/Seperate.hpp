@@ -1,5 +1,5 @@
 #pragma once
-#include "../Types/Types.hpp"
+#include "../Parser/ParserBase/Types.hpp"
 
 namespace Parse
 {

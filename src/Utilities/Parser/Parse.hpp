@@ -1,6 +1,5 @@
 #pragma once
 #include "ParserBase/Locale.hpp"
-#include "ParserBase/Seperate.hpp"
 #include "ParserBase/Templates.hpp"
 
 namespace Parse
