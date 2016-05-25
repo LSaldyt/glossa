@@ -1,7 +1,13 @@
 #include "../Syntax/Token.hpp"
 
-struct LexResult
+namespace Lexer
 {
-    bool   result;
-    Syntax::Tokens lexed;
-};
+    using namespace Syntax;
+    using namespace Parse;
+
+    struct LexResult
+    {
+        bool   result;
+        Tokens lexed;
+    };
+}

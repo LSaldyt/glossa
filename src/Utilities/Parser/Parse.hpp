@@ -5,6 +5,32 @@
 
 namespace Parse
 {
+    const auto inOrder = [](ParseFunctions parsers)
+    {
+        auto parse = [parsers](const Terms& original_terms)
+        {
+            Terms parsed;
+            Terms terms = original_terms;
+
+            for (auto parser : parsers)
+            {
+                auto parse_result = parser(terms);
+                if(parse_result.result)
+                {
+                    parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );
+                    terms  = parse_result.remaining;
+                }
+                else
+                {
+                    return Result (false, Terms(), original_terms);
+                }
+            }
+            return Result (true, parsed, terms);
+        };
+        return parse;
+    };
+
+
     const auto just = [](std::string value)
     {
         auto comparator = [value](Term term){ return value == term; };

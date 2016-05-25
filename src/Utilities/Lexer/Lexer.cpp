@@ -1,39 +1,39 @@
 #include "Lexer.hpp"
 
-
-Lexer::Lexer(Syntax::SymbolGenerators set_symbols, Parse::Parser<Parse::ParseFunction> set_parser)
+namespace Lexer
 {
-    symbols = set_symbols;
-    parser  = set_parser;
-}
-
-Lexer::~Lexer(){}
-
-LexResult Lexer::lex(const std::string& sentence)
-{
-    auto parse_result = parser(sentence);
-    return match(parse_result);
-}
-
-LexResult Lexer::lex(Parse::Terms terms)
-{
-    auto parse_result = parser(terms);
-    return match(parse_result);
-}
-
-LexResult Lexer::match(Parse::Result parse_result)
-{
-    LexResult result = { false, Syntax::Tokens()};
-
-    if(parse_result.result)
+    Lexer::Lexer(const SymbolGenerators& set_symbols,
+                 const ParseFunction     set_parser,
+                 const Seperators&       set_seperators)
     {
-        auto tokens = Syntax::Tokens();
-        for (unsigned i = 0; i < parse_result.parsed.size() && i < symbols.size(); i++)
-        {
-            tokens.push_back(std::make_tuple(parse_result.parsed[i], symbols[i]));
-        }
-        result = {true, tokens};
+        symbols = set_symbols;
+        parser  = set_parser;
     }
 
-    return result;
+    Lexer::~Lexer(){}
+
+    LexResult Lexer::lex(const std::string& sentence)
+    {
+        auto terms = seperate(sentence, seperators);
+        auto parse_result = parser(terms);
+        return match(parse_result);
+    }
+
+    LexResult Lexer::match(Parse::Result parse_result)
+    {
+        LexResult result = { false, Syntax::Tokens()};
+
+        if(parse_result.result)
+        {
+            auto tokens = Syntax::Tokens();
+            for (unsigned i = 0; i < parse_result.parsed.size() && i < symbols.size(); i++)
+            {
+                tokens.push_back(std::make_tuple(parse_result.parsed[i], symbols[i]));
+            }
+            result = {true, tokens};
+        }
+
+        return result;
+    }
+
 }

@@ -8,7 +8,6 @@ namespace Parse
 
     std::tuple<bool, bool, int> find_seperator(std::string s, const Seperators &seperators)
     {
-        std::cout << "Finding seperator in" << s << std::endl;
         auto found = std::make_tuple(false, false, 0);
         for (auto seperator : seperators)
         {
@@ -18,7 +17,6 @@ namespace Parse
                 bool exited_early = false;
                 for (unsigned i = 0; i < seperator_string.size(); i++)
                 {
-                    std::cout << "Comparing " << seperator_string[i] << " and " << s[i] << std::endl;
                     if (seperator_string[i] != s[i])
                     {
                         exited_early = true;
