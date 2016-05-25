@@ -1,20 +1,17 @@
 #include "../Syntax/Symbols.hpp"
 #include "../Parser/Parse.hpp"
 #include "../Parser/ParserBase/Locale.hpp"
+#include "Language.hpp"
 #include "LexResult.hpp"
 
 namespace Lexer
 {
     class Lexer
     {
-        SymbolGenerators symbols;
-        ParseFunction    parser;
-        Seperators       seperators;
+        Language language;
 
     public:
-        Lexer (const SymbolGenerators& set_symbols    = SymbolGenerators(),
-               const ParseFunction     set_parser     = wildcard,
-               const Seperators&       set_seperators = Seperators());
+        Lexer (const Language& set_language);
         ~Lexer();
 
         LexResult lex(const std::string& sentence);

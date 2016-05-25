@@ -5,7 +5,6 @@
 #include "Utilities/Syntax/Symbols.hpp"
 #include "Utilities/Lexer/Lexer.hpp"
 #include <iostream>
-#include <typeinfo>
 
 int main()
 {

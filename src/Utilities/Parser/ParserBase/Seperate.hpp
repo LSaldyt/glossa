@@ -11,7 +11,6 @@ namespace Parse
     const Seperators mathematical =
     {
     std::make_tuple(" ", false),
-    std::make_tuple("++", true),
     std::make_tuple("+", true),
     std::make_tuple("-", true),
     std::make_tuple("*", true),
@@ -20,5 +19,11 @@ namespace Parse
     std::make_tuple(")", true),
     std::make_tuple("^", true),
     std::make_tuple("=", true)
+    };
+
+    const Seperators whitespace =
+    {
+        std::make_tuple(" ", false),
+        std::make_tuple("\t", true)
     };
 }
