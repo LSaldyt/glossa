@@ -18,3 +18,24 @@
 
       const auto buildTokenParser = [](std::vector<std::string> strings){return tokenParser(inOrder(justFrom(strings)));};
       
+### Some example Usage:
+
+    using namespace Parse;
+    using namespace Lexer;
+    using namespace Syntax;
+
+    auto file = readFile("test_file.txt");
+    for (auto line : file)
+    {
+        Terms keywords  = {"if", "then", "else"};
+        Terms operators = {"+", "-", "*", "/"};
+
+        Language test_language(digits, alphas, keywords, operators);
+        Lexer::Lexer lexer(test_language);
+
+        auto tokens = lexer.lex(line);
+
+        auto parseFunctions = {just("number"), just("operator"), just("number")};
+        auto parser = tokenParser(inOrder(parseFunctions));
+        std::cout << parser(tokens).result << std::endl;
+    }
