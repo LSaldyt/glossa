@@ -2,17 +2,19 @@
 
 ### This module defines a set of parsers in the `Parse` namespace:
 
-    const auto just; 
-    const auto wildcard; 
-    const auto subsetOf; 
-    const auto anyOf;
-    const auto many;
+    const auto just;     // takes a string and parses that string exactly
+    const auto wildcard; // parses any term
+    const auto subsetOf; // ensures a term is a subset of a string
+    const auto anyOf;    // takes a list of parsers and parses any of them
+    const auto many;     // takes a single parser and parses it until it fails.
     const auto digits;
     const auto alphas;
     const auto puncts;
     const auto uppers;
     const auto lowers;
     const auto parseOp;
+    const auto tokenParser; // Converts a parseFunction into a tokenParser
+    const auto inOrder;     // Takes a list of parsers, and parses them in order
 
 ##### All of these are of the type `ParseFunction`, which returns a `Result` from a list of terms:
 
@@ -32,54 +34,9 @@
         Terms parsed;
     };
     
-### Any ParseFunction can be used with the `Parser` class, which parses a list of parsers in order, returning their collective results:
-
-    template <typename T>
-    class Parser
-    {
-    public:
-
-        std::vector<T> parsers;
-        Seperators seperators;
-        
-        Parser(const std::vector<T>& set_parsers,
-               const Seperators& set_seperators)
-        {
-            parsers    = set_parsers;
-            seperators = set_seperators;
-        }
-        ~Parser(){}
-
-        Result parse(const Terms& original_terms)
-        {
-            Terms parsed;
-            Terms terms = original_terms;
-
-            for (auto parser : parsers)
-            {
-                auto parse_result = parser(terms);
-                if(parse_result.result)
-                {
-                    parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );
-                    terms  = parse_result.remaining;
-                }
-                else
-                {
-                    return Result (false, Terms(), original_terms);
-                }
-            }
-            return Result(true, parsed, terms);
-        }
-    };
+##### There is also a `TokenResult`, which is the same as `Result`, except `parsed` and `remaining` hold `Tokens`, not `Terms`
     
-##### Because of the template, `Parser` is actually capable of taking a list of `Parser`s as well. The `()` operator is overloaded, so a fully constructed `Parser` can be called as if it were a `ParseFunction`. `Parser` also is capable of tokenizing a sentence, given to the parser as a string. This is where the Seperator list comes in.
-
-  
-      using Seperator       = std::tuple<char, bool>;
-      using Seperators      = std::vector<Seperator>;
-      
-##### The `Parse` module is the basis of the `Lexer` module, as a `Lexer` will take a list of symbols and a parser, parsing a sentence and pairing the appropriate terms with the appropriate symbols.
-
+##### The `Parse` module is the basis of the `Lexer` module, as a `Lexer` will take a list of symbols and a parser, parsing a sentence and pairing the appropriate terms with the appropriate symbols. However, the `tokenParser` function converts a string parser to one that parses a list of tokens, which would be returned from a `Lexer`
 
 ### `ParseFunctions` can be created by the used either from scratch or from a set of templates:
 
