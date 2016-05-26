@@ -12,6 +12,16 @@ namespace Lexer
     Tokens Lexer::lex(const std::string& sentence)
     {
         auto terms = seperate(sentence, language.seperators);
-        return Tokens();
+
+        auto tokens = Tokens();
+
+        while (terms.size() > 0)
+        {
+            auto result = language.identify(terms);
+            tokens.push_back(std::get<0>(result));
+            terms = std::get<1>(result);
+        }
+
+        return tokens;
     }
 }

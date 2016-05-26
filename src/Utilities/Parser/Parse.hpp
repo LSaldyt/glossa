@@ -29,28 +29,10 @@ namespace Parse
         return parse;
     };
 
-
     const auto just = [](std::string value)
     {
         auto comparator = [value](Term term){ return value == term; };
         return singleTemplate(comparator);
-    };
-
-    const auto wildcard = singleTemplate([](Term t) { return true; } );
-
-    const auto subsetOf = [](std::string symbols)
-    {
-        return singleTemplate([symbols](Term term)
-        {
-            for(auto c : term)
-            {
-                if(symbols.empty() || (symbols.find_first_not_of(c) == std::string::npos))
-                {
-                    return false;
-                }
-            }
-            return true;
-        });
     };
 
     const auto anyOf = [](ParseFunctions functions)
@@ -67,6 +49,36 @@ namespace Parse
                 }
             }
             return result;
+        });
+    };
+
+    const auto justFrom = [just, anyOf](std::vector<std::string> strings)
+    {
+        auto functions = ParseFunctions();
+        functions.reserve(strings.size());
+        for (auto s : strings)
+        {
+            functions.push_back(just(s));
+        }
+        return anyOf(functions);
+    };
+
+
+
+    const auto wildcard = singleTemplate([](Term t) { return true; } );
+
+    const auto subsetOf = [](std::string symbols)
+    {
+        return singleTemplate([symbols](Term term)
+        {
+            for(auto c : term)
+            {
+                if(symbols.empty() || (symbols.find_first_not_of(c) == std::string::npos))
+                {
+                    return false;
+                }
+            }
+            return true;
         });
     };
 
