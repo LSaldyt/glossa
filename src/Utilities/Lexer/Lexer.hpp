@@ -15,6 +15,7 @@ namespace Lexer
         Lexer (const Language& set_language);
         ~Lexer();
 
+        // Convert a line to a list of tokens based on the language definition
         Tokens lex(const std::string& sentence);
     };
 }
