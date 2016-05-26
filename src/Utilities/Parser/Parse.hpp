@@ -6,6 +6,7 @@
 
 namespace Parse
 {
+    //Convert a standard parseFunction to one that parses Tokens
     const auto tokenParser = [](ParseFunction parser)
     {
         auto parseTokens = [parser](Syntax::Tokens tokens)
@@ -29,6 +30,7 @@ namespace Parse
         return parseTokens;
     };
 
+    // Parse a list of functions in order, failing if any of them fail
     const auto inOrder = [](ParseFunctions parsers)
     {
         auto parse = [parsers](const Terms& original_terms)
@@ -54,12 +56,14 @@ namespace Parse
         return parse;
     };
 
+    //Parse a single string, exactly
     const auto just = [](std::string value)
     {
         auto comparator = [value](Term term){ return value == term; };
         return singleTemplate(comparator);
     };
 
+    // Attempt to parse any parser from a list of Parsers, failing only if all of the parsers fail, and passing if any of them pass
     const auto anyOf = [](ParseFunctions functions)
     {
         return parseTemplate([functions](Terms terms)
@@ -77,6 +81,7 @@ namespace Parse
         });
     };
 
+    // Convert a list of strings to a list of just(string)s
     const auto justFrom = [](std::vector<std::string> strings)
     {
         auto functions = ParseFunctions();
@@ -88,10 +93,10 @@ namespace Parse
         return anyOf(functions);
     };
 
-
-
+    // Parse any term
     const auto wildcard = singleTemplate([](Term t) { return true; } );
 
+    // Parse a term that is a subset of another term
     const auto subsetOf = [](std::string symbols)
     {
         return singleTemplate([symbols](Term term)
@@ -107,6 +112,7 @@ namespace Parse
         });
     };
 
+    // Takes a parser and parses it repeatedly, never fails
     const auto many = [](ParseFunction parser)
     {
         Consumer consumer = [parser](Terms terms)
@@ -117,6 +123,7 @@ namespace Parse
         return multiTemplate(consumer);
     };
 
+    //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters
     const auto digits = singleTemplate(is_digits);
     const auto alphas = singleTemplate(is_alphas);
     const auto puncts = singleTemplate(is_puncts);
@@ -125,14 +132,3 @@ namespace Parse
 
     const auto parseOp = subsetOf("+-/*");
 }
-
-// Single Token Parsers:
-// just()     -returns a function that parses a string exactly,
-// wildcard() -parses single string (non whitespace),
-// noneOf()   -takes a list of parsers and tries them against a single string
-// allOf()    -does the same, but ensuring all parsers pass
-// subsetOf() -takes any container of characters and ensures that the string consists entirely of those characters
-// parseAny() -returns the result of the first matching parser out of a list of parsers it is given
-// Multi Token Parsers:
-// many()  -repeats a single parser until it fails, but returns true no matter what
-// until() -parsers with a second parser (wildcard by default) until it's first parser is true, optionally returning either or both results
