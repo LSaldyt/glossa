@@ -21,11 +21,11 @@ int main()
 
         Language test_language(digits, alphas, keywords, operators);
         Lexer::Lexer lexer(test_language);
-        for(auto t : lexer.lex(line))
-        {
-            std::cout << std::get<0>(t) << std::endl;
-            std::cout << std::get<1>(t) << std::endl;
-            //std::cout << "-" <<  t << "-" <<  std::endl;
-        }
+
+        auto tokens = lexer.lex(line);
+
+        auto parseFunctions = {just("number"), just("operator"), just("number")};
+        auto parser = tokenParser(inOrder(parseFunctions));
+        std::cout << parser(tokens).result << std::endl;
     }
 }

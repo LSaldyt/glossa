@@ -1,9 +1,34 @@
 #pragma once
 #include "ParserBase/Locale.hpp"
 #include "ParserBase/Templates.hpp"
+#include "../Syntax/Token.hpp"
+#include "ParserBase/TokenResult.hpp"
 
 namespace Parse
 {
+    const auto tokenParser = [](ParseFunction parser)
+    {
+        auto parseTokens = [parser](Syntax::Tokens tokens)
+        {
+            auto terms = Terms();
+            terms.reserve(tokens.size());
+            for (auto token : tokens)
+            {
+                terms.push_back(std::get<1>(token));
+            }
+
+            auto result = parser(terms);
+            if(result.result)
+            {
+                return TokenResult(true,
+                        Syntax::Tokens(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        Syntax::Tokens(tokens.begin() + result.parsed.size(), tokens.end()));
+            }
+            return TokenResult();
+        };
+        return parseTokens;
+    };
+
     const auto inOrder = [](ParseFunctions parsers)
     {
         auto parse = [parsers](const Terms& original_terms)
@@ -52,7 +77,7 @@ namespace Parse
         });
     };
 
-    const auto justFrom = [just, anyOf](std::vector<std::string> strings)
+    const auto justFrom = [](std::vector<std::string> strings)
     {
         auto functions = ParseFunctions();
         functions.reserve(strings.size());
