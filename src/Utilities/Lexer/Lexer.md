@@ -1,34 +1,20 @@
 # Lexer
 
-### The job of the `Lexer` is to join a set of terms that were parsed with a set of `SymbolGenerators`:
+### The `Lexer` class takes a `Language` definition, and then lexes a string, returning `Tokens`, which are essentially tagged strings, ex: `"2000" : "number"`
 
-##### Essentially, each `SymbolGenerator` is a Constructor that takes a string and returns a pointer to a symbolic type. However, the generator itself will not check that the string is actually convertible to the symbolic type, instead it will simply throw an error if it is not. It is the `Parser`'s job to ensure that `Lexer` recieves the correct types.
+##### `Token` is officially implemented as `std::tuple<Term, Term>`, where `Term` is a synonym for `std::string`
 
-      using SymbolGenerator  = std::function<Symbol(void)>;
-      using SymbolGenerators = std::vector<SymbolGenerator>;
+### The `Language` constructor:
 
-##### An example of `Symbol` would be the `Operator` class:
+       Language(const ParseFunction& set_number_parser     = digits,
+                       const ParseFunction& set_identifier_parser = alphas,
+                       const Terms& set_keywords  = Terms(),
+                       const Terms& set_operators = Terms())
+                       
+##### Based on this information, the lexer can tag `"number"`, `"identifier"`, `"keyword"`, and `"operator"`
+##### A tokenParser can be constructed to parse a list of types (`Tokens`), ex: `tokenParser(inOrder(justFrom({"number", "operator", "number"})))`
 
-      struct Operator : public Symbol
-      {
-          Op op;
-      };
+### It would be a good idea to write a function that simplifies the above construction process, such as :
+
+      const auto buildTokenParser = [](std::vector<std::string> strings){return tokenParser(inOrder(justFrom(strings)));};
       
-##### Where `Symbol` is an empty struct
-
-##### A `SymbolGenerator` for the `Operator` class should take a string and return the corresponding operator.
-##### Actually, it should return a pointer to the corresponding operator, allowing for polymorphism of symbols. This currently isn't a feature, but it will be added very soon...
-
-### Lexer will return a LexResult:
-
-    struct LexResult
-    {
-        bool   result;
-        Syntax::Tokens lexed;
-    };
-    
-##### Where `Tokens` are defined as:
-
-    using Token  = std::tuple<Parse::Term, SymbolGenerator>;
-    using Tokens = std::vector<Token>;
-
