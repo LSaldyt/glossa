@@ -23,12 +23,12 @@ int main()
         Language test_language(digits, alphas, keywords, operators);
         Lexer::Lexer lexer(test_language);
 
-        auto tokens = lexer.lex(line);
 
         auto parseFunctions = {just("number"), just("operator"), just("number")};
-        auto parser = tokenParser(inOrder(parseFunctions));
+        auto parser = tokenParser<Token>(inOrder(parseFunctions));
 
-        std::vector<SymbolicToken> symbolic_tokens;
+        auto tokens = lexer.lex(line);
+        SymbolicTokens symbolic_tokens;
 
         for(auto token : parser(tokens).parsed)
         {
@@ -39,7 +39,6 @@ int main()
                 std::make_tuple(search->second(std::get<0>(token)),
                                 type));
             }
-                //
             else {
                 std::cout << "Not found\n";
             }
