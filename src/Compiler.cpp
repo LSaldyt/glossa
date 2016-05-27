@@ -26,6 +26,19 @@ int main()
 
         auto parseFunctions = {just("number"), just("operator"), just("number")};
         auto parser = tokenParser(inOrder(parseFunctions));
-        std::cout << parser(tokens).result << std::endl;
+
+        std::vector<std::shared_ptr<Symbol>> symbols;
+
+        for(auto token : parser(tokens).parsed)
+        {
+            if (std::get<1>(token) == "number")
+            {
+                symbols.push_back(intGenerator(std::get<0>(token)));
+            }
+            else if (std::get<1>(token) == "operator")
+            {
+                symbols.push_back(opGenerator(std::get<0>(token)));
+            }
+        }
     }
 }

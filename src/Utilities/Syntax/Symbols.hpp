@@ -45,5 +45,8 @@ namespace Syntax
     struct Integer : public Literal
     {
         int value;
+        Integer(int set_value) { value = set_value; }
     };
+
+    const SymbolGenerator intGenerator = [](std::string s){ return std::make_shared<Integer>(Integer(std::stoi(s))); };
 }
