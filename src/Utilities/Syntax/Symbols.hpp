@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 namespace Syntax
 {
@@ -20,8 +21,6 @@ namespace Syntax
     using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
     using SymbolGenerators = std::vector<SymbolGenerator>;
 
-    struct Expression : public Symbol {};
-
     struct Operator : public Symbol
     {
         Op op;
@@ -30,6 +29,7 @@ namespace Syntax
 
     const SymbolGenerator opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(Op(term[0])));};
 
+    struct Expression : public Symbol {};
     struct BinaryExpression : public Expression
     {
         Operator    op;
@@ -49,4 +49,9 @@ namespace Syntax
     };
 
     const SymbolGenerator intGenerator = [](std::string s){ return std::make_shared<Integer>(Integer(std::stoi(s))); };
+
+    const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
+     {"number", intGenerator},
+     {"operator",  opGenerator}
+    };
 }

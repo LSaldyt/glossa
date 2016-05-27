@@ -2,6 +2,7 @@
 #include "Utilities/IO/readFile.hpp"
 #include "Utilities/Parser/Parse.hpp"
 #include "Utilities/Syntax/Symbols.hpp"
+#include "Utilities/Syntax/Token.hpp"
 #include "Utilities/Lexer/Lexer.hpp"
 #include "Utilities/Lexer/Seperate.hpp"
 #include "Utilities/Lexer/Language.hpp"
@@ -27,17 +28,20 @@ int main()
         auto parseFunctions = {just("number"), just("operator"), just("number")};
         auto parser = tokenParser(inOrder(parseFunctions));
 
-        std::vector<std::shared_ptr<Symbol>> symbols;
+        std::vector<SymbolicToken> symbolic_tokens;
 
         for(auto token : parser(tokens).parsed)
         {
-            if (std::get<1>(token) == "number")
-            {
-                symbols.push_back(intGenerator(std::get<0>(token)));
+            auto type = std::get<1>(token);
+            auto search = generatorMap.find(type);
+            if(search != generatorMap.end()) {
+                symbolic_tokens.push_back(
+                std::make_tuple(search->second(std::get<0>(token)),
+                                type));
             }
-            else if (std::get<1>(token) == "operator")
-            {
-                symbols.push_back(opGenerator(std::get<0>(token)));
+                //
+            else {
+                std::cout << "Not found\n";
             }
         }
     }
