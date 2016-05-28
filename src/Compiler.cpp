@@ -6,6 +6,7 @@
 #include "Utilities/Lexer/Lexer.hpp"
 #include "Utilities/Lexer/Seperate.hpp"
 #include "Utilities/Lexer/Language.hpp"
+#include "Utilities/Generator/Generator.hpp"
 #include <iostream>
 
 int main()
@@ -13,35 +14,28 @@ int main()
     using namespace Parse;
     using namespace Lexer;
     using namespace Syntax;
+    using namespace Gen;
+
+    Terms keywords  = {"if", "then", "else"};
+    Terms operators = {"+", "-", "*", "/", "="};
+
+    Language test_language(digits, alphas, keywords, operators);
+    Lexer::Lexer lexer(test_language);
+
+    auto parseFunctions = inOrder({just("identifier"), just("operator"), just("number")});
+    auto parser = tokenParser<Token>(parseFunctions);
+
+    SymbolicTokenParser symbolic_token_parser = tokenParser<SymbolicToken>(parseFunctions);
+
+    Generator assignment_generator(symbolic_token_parser, AssignmentGenerator);
 
     auto file = readFile("test_file.txt");
     for (auto line : file)
     {
-        Terms keywords  = {"if", "then", "else"};
-        Terms operators = {"+", "-", "*", "/"};
-
-        Language test_language(digits, alphas, keywords, operators);
-        Lexer::Lexer lexer(test_language);
-
-
-        auto parseFunctions = {just("number"), just("operator"), just("number")};
-        auto parser = tokenParser<Token>(inOrder(parseFunctions));
-
         auto tokens = lexer.lex(line);
-        SymbolicTokens symbolic_tokens;
-
-        for(auto token : parser(tokens).parsed)
-        {
-            auto type = std::get<1>(token);
-            auto search = generatorMap.find(type);
-            if(search != generatorMap.end()) {
-                symbolic_tokens.push_back(
-                std::make_tuple(search->second(std::get<0>(token)),
-                                type));
-            }
-            else {
-                std::cout << "Not found\n";
-            }
-        }
+        SymbolicTokens symbolic_tokens = toSymbolic(parser(tokens).parsed);
+        auto generated = assignment_generator.generate(symbolic_tokens);
+        std::cout << std::get<0>(generated) << std::endl;
+        std::cout << std::get<1>(generated) << std::endl;
     }
 }
