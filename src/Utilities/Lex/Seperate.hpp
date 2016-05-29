@@ -1,8 +1,9 @@
 #pragma once
-#include "../Parser/ParserBase/Types.hpp"
+#include "../Parse/Base/Types.hpp"
 
-namespace Parse
+namespace Lex
 {
+    using namespace Parse;
     using Seperator       = std::tuple<std::string, bool>;
     using Seperators      = std::vector<Seperator>;
 

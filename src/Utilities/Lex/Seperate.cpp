@@ -3,9 +3,8 @@
 #include "Seperate.hpp"
 #include <iostream>
 
-namespace Parse
+namespace Lex
 {
-
     std::tuple<bool, bool, int> find_seperator(std::string s, const Seperators &seperators)
     {
         auto found = std::make_tuple(false, false, 0);

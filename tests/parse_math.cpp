@@ -1,10 +1,11 @@
 #include "catch.hpp"
-#include "../src/Utilities/Parser/Parse.hpp"
-#include "../src/Utilities/Lexer/Seperate.hpp"
+#include "../src/Utilities/Parse/Parse.hpp"
+#include "../src/Utilities/Lex/Seperate.hpp"
 
 TEST_CASE( "Basic mathematical expressions can be parsed")
 {
     using namespace Parse;
+    using namespace Lex;
     Seperators mathematical = Seperators();
     mathematical.push_back(std::make_tuple("+", true));
     mathematical.push_back(std::make_tuple("-", true));

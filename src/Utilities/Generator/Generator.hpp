@@ -1,6 +1,6 @@
 #pragma once
 #include "../Syntax/Statements.hpp"
-#include "../Parser/Parse.hpp"
+#include "../Parse/Parse.hpp"
 
 namespace Gen
 {

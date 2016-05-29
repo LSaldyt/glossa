@@ -1,26 +1,9 @@
 #include "Compiler.hpp"
-#include "Utilities/IO/IO.hpp"
-#include "Utilities/Parser/Parse.hpp"
-#include "Utilities/Syntax/Symbols.hpp"
-#include "Utilities/Syntax/Token.hpp"
-#include "Utilities/Lexer/Lexer.hpp"
-#include "Utilities/Lexer/Seperate.hpp"
-#include "Utilities/Lexer/Language.hpp"
-#include "Utilities/Generator/Generator.hpp"
-#include <iostream>
+
 
 int main()
 {
-    using namespace Parse;
-    using namespace Lexer;
-    using namespace Syntax;
-    using namespace Gen;
-
-    Terms keywords  = {"if", "then", "else"};
-    Terms operators = {"+", "-", "*", "/", "="};
-
-    Language test_language(digits, alphas, keywords, operators);
-    Lexer::Lexer lexer(test_language);
+    using namespace Compiler;
 
     auto parseFunctions = inOrder({just("identifier"), just("operator"), just("int")});
     auto parser = tokenParser<Token>(parseFunctions);
@@ -29,16 +12,38 @@ int main()
 
     Generator assignment_generator(symbolic_token_parser, AssignmentGenerator);
 
+    auto content         = readFile     ("input.txt");
+    auto tokens          = tokenPass    (content);
+    auto symbolic_tokens = symbolicPass (tokens);
+
     std::vector<std::string> output;
-    auto file = readFile("input.txt");
-    for (auto line : file)
+    for (auto symbolic_token_group : symbolic_tokens)
     {
-        std::cout << "Compiled: " << line << std::endl;
-        auto tokens = lexer.lex(line);
-        SymbolicTokens symbolic_tokens = toSymbolic(parser(tokens).parsed);
-        auto generated = assignment_generator.generate(symbolic_tokens);
-        std::cout << "To: " << std::get<0>(generated) << std::endl;
+        auto generated = assignment_generator.generate(symbolic_token_group);
         output.push_back(std::get<0>(generated));
     }
     writeFile(output, "output.cpp");
+}
+
+namespace Compiler
+{
+    std::vector<Tokens> tokenPass(std::vector<std::string> content)
+    {
+        std::vector<Tokens> tokens;
+        for (auto line : content)
+        {
+            tokens.push_back(lex(line, test_language));
+        }
+        return tokens;
+    }
+
+    std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens)
+    {
+        std::vector<SymbolicTokens> symbolic_tokens;
+        for (auto token_group : tokens)
+        {
+            symbolic_tokens.push_back(toSymbolic(token_group));
+        }
+        return symbolic_tokens;
+    }
 }

@@ -1,15 +1,9 @@
-#include "Lexer.hpp"
+#include "Lex.hpp"
 
-namespace Lexer
+namespace Lex
 {
-    Lexer::Lexer(const Language& set_language)
-    {
-        language = set_language;
-    }
-
-    Lexer::~Lexer(){}
-
-    Tokens Lexer::lex(const std::string& sentence)
+    using namespace Syntax;
+    Tokens lex(const std::string& sentence, const Language& language)
     {
         auto terms  = seperate(sentence, language.seperators);
         auto tokens = Tokens();

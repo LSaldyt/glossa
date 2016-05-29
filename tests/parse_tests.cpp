@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/Utilities/Parser/Parse.hpp"
+#include "../src/Utilities/Parse/Parse.hpp"
 
 TEST_CASE( "Basic Parsers work")
 {

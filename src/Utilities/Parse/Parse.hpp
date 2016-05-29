@@ -1,8 +1,8 @@
 #pragma once
-#include "ParserBase/Locale.hpp"
-#include "ParserBase/Templates.hpp"
+#include "Base/Locale.hpp"
+#include "Base/Templates.hpp"
 #include "../Syntax/Token.hpp"
-#include "ParserBase/TokenResult.hpp"
+#include "Base/TokenResult.hpp"
 
 namespace Parse
 {
