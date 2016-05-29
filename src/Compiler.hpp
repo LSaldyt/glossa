@@ -7,6 +7,7 @@
 #include "Utilities/Lex/Seperate.hpp"
 #include "Utilities/Lex/Language.hpp"
 #include "Utilities/Generator/Generator.hpp"
+#include "Utilities/Language.hpp"
 #include <iostream>
 
 namespace Compiler

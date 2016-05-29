@@ -1,10 +1,9 @@
 #pragma once
-#include "Language.hpp"
+#include "Import.hpp"
 #include "Seperate.hpp"
-#include "../Syntax/Token.hpp"
+#include "../Language.hpp"
 
 namespace Lex
 {
-    using namespace Syntax;
-    Tokens lex(const std::string& sentence, const Language& language);
+    Tokens lex(const std::string& sentence, const Language::Language& language);
 }

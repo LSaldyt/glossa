@@ -2,8 +2,7 @@
 
 namespace Lex
 {
-    using namespace Syntax;
-    Tokens lex(const std::string& sentence, const Language& language)
+    Tokens lex(const std::string& sentence, const Language::Language& language)
     {
         auto terms  = seperate(sentence, language.seperators);
         auto tokens = Tokens();

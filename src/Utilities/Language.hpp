@@ -1,13 +1,9 @@
 #pragma once
-#include "../Parse/Parse.hpp"
-#include "../Parse/Base/Types.hpp"
-#include "Seperate.hpp"
+#include "Lex/Seperate.hpp"
 
-namespace Lex
+namespace Language
 {
-    using namespace Parse;
-    using namespace Syntax;
-
+    using namespace Lex;
     struct Language
     {
         Seperators    seperators;
@@ -44,7 +40,7 @@ namespace Lex
             }
         }
 
-        std::tuple<Token, Terms> identify(Terms terms) const 
+        std::tuple<Token, Terms> identify(Terms terms) const
         {
             for (auto parser : parsers)
             {

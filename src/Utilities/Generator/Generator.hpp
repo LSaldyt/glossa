@@ -1,10 +1,8 @@
 #pragma once
-#include "../Syntax/Statements.hpp"
-#include "../Parse/Parse.hpp"
+#include "Import.hpp"
 
 namespace Gen
 {
-    using namespace Syntax;
     using SymbolicTokenParser = std::function<TokenResult<SymbolicToken>(SymbolicTokens)>;
 
     class Generator
