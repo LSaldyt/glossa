@@ -1,6 +1,5 @@
 #include "Compiler.hpp"
 
-
 int main()
 {
     using namespace Compiler;

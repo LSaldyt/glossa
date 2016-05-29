@@ -7,7 +7,6 @@
 #include "Utilities/Lex/Seperate.hpp"
 #include "Utilities/Lex/Language.hpp"
 #include "Utilities/Generator/Generator.hpp"
-#include "Utilities/Language.hpp"
 #include <iostream>
 
 namespace Compiler
@@ -23,5 +22,6 @@ namespace Compiler
     const Terms keywords  = {"if", "then", "else"};
     const Terms operators = {"+", "-", "*", "/", "="};
 
-    const Language test_language(digits, alphas, keywords, operators);
+    const Language test_language({std::make_tuple(keywords, "keyword"), std::make_tuple(operators, "operator")},
+                                 {std::make_tuple(digits, "int"),       std::make_tuple(alphas, "identifier")});
 }
