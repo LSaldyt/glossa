@@ -4,23 +4,14 @@ int main()
 {
     using namespace Compiler;
 
-    auto parseFunctions = inOrder({just("identifier"), just("operator"), just("int")});
-    auto parser = tokenParser<Token>(parseFunctions);
-
-    SymbolicTokenParser symbolic_token_parser = tokenParser<SymbolicToken>(parseFunctions);
-
-    Generator assignment_generator(symbolic_token_parser, AssignmentGenerator);
-
     auto content         = readFile     ("input.txt");
     auto tokens          = tokenPass    (content);
     auto symbolic_tokens = symbolicPass (tokens);
+    auto joined_tokens   = join(symbolic_tokens);
 
     std::vector<std::string> output;
-    for (auto symbolic_token_group : symbolic_tokens)
-    {
-        auto generated = assignment_generator.generate(symbolic_token_group);
-        output.push_back(std::get<0>(generated));
-    }
+    auto result = generate({}, joined_tokens);
+    output.push_back(result.generated);
     writeFile(output, "output.cpp");
 }
 
@@ -44,5 +35,19 @@ namespace Compiler
             symbolic_tokens.push_back(toSymbolic(token_group));
         }
         return symbolic_tokens;
+    }
+
+    SymbolicTokens join(std::vector<SymbolicTokens> token_groups)
+    {
+        auto tokens = SymbolicTokens();
+        for (auto token_group : token_groups)
+        {
+            for (auto t : token_group)
+            {
+                tokens.push_back(t);
+            }
+            tokens.push_back(std::make_tuple(std::make_shared<NewLine>(NewLine()), "\n"));
+        }
+        return tokens;
     }
 }

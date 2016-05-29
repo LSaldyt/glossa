@@ -19,6 +19,11 @@ namespace Syntax
         virtual std::string representation(){ return ""; }
     };
 
+    struct NewLine : public Symbol
+    {
+        std::string represntation(){return "\n";}
+    };
+
     using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
     using SymbolGenerators = std::vector<SymbolGenerator>;
 

@@ -10,7 +10,6 @@ namespace Syntax
     };
 
     using StatementGenerator = std::function<std::shared_ptr<Statement>(SymbolicTokens)>;
-    using GeneratorFunction  = std::function<std::string(std::shared_ptr<Statement>)>;
 
     struct Assignment : public Statement
     {
@@ -39,4 +38,5 @@ namespace Syntax
         auto type       = std::get<1>(tokens[2]);
         return std::make_shared<Assignment>(Assignment(identifier, value, type));
     };
+
 }

@@ -6,7 +6,7 @@
 #include "Utilities/Lex/Lex.hpp"
 #include "Utilities/Lex/Seperate.hpp"
 #include "Utilities/Lex/Language.hpp"
-#include "Utilities/Generator/Generator.hpp"
+#include "Utilities/Gen/Gen.hpp"
 #include <iostream>
 
 namespace Compiler
@@ -18,6 +18,7 @@ namespace Compiler
 
     std::vector<Tokens> tokenPass(std::vector<std::string>);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
+    SymbolicTokens join(std::vector<SymbolicTokens>);
 
     const Terms keywords  = {"if", "then", "else"};
     const Terms operators = {"+", "-", "*", "/", "="};
