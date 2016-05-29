@@ -30,10 +30,10 @@ namespace Lexer
             keywords          = set_keywords;
             operators         = set_operators;
 
-            parsers.push_back(std::make_tuple(set_number_parser, "number"));
+            parsers.push_back(std::make_tuple(set_number_parser,     "int"));
             parsers.push_back(std::make_tuple(set_identifier_parser, "identifier"));
-            parsers.push_back(std::make_tuple(justFrom(keywords), "keyword"));
-            parsers.push_back(std::make_tuple(justFrom(operators), "operator"));
+            parsers.push_back(std::make_tuple(justFrom(keywords),    "keyword"));
+            parsers.push_back(std::make_tuple(justFrom(operators),   "operator"));
 
             seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());
 

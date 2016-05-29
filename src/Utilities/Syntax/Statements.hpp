@@ -28,13 +28,13 @@ namespace Syntax
 
         std::string generator()
         {
-            return (type + " " + identifier + " = " + "nah");
+            return (type + " " + identifier + " = " + value->representation() + ";");
         }
     };
 
     const StatementGenerator AssignmentGenerator = [](SymbolicTokens tokens)
     {
-        auto identifier = ""; //std::get<0>(tokens[0])->name;
+        auto identifier = std::get<0>(tokens[0])->representation();
         auto value      = std::get<0>(tokens[2]);
         auto type       = std::get<1>(tokens[2]);
         return std::make_shared<Assignment>(Assignment(identifier, value, type));

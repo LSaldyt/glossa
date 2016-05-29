@@ -14,7 +14,10 @@ namespace Syntax
         Exp = '^'
     };
 
-    struct Symbol {};
+    struct Symbol
+    {
+        virtual std::string representation(){ return ""; }
+    };
 
     using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
     using SymbolGenerators = std::vector<SymbolGenerator>;
@@ -23,6 +26,10 @@ namespace Syntax
     {
         Op op;
         Operator(Op set_op){op = set_op;}
+        std::string representation()
+        {
+            return "";
+        }
     };
 
     const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(Op(term[0])));};
@@ -38,6 +45,10 @@ namespace Syntax
     {
         int value;
         Integer(int set_value) { value = set_value; }
+        std::string representation()
+        {
+            return std::to_string(value);
+        }
     };
 
     const auto intGenerator = [](std::string s){ return std::make_shared<Integer>(Integer(std::stoi(s))); };
@@ -49,12 +60,16 @@ namespace Syntax
         {
             name = set_name;
         }
+        std::string representation()
+        {
+            return name;
+        }
     };
 
     const auto identifierGenerator = [](std::string s){ return std::make_shared<Identifier>(Identifier(s)); };
 
     const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
-     {"number",     intGenerator},
+     {"int",        intGenerator},
      {"operator",   opGenerator},
      {"identifier", identifierGenerator}
     };

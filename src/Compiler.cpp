@@ -1,5 +1,5 @@
 #include "Compiler.hpp"
-#include "Utilities/IO/readFile.hpp"
+#include "Utilities/IO/IO.hpp"
 #include "Utilities/Parser/Parse.hpp"
 #include "Utilities/Syntax/Symbols.hpp"
 #include "Utilities/Syntax/Token.hpp"
@@ -22,20 +22,23 @@ int main()
     Language test_language(digits, alphas, keywords, operators);
     Lexer::Lexer lexer(test_language);
 
-    auto parseFunctions = inOrder({just("identifier"), just("operator"), just("number")});
+    auto parseFunctions = inOrder({just("identifier"), just("operator"), just("int")});
     auto parser = tokenParser<Token>(parseFunctions);
 
     SymbolicTokenParser symbolic_token_parser = tokenParser<SymbolicToken>(parseFunctions);
 
     Generator assignment_generator(symbolic_token_parser, AssignmentGenerator);
 
-    auto file = readFile("test_file.txt");
+    std::vector<std::string> output;
+    auto file = readFile("input.txt");
     for (auto line : file)
     {
+        std::cout << "Compiled: " << line << std::endl;
         auto tokens = lexer.lex(line);
         SymbolicTokens symbolic_tokens = toSymbolic(parser(tokens).parsed);
         auto generated = assignment_generator.generate(symbolic_tokens);
-        std::cout << std::get<0>(generated) << std::endl;
-        std::cout << std::get<1>(generated) << std::endl;
+        std::cout << "To: " << std::get<0>(generated) << std::endl;
+        output.push_back(std::get<0>(generated));
     }
+    writeFile(output, "output.cpp");
 }
