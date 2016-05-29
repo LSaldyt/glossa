@@ -1,20 +1,40 @@
+# CXX       = g++
+# CXXFLAGS  = -c -Wall -std=c++14
+# LDFLAGS   =
+# BDIR      = build
+# VPATH     = src src/Utilities/Parser src/Utilities/IO src/Utilities/Parser/ParserBase src/Utilities/Lexer src/Utilities/Generator src/Utilities/Syntax
+# SOURCES   = Compiler.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lexer.cpp Generator.cpp
+# OBJECTS   = $(SOURCES:.cpp=.o)
+# # OBJECTS   =
+# EXECUTABLE= $(BDIR)/Compiler
+#
+# all: $(SOURCES) $(EXECUTABLE)
+#
+#
+# # build/Compiler: $(OBJECTS)
+# # g++ flags objects -o build/Compiler
+# $(EXECUTABLE): $(OBJECTS)
+# 	$(CXX) $(LDFLAGS) $(SOURCES:%.cpp=$(BDIR)/%.o) -o $@
+#
+# .cpp.o:
+# 	$(CXX) $(CXXFLAGS) $< -o $(BDIR)/$@
+
+#The above works, but recompiles things unnecessarily
+
 CXX       = g++
 CXXFLAGS  = -c -Wall -std=c++14
 LDFLAGS   =
 BDIR      = build
 VPATH     = src src/Utilities/Parser src/Utilities/IO src/Utilities/Parser/ParserBase src/Utilities/Lexer src/Utilities/Generator src/Utilities/Syntax
 SOURCES   = Compiler.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lexer.cpp Generator.cpp
-OBJECTS   = $(SOURCES:.cpp=.o)
+OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
 # OBJECTS   =
 EXECUTABLE= $(BDIR)/Compiler
 
 all: $(SOURCES) $(EXECUTABLE)
 
-
-# build/Compiler: $(OBJECTS)
-# g++ flags objects -o build/Compiler
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(LDFLAGS) $(SOURCES:%.cpp=$(BDIR)/%.o) -o $@
+	$(CXX) $(LDFLAGS) $(OBJECTS) -o $@
 
-.cpp.o:
-	$(CXX) $(CXXFLAGS) $< -o $(BDIR)/$@
+$(BDIR)/%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@
