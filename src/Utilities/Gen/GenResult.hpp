@@ -3,18 +3,20 @@
 #include <string>
 namespace Gen
 {
-    struct GenerationResult
+    struct GenResult
     {
         bool result;
         std::string generated;
         SymbolicTokens remaining;
-        GenerationResult(bool set_result=false,
-                         std::string set_generated = "",
-                         SymbolicTokens set_remaining = SymbolicTokens())
+        GenResult(bool set_result=false,
+                     std::string set_generated = "",
+                     SymbolicTokens set_remaining = SymbolicTokens())
         {
             result = set_result;
             generated = set_generated;
             remaining = set_remaining;
         }
     };
+
+    using Generator = std::function<GenResult(SymbolicTokens)>;
 }

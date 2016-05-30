@@ -25,4 +25,13 @@ namespace Compiler
 
     const Language test_language({std::make_tuple(keywords, "keyword"), std::make_tuple(operators, "operator")},
                                  {std::make_tuple(digits, "int"),       std::make_tuple(alphas, "identifier")});
+
+
+     const SymbolicStatementParser test_statement_parser = std::make_tuple([](SymbolicTokens)
+     {
+         return TokenResult<SymbolicToken>();
+     },
+     AssignmentGenerator
+     );
+     const Generator test_generator = makeGenerator(test_statement_parser);
 }

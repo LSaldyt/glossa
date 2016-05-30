@@ -1,5 +1,7 @@
 #include "Compiler.hpp"
 
+
+
 int main()
 {
     using namespace Compiler;
@@ -7,16 +9,16 @@ int main()
     auto content         = readFile     ("input.txt");
     auto tokens          = tokenPass    (content);
     auto symbolic_tokens = symbolicPass (tokens);
-    auto joined_tokens   = join(symbolic_tokens);
+    auto joined_tokens   = join         (symbolic_tokens);
 
-    std::vector<std::string> output;
-    auto result = generate({}, joined_tokens);
-    output.push_back(result.generated);
+    auto output = generate(test_generator, joined_tokens);
     writeFile(output, "output.cpp");
 }
 
 namespace Compiler
 {
+
+
     std::vector<Tokens> tokenPass(std::vector<std::string> content)
     {
         std::vector<Tokens> tokens;
