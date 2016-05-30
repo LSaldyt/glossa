@@ -7,24 +7,27 @@ int main()
     using namespace Compiler;
 
     auto content         = readFile     ("input.txt");
-    auto tokens          = tokenPass    (content);
+    auto tokens          = tokenPass    (content, test_language);
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
-    auto output = generate(test_generator, joined_tokens);
+    for(auto jt : joined_tokens)
+    {
+        std::cout << std::get<1>(jt) << std::endl;
+    }
+
+    auto output = generate(test_language.language_generator, joined_tokens);
     writeFile(output, "output.cpp");
 }
 
 namespace Compiler
 {
-
-
-    std::vector<Tokens> tokenPass(std::vector<std::string> content)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)
     {
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            tokens.push_back(lex(line, test_language));
+            tokens.push_back(lex(line, language));
         }
         return tokens;
     }

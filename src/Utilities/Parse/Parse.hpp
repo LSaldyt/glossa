@@ -91,7 +91,7 @@ namespace Parse
         {
             functions.push_back(just(s));
         }
-        return anyOf(functions);
+        return functions;
     };
 
     // Parse any term
