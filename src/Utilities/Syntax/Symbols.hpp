@@ -11,7 +11,8 @@ namespace Syntax
         Sub = '-',
         Mul = '*',
         Div = '/',
-        Exp = '^'
+        Exp = '^',
+        Eq  = '='
     };
 
     struct Symbol
@@ -73,8 +74,22 @@ namespace Syntax
 
     const auto identifierGenerator = [](std::string s){ return std::make_shared<Identifier>(Identifier(s)); };
 
+    struct Keyword : public Symbol
+    {
+        std::string name;
+        Keyword(std::string set_name)
+        {
+            name = set_name;
+        }
+        std::string representation()
+        {
+            return name;
+        }
+    };
+
+
     const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
-     {"int",        intGenerator},
+     {"type",       intGenerator},
      {"operator",   opGenerator},
      {"identifier", identifierGenerator}
     };

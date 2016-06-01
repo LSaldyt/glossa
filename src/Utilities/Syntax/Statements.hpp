@@ -33,9 +33,9 @@ namespace Syntax
 
     const StatementGenerator AssignmentGenerator = [](SymbolicTokens tokens)
     {
-        auto identifier = std::get<0>(tokens[0])->representation();
-        auto value      = std::get<0>(tokens[2]);
-        auto type       = std::get<1>(tokens[2]);
+        auto identifier = tokens[0].value->representation();
+        auto value      = tokens[2].value;
+        auto type       = tokens[2].sub_type;
         return std::make_shared<Assignment>(Assignment(identifier, value, type));
     };
 

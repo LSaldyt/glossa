@@ -6,7 +6,20 @@ namespace Lex
 {
     using LanguageTermSet  = std::tuple<Terms, std::string>;
     using LanguageTermSets = std::vector<LanguageTermSet>;
-    using LanguageParser   = std::tuple<ParseFunction, std::string>;
+
+    struct LanguageParser
+    {
+        ParseFunction parser;
+        std::string name;
+        std::string type;
+        LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type)
+        {
+            parser = set_parser;
+            name   = set_name;
+            type   = set_type;
+        }
+    };
+
     using LanguageParsers  = std::vector<LanguageParser>;
 
     struct Language
@@ -15,7 +28,7 @@ namespace Lex
 
         LanguageTermSets language_term_sets;
         LanguageParsers  language_parsers;
-        Gen::Generator        language_generator;
+        Gen::Generator   language_generator;
 
         Language(const LanguageTermSets& set_term_sets,
                  const LanguageParsers&  set_language_parsers,
@@ -28,7 +41,14 @@ namespace Lex
 
             for (auto term_set : language_term_sets)
             {
-                language_parsers.push_back(std::make_tuple(anyOf(justFrom(std::get<0>(term_set))), std::get<1>(term_set)));
+                for (auto term : std::get<0>(term_set))
+                {
+                    language_parsers.push_back(LanguageParser(just(term), term, std::get<1>(term_set)));
+                    if(std::get<1>(term_set) != "keyword") //seperating by keywords would make identifiers containing keywords impossible
+                    {
+                        seperators.push_back(std::make_tuple(term, true));
+                    }
+                }
             }
 
             std::vector<Gen::Generator> generators;
@@ -45,13 +65,13 @@ namespace Lex
         {
             for (auto parser : language_parsers)
             {
-                auto result = std::get<0>(parser)(terms);
+                auto result = parser.parser(terms);
                 if(result.result)
                 {
-                    return std::make_tuple(std::make_tuple(result.parsed[0], std::get<1>(parser)), result.remaining);
+                    return std::make_tuple(Token(result.parsed[0], parser.name, parser.type), result.remaining);
                 }
             }
-            return std::make_tuple(std::make_tuple("", "failure"), Terms());
+            return std::make_tuple(Token("", "", "failure"), Terms());
         }
     };
 }

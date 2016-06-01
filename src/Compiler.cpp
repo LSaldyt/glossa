@@ -1,22 +1,41 @@
 #include "Compiler.hpp"
 
-
-
 int main()
 {
     using namespace Compiler;
+
+    Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTokenParser({
+        just("identifier"),
+        just("operator"),
+        just("type"),
+        just("\n")
+    }), Syntax::AssignmentGenerator);
+
+    Terms keywords  = {"42"};
+    Terms operators = {"+", "-", "*", "/", "="};
+
+    Gen::SymbolicStatementParsers statement_parsers(1, assign_parser);
+
+    Lex::LanguageTermSets term_set;
+    term_set.push_back(std::make_tuple(keywords, "keyword"));
+    term_set.push_back(std::make_tuple(operators, "operator"));
+
+    Lex::LanguageParsers  parser_set;
+    parser_set.push_back(LanguageParser(Parse::digits, "int", "type"));
+    parser_set.push_back(LanguageParser(Parse::alphas, "", "identifier"));
+
+    Lex::Language test_language(term_set, parser_set, statement_parsers);
 
     auto content         = readFile     ("input.txt");
     auto tokens          = tokenPass    (content, test_language);
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
-    for(auto jt : joined_tokens)
-    {
-        std::cout << std::get<1>(jt) << std::endl;
-    }
-
     auto output = generate(test_language.language_generator, joined_tokens);
+    for(auto o : output)
+    {
+        std::cout << o << "\n";
+    }
     writeFile(output, "output.cpp");
 }
 
@@ -51,7 +70,7 @@ namespace Compiler
             {
                 tokens.push_back(t);
             }
-            tokens.push_back(std::make_tuple(std::make_shared<NewLine>(NewLine()), "\n"));
+            tokens.push_back(SymbolicToken(std::make_shared<NewLine>(NewLine()), "\n", "\n"));
         }
         return tokens;
     }

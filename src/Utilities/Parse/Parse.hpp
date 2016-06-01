@@ -16,7 +16,7 @@ namespace Parse
             terms.reserve(tokens.size());
             for (auto token : tokens)
             {
-                terms.push_back(std::get<1>(token));
+                terms.push_back(token.type);
             }
 
             auto result = parser(terms);
