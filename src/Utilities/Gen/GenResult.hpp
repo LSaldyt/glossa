@@ -9,7 +9,7 @@ namespace Gen
         std::string generated;
         SymbolicTokens remaining;
         GenResult(bool set_result=false,
-                     std::string set_generated = "",
+                     std::string set_generated = "/*Generation Failed*/",
                      SymbolicTokens set_remaining = SymbolicTokens())
         {
             result = set_result;

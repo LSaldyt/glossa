@@ -11,10 +11,23 @@ int main()
         just("\n")
     }), Syntax::AssignmentGenerator);
 
-    Terms keywords  = {"42"};
-    Terms operators = {"+", "-", "*", "/", "="};
+    Gen::SymbolicStatementParser function_parser = std::make_tuple(makeTypeParser({
+        just("identifier"),
+        just("operator"),
+        just("operator"),
+        just("operator"),
+        just("\n"),
+        just("keyword"),
+        just("type"),
+        just("\n")
+    }), Syntax::FunctionGenerator);
 
-    Gen::SymbolicStatementParsers statement_parsers(1, assign_parser);
+    Terms keywords  = {"return"};
+    Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
+
+    Gen::SymbolicStatementParsers statement_parsers;
+    statement_parsers.push_back(assign_parser);
+    statement_parsers.push_back(function_parser);
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));
@@ -34,7 +47,7 @@ int main()
     auto output = generate(test_language.language_generator, joined_tokens);
     for(auto o : output)
     {
-        std::cout << o << std::endl;
+        std::cout << o << "\n";
     }
     writeFile(output, "output.cpp");
 }

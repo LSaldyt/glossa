@@ -4,13 +4,19 @@ namespace Gen
 {
     std::vector<std::string> generate(const Generator& generator, const SymbolicTokens& tokens)
     {
-        auto tokens_copy = tokens;
+        SymbolicTokens tokens_copy = tokens;
         std::vector<std::string> output;
         while (tokens.size() > 0)
         {
             GenResult result = generator(tokens_copy);
             if (!result.result)
             {
+                std::cout << "Remaining: ";
+                for(auto r : result.remaining)
+                {
+                    std::cout << r.type << " ";
+                }
+                std::cout << std::endl;
                 break;
             }
             output.push_back(result.generated);
@@ -24,7 +30,7 @@ namespace Gen
         return [parser](SymbolicTokens tokens)
         {
             auto result = std::get<0>(parser)(tokens);
-            std::string output = "";
+            std::string output = "//Generation Failed";
             if (result.result)
             {
                 output = std::get<1>(parser)(result.parsed)->generator();
@@ -37,7 +43,7 @@ namespace Gen
     {
         return [generators](SymbolicTokens tokens)
         {
-            auto result = GenResult(false, "", tokens);
+            auto result = GenResult(false, "//Generation Failed", tokens);
             for (auto generator : generators)
             {
                 auto gen_result = generator(tokens);

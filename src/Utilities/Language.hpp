@@ -35,7 +35,6 @@ namespace Lex
                  const Gen::SymbolicStatementParsers& statement_parsers)
         {
             language_term_sets = set_term_sets;
-            language_parsers   = set_language_parsers;
 
             seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());
 
@@ -51,6 +50,8 @@ namespace Lex
                 }
             }
 
+            language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
+            
             std::vector<Gen::Generator> generators;
             generators.reserve(statement_parsers.size());
             for (auto s_parser : statement_parsers)

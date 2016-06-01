@@ -88,6 +88,17 @@ namespace Parse
         return singleTemplate(comparator);
     };
 
+    // Change the success of a parser
+    const auto inverse = [](ParseFunction parser)
+    {
+        return parseTemplate([parser](Terms terms)
+        {
+            auto result = parser(terms);
+            result.result = !result.result;
+            return result;
+        });
+    };
+
     // Attempt to parse any parser from a list of Parsers, failing only if all of the parsers fail, and passing if any of them pass
     const auto anyOf = [](ParseFunctions functions)
     {

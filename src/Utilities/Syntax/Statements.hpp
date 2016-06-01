@@ -31,6 +31,21 @@ namespace Syntax
         }
     };
 
+    struct Function : public Statement
+    {
+        std::string identifier;
+
+        std::string generator()
+        {
+            return "int f(int x);";
+        }
+    };
+
+    const StatementGenerator FunctionGenerator = [](SymbolicTokens tokens)
+    {
+        return std::make_shared<Function>(Function());
+    };
+
     const StatementGenerator AssignmentGenerator = [](SymbolicTokens tokens)
     {
         auto identifier = tokens[0].value->representation();

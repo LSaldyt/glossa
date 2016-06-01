@@ -12,7 +12,10 @@ namespace Syntax
         Mul = '*',
         Div = '/',
         Exp = '^',
-        Eq  = '='
+        Eq  = '=',
+        RP  = ')',
+        LP  = '(',
+        Col = ':'
     };
 
     struct Symbol
@@ -87,11 +90,13 @@ namespace Syntax
         }
     };
 
+    const auto keywordGenerator = [](std::string s){ return std::make_shared<Keyword>(Keyword(s)); };
 
     const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
      {"type",       intGenerator},
      {"operator",   opGenerator},
-     {"identifier", identifierGenerator}
+     {"identifier", identifierGenerator},
+     {"keyword",    keywordGenerator}
     };
 
 }
