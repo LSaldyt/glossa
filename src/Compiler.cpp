@@ -11,18 +11,19 @@ int main()
         just("\n")
     }), Syntax::AssignmentGenerator);
 
-    Gen::SymbolicStatementParser function_parser = std::make_tuple(makeTypeParser({
-        just("identifier"),
-        just("operator"),
-        just("operator"),
-        just("operator"),
-        just("\n"),
-        just("keyword"),
-        just("type"),
-        just("\n")
-    }), Syntax::FunctionGenerator);
 
-    Terms keywords  = {"return"};
+    Gen::SymbolicStatementParser function_parser = std::make_tuple(inOrderTokenParser<SymbolicToken>({
+        typeParser     <SymbolicToken> (just("identifier")),
+        dualTypeParser <SymbolicToken> (just("operator"), just("(")),
+        dualTypeParser <SymbolicToken> (just("operator"), just(")")),
+        dualTypeParser <SymbolicToken> (just("operator"), just(":")),
+        typeParser     <SymbolicToken> (just("\n")),
+        dualTypeParser <SymbolicToken> (just("keyword"), just("return")),
+        typeParser     <SymbolicToken> (just("type")),
+        typeParser     <SymbolicToken> (just("\n")),
+        }), Syntax::FunctionGenerator);
+
+    Terms keywords  = {"return", "test"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
 
     Gen::SymbolicStatementParsers statement_parsers;

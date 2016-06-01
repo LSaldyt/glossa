@@ -26,7 +26,7 @@ namespace Parse
                         std::vector<TokenType>(tokens.begin(), tokens.begin() + result.parsed.size()),
                         std::vector<TokenType>(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult<TokenType>();
+            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
         };
         return parseTokens;
     };
@@ -50,10 +50,76 @@ namespace Parse
                         std::vector<TokenType>(tokens.begin(), tokens.begin() + result.parsed.size()),
                         std::vector<TokenType>(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult<TokenType>();
+            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
         };
         return parseTokens;
     };
+
+    template < typename TokenType >
+    std::function<TokenResult<TokenType>(std::vector<TokenType>)> dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType=true)
+    {
+        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](std::vector<TokenType> tokens)
+        {
+            auto typeResult    = typeParser    <TokenType> (typeParserFunc)    (tokens);
+            auto subTypeResult = subTypeParser <TokenType> (subTypeParserFunc) (tokens);
+            if(typeResult.result && subTypeResult.result)
+            {
+                if(byType)
+                {
+                return TokenResult<TokenType>(true,
+                        std::vector<TokenType>(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
+                        std::vector<TokenType>(tokens.begin() + typeResult.parsed.size(), tokens.end()));
+                }
+                else
+                {
+                return TokenResult<TokenType>(true,
+                        std::vector<TokenType>(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
+                        std::vector<TokenType>(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
+                }
+            }
+            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+        };
+        return parseTokens;
+    };
+
+    //inOrder for tokenTypes
+    template < typename TokenType >
+    std::function<TokenResult<TokenType>(std::vector<TokenType>)> inOrderTokenParser(std::vector<std::function<TokenResult<TokenType>(std::vector<TokenType>)>> parsers)
+    {
+        return [parsers](std::vector<TokenType> original_tokens)
+        {
+            std::vector<TokenType> parsed;
+            std::vector<TokenType> tokens = original_tokens;
+
+            for (auto parser : parsers)
+            {
+                auto parse_result = parser(tokens);
+                if(parse_result.result)
+                {
+                    parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );
+                    tokens  = parse_result.remaining;
+                }
+                else
+                {
+                    return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+                }
+            }
+            return TokenResult<TokenType>(true, parsed, tokens);
+        };
+    }
+
+    template < typename TokenType >
+    std::function<TokenResult<TokenType>(std::vector<TokenType>)> constructDualTypeParser(std::vector<std::tuple<ParseFunction, ParseFunction>> parser_pairs, bool byType=true)
+    {
+        auto dual_types = std::vector<std::function<TokenResult<TokenType>(std::vector<TokenType>)>>();
+        dual_types.reserve(parser_pairs.size());
+        for (auto parser_pair : parser_pairs)
+        {
+            dual_types.push_back(dualTypeParser<TokenType>(std::get<0>(parser_pair), std::get<1>(parser_pair), byType));
+        }
+        return inOrderTokenParser<TokenType>(dual_types);
+    }
+
 
     // Parse a list of functions in order, failing if any of them fail
     const auto inOrder = [](ParseFunctions parsers)
@@ -109,6 +175,30 @@ namespace Parse
             {
                 auto func_result = function(terms);
                 if(func_result.result)
+                {
+                    result = func_result;
+                    break;
+                }
+            }
+            return result;
+        });
+    };
+
+    //Parse all parsers from a list of parsers, passing only if all of them pass
+    const auto allOf = [](ParseFunctions functions)
+    {
+        return parseTemplate([functions](Terms terms)
+        {
+            auto result = Result(false, Terms(), terms);
+            for (auto function : functions)
+            {
+                auto func_result = function(terms);
+                if(!func_result.result)
+                {
+                    result = Result(false, Terms(), terms);
+                    break;
+                }
+                else
                 {
                     result = func_result;
                 }
