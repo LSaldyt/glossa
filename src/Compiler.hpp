@@ -20,17 +20,17 @@ namespace Compiler
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
     SymbolicTokens join(std::vector<SymbolicTokens>);
 
-    const auto makeTokenParserFromStrings = [](std::vector<std::string> strings)
+    const auto makeTypeParserFromStrings = [](std::vector<std::string> strings)
     {
         using namespace Parse;
         using namespace Syntax;
-        return tokenParser<SymbolicToken>(inOrder(justFrom(strings)));
+        return typeParser<SymbolicToken>(inOrder(justFrom(strings)));
     };
 
-    const auto makeTokenParser = [](std::vector<ParseFunction> functions)
+    const auto makeTypeParser = [](std::vector<ParseFunction> functions)
     {
         using namespace Parse;
         using namespace Syntax;
-        return tokenParser<SymbolicToken>(inOrder(functions));
+        return typeParser<SymbolicToken>(inOrder(functions));
     };
 }

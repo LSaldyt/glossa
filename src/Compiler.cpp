@@ -4,7 +4,7 @@ int main()
 {
     using namespace Compiler;
 
-    Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTokenParser({
+    Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
         just("identifier"),
         just("operator"),
         just("type"),
@@ -34,7 +34,7 @@ int main()
     auto output = generate(test_language.language_generator, joined_tokens);
     for(auto o : output)
     {
-        std::cout << o << "\n";
+        std::cout << o << std::endl;
     }
     writeFile(output, "output.cpp");
 }

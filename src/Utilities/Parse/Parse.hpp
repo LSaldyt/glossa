@@ -8,7 +8,31 @@ namespace Parse
 {
     //Convert a standard parseFunction to one that parses Tokens
     template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> tokenParser(ParseFunction parser)
+    std::function<TokenResult<TokenType>(std::vector<TokenType>)> subTypeParser(ParseFunction parser)
+    {
+        auto parseTokens = [parser](std::vector<TokenType> tokens)
+        {
+            auto terms = Terms();
+            terms.reserve(tokens.size());
+            for (auto token : tokens)
+            {
+                terms.push_back(token.sub_type);
+            }
+
+            auto result = parser(terms);
+            if(result.result)
+            {
+                return TokenResult<TokenType>(true,
+                        std::vector<TokenType>(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        std::vector<TokenType>(tokens.begin() + result.parsed.size(), tokens.end()));
+            }
+            return TokenResult<TokenType>();
+        };
+        return parseTokens;
+    };
+
+    template < typename TokenType >
+    std::function<TokenResult<TokenType>(std::vector<TokenType>)> typeParser(ParseFunction parser)
     {
         auto parseTokens = [parser](std::vector<TokenType> tokens)
         {
