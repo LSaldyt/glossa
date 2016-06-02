@@ -3,7 +3,9 @@ CXXFLAGS  = -c -Wall -std=c++14
 LDFLAGS   =
 BDIR      = tests/build
 VPATH     = tests src src/Utilities/IO src/Utilities/Parse/Base src/Utilities/Lex src/Utilities/Gen  src/Utilities/Syntax
-SOURCES   = parse_tests.cpp Seperate.cpp suite.cpp Locale.cpp Templates.cpp Lex.cpp parse_math.cpp Gen.cpp token_parse_tests.cpp
+SOURCES   = parse_tests.cpp Seperate.cpp suite.cpp Locale.cpp Templates.cpp \
+			Lex.cpp parse_math.cpp Gen.cpp token_parse_tests.cpp\
+			lex_tests.cpp
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
 # OBJECTS   =
 EXECUTABLE= $(BDIR)/suite
