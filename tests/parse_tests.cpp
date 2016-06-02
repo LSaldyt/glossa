@@ -6,16 +6,32 @@ TEST_CASE( "Basic Parsers work")
     using namespace Parse;
     Terms expected;
 
+    auto hello = just("hello");
+
     SECTION ("standard parsers work")
     {
         expected = {"hello"};
-        REQUIRE(just("hello")(expected).parsed        == expected);
+        REQUIRE(hello(expected).parsed        == expected);
         REQUIRE(wildcard(expected).parsed             == expected);
         REQUIRE(subsetOf("ehlo")(expected).parsed     == expected);
-        ParseFunctions parsers = {just("hello"), wildcard, subsetOf("ehlo")};
-        REQUIRE(anyOf(parsers)(expected).parsed == expected);
+        ParseFunctions parsers = {hello, wildcard, subsetOf("ehlo")};
+        REQUIRE(anyOf(parsers)(expected).parsed       == expected);
+        REQUIRE(inverse(just("nothello"))({"hello"}).result == true);
         REQUIRE(alphas(expected).parsed               == expected);
         REQUIRE(lowers(expected).parsed               == expected);
+    }
+
+    SECTION ("more advanced parsers work")
+    {
+        expected = {"hello", "hello"};
+        REQUIRE(many(hello)(expected).parsed  == expected);
+        REQUIRE(inOrder({hello, hello})(expected).parsed == expected);
+
+        REQUIRE(allOf({hello, wildcard})({"hello"}).result         == true);
+        REQUIRE(allOf({hello, just("nothello")})({"hello"}).result == false);
+
+        REQUIRE(inOrder(justFrom({"hello", "hello"}))(expected).parsed     == expected);
+
     }
 
     SECTION("digits")
@@ -33,18 +49,12 @@ TEST_CASE( "Basic Parsers work")
     SECTION("operators")
     {
         expected = {"+"};
-        REQUIRE(parseOp(expected).parsed              == expected);
+        REQUIRE(subsetOf("+-/*")(expected).parsed              == expected);
     }
 
     SECTION("punctuation")
     {
         expected = {"!?"};
         REQUIRE(puncts(expected).parsed               == expected);
-    }
-
-    SECTION("many")
-    {
-        expected = {"hello", "hello"};
-        REQUIRE(many(just("hello"))(expected).parsed  == expected);
     }
 }

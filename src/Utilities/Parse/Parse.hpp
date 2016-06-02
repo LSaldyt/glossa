@@ -255,6 +255,4 @@ namespace Parse
     const auto puncts = singleTemplate(is_puncts);
     const auto uppers = singleTemplate(is_uppers);
     const auto lowers = singleTemplate(is_lowers);
-
-    const auto parseOp = subsetOf("+-/*");
 }
