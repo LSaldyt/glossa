@@ -1,2 +1,2 @@
 int x = 42;
-int x = 32 + 5;
+int y = 32 + x;

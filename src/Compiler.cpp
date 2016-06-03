@@ -4,9 +4,11 @@ int main()
 {
     using namespace Compiler;
 
+    auto typeOrIdent = anyOf({just("type"), just("identifier")});
+
     auto expression_parser = inOrder({
-        just("type"),
-        many(inOrder({just("operator"), just("type")}))
+        typeOrIdent,
+        many(inOrder({just("operator"), typeOrIdent}))
     });
 
     Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
