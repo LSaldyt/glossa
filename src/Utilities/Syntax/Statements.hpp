@@ -24,24 +24,35 @@ namespace Syntax
 
         Expression(SymbolicTokens tokens)
         {
-            if (tokens.begin() != tokens.end())
+            auto it = tokens.begin();
+            if (it != tokens.end())
             {
-                base = tokens.begin()->value;
+                base = it->value;
             }
-            for (auto it = tokens.begin() + 1; it != tokens.end(); ++it)
+            it++;
+            while(it != tokens.end())
             {
-                if(it+1 != tokens.end())
+                if(it + 1 != tokens.end())
                 {
                     extensions.push_back(std::make_tuple(it->value, (it+1)->value));
+                    it++;
                 }
+                else
+                {
+                    break;
+                }
+                it++;
             }
         }
 
         std::string generator()
         {
             std::string generated = base->representation();
+            std::cout << extensions.size() << std::endl;
             for (auto e : extensions)
             {
+                std::cout << "-" << std::get<0>(e)->representation() << "-" << std::endl;
+                std::cout << "-" << std::get<1>(e)->representation() << "-" << std::endl;
                 generated += (" " + std::get<0>(e)->representation() + " " + std::get<1>(e)->representation());
             }
             return generated;
@@ -90,7 +101,7 @@ namespace Syntax
         SymbolicTokens expression_tokens;
         if (tokens.size() >= 3)
         {
-            expression_tokens = SymbolicTokens(tokens.begin() + 2, tokens.end());
+            expression_tokens = SymbolicTokens(tokens.begin() + 2, tokens.end() - 1);
         }
         return std::make_shared<Assignment>(Assignment(identifier, Expression(expression_tokens), type));
     };

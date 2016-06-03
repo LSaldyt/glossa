@@ -37,7 +37,7 @@ namespace Syntax
         Operator(Op set_op){op = set_op;}
         std::string representation()
         {
-            return "";
+            return std::string(1, (char)op);
         }
     };
 
