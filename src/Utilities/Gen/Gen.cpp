@@ -6,7 +6,7 @@ namespace Gen
     {
         SymbolicTokens tokens_copy = tokens;
         std::vector<std::string> output;
-        while (tokens.size() > 0)
+        while (tokens_copy.size() > 0)
         {
             GenResult result = generator(tokens_copy);
             if (!result.result)

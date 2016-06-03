@@ -21,7 +21,6 @@ TEST_CASE("The lexer and language modules work")
 
     Lex::Language test_language(term_set, parser_set, statement_parsers);
 
-
     SECTION("Lexing based on keywords, operators and whitespace")
     {
         auto test_sentence = "if 2 + 2 is 4 then 4 - 2 is 2";

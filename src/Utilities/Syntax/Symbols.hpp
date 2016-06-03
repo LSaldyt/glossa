@@ -25,7 +25,7 @@ namespace Syntax
 
     struct NewLine : public Symbol
     {
-        std::string represntation(){return "\n";}
+        std::string representation(){return "\n";}
     };
 
     using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
@@ -43,9 +43,8 @@ namespace Syntax
 
     const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(Op(term[0])));};
 
-    struct Expression : public Symbol {};
 
-    struct Literal : public Expression
+    struct Literal : public Symbol
     {
 
     };

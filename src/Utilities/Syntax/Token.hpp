@@ -34,14 +34,15 @@ namespace Syntax
     };
     using SymbolicTokens = std::vector<SymbolicToken>;
 
-    const auto toSymbolic = [](Tokens tokens)
+    const auto toSymbolic = [](std::unordered_map<std::string, SymbolGenerator> generatorMap, Tokens tokens)
     {
         SymbolicTokens symbolic_tokens;
+        symbolic_tokens.reserve(tokens.size());
         for (auto token : tokens)
         {
             std::cout << "Token: " << token.value << " " << token.sub_type << " " << token.type << std::endl;
             auto type = token.type;
-            auto search = generatorMap.find(type); //generatorMap is defined in Symbols
+            auto search = generatorMap.find(type);
             if (search != generatorMap.end())
             {
                 auto symbolic = SymbolicToken(search->second(token.value), token.sub_type, type);
@@ -52,6 +53,7 @@ namespace Syntax
                 std::cout << "Failed to generate type " << token.type << std::endl;
             }
         }
+
         return symbolic_tokens;
     };
 }

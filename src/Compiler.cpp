@@ -4,10 +4,15 @@ int main()
 {
     using namespace Compiler;
 
+    auto expression_parser = inOrder({
+        just("type"),
+        many(inOrder({just("operator"), just("type")}))
+    });
+
     Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
         just("identifier"),
         just("operator"),
-        just("type"),
+        expression_parser,
         just("\n")
     }), Syntax::AssignmentGenerator);
 
@@ -40,7 +45,7 @@ int main()
 
     Lex::Language test_language(term_set, parser_set, statement_parsers);
 
-    auto content         = readFile     ("input.txt");
+    auto content         = readFile     ("../input/input.txt");
     auto tokens          = tokenPass    (content, test_language);
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
@@ -50,7 +55,7 @@ int main()
     {
         std::cout << o << "\n";
     }
-    writeFile(output, "output.cpp");
+    writeFile(output, "../output/output.cpp");
 }
 
 namespace Compiler
@@ -70,7 +75,7 @@ namespace Compiler
         std::vector<SymbolicTokens> symbolic_tokens;
         for (auto token_group : tokens)
         {
-            symbolic_tokens.push_back(toSymbolic(token_group));
+            symbolic_tokens.push_back(toSymbolic(generatorMap, token_group));
         }
         return symbolic_tokens;
     }
