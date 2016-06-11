@@ -16,17 +16,18 @@ int main()
         just("operator"),
         expression_parser,
         just("\n")
-    }), Syntax::AssignmentGenerator);
 
+    }), Syntax::AssignmentGenerator);
 
     Gen::SymbolicStatementParser function_parser = std::make_tuple(inOrderTokenParser<SymbolicToken>({
         typeParser     <SymbolicToken> (just("identifier")),
         dualTypeParser <SymbolicToken> (just("operator"), just("(")),
+        typeParser     <SymbolicToken> (many(just("identifier"))),
         dualTypeParser <SymbolicToken> (just("operator"), just(")")),
         dualTypeParser <SymbolicToken> (just("operator"), just(":")),
         typeParser     <SymbolicToken> (just("\n")),
         dualTypeParser <SymbolicToken> (just("keyword"), just("return")),
-        typeParser     <SymbolicToken> (just("type")),
+        typeParser     <SymbolicToken> (expression_parser),
         typeParser     <SymbolicToken> (just("\n")),
         }), Syntax::FunctionGenerator);
 
@@ -55,7 +56,7 @@ int main()
     auto output = generate(test_language.language_generator, joined_tokens);
     for(auto o : output)
     {
-        std::cout << o << "\n";
+        std::cout << o << std::endl;
     }
     writeFile(output, "../output/output.cpp");
 }

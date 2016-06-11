@@ -1,2 +1,4 @@
 x = 42
 y = 32 + x
+f(x):
+  return x * x

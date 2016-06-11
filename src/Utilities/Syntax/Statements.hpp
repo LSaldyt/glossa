@@ -48,11 +48,8 @@ namespace Syntax
         std::string generator()
         {
             std::string generated = base->representation();
-            std::cout << extensions.size() << std::endl;
             for (auto e : extensions)
             {
-                std::cout << "-" << std::get<0>(e)->representation() << "-" << std::endl;
-                std::cout << "-" << std::get<1>(e)->representation() << "-" << std::endl;
                 generated += (" " + std::get<0>(e)->representation() + " " + std::get<1>(e)->representation());
             }
             return generated;
@@ -81,16 +78,56 @@ namespace Syntax
     struct Function : public Statement
     {
         std::string identifier;
+        std::vector<std::string> argnames;
+        Expression expression;
+
+        Function(std::string set_identifier,
+                 std::vector<std::string> set_argnames,
+                 Expression set_expression) : expression(set_expression)
+        {
+            identifier = set_identifier;
+            argnames   = set_argnames;
+        }
 
         std::string generator()
         {
-            return "int f(int x);";
+            std::string template_line = "template< ";
+            for (auto argname : argnames)
+            {
+                template_line += ("typename T" + argname);
+            }
+            template_line += " >\n";
+            std::string declaration_line = "auto " + identifier + "(";
+            if (argnames.size() > 0)
+            {
+                declaration_line += ("T" + argnames[0] + " " + argnames[0]);
+            }
+            for(unsigned i = 1; i < argnames.size(); i++)
+            {
+                declaration_line += (", T" + argnames[i] + " " + argnames[i]);
+            }
+            std::string return_exp = expression.generator();
+            declaration_line += ") -> decltype(" + return_exp + ")\n{\n    ";
+            std::string return_line = "return " + return_exp + ";\n}\n";
+            return template_line + declaration_line + return_line;
         }
     };
 
     const StatementGenerator FunctionGenerator = [](SymbolicTokens tokens)
     {
-        return std::make_shared<Function>(Function());
+        auto identifier = tokens[0].value->representation();
+        std::vector<std::string> argnames;
+        auto it = tokens.begin() + 2;
+        while(it->value->representation() != ")")
+        {
+            argnames.push_back(it->value->representation());
+            it++;
+        }
+
+        it += 4;
+        auto return_expression = Expression(SymbolicTokens(it, tokens.end()));
+
+        return std::make_shared<Function>(Function(identifier, argnames, return_expression));
     };
 
     const StatementGenerator AssignmentGenerator = [](SymbolicTokens tokens)
