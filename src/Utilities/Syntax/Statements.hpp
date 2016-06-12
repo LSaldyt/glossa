@@ -71,7 +71,7 @@ namespace Syntax
 
         std::string generator()
         {
-            return (type + " " + identifier + " = " + value.generator() + ";");
+            return ("const " + type + " " + identifier + " = " + value.generator() + ";");
         }
     };
 
@@ -91,24 +91,37 @@ namespace Syntax
 
         std::string generator()
         {
-            std::string template_line = "template< ";
-            for (auto argname : argnames)
+            std::string template_line    = "";
+            std::string declaration_line = "";
+            std::string return_exp       = expression.generator();
+            std::string return_line      = "";
+
+            if(identifier == "main" && argnames.size() == 0)
             {
-                template_line += ("typename T" + argname);
+                declaration_line = "int main()\n{\n";
+                return_line = "    print(" + return_exp + ");\n    return 0;\n}";
             }
-            template_line += " >\n";
-            std::string declaration_line = "auto " + identifier + "(";
-            if (argnames.size() > 0)
+            else
             {
-                declaration_line += ("T" + argnames[0] + " " + argnames[0]);
+                template_line = "template< ";
+                for (auto argname : argnames)
+                {
+                    template_line += ("typename T" + argname);
+                }
+                template_line += " >\n";
+                declaration_line = "auto " + identifier + "(";
+                if (argnames.size() > 0)
+                {
+                    declaration_line += ("T" + argnames[0] + " " + argnames[0]);
+                }
+                for(unsigned i = 1; i < argnames.size(); i++)
+                {
+                    declaration_line += (", T" + argnames[i] + " " + argnames[i]);
+                }
+                declaration_line += ") -> decltype(" + return_exp + ")\n{\n    ";
+                return_line = "return " + return_exp + ";\n}\n";
             }
-            for(unsigned i = 1; i < argnames.size(); i++)
-            {
-                declaration_line += (", T" + argnames[i] + " " + argnames[i]);
-            }
-            std::string return_exp = expression.generator();
-            declaration_line += ") -> decltype(" + return_exp + ")\n{\n    ";
-            std::string return_line = "return " + return_exp + ";\n}\n";
+
             return template_line + declaration_line + return_line;
         }
     };

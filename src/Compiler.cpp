@@ -56,7 +56,7 @@ int main()
     auto output = generate(test_language.language_generator, joined_tokens);
     for(auto o : output)
     {
-        std::cout << o << std::endl;
+        std::cout << o << "\n";
     }
     writeFile(output, "../output/output.cpp");
 }
