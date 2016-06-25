@@ -1,35 +1,14 @@
 #include "Compiler.hpp"
 
+
+
 int main()
 {
     using namespace Compiler;
 
-    // auto typeOrIdent = anyOf({just("type"), just("identifier")});
-    //
-    // auto expression_parser = inOrder({
-    //     typeOrIdent,
-    //     many(inOrder({just("operator"), typeOrIdent}))
-    // });
-
-    // Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
-    //     just("identifier"),
-    //     just("operator"),
-    //     expression_parser,
-    //     just("\n")
-    //
-    // }), Syntax::AssignmentGenerator);
-    //
-    // Gen::SymbolicStatementParser function_parser = std::make_tuple(inOrderTokenParser<SymbolicToken>({
-    //     typeParser     <SymbolicToken> (just("identifier")),
-    //     dualTypeParser <SymbolicToken> (just("operator"), just("(")),
-    //     typeParser     <SymbolicToken> (many(just("identifier"))),
-    //     dualTypeParser <SymbolicToken> (just("operator"), just(")")),
-    //     dualTypeParser <SymbolicToken> (just("operator"), just(":")),
-    //     typeParser     <SymbolicToken> (just("\n")),
-    //     dualTypeParser <SymbolicToken> (just("keyword"), just("return")),
-    //     typeParser     <SymbolicToken> (expression_parser),
-    //     typeParser     <SymbolicToken> (just("\n")),
-    //     }), Syntax::FunctionGenerator);
+    SymbolicTokens test_tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("foo")), "", "identifier")};
+    auto result = buildThing(test_tokens);
+    //std::cout << "Thing: " << result.identifier << std::endl;
 
     Terms keywords  = {"return", "test"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};

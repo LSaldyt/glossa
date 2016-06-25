@@ -125,35 +125,4 @@ namespace Syntax
             return template_line + declaration_line + return_line;
         }
     };
-
-    const StatementGenerator FunctionGenerator = [](SymbolicTokens tokens)
-    {
-        auto identifier = tokens[0].value->representation();
-        std::vector<std::string> argnames;
-        auto it = tokens.begin() + 2;
-        while(it->value->representation() != ")")
-        {
-            argnames.push_back(it->value->representation());
-            it++;
-        }
-
-        it += 4;
-        auto return_expression = Expression(SymbolicTokens(it, tokens.end()));
-
-        return std::make_shared<Function>(Function(identifier, argnames, return_expression));
-    };
-
-    const StatementGenerator AssignmentGenerator = [](SymbolicTokens tokens)
-    {
-        auto identifier = tokens[0].value->representation();
-
-        auto type       = tokens[2].sub_type;
-        SymbolicTokens expression_tokens;
-        if (tokens.size() >= 3)
-        {
-            expression_tokens = SymbolicTokens(tokens.begin() + 2, tokens.end() - 1);
-        }
-        return std::make_shared<Assignment>(Assignment(identifier, Expression(expression_tokens), type));
-    };
-
 }

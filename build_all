@@ -1,5 +1,5 @@
 CXX       = g++
-CXXFLAGS  = -c -Wall -std=c++14
+CXXFLAGS  = -c -std=c++14
 LDFLAGS   =
 BDIR      = build
 VPATH     = src src/Utilities/IO src/Utilities/Parse/Base src/Utilities/Lex src/Utilities/Gen src/Utilities/Syntax src/Utilities

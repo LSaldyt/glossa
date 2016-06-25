@@ -6,11 +6,11 @@
 
 namespace Parse
 {
+    using namespace Syntax;
     //Convert a standard parseFunction to one that parses Tokens
-    template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> subTypeParser(ParseFunction parser)
+    std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> subTypeParser(ParseFunction parser)
     {
-        auto parseTokens = [parser](std::vector<TokenType> tokens)
+        auto parseTokens = [parser](std::vector<SymbolicToken> tokens)
         {
             auto terms = Terms();
             terms.reserve(tokens.size());
@@ -22,19 +22,18 @@ namespace Parse
             auto result = parser(terms);
             if(result.result)
             {
-                return TokenResult<TokenType>(true,
-                        std::vector<TokenType>(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        std::vector<TokenType>(tokens.begin() + result.parsed.size(), tokens.end()));
+                return TokenResult<SymbolicToken>(true,
+                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        std::vector<SymbolicToken>(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+            return TokenResult<SymbolicToken>(false, std::vector<SymbolicToken>(), tokens);
         };
         return parseTokens;
     };
 
-    template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> typeParser(ParseFunction parser)
+    std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> typeParser(ParseFunction parser)
     {
-        auto parseTokens = [parser](std::vector<TokenType> tokens)
+        auto parseTokens = [parser](std::vector<SymbolicToken> tokens)
         {
             auto terms = Terms();
             terms.reserve(tokens.size());
@@ -46,50 +45,48 @@ namespace Parse
             auto result = parser(terms);
             if(result.result)
             {
-                return TokenResult<TokenType>(true,
-                        std::vector<TokenType>(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        std::vector<TokenType>(tokens.begin() + result.parsed.size(), tokens.end()));
+                return TokenResult<SymbolicToken>(true,
+                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        std::vector<SymbolicToken>(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+            return TokenResult<SymbolicToken>(false, std::vector<SymbolicToken>(), tokens);
         };
         return parseTokens;
     };
 
-    template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType=true)
+    std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType=true)
     {
-        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](std::vector<TokenType> tokens)
+        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](std::vector<SymbolicToken> tokens)
         {
-            auto typeResult    = typeParser    <TokenType> (typeParserFunc)    (tokens);
-            auto subTypeResult = subTypeParser <TokenType> (subTypeParserFunc) (tokens);
+            auto typeResult    = typeParser    (typeParserFunc)    (tokens);
+            auto subTypeResult = subTypeParser (subTypeParserFunc) (tokens);
             if(typeResult.result && subTypeResult.result)
             {
                 if(byType)
                 {
-                return TokenResult<TokenType>(true,
-                        std::vector<TokenType>(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
-                        std::vector<TokenType>(tokens.begin() + typeResult.parsed.size(), tokens.end()));
+                return TokenResult<SymbolicToken>(true,
+                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
+                        std::vector<SymbolicToken>(tokens.begin() + typeResult.parsed.size(), tokens.end()));
                 }
                 else
                 {
-                return TokenResult<TokenType>(true,
-                        std::vector<TokenType>(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
-                        std::vector<TokenType>(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
+                return TokenResult<SymbolicToken>(true,
+                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
+                        std::vector<SymbolicToken>(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
                 }
             }
-            return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+            return TokenResult<SymbolicToken>(false, std::vector<SymbolicToken>(), tokens);
         };
         return parseTokens;
     };
 
     //inOrder for tokenTypes
-    template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> inOrderTokenParser(std::vector<std::function<TokenResult<TokenType>(std::vector<TokenType>)>> parsers)
+    std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> inOrderTokenParser(std::vector<std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)>> parsers)
     {
-        return [parsers](std::vector<TokenType> original_tokens)
+        return [parsers](std::vector<SymbolicToken> original_tokens)
         {
-            std::vector<TokenType> parsed;
-            std::vector<TokenType> tokens = original_tokens;
+            std::vector<SymbolicToken> parsed;
+            std::vector<SymbolicToken> tokens = original_tokens;
 
             for (auto parser : parsers)
             {
@@ -101,23 +98,22 @@ namespace Parse
                 }
                 else
                 {
-                    return TokenResult<TokenType>(false, std::vector<TokenType>(), tokens);
+                    return TokenResult<SymbolicToken>(false, std::vector<SymbolicToken>(), tokens);
                 }
             }
-            return TokenResult<TokenType>(true, parsed, tokens);
+            return TokenResult<SymbolicToken>(true, parsed, tokens);
         };
     }
 
-    template < typename TokenType >
-    std::function<TokenResult<TokenType>(std::vector<TokenType>)> constructDualTypeParser(std::vector<std::tuple<ParseFunction, ParseFunction>> parser_pairs, bool byType=true)
+    std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> constructDualTypeParser(std::vector<std::tuple<ParseFunction, ParseFunction>> parser_pairs, bool byType=true)
     {
-        auto dual_types = std::vector<std::function<TokenResult<TokenType>(std::vector<TokenType>)>>();
+        auto dual_types = std::vector<std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)>>();
         dual_types.reserve(parser_pairs.size());
         for (auto parser_pair : parser_pairs)
         {
-            dual_types.push_back(dualTypeParser<TokenType>(std::get<0>(parser_pair), std::get<1>(parser_pair), byType));
+            dual_types.push_back(dualTypeParser(std::get<0>(parser_pair), std::get<1>(parser_pair), byType));
         }
-        return inOrderTokenParser<TokenType>(dual_types);
+        return inOrderTokenParser(dual_types);
     }
 
 
