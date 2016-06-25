@@ -6,7 +6,6 @@
 #include "Utilities/Lex/Lex.hpp"
 #include "Utilities/Lex/Seperate.hpp"
 #include "Utilities/Language.hpp"
-#include "Utilities/Gen/Gen.hpp"
 #include <iostream>
 
 namespace Compiler
@@ -14,7 +13,6 @@ namespace Compiler
     using namespace Parse;
     using namespace Lex;
     using namespace Syntax;
-    using namespace Gen;
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);

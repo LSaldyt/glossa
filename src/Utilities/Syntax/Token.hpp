@@ -40,7 +40,6 @@ namespace Syntax
         symbolic_tokens.reserve(tokens.size());
         for (auto token : tokens)
         {
-            std::cout << "Token: " << token.value << " " << token.sub_type << " " << token.type << std::endl;
             auto type = token.type;
             auto search = generatorMap.find(type);
             if (search != generatorMap.end())

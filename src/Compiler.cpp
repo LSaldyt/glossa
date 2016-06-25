@@ -11,32 +11,32 @@ int main()
         many(inOrder({just("operator"), typeOrIdent}))
     });
 
-    Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
-        just("identifier"),
-        just("operator"),
-        expression_parser,
-        just("\n")
-
-    }), Syntax::AssignmentGenerator);
-
-    Gen::SymbolicStatementParser function_parser = std::make_tuple(inOrderTokenParser<SymbolicToken>({
-        typeParser     <SymbolicToken> (just("identifier")),
-        dualTypeParser <SymbolicToken> (just("operator"), just("(")),
-        typeParser     <SymbolicToken> (many(just("identifier"))),
-        dualTypeParser <SymbolicToken> (just("operator"), just(")")),
-        dualTypeParser <SymbolicToken> (just("operator"), just(":")),
-        typeParser     <SymbolicToken> (just("\n")),
-        dualTypeParser <SymbolicToken> (just("keyword"), just("return")),
-        typeParser     <SymbolicToken> (expression_parser),
-        typeParser     <SymbolicToken> (just("\n")),
-        }), Syntax::FunctionGenerator);
+    // Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
+    //     just("identifier"),
+    //     just("operator"),
+    //     expression_parser,
+    //     just("\n")
+    //
+    // }), Syntax::AssignmentGenerator);
+    //
+    // Gen::SymbolicStatementParser function_parser = std::make_tuple(inOrderTokenParser<SymbolicToken>({
+    //     typeParser     <SymbolicToken> (just("identifier")),
+    //     dualTypeParser <SymbolicToken> (just("operator"), just("(")),
+    //     typeParser     <SymbolicToken> (many(just("identifier"))),
+    //     dualTypeParser <SymbolicToken> (just("operator"), just(")")),
+    //     dualTypeParser <SymbolicToken> (just("operator"), just(":")),
+    //     typeParser     <SymbolicToken> (just("\n")),
+    //     dualTypeParser <SymbolicToken> (just("keyword"), just("return")),
+    //     typeParser     <SymbolicToken> (expression_parser),
+    //     typeParser     <SymbolicToken> (just("\n")),
+    //     }), Syntax::FunctionGenerator);
 
     Terms keywords  = {"return", "test"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
 
     Gen::SymbolicStatementParsers statement_parsers;
-    statement_parsers.push_back(assign_parser);
-    statement_parsers.push_back(function_parser);
+    //statement_parsers.push_back(assign_parser);
+    //statement_parsers.push_back(function_parser);
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));
@@ -53,12 +53,17 @@ int main()
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
-    auto output = generate(test_language.language_generator, joined_tokens);
-    for(auto o : output)
+    for(auto jt : joined_tokens)
     {
-        std::cout << o << "\n";
+        std::cout << jt.type << std::endl;
     }
-    writeFile(output, "../output/output.cpp");
+
+    //auto output = generate(test_language.language_generator, joined_tokens);
+    //for(auto o : output)
+    //{
+    //    std::cout << o << "\n";
+  //  }
+    //writeFile(output, "../output/output.cpp");
 }
 
 namespace Compiler

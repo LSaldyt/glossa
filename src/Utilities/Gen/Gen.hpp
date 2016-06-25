@@ -4,8 +4,4 @@
 
 namespace Gen
 {
-    std::vector<std::string> generate(const Generator& generator, const SymbolicTokens& tokens);
-
-    Generator makeGenerator(const SymbolicStatementParser&);
-    Generator firstOf(const std::vector<Generator>& generators);
 }
