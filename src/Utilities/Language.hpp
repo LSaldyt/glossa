@@ -1,6 +1,5 @@
 #pragma once
 #include "Lex/Seperate.hpp"
-#include "Gen/Gen.hpp"
 
 namespace Lex
 {
@@ -28,11 +27,9 @@ namespace Lex
 
         LanguageTermSets language_term_sets;
         LanguageParsers  language_parsers;
-        Gen::Generator   language_generator;
 
         Language(const LanguageTermSets& set_term_sets,
-                 const LanguageParsers&  set_language_parsers,
-                 const Gen::SymbolicStatementParsers& statement_parsers)
+                 const LanguageParsers&  set_language_parsers)
         {
             language_term_sets = set_term_sets;
 
@@ -51,15 +48,7 @@ namespace Lex
             }
 
             language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
-            
-            std::vector<Gen::Generator> generators;
-            generators.reserve(statement_parsers.size());
-            for (auto s_parser : statement_parsers)
-            {
-                generators.push_back(Gen::makeGenerator(s_parser));
-            }
 
-            language_generator = Gen::firstOf(generators);
         }
 
         std::tuple<Token, Terms> identify(Terms terms) const

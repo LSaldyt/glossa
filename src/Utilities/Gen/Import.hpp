@@ -5,7 +5,7 @@
 namespace Gen
 {
     using namespace Syntax;
-    using SymbolicTokenParser      = std::function<TokenResult<SymbolicToken>(SymbolicTokens)>;
-    using SymbolicStatementParser  = std::tuple<SymbolicTokenParser, StatementGenerator>;
-    using SymbolicStatementParsers = std::vector<SymbolicStatementParser>;
+    using namespace Parse;
+
+    using SymbolicTokenParser = std::function<TokenResult<SymbolicToken>(SymbolicTokens)>;
 }

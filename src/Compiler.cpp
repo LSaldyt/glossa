@@ -4,12 +4,12 @@ int main()
 {
     using namespace Compiler;
 
-    auto typeOrIdent = anyOf({just("type"), just("identifier")});
-
-    auto expression_parser = inOrder({
-        typeOrIdent,
-        many(inOrder({just("operator"), typeOrIdent}))
-    });
+    // auto typeOrIdent = anyOf({just("type"), just("identifier")});
+    //
+    // auto expression_parser = inOrder({
+    //     typeOrIdent,
+    //     many(inOrder({just("operator"), typeOrIdent}))
+    // });
 
     // Gen::SymbolicStatementParser assign_parser = std::make_tuple(makeTypeParser({
     //     just("identifier"),
@@ -34,10 +34,6 @@ int main()
     Terms keywords  = {"return", "test"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
 
-    Gen::SymbolicStatementParsers statement_parsers;
-    //statement_parsers.push_back(assign_parser);
-    //statement_parsers.push_back(function_parser);
-
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
@@ -46,7 +42,7 @@ int main()
     parser_set.push_back(LanguageParser(Parse::digits, "int", "type"));
     parser_set.push_back(LanguageParser(Parse::alphas, "", "identifier"));
 
-    Lex::Language test_language(term_set, parser_set, statement_parsers);
+    Lex::Language test_language(term_set, parser_set);
 
     auto content         = readFile     ("../input/input.txt");
     auto tokens          = tokenPass    (content, test_language);
@@ -55,15 +51,8 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << jt.type << std::endl;
+        std::cout << jt.type << " " << jt.sub_type << std::endl;
     }
-
-    //auto output = generate(test_language.language_generator, joined_tokens);
-    //for(auto o : output)
-    //{
-    //    std::cout << o << "\n";
-  //  }
-    //writeFile(output, "../output/output.cpp");
 }
 
 namespace Compiler
