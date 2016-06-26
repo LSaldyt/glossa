@@ -34,19 +34,4 @@ namespace Compiler
         using namespace Syntax;
         return typeParser(inOrder(functions));
     };
-
-    struct Thing : public Statement
-    {
-        std::string identifier;
-    };
-
-    const auto identifierParser = typeParser(just("identifier"));
-    const auto getRepr          = [](SymbolicTokens s){return s[0].value->representation();};
-
-    StatementResult buildThing(SymbolicTokens& tokens)
-    {
-        Thing thing;
-        std::tuple<bool, SymbolicTokens> result = bind(thing.identifier, from<std::string>(identifierParser, tokens, getRepr));
-        return StatementResult(std::get<0>(result), std::get<1>(result), std::make_shared<Thing>(thing));
-    }
 }

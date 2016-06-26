@@ -15,35 +15,35 @@ namespace Syntax
     {
         std::shared_ptr<Symbol> base;
         std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> extensions;
-        Expression(std::shared_ptr<Symbol> set_base,
-                   std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> set_extensions)
+        Expression(std::shared_ptr<Symbol> set_base=std::make_shared<Symbol>(Integer(0)),
+                   std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> set_extensions=std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>())
         {
             base = set_base;
             extensions = set_extensions;
         }
 
-        Expression(SymbolicTokens tokens)
-        {
-            auto it = tokens.begin();
-            if (it != tokens.end())
-            {
-                base = it->value;
-            }
-            it++;
-            while(it != tokens.end())
-            {
-                if(it + 1 != tokens.end())
-                {
-                    extensions.push_back(std::make_tuple(it->value, (it+1)->value));
-                    it++;
-                }
-                else
-                {
-                    break;
-                }
-                it++;
-            }
-        }
+        // Expression(SymbolicTokens tokens)
+        // {
+        //     auto it = tokens.begin();
+        //     if (it != tokens.end())
+        //     {
+        //         base = it->value;
+        //     }
+        //     it++;
+        //     while(it != tokens.end())
+        //     {
+        //         if(it + 1 != tokens.end())
+        //         {
+        //             extensions.push_back(std::make_tuple(it->value, (it+1)->value));
+        //             it++;
+        //         }
+        //         else
+        //         {
+        //             break;
+        //         }
+        //         it++;
+        //     }
+        // }
 
         std::string generator()
         {
@@ -61,9 +61,9 @@ namespace Syntax
         std::string identifier;
         Expression value;
         std::string type;
-        Assignment(std::string set_identifier,
-                   Expression set_value,
-                   std::string set_type) : value(set_value)
+        Assignment(std::string set_identifier="",
+                   Expression set_value=Expression(),
+                   std::string set_type="") : value(set_value)
         {
             identifier = set_identifier;
             type       = set_type;

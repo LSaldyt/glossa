@@ -1,14 +1,10 @@
 #include "Compiler.hpp"
-
+#include "ToStatements.hpp"
 
 
 int main()
 {
     using namespace Compiler;
-
-    SymbolicTokens test_tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("foo")), "", "identifier")};
-    auto result = buildThing(test_tokens);
-    //std::cout << "Thing: " << result.identifier << std::endl;
 
     Terms keywords  = {"return", "test"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
@@ -30,8 +26,10 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << jt.type << " " << jt.sub_type << std::endl;
+        std::cout << jt.type << "  " << jt.sub_type << std::endl;
     }
+
+    auto statementResult = buildAssignment(joined_tokens);
 }
 
 namespace Compiler

@@ -64,7 +64,7 @@ namespace Syntax
     struct Identifier : public Symbol
     {
         std::string name;
-        Identifier(std::string set_name)
+        Identifier(std::string set_name="")
         {
             name = set_name;
         }
