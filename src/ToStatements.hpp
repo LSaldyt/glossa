@@ -4,6 +4,15 @@ namespace Compiler
 {
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicTokens s){return s[0].value->representation();};
+    const auto getReprs         = [](SymbolicTokens tokens)
+        {
+            std::vector<std::string> strings;
+            for (auto t : tokens)
+            {
+                strings.push_back(getRepr(t));
+            }
+            return strings;
+        };
 
     const auto typeOrIdent = anyOf({just("type"), just("identifier")});
     const auto expression_parser = inOrder({
@@ -50,17 +59,28 @@ namespace Compiler
         return std::make_tuple(true, e);
     }
 
-    const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){ return tokens[0].value->representation(); });
+    const auto genIdent = builder<std::string>(typeParser(just("identifier")), getRepr; })
 
     StatementResult buildAssignment(SymbolicTokens& tokens)
     {
         Assignment a;
         std::vector<bool> results;
         results.push_back(bindTo<std::string>(a.identifier, genIdent, tokens));
-        results.push_back(advance(typeParser(wildcard), tokens));
+        results.push_back(advance(subTypeParser(just("=")), tokens));
         results.push_back(bindTo<Expression>(a.value, buildExpression, tokens));
         auto result = check_results(results);
         return StatementResult(result, tokens, std::make_shared<Assignment>(a));
     }
 
+    const auto byCommas     = subTypeParser(sepBy([](std::string s){return s == ",";});
+    const auto commaSepList = builder<std::vector<std::string>>(byCommas, getReprs)));
+
+    StatementResult buildFunction(SymbolicTokens& tokens)
+    {
+        Function f;
+        std::vector<bool> results;
+        results.push_back(bindTo<std::string>(f.identifier, genIdent, tokens));
+        results.push_back(bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens));
+        results.push_back(bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, ,tokens))
+    }
 }

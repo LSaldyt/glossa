@@ -51,9 +51,10 @@ namespace Syntax
 
     struct Function : public Statement
     {
-        std::string identifier;
-        std::vector<std::string> argnames;
-        Expression expression;
+        std::string                              identifier;
+        std::vector<std::string>                 argnames;
+        std::vector<std::shared_ptr<Statement>>  body;
+        Expression                               return_expr;
 
         Function(std::string set_identifier,
                  std::vector<std::string> set_argnames,
