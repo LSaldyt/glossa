@@ -26,10 +26,19 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << jt.type << "  " << jt.sub_type << std::endl;
+        std::cout << jt.type << " " << jt.sub_type << std::endl;
     }
 
     auto statementResult = buildAssignment(joined_tokens);
+
+    std::vector<std::string> output;
+    if (statementResult.result)
+    {
+        print(statementResult.statement->generator());
+        output.push_back(statementResult.statement->generator());
+    }
+
+    writeFile(output, "../output/output.cpp");
 }
 
 namespace Compiler

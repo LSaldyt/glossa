@@ -22,29 +22,6 @@ namespace Syntax
             extensions = set_extensions;
         }
 
-        // Expression(SymbolicTokens tokens)
-        // {
-        //     auto it = tokens.begin();
-        //     if (it != tokens.end())
-        //     {
-        //         base = it->value;
-        //     }
-        //     it++;
-        //     while(it != tokens.end())
-        //     {
-        //         if(it + 1 != tokens.end())
-        //         {
-        //             extensions.push_back(std::make_tuple(it->value, (it+1)->value));
-        //             it++;
-        //         }
-        //         else
-        //         {
-        //             break;
-        //         }
-        //         it++;
-        //     }
-        // }
-
         std::string generator()
         {
             std::string generated = base->representation();
@@ -60,18 +37,15 @@ namespace Syntax
     {
         std::string identifier;
         Expression value;
-        std::string type;
         Assignment(std::string set_identifier="",
-                   Expression set_value=Expression(),
-                   std::string set_type="") : value(set_value)
+                   Expression set_value=Expression()) : value(set_value)
         {
             identifier = set_identifier;
-            type       = set_type;
         }
 
         std::string generator()
         {
-            return ("const " + type + " " + identifier + " = " + value.generator() + ";");
+            return ("const auto " + identifier + " = " + value.generator() + ";");
         }
     };
 

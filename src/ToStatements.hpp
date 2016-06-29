@@ -11,7 +11,19 @@ namespace Compiler
            many(inOrder({just("operator"), typeOrIdent}))
     });
 
-    Expression buildExpression(SymbolicTokens& tokens)
+    const auto check_results = [](std::vector<bool> results)
+    {
+        for (auto r : results)
+        {
+            if (! r)
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
         Expression e;
 
@@ -35,21 +47,20 @@ namespace Compiler
             it++;
         }
         tokens = SymbolicTokens(tokens.begin() + e.extensions.size() + 1, tokens.end());
+        return std::make_tuple(true, e);
     }
-
-//    template < typename T >
-//    std::function<std::tuple<bool, T>(SymbolicTokens)> from (std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
-
-//    template < typename T >
-//    bool bind(T &t, std::function<std::tuple<bool, T>(SymbolicTokens)> typeGenerator, SymbolicTokens tokens)
 
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){ return tokens[0].value->representation(); });
 
     StatementResult buildAssignment(SymbolicTokens& tokens)
     {
         Assignment a;
-        auto result = bindTo<std::string>(a.identifier, genIdent, tokens);
-        std::cout << result << std::endl;
+        std::vector<bool> results;
+        results.push_back(bindTo<std::string>(a.identifier, genIdent, tokens));
+        results.push_back(advance(typeParser(wildcard), tokens));
+        results.push_back(bindTo<Expression>(a.value, buildExpression, tokens));
+        auto result = check_results(results);
+        return StatementResult(result, tokens, std::make_shared<Assignment>(a));
     }
 
 }
