@@ -269,7 +269,7 @@ namespace Parse
             }
             return Result(true, parsed, Terms(terms.begin() + parsed.size(), terms.end()));
         };
-    }
+    };
 
     //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters
     const auto digits = singleTemplate(is_digits);

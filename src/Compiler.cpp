@@ -29,7 +29,7 @@ int main()
         std::cout << jt.type << " " << jt.sub_type << std::endl;
     }
 
-    auto statementResult = buildAssignment(joined_tokens);
+    auto statementResult = buildFunction(joined_tokens);
 
     std::vector<std::string> output;
     if (statementResult.result)

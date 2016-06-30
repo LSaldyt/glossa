@@ -15,11 +15,9 @@ namespace Syntax
     {
         std::shared_ptr<Symbol> base;
         std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> extensions;
-        Expression(std::shared_ptr<Symbol> set_base=std::make_shared<Symbol>(Integer(0)),
-                   std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> set_extensions=std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>())
+        Expression() : base(std::make_shared<Symbol>(Integer(0))),
+                       extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>())
         {
-            base = set_base;
-            extensions = set_extensions;
         }
 
         std::string generator()
@@ -37,11 +35,6 @@ namespace Syntax
     {
         std::string identifier;
         Expression value;
-        Assignment(std::string set_identifier="",
-                   Expression set_value=Expression()) : value(set_value)
-        {
-            identifier = set_identifier;
-        }
 
         std::string generator()
         {
@@ -51,51 +44,47 @@ namespace Syntax
 
     struct Function : public Statement
     {
-        std::string                              identifier;
-        std::vector<std::string>                 argnames;
-        std::vector<std::shared_ptr<Statement>>  body;
-        Expression                               return_expr;
+        std::string                identifier;
+        std::vector<std::string>   argnames;
+        std::shared_ptr<Statement> body;
 
-        Function(std::string set_identifier,
-                 std::vector<std::string> set_argnames,
-                 Expression set_expression) : expression(set_expression)
+        Function() : body(std::make_shared<Statement>(Expression()))
         {
-            identifier = set_identifier;
-            argnames   = set_argnames;
+
         }
 
         std::string generator()
         {
             std::string template_line    = "";
             std::string declaration_line = "";
-            std::string return_exp       = expression.generator();
+            // std::string return_exp       = expression.generator();
             std::string return_line      = "";
 
-            if(identifier == "main" && argnames.size() == 0)
-            {
-                declaration_line = "int main()\n{\n";
-                return_line = "    print(" + return_exp + ");\n    return 0;\n}";
-            }
-            else
-            {
-                template_line = "template< ";
-                for (auto argname : argnames)
-                {
-                    template_line += ("typename T" + argname);
-                }
-                template_line += " >\n";
-                declaration_line = "auto " + identifier + "(";
-                if (argnames.size() > 0)
-                {
-                    declaration_line += ("T" + argnames[0] + " " + argnames[0]);
-                }
-                for(unsigned i = 1; i < argnames.size(); i++)
-                {
-                    declaration_line += (", T" + argnames[i] + " " + argnames[i]);
-                }
-                declaration_line += ") -> decltype(" + return_exp + ")\n{\n    ";
-                return_line = "return " + return_exp + ";\n}\n";
-            }
+            // if(identifier == "main" && argnames.size() == 0)
+            // {
+            //     declaration_line = "int main()\n{\n";
+            //     return_line = "    print(" + return_exp + ");\n    return 0;\n}";
+            // }
+            // else
+            // {
+            //     template_line = "template< ";
+            //     for (auto argname : argnames)
+            //     {
+            //         template_line += ("typename T" + argname);
+            //     }
+            //     template_line += " >\n";
+            //     declaration_line = "auto " + identifier + "(";
+            //     if (argnames.size() > 0)
+            //     {
+            //         declaration_line += ("T" + argnames[0] + " " + argnames[0]);
+            //     }
+            //     for(unsigned i = 1; i < argnames.size(); i++)
+            //     {
+            //         declaration_line += (", T" + argnames[i] + " " + argnames[i]);
+            //     }
+            //     declaration_line += ") -> decltype(" + return_exp + ")\n{\n    ";
+            //     return_line = "return " + return_exp + ";\n}\n";
+            // }
 
             return template_line + declaration_line + return_line;
         }
