@@ -1,12 +1,12 @@
 #pragma once
-#include "Utilities/IO/IO.hpp"
-#include "Utilities/Parse/Parse.hpp"
-#include "Utilities/Syntax/Symbols.hpp"
-#include "Utilities/Syntax/Token.hpp"
-#include "Utilities/Lex/Lex.hpp"
-#include "Utilities/Lex/Seperate.hpp"
-#include "Utilities/Language.hpp"
-#include "Utilities/Gen/Gen.hpp"
+#include "IO/IO.hpp"
+#include "Parse/Parse.hpp"
+#include "Syntax/Symbols.hpp"
+#include "Syntax/Token.hpp"
+#include "Lex/Lex.hpp"
+#include "Lex/Seperate.hpp"
+#include "Language.hpp"
+#include "Gen/Gen.hpp"
 #include <iostream>
 #include <tuple>
 

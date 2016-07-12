@@ -32,32 +32,51 @@ namespace Compiler
         return true;
     };
 
-    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
+    template <typename T>
+    std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
     {
-        std::cout << "Building Expression" << std::endl;
-        Expression e;
+        std::cout << "Beginning toPairs" << std::endl;
+        std::vector<std::tuple<T, T>> pairs;
 
-        auto it = tokens.begin();
-        if (it != tokens.end())
+        auto it = items.begin();
+        while(it != items.end())
         {
-            e.base = it->value;
-        }
-        it++;
-        while(it != tokens.end())
-        {
-            if(it + 1 != tokens.end())
+            if(it + 1 != items.end())
             {
-                e.extensions.push_back(std::make_tuple(it->value, (it+1)->value));
-                it++;
+                pairs.push_back(std::make_tuple(*it, *(it+1)));
+                it += 2; //Iterate two items at a time
             }
             else
             {
                 break;
             }
-            it++;
         }
-        tokens = SymbolicTokens(tokens.begin() + e.extensions.size() + 1, tokens.end());
-        return std::make_tuple(true, e);
+        std::cout << "Ending toPairs" << std::endl;
+        return pairs;
+    }
+
+    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
+    {
+        std::cout << "Building Expression" << std::endl;
+        Expression e;
+
+        if (tokens.size() > 0)
+        {
+            e.base = tokens.begin()->value;
+            auto pairs = toPairs(SymbolicTokens(tokens.begin() + 1, tokens.end())); 
+            //Convert symbolic token pairs to only their symbol values
+            for (auto pair : pairs)
+            {
+                e.extensions.push_back(std::make_tuple(std::get<0>(pair).value,
+                                                       std::get<1>(pair).value));
+            }
+            tokens = SymbolicTokens(tokens.begin() + e.extensions.size() + 1, tokens.end());
+            return std::make_tuple(true, e);
+        }
+        else
+        {
+            return std::make_tuple(false, e);
+        }
     }
 
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});

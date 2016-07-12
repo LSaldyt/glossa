@@ -26,7 +26,7 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << jt.type << " " << jt.sub_type << std::endl;
+        std::cout << jt.type << "  " << jt.sub_type << std::endl;
     }
 
     auto statementResult = buildFunction(joined_tokens);
