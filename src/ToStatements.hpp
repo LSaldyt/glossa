@@ -34,6 +34,7 @@ namespace Compiler
 
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
+        std::cout << "Building Expression" << std::endl;
         Expression e;
 
         auto it = tokens.begin();

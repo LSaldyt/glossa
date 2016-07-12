@@ -18,6 +18,7 @@ namespace Syntax
         Expression() : base(std::make_shared<Symbol>(Integer(0))),
                        extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>())
         {
+            std::cout << "Expression Construction Finished" << std::endl;
         }
 
         std::string generator()
