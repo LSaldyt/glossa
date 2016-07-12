@@ -5,7 +5,6 @@ BDIR      = build
 VPATH     = src src/IO src/Parse/Base src/Lex src/Gen src/Syntax
 SOURCES   = Compiler.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lex.cpp Gen.cpp
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
-# OBJECTS   =
 EXECUTABLE= $(BDIR)/Compiler
 
 all: $(SOURCES) $(EXECUTABLE)

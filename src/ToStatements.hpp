@@ -2,6 +2,7 @@
 
 namespace Compiler
 {
+    using namespace Parse;
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)

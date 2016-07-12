@@ -6,19 +6,7 @@ namespace Gen
 {
     using StatementParser     = std::function<StatementResult(SymbolicTokens)>;
 
-    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens)
-    {
-        auto result = function(tokens);
-        if (!result.result)
-        {
-            return false;
-        }
-        else
-        {
-            tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
-            return true;
-        }
-    }
+    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens);
 
     template < typename T >
     std::function<std::tuple<bool, T>(SymbolicTokens&)> builder (std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
