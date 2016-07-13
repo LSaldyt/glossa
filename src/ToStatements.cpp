@@ -2,9 +2,9 @@
 
 namespace Compiler
 {
+
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
-        std::cout << "Building Expression" << std::endl;
         Expression e;
 
         if (tokens.size() > 0)
@@ -45,6 +45,7 @@ namespace Compiler
         results.push_back(advance(subTypeParser(just("(")), tokens));
         results.push_back(bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens));
         results.push_back(advance(subTypeParser(just(")")), tokens));
+        results.push_back(advance(subTypeParser(just(":")), tokens));
         results.push_back(advance(subTypeParser(just("\n")), tokens));
         auto assignresult = buildAssignment(tokens);
         results.push_back(assignresult.result);

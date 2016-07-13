@@ -28,7 +28,6 @@ namespace Gen
     template < typename T >
     bool bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
     {
-        std::cout << "Binding" << std::endl;
         auto result = typeGenerator(tokens);
         if (! std::get<0>(result))
         {

@@ -144,30 +144,12 @@ namespace Parse
         return multiTemplate(consumer);
     };
 
-    const auto sepBy  = [](Comparator seperator)
+    const auto sepBy = [](ParseFunction parser)
     {
-        return [seperator](Terms terms)
-        {
-            Terms parsed;
-            auto seperated_last = false;
-            for (auto term : terms)
-            {
-                if (! seperator(term))
-                {
-                    parsed.push_back(term);
-                    seperated_last = false;
-                }
-                else
-                {
-                    if (seperated_last)
-                    {
-                        break;
-                    }
-                    seperated_last = true;
-                }
-            }
-            return Result(true, parsed, Terms(terms.begin() + parsed.size(), terms.end()));
-        };
+        return inOrder({
+        wildcard,
+        many(inOrder({parser, wildcard}))
+        });
     };
 
     //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters

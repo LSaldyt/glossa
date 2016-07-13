@@ -7,7 +7,7 @@ int main()
     using namespace Compiler;
 
     Terms keywords  = {"return", "test"};
-    Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":"};
+    Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":", ","};
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));
@@ -15,7 +15,7 @@ int main()
 
     Lex::LanguageParsers  parser_set;
     parser_set.push_back(LanguageParser(Parse::digits, "int", "type"));
-    parser_set.push_back(LanguageParser(Parse::alphas, "", "identifier"));
+    parser_set.push_back(LanguageParser(Parse::alphas, "identifier", "identifier"));
 
     Lex::Language test_language(term_set, parser_set);
 
@@ -26,7 +26,7 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << jt.type << " " << jt.sub_type << std::endl;
+        std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
     }
 
     auto statementResult = buildFunction(joined_tokens);

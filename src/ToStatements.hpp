@@ -56,16 +56,13 @@ namespace Compiler
         return pairs;
     }
 
+    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), getReprs);
+
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
 
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
-
-    const auto byCommas     = subTypeParser(sepBy([](std::string s){return s == ",";}));
-    const auto commaSepList = builder<std::vector<std::string>>(byCommas, getReprs);
-
     const auto buildStatement = [](StatementResult r){ return std::make_tuple(r.result, r.statement); };
 
     StatementResult buildAssignment(SymbolicTokens& tokens);
-
     StatementResult buildFunction(SymbolicTokens& tokens);
 }
