@@ -33,6 +33,27 @@ namespace Compiler
         return true;
     };
 
+    const auto everyOther = [](std::vector<std::string> terms)
+    {
+        std::vector<std::string> every_other;
+        for (int i = 0; i < terms.size(); i++)
+        {
+            if (i % 2 == 0)
+            {
+                every_other.push_back(terms[i]);
+            }
+        }
+        return every_other;
+    };
+
+    const auto compose = [](auto f, auto g)
+    {
+        return [f, g](auto x){ return f(g(x)); };
+    };
+
+    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), compose(everyOther, getReprs));
+    const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
+
     template <typename T>
     std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
     {
@@ -56,31 +77,15 @@ namespace Compiler
         return pairs;
     }
 
-    const auto everyOther = [](std::vector<std::string> terms)
-    {
-        std::vector<std::string> every_other;
-        for (int i = 0; i < terms.size(); i++)
-        {
-            if (i % 2 == 0)
-            {
-                every_other.push_back(terms[i]);
-            }
-        }
-        return every_other;
-    };
-
-    const auto compose = [](auto f, auto g)
-    {
-        return [f, g](auto x){ return f(g(x)); };
-    };
-
-    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), compose(everyOther, getReprs));
-
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
-
-    const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
-    const auto buildStatement = [](StatementResult r){ return std::make_tuple(r.result, r.statement); };
 
     StatementResult buildAssignment(SymbolicTokens& tokens);
     StatementResult buildFunction(SymbolicTokens& tokens);
+
+    const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
+    {
+        buildAssignment, buildFunction
+    };
+
+    std::tuple<bool, std::shared_ptr<Statement>> buildStatement(SymbolicTokens& tokens);
 }

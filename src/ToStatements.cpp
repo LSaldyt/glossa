@@ -2,6 +2,21 @@
 
 namespace Compiler
 {
+    //Used to create meta statements, ex functions inside of functions
+    std::tuple<bool, std::shared_ptr<Statement>> buildStatement(SymbolicTokens& tokens)
+    {
+        for (auto statementBuilder : statementBuilders)
+        {
+            SymbolicTokens tokens_copy(tokens);
+            auto result = statementBuilder(tokens_copy);
+            if (result.result)
+            {
+                tokens = tokens_copy;
+                return std::make_tuple(true, result.statement); 
+            }
+        }
+        return std::make_tuple(false, std::make_shared<Statement>(Statement()));
+    }
 
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
@@ -51,9 +66,7 @@ namespace Compiler
         results.push_back(advance(subTypeParser(just(")")), tokens));
         results.push_back(advance(subTypeParser(just(":")), tokens));
         results.push_back(advance(subTypeParser(just("\n")), tokens));
-        auto assignresult = buildAssignment(tokens);
-        results.push_back(assignresult.result);
-        f.body = assignresult.statement;
+        results.push_back(bindTo<std::shared_ptr<Statement>>(f.body, buildStatement, tokens));
         auto result = check_results(results);
         for (auto r : results)
         {

@@ -43,6 +43,6 @@ namespace Syntax
             }
         }
 
-        return "const auto " + identifier + " [=](" + args + "){" + body->generator() + "}";
+        return "const auto " + identifier + " = [=](" + args + "){" + body->generator() + "};";
     }
 }
