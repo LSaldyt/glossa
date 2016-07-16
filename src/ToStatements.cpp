@@ -44,6 +44,10 @@ namespace Compiler
         results.push_back(bindTo<std::string>(f.identifier, genIdent, tokens));
         results.push_back(advance(subTypeParser(just("(")), tokens));
         results.push_back(bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens));
+        for (auto t : tokens)
+        {
+            std::cout << "Remaining " << t.type << std::endl;
+        }
         results.push_back(advance(subTypeParser(just(")")), tokens));
         results.push_back(advance(subTypeParser(just(":")), tokens));
         results.push_back(advance(subTypeParser(just("\n")), tokens));
@@ -51,6 +55,10 @@ namespace Compiler
         results.push_back(assignresult.result);
         f.body = assignresult.statement;
         auto result = check_results(results);
+        for (auto r : results)
+        {
+            std::cout << r << std::endl;
+        }
         return StatementResult(result, tokens, std::make_shared<Function>(f));
     }
 }

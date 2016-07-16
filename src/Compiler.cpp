@@ -37,6 +37,10 @@ int main()
         print(statementResult.statement->generator());
         output.push_back(statementResult.statement->generator());
     }
+    else
+    {
+        print("ERROR - Function template did not match syntax");
+    }
 
     writeFile(output, "../output/output.cpp");
 }

@@ -56,7 +56,25 @@ namespace Compiler
         return pairs;
     }
 
-    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), getReprs);
+    const auto everyOther = [](std::vector<std::string> terms)
+    {
+        std::vector<std::string> every_other;
+        for (int i = 0; i < terms.size(); i++)
+        {
+            if (i % 2 == 0)
+            {
+                every_other.push_back(terms[i]);
+            }
+        }
+        return every_other;
+    };
+
+    const auto compose = [](auto f, auto g)
+    {
+        return [f, g](auto x){ return f(g(x)); };
+    };
+
+    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), compose(everyOther, getReprs));
 
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
 

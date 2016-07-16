@@ -1,7 +1,6 @@
 #pragma once
 #include "Symbols.hpp"
 #include "Token.hpp"
-
 namespace Syntax
 {
 
@@ -56,7 +55,18 @@ namespace Syntax
 
         std::string generator()
         {
-            return identifier;
+            std::string args = "";
+            for (int i =0; i < argnames.size(); i++)
+            { 
+                std::cout << "Argname: " << argnames[i] << std::endl;
+                args += ("auto " + argnames[i]);
+                if (i+1 != argnames.size()) //If not on last iteration
+                {
+                    args += ", ";
+                }
+            }
+  
+            return "const auto " + identifier + " [=](" + args + "){" + body->generator() + "}";
         }
     };
 }
