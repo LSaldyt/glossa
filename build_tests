@@ -4,8 +4,9 @@ LDFLAGS   =
 BDIR      = tests/build
 VPATH     = tests src src/IO src/Parse/Base src/Lex src/Gen  src/Syntax src/Parse
 SOURCES   = parse_tests.cpp Seperate.cpp suite.cpp Locale.cpp Templates.cpp \
-			Lex.cpp parse_math.cpp Gen.cpp token_parse_tests.cpp\
-			lex_tests.cpp Parse.cpp ToStatements.cpp
+			Lex.cpp parse_math.cpp Gen.cpp token_parse_tests.cpp \
+			lex_tests.cpp Parse.cpp ToStatements.cpp Language.cpp \
+                        StatementResult.cpp Statements.cpp
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
 # OBJECTS   =
 EXECUTABLE= $(BDIR)/suite
