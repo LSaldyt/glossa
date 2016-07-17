@@ -1,1 +1,3 @@
-const auto f = [=](auto x, auto y){const auto g = [=](auto z){const auto w = x + y + z;};};
+const auto f = [=](auto x, auto y){ return x * y 
+ 
+; };

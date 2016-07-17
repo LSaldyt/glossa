@@ -87,5 +87,6 @@ namespace Compiler
         buildAssignment, buildFunction
     };
 
-    std::tuple<bool, std::shared_ptr<Statement>> buildStatement(SymbolicTokens& tokens);
+    std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
+    std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
 }

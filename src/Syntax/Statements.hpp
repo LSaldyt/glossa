@@ -33,9 +33,10 @@ namespace Syntax
     {
         Function();
 
-        std::string                identifier;
-        std::vector<std::string>   argnames;
-        std::shared_ptr<Statement> body;
+        std::string                             identifier;
+        std::vector<std::string>                argnames;
+        std::vector<std::shared_ptr<Statement>> body;
+        Expression                              return_expression;
 
         std::string generator();
     };
