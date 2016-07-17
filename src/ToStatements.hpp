@@ -57,7 +57,6 @@ namespace Compiler
     template <typename T>
     std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
     {
-        std::cout << "Beginning toPairs" << std::endl;
         std::vector<std::tuple<T, T>> pairs;
 
         auto it = items.begin();
@@ -73,7 +72,6 @@ namespace Compiler
                 break;
             }
         }
-        std::cout << "Ending toPairs" << std::endl;
         return pairs;
     }
 

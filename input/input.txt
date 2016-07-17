@@ -1,3 +1,4 @@
 f(x, y):
-    return x * y
-
+  g(z):
+    return z
+  return x * y
