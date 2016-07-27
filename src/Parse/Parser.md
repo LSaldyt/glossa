@@ -38,7 +38,7 @@
     
 ##### The `Parse` module is the basis of the `Lexer` module, as a `Lexer` will take a list of symbols and a parser, parsing a sentence and pairing the appropriate terms with the appropriate symbols. However, the `tokenParser` function converts a string parser to one that parses a list of tokens, which would be returned from a `Lexer`
 
-### `ParseFunctions` can be created by the used either from scratch or from a set of templates:
+### `ParseFunctions` can be created by the user either from scratch or from a set of templates:
 
     using Consumer        = std::function<Consumed(Terms)>;
     using Comparator      = std::function<bool(Term)>;
