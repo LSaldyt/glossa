@@ -12,19 +12,19 @@ Currently:
 
 The existing compiler can convert something like:
 
-f(x, y):
-    g(z):
-        return z * z
-    return g
+    f(x, y):
+        g(z):
+            return z * z
+        return g
 
 Into:
-    
-const auto f = [=](auto x, auto y){
-    const auto g = [=](auto z){
-            return x * z + y;
-        };
-     return g;
-     };
 
+    const auto f = [=](auto x, auto y){  
+        const auto g = [=](auto z){  
+                return x * z + y;  
+            };  
+         return g;  
+         };  
+         
 But is very brittle and only supports function definitions, simple expressions, assignment, and function calls.
 
