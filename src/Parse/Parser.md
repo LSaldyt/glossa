@@ -51,7 +51,7 @@
 
 #### Custom `ParseFunction`
 
-##### A custom `ParseFunction` can easily be defined, as long as it follows the template of `std::function<Result(Terms)>`, meaning that it returns `Result` object given a list of strings. For example:
+##### A custom `ParseFunction` can easily be defined, as long as it follows the template of `std::function<Result(Terms)>`, meaning that it returns `Result` object given a list of strings (`vector` of `std::string`s, aliased as `Terms`). For example:
 
         //A parse function that never consumes anything and always fails:
         const auto customParseFunction = [](Terms terms){return Result(false, Terms(), terms);};
