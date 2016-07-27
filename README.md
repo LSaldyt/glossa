@@ -2,8 +2,8 @@
 
 A simple compiler:
 
-[Parser](https://github.com/BananaSky/Compiler/blob/master/src/Parser/Parser.md)  
-[Lexer](https://github.com/BananaSky/Compiler/blob/master/src/Lexer/Lexer.md)  
+[Parser](https://github.com/BananaSky/Compiler/blob/master/src/Parse/Parser.md)  
+[Lexer](https://github.com/BananaSky/Compiler/blob/master/src/Lex/Lexer.md)  
 [IO](https://github.com/BananaSky/Compiler/blob/master/src/IO/IO.md)  
 
 (Documentation for code gen and other features will be added as they become more robust)
