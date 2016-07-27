@@ -118,6 +118,7 @@ namespace Compiler
             results.push_back(bindTo<Expression>(f.return_expression, buildExpression, tokens));
             result = check_results(results);
         }
+        advance(subTypeParser(just("\n")), tokens);
         for(auto r : results)
         {
             std::cout << r << std::endl;
@@ -127,5 +128,18 @@ namespace Compiler
             std::cout << "Function successfully built" << std::endl;
         }
         return StatementResult(result, tokens, std::make_shared<Function>(f));
+    }
+
+    StatementResult buildFunctionCall(SymbolicTokens& tokens)
+    {
+        FunctionCall fc;
+        std::vector<bool> results;
+        results.push_back(bindTo<std::string>(fc.identifier, genIdent, tokens));
+        results.push_back(advance(subTypeParser(just("(")), tokens));
+        results.push_back(bindTo<std::vector<std::string>>(fc.args, commaSepList, tokens));
+        results.push_back(advance(subTypeParser(just(")")), tokens));
+        auto result = check_results(results);
+        advance(subTypeParser(just("\n")), tokens);
+        return StatementResult(result, tokens, std::make_shared<FunctionCall>(fc));
     }
 }

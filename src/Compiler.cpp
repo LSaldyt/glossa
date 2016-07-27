@@ -29,15 +29,17 @@ int main()
         std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
     }
 
-    auto statementResult = buildStatement(joined_tokens);
+    auto statementresults = buildStatements(joined_tokens);
 
     std::vector<std::string> output;
-    if (std::get<0>(statementResult))
+    if (std::get<0>(statementresults))
     {
-        auto statement = std::get<1>(statementResult);
-        auto generated = statement->generator();
-        print(generated);
-        output.push_back(generated);
+        for (auto statement : std::get<1>(statementresults))
+        {
+            auto generated = statement->generator();
+            print(generated);
+            output.push_back(generated);
+        }
     }
     else
     {

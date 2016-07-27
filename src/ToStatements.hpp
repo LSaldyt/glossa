@@ -79,10 +79,11 @@ namespace Compiler
 
     StatementResult buildAssignment(SymbolicTokens& tokens);
     StatementResult buildFunction(SymbolicTokens& tokens);
+    StatementResult buildFunctionCall(SymbolicTokens& tokens);
 
     const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
     {
-        buildAssignment, buildFunction
+        buildAssignment, buildFunction, buildFunctionCall
     };
 
     std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);

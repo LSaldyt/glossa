@@ -40,4 +40,11 @@ namespace Syntax
 
         std::string generator();
     };
+
+    struct FunctionCall : public Statement
+    {
+        std::string              identifier;
+        std::vector<std::string> args;
+        std::string              generator();
+    };
 }

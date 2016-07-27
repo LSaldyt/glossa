@@ -46,4 +46,18 @@ namespace Syntax
 
         return "const auto " + identifier + " = [=](" + args + "){" + body_string + " return "+ return_expression.generator() + "; };";
     }
+
+    std::string FunctionCall::generator()
+    {
+        std::string arglist = "";
+        for (int i =0; i < args.size(); i++)
+        { 
+            arglist += args[i];
+            if (i+1 != args.size()) //If not on last iteration
+            {
+                arglist += ", ";
+            }
+        }
+        return identifier + "(" + arglist + ");";
+    }
 }
