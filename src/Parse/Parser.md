@@ -62,7 +62,8 @@
             if (terms.size() > 0)
             {
                 //Return the first term as parsed and the remaining terms as remaining
-                return Result(true, Terms(terms.begin(), terms.begin() + 1), Terms(terms.begin() + 1, terms.end);
+                return Result(true, Terms(terms.begin(), terms.begin() + 1), 
+                                    Terms(terms.begin() + 1, terms.end());
             }
             else
             {
