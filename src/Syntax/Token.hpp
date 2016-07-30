@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include "Symbols.hpp"
-#include "../Parse/Base/Types.hpp"
+#include "../Match/Base/Types.hpp"
 
 namespace Syntax
 {
