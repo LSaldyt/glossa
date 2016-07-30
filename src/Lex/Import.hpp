@@ -6,5 +6,5 @@
 namespace Lex
 {
     using namespace Syntax;
-    using namespace Parse;
+    using namespace Match;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "Result.hpp"
 
-namespace Parse
+namespace Match 
 {
     using ParseFunction   = std::function<Result(Terms)>;
     using ParseFunctions  = std::vector<ParseFunction>;

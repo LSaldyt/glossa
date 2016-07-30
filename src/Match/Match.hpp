@@ -4,7 +4,7 @@
 #include "../Syntax/Token.hpp"
 #include "Base/TokenResult.hpp"
 
-namespace Parse
+namespace Match 
 {
     using namespace Syntax;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Types.hpp"
 
-namespace Parse
+namespace Match 
 {
 
     struct Consumed
