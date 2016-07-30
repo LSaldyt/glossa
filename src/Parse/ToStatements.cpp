@@ -97,45 +97,4 @@ namespace Parse
            }
        };
     }
-
-    StatementResult buildFunction(SymbolicTokens& tokens)
-    {
-        Function f;
-        bool result = true;
-        try{
-            bindTo<std::string>(f.identifier, genIdent, tokens);
-            advance(subTypeParser(just("(")), tokens);
-            bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens);
-            advance(subTypeParser(just(")")), tokens);
-            advance(subTypeParser(just(":")), tokens);
-            advance(subTypeParser(just("\n")), tokens);
-            bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, buildStatements, tokens);
-            advance(subTypeParser(just("return")), tokens);
-            bindTo<Expression>(f.return_expression, buildExpression, tokens);
-            advance(subTypeParser(just("\n")), tokens);
-        }
-        catch (bad_bind& e){
-            result = false;
-            std::cout << e.s << std::endl;
-        }
-        return StatementResult(result, tokens, std::make_shared<Function>(f));
-    }
-
-    StatementResult buildFunctionCall(SymbolicTokens& tokens)
-    {
-        FunctionCall fc;
-        bool result = true;
-        try{
-            bindTo<std::string>(fc.identifier, genIdent, tokens);
-            advance(subTypeParser(just("(")), tokens);
-            bindTo<std::vector<std::string>>(fc.args, commaSepList, tokens);
-            advance(subTypeParser(just(")")), tokens);
-        } 
-        catch (bad_bind &e)
-        {
-            result = false;
-            std::cout << e.s << std::endl;
-        }
-        return StatementResult(result, tokens, std::make_shared<FunctionCall>(fc));
-    }
 }

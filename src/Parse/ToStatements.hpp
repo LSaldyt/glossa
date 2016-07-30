@@ -90,10 +90,21 @@ namespace Parse
         return std::make_shared<Assignment>(a);
         });
 
+    const auto buildFunction = statementBuilder([=](SymbolicTokens& tokens){
+        Function f;
+        bindTo<std::string>(f.identifier, genIdent, tokens);
+        advance(subTypeParser(just("(")), tokens);
+        bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens);
+        advance(subTypeParser(just(")")), tokens);
+        advance(subTypeParser(just(":")), tokens);
+        advance(subTypeParser(just("\n")), tokens);
+        bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, buildStatements, tokens);
+        advance(subTypeParser(just("return")), tokens);
+        bindTo<Expression>(f.return_expression, buildExpression, tokens);
+        advance(subTypeParser(just("\n")), tokens);
+        return std::make_shared<Function>(f);
+    });
 
-
-    StatementResult buildFunction(SymbolicTokens& tokens);
-    StatementResult buildFunctionCall(SymbolicTokens& tokens);
 
     const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
     {
