@@ -1,5 +1,6 @@
 #pragma once
 #include "../Match/Match.hpp"
+#include "TokenResult.hpp"
 
 namespace Parse
 {

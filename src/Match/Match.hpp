@@ -1,12 +1,9 @@
 #pragma once
 #include "Base/Locale.hpp"
 #include "Base/Templates.hpp"
-#include "../Syntax/Token.hpp"
-#include "Base/TokenResult.hpp"
 
 namespace Match 
 {
-    using namespace Syntax;
 
     // Parse a list of functions in order, failing if any of them fail
     const auto inOrder = [](ParseFunctions parsers)
