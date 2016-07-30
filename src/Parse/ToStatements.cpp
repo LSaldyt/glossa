@@ -1,6 +1,6 @@
 #include "ToStatements.hpp"
 
-namespace Compiler
+namespace Parse 
 {
     //Used to create meta statements, ex functions inside of functions
     std::tuple<bool, std::shared_ptr<Statement>> buildStatement(SymbolicTokens& tokens)
