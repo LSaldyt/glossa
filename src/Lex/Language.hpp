@@ -1,5 +1,5 @@
 #pragma once
-#include "Lex/Seperate.hpp"
+#include "Seperate.hpp"
 
 namespace Lex
 {

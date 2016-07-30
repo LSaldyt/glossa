@@ -1,7 +1,7 @@
 #pragma once
 #include "Consumed.hpp"
 
-namespace Parse
+namespace Match 
 {
     struct Result : public Consumed
     {

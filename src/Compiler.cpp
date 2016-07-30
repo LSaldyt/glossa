@@ -1,12 +1,11 @@
 #include "Compiler.hpp"
-#include "ToStatements.hpp"
 
 
 int main()
 {
     using namespace Compiler;
 
-    Terms keywords  = {"return", "test"};
+    Terms keywords  = {"return"};
     Terms operators = {"+", "-", "*", "/", "=", "(", ")", ":", ","};
 
     Lex::LanguageTermSets term_set;
@@ -29,17 +28,15 @@ int main()
         std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
     }
 
-    auto statementresults = buildStatements(joined_tokens);
+    auto statementresult = buildStatement(joined_tokens);
 
     std::vector<std::string> output;
-    if (std::get<0>(statementresults))
+    if (std::get<0>(statementresult))
     {
-        for (auto statement : std::get<1>(statementresults))
-        {
-            auto generated = statement->generator();
-            print(generated);
-            output.push_back(generated);
-        }
+        print("Success!");
+        auto generated = std::get<1>(statementresult)->generator();
+        print(generated);
+        output.push_back(generated);
     }
     else
     {

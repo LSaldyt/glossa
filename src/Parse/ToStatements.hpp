@@ -1,8 +1,11 @@
-#include "Compiler.hpp"
+#include "Parse.hpp"
+#include "../Syntax/Symbols.hpp"
+#include "../Syntax/Token.hpp"
+#include <iostream>
+#include <tuple>
 
-namespace Compiler
+namespace Parse
 {
-    using namespace Parse;
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)
@@ -83,7 +86,7 @@ namespace Compiler
 
     const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
     {
-        buildAssignment, buildFunction, buildFunctionCall
+        buildAssignment, buildFunction 
     };
 
     std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);

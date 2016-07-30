@@ -110,4 +110,18 @@ namespace Parse
         return inOrderTokenParser(dual_types);
     }
 
+    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens)
+    {
+        auto result = function(tokens);
+        if (!result.result)
+        {
+            return false;
+        }
+        else
+        {
+            tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
+            return true;
+        }
+    }
+
 }

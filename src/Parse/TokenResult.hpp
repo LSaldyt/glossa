@@ -1,6 +1,5 @@
 #pragma once
-#include "../../Syntax/Token.hpp"
-
+#include "../Syntax/Token.hpp"
 
 template< typename TokenType >
 struct TokenResult

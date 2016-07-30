@@ -1,6 +1,6 @@
 #include "StatementResult.hpp"
 
-namespace Gen{
+namespace Parse{
   StatementResult::StatementResult(bool set_result, SymbolicTokens set_parsed,
                   std::shared_ptr<Statement> set_statement)
   {

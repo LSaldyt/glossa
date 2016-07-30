@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 
-namespace Parse
+namespace Match 
 {
     using Comparator = std::function<bool(const std::string&)>;
     using Term = std::string;

@@ -1,12 +1,14 @@
 #pragma once
-#include "Base/Locale.hpp"
-#include "Base/Templates.hpp"
-#include "../Syntax/Token.hpp"
-#include "Base/TokenResult.hpp"
+#include "../Match/Match.hpp"
+#include "TokenResult.hpp"
+#include "../Syntax/Statements.hpp"
+#include "StatementResult.hpp"
+#include <exception>
 
 namespace Parse
 {
     using namespace Syntax;
+    using namespace Match;
     //Convert a standard parseFunction to one that parses Tokens
     std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> subTypeParser(ParseFunction parser);
     std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> typeParser(ParseFunction parser);
@@ -16,146 +18,48 @@ namespace Parse
     std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> inOrderTokenParser(std::vector<std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)>> parsers);
     std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> constructDualTypeParser(std::vector<std::tuple<ParseFunction, ParseFunction>> parser_pairs, bool byType);
 
-    // Parse a list of functions in order, failing if any of them fail
-    const auto inOrder = [](ParseFunctions parsers)
+    using SymbolicTokenParser = std::function<TokenResult<SymbolicToken>(SymbolicTokens)>;
+    using StatementParser     = std::function<StatementResult(SymbolicTokens)>;
+
+    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens);
+
+    struct bad_bind : public std::exception 
     {
-        auto parse = [parsers](const Terms& original_terms)
+        std::string s;
+        bad_bind(std::string s)
         {
-            Terms parsed;
-            Terms terms = original_terms;
-
-            for (auto parser : parsers)
-            {
-                auto parse_result = parser(terms);
-                if(parse_result.result)
-                {
-                    parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );
-                    terms  = parse_result.remaining;
-                }
-                else
-                {
-                    return Result (false, Terms(), original_terms);
-                }
-            }
-            return Result (true, parsed, terms);
-        };
-        return parse;
-    };
-
-    //Parse a single string, exactly
-    const auto just = [](std::string value)
-    {
-        auto comparator = [value](Term term){ return value == term; };
-        return singleTemplate(comparator);
-    };
-
-    // Change the success of a parser
-    const auto inverse = [](ParseFunction parser)
-    {
-        return parseTemplate([parser](Terms terms)
-        {
-            auto result = parser(terms);
-            result.result = !result.result;
-            return result;
-        });
-    };
-
-    // Attempt to parse any parser from a list of Parsers, failing only if all of the parsers fail, and passing if any of them pass
-    const auto anyOf = [](ParseFunctions functions)
-    {
-        return parseTemplate([functions](Terms terms)
-        {
-            auto result = Result(false, Terms(), terms);
-            for (auto function : functions)
-            {
-                auto func_result = function(terms);
-                if(func_result.result)
-                {
-                    result = func_result;
-                    break;
-                }
-            }
-            return result;
-        });
-    };
-
-    //Parse all parsers from a list of parsers, passing only if all of them pass
-    const auto allOf = [](ParseFunctions functions)
-    {
-        return parseTemplate([functions](Terms terms)
-        {
-            auto result = Result(false, Terms(), terms);
-            for (auto function : functions)
-            {
-                auto func_result = function(terms);
-                if(!func_result.result)
-                {
-                    result = Result(false, Terms(), terms);
-                    break;
-                }
-                else
-                {
-                    result = func_result;
-                }
-            }
-            return result;
-        });
-    };
-
-    // Convert a list of strings to a list of just(string)s
-    const auto justFrom = [](std::vector<std::string> strings)
-    {
-        auto functions = ParseFunctions();
-        functions.reserve(strings.size());
-        for (auto s : strings)
-        {
-            functions.push_back(just(s));
+            this->s = s;
         }
-        return functions;
     };
 
-    // Parse any term
-    const auto wildcard = singleTemplate([](Term t) { return true; } );
-
-    // Parse a term that is a subset of another term
-    const auto subsetOf = [](std::string symbols)
+    template < typename T >
+    std::function<std::tuple<bool, T>(SymbolicTokens&)> builder (std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
     {
-        return singleTemplate([symbols](Term term)
+        std::function<std::tuple<bool, T>(SymbolicTokens&)> f = [function, converter](SymbolicTokens& tokens)
         {
-            for(auto c : term)
+            auto result = function(tokens);
+            auto to_return = std::make_tuple(false, T());
+            if (result.result)
             {
-                if(symbols.empty() || (symbols.find_first_not_of(c) == std::string::npos))
-                {
-                    return false;
-                }
+                tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
+                to_return = std::make_tuple(true, converter(result.parsed));
             }
-            return true;
-        });
-    };
-
-    // Takes a parser and parses it repeatedly, never fails
-    const auto many = [](ParseFunction parser)
-    {
-        Consumer consumer = [parser](Terms terms)
-        {
-            auto result = parser(terms);
-            return Consumed(result.result, result.parsed);
+            return to_return;
         };
-        return multiTemplate(consumer);
-    };
+        return f;
+    }
 
-    const auto sepBy = [](ParseFunction parser)
+    template < typename T >
+    void bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
     {
-        return inOrder({
-        wildcard,
-        many(inOrder({parser, wildcard}))
-        });
-    };
-
-    //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters
-    const auto digits = singleTemplate(is_digits);
-    const auto alphas = singleTemplate(is_alphas);
-    const auto puncts = singleTemplate(is_puncts);
-    const auto uppers = singleTemplate(is_uppers);
-    const auto lowers = singleTemplate(is_lowers);
+        auto result = typeGenerator(tokens);
+        if (! std::get<0>(result))
+        {
+            throw bad_bind("Failed to bind "); 
+        }
+        else
+        {
+            t = std::get<1>(result);
+        }
+    }
 }

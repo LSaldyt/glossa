@@ -1,6 +1,8 @@
-#include "Import.hpp"
+#include "../Syntax/Statements.hpp"
 
-namespace Gen{
+namespace Parse{
+
+  using namespace Syntax;
   struct StatementResult
   {
       bool result;

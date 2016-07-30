@@ -1,6 +1,6 @@
 #include "Templates.hpp"
 
-namespace Parse
+namespace Match 
 {
     ParseFunction parseTemplate(Consumer consumer)
     {
