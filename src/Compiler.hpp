@@ -5,7 +5,7 @@
 #include "Syntax/Token.hpp"
 #include "Lex/Lex.hpp"
 #include "Lex/Seperate.hpp"
-#include "Language.hpp"
+#include "Lex/Language.hpp"
 #include "Gen/Gen.hpp"
 #include <iostream>
 #include <tuple>
