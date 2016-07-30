@@ -3,6 +3,7 @@
 #include "TokenResult.hpp"
 #include "../Syntax/Statements.hpp"
 #include "StatementResult.hpp"
+#include "Typename.hpp"
 #include <exception>
 
 namespace Parse
@@ -49,13 +50,13 @@ namespace Parse
         return f;
     }
 
-    template < typename T >
+    template <typename T>
     void bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
     {
         auto result = typeGenerator(tokens);
         if (! std::get<0>(result))
         {
-            throw bad_bind("Failed to bind "); 
+            throw bad_bind("Failed to bind to " + std::string(get_name<decltype(t)>().data)); 
         }
         else
         {
