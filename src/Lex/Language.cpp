@@ -9,9 +9,7 @@ namespace Lex
         type   = set_type;
     }
 
-    Language::Language(const LanguageTermSets& set_term_sets,
-                       const LanguageParsers&  set_language_parsers)
-    {
+    Language::Language(const LanguageTermSets& set_term_sets, const LanguageParsers&  set_language_parsers) {
         language_term_sets = set_term_sets;
 
         seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());

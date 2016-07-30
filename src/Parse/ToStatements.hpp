@@ -80,7 +80,11 @@ namespace Parse
 
     std::function<StatementResult(SymbolicTokens&)> statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
 
+    std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
+    std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
+
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
+
     const auto buildAssignment = statementBuilder([=](SymbolicTokens& tokens){
         Assignment a;
         bindTo<std::string>(a.identifier, genIdent, tokens);
@@ -97,20 +101,14 @@ namespace Parse
         bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens);
         advance(subTypeParser(just(")")), tokens);
         advance(subTypeParser(just(":")), tokens);
-        advance(subTypeParser(just("\n")), tokens);
         bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, buildStatements, tokens);
         advance(subTypeParser(just("return")), tokens);
         bindTo<Expression>(f.return_expression, buildExpression, tokens);
-        advance(subTypeParser(just("\n")), tokens);
         return std::make_shared<Function>(f);
     });
-
 
     const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
     {
         buildAssignment, buildFunction 
     };
-
-    std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
-    std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
 }
