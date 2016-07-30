@@ -1,12 +1,22 @@
 #pragma once
 #include "Import.hpp"
 #include "StatementResult.hpp"
+#include <exception>
 
 namespace Gen
 {
     using StatementParser     = std::function<StatementResult(SymbolicTokens)>;
 
     bool advance(SymbolicTokenParser function, SymbolicTokens& tokens);
+
+    struct bad_bind : public std::exception 
+    {
+        std::string s;
+        bad_bind(std::string s)
+        {
+            this->s = s;
+        }
+    };
 
     template < typename T >
     std::function<std::tuple<bool, T>(SymbolicTokens&)> builder (std::function<TokenResult<SymbolicToken>(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
@@ -26,17 +36,16 @@ namespace Gen
     }
 
     template < typename T >
-    bool bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
+    void bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
     {
         auto result = typeGenerator(tokens);
         if (! std::get<0>(result))
         {
-            return false;
+            throw bad_bind("Failed to bind "); 
         }
         else
         {
             t = std::get<1>(result);
-            return true;
         }
     }
 }

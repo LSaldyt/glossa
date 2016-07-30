@@ -84,48 +84,41 @@ namespace Compiler
 
     StatementResult buildAssignment(SymbolicTokens& tokens)
     {
-        Assignment a;
-        std::vector<bool> results;
-        results.push_back(bindTo<std::string>(a.identifier, genIdent, tokens));
-        results.push_back(advance(subTypeParser(just("=")), tokens));
-        results.push_back(bindTo<Expression>(a.value, buildExpression, tokens));
-        results.push_back(advance(subTypeParser(just("\n")), tokens));
-        auto result = check_results(results);
-        return StatementResult(result, tokens, std::make_shared<Assignment>(a));
+        try{
+            Assignment a;
+            bindTo<std::string>(a.identifier, genIdent, tokens);
+            advance(subTypeParser(just("=")), tokens);
+            bindTo<Expression>(a.value, buildExpression, tokens);
+            advance(subTypeParser(just("\n")), tokens);
+            std::cout << a.identifier << std::endl;
+            return StatementResult(true, tokens, std::make_shared<Assignment>(a));
+        }
+        catch (const bad_bind& e)
+        {
+            std::cout << e.s << std::endl;
+            return StatementResult(false, tokens, std::make_shared<Assignment>(Assignment())); //Empty statement
+        }
     }
 
     StatementResult buildFunction(SymbolicTokens& tokens)
     {
-        std::cout << "Building Function" << std::endl;
-        for (auto t : tokens)
-        {
-            std::cout << "Given: " << t.type << " " << t.sub_type << std::endl;
-        }
         Function f;
-        std::vector<bool> results;
-        results.push_back(bindTo<std::string>(f.identifier, genIdent, tokens));
-        results.push_back(advance(subTypeParser(just("(")), tokens));
-        results.push_back(bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens));
-        results.push_back(advance(subTypeParser(just(")")), tokens));
-        results.push_back(advance(subTypeParser(just(":")), tokens));
-        results.push_back(advance(subTypeParser(just("\n")), tokens));
-        std::cout << "Building Function Body" << std::endl;
-        auto result = check_results(results);
-        if (result)
-        {
-            results.push_back(bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, buildStatements, tokens));
-            results.push_back(advance(subTypeParser(just("return")), tokens));
-            results.push_back(bindTo<Expression>(f.return_expression, buildExpression, tokens));
-            result = check_results(results);
+        bool result = true;
+        try{
+            bindTo<std::string>(f.identifier, genIdent, tokens);
+            advance(subTypeParser(just("(")), tokens);
+            bindTo<std::vector<std::string>>(f.argnames, commaSepList, tokens);
+            advance(subTypeParser(just(")")), tokens);
+            advance(subTypeParser(just(":")), tokens);
+            advance(subTypeParser(just("\n")), tokens);
+            bindTo<std::vector<std::shared_ptr<Statement>>>(f.body, buildStatements, tokens);
+            advance(subTypeParser(just("return")), tokens);
+            bindTo<Expression>(f.return_expression, buildExpression, tokens);
+            advance(subTypeParser(just("\n")), tokens);
         }
-        advance(subTypeParser(just("\n")), tokens);
-        for(auto r : results)
-        {
-            std::cout << r << std::endl;
-        }
-        if (result)
-        {
-            std::cout << "Function successfully built" << std::endl;
+        catch (bad_bind& e){
+            result = false;
+            std::cout << e.s << std::endl;
         }
         return StatementResult(result, tokens, std::make_shared<Function>(f));
     }
@@ -133,13 +126,18 @@ namespace Compiler
     StatementResult buildFunctionCall(SymbolicTokens& tokens)
     {
         FunctionCall fc;
-        std::vector<bool> results;
-        results.push_back(bindTo<std::string>(fc.identifier, genIdent, tokens));
-        results.push_back(advance(subTypeParser(just("(")), tokens));
-        results.push_back(bindTo<std::vector<std::string>>(fc.args, commaSepList, tokens));
-        results.push_back(advance(subTypeParser(just(")")), tokens));
-        auto result = check_results(results);
-        advance(subTypeParser(just("\n")), tokens);
+        bool result = true;
+        try{
+            bindTo<std::string>(fc.identifier, genIdent, tokens);
+            advance(subTypeParser(just("(")), tokens);
+            bindTo<std::vector<std::string>>(fc.args, commaSepList, tokens);
+            advance(subTypeParser(just(")")), tokens);
+        } 
+        catch (bad_bind &e)
+        {
+            result = false;
+            std::cout << e.s << std::endl;
+        }
         return StatementResult(result, tokens, std::make_shared<FunctionCall>(fc));
     }
 }
