@@ -1,10 +1,7 @@
 #include "Parse.hpp"
 #include "../Syntax/Symbols.hpp"
 #include "../Syntax/Token.hpp"
-#include "../Lex/Lex.hpp"
-#include "../Lex/Seperate.hpp"
-#include "../Lex/Language.hpp"
-#include "../Gen/Gen.hpp"
+#include "Gen.hpp"
 #include <iostream>
 #include <tuple>
 

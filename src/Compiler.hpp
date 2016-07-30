@@ -6,7 +6,7 @@
 #include "Lex/Lex.hpp"
 #include "Lex/Seperate.hpp"
 #include "Lex/Language.hpp"
-#include "Gen/Gen.hpp"
+#include "Parse/Gen.hpp"
 #include <iostream>
 #include <tuple>
 #include "Parse/ToStatements.hpp"
