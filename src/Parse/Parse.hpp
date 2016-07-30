@@ -1,7 +1,7 @@
 #pragma once
 #include "../Match/Match.hpp"
 #include "TokenResult.hpp"
-#include "../Syntax/Statements.hpp"
+#include "../Syntax/Syntax.hpp"
 #include "StatementResult.hpp"
 #include "Typename.hpp"
 #include <exception>

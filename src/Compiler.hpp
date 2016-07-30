@@ -1,8 +1,7 @@
 #pragma once
 #include "IO/IO.hpp"
 #include "Parse/Parse.hpp"
-#include "Syntax/Symbols.hpp"
-#include "Syntax/Token.hpp"
+#include "Syntax/Syntax.hpp"
 #include "Lex/Lex.hpp"
 #include "Lex/Seperate.hpp"
 #include "Lex/Language.hpp"

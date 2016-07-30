@@ -1,5 +1,5 @@
 #pragma once
-#include "../Syntax/Token.hpp"
+#include "../Types/Token.hpp"
 #include "../Match/Match.hpp"
 #include "../Match/Base/Types.hpp"
 

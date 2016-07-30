@@ -1,6 +1,5 @@
 #include "Parse.hpp"
-#include "../Syntax/Symbols.hpp"
-#include "../Syntax/Token.hpp"
+#include "../Types/Token.hpp"
 #include <iostream>
 #include <tuple>
 

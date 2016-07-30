@@ -1,6 +1,5 @@
 #pragma once
 #include "Symbols.hpp"
-#include "Token.hpp"
 namespace Syntax
 {
 
@@ -8,8 +7,6 @@ namespace Syntax
     {
         virtual std::string generator();
     };
-
-    using StatementGenerator = std::function<std::shared_ptr<Statement>(SymbolicTokens)>;
 
     struct Expression : public Statement
     {
