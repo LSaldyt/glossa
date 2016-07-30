@@ -40,6 +40,7 @@ namespace Parse
         return std::make_tuple(true, statements); //Has to stop eventually, so always returns true
     }
 
+
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
         const auto validType = typeParser(allOf({anyOf({just("type"), just("identifier")}), inverse(just("keyword"))}));
@@ -82,22 +83,19 @@ namespace Parse
         }
     }
 
-    StatementResult buildAssignment(SymbolicTokens& tokens)
+    std::function<StatementResult(SymbolicTokens&)> statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder)
     {
-        try{
-            Assignment a;
-            bindTo<std::string>(a.identifier, genIdent, tokens);
-            advance(subTypeParser(just("=")), tokens);
-            bindTo<Expression>(a.value, buildExpression, tokens);
-            advance(subTypeParser(just("\n")), tokens);
-            std::cout << a.identifier << std::endl;
-            return StatementResult(true, tokens, std::make_shared<Assignment>(a));
-        }
-        catch (const bad_bind& e)
-        {
-            std::cout << e.s << std::endl;
-            return StatementResult(false, tokens, std::make_shared<Assignment>(Assignment())); //Empty statement
-        }
+       return [builder](SymbolicTokens& tokens)
+       {
+           try{
+               auto statement = builder(tokens);
+               return StatementResult(true, tokens, statement);
+           }
+           catch (const bad_bind& e){
+               std::cout << e.s << std::endl;
+               return StatementResult(false, tokens, std::make_shared<Statement>(Statement())); //Empty statement
+           }
+       };
     }
 
     StatementResult buildFunction(SymbolicTokens& tokens)

@@ -78,9 +78,20 @@ namespace Parse
         return pairs;
     }
 
-    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
+    std::function<StatementResult(SymbolicTokens&)> statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
 
-    StatementResult buildAssignment(SymbolicTokens& tokens);
+    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
+    const auto buildAssignment = statementBuilder([=](SymbolicTokens& tokens){
+        Assignment a;
+        bindTo<std::string>(a.identifier, genIdent, tokens);
+        advance(subTypeParser(just("=")), tokens);
+        bindTo<Expression>(a.value, buildExpression, tokens);
+        advance(subTypeParser(just("\n")), tokens);
+        return std::make_shared<Assignment>(a);
+        });
+
+
+
     StatementResult buildFunction(SymbolicTokens& tokens);
     StatementResult buildFunctionCall(SymbolicTokens& tokens);
 
