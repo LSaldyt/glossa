@@ -38,7 +38,7 @@
     
 ##### The `Parse` module is the basis of the `Lexer` module, as a `Lexer` will take a list of symbols and a parser, parsing a sentence and pairing the appropriate terms with the appropriate symbols. However, the `tokenParser` function converts a string parser to one that parses a list of tokens, which would be returned from a `Lexer`
 
-### `ParseFunctions` can be created by the used either from scratch or from a set of templates:
+### `ParseFunctions` can be created by the user either from scratch or from a set of templates:
 
     using Consumer        = std::function<Consumed(Terms)>;
     using Comparator      = std::function<bool(Term)>;
@@ -51,7 +51,7 @@
 
 #### Custom `ParseFunction`
 
-##### A custom `ParseFunction` can easily be defined, as long as it follows the template of `std::function<Result(Terms)>`, meaning that it returns `Result` object given a list of strings. For example:
+##### A custom `ParseFunction` can easily be defined, as long as it follows the template of `std::function<Result(Terms)>`, meaning that it returns `Result` object given a list of strings (`vector` of `std::string`s, aliased as `Terms`). For example:
 
         //A parse function that never consumes anything and always fails:
         const auto customParseFunction = [](Terms terms){return Result(false, Terms(), terms);};
@@ -62,7 +62,8 @@
             if (terms.size() > 0)
             {
                 //Return the first term as parsed and the remaining terms as remaining
-                return Result(true, Terms(terms.begin(), terms.begin() + 1), Terms(terms.begin() + 1, terms.end);
+                return Result(true, Terms(terms.begin(), terms.begin() + 1), 
+                                    Terms(terms.begin() + 1, terms.end());
             }
             else
             {
