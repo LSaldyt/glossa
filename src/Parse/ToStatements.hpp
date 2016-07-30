@@ -1,8 +1,17 @@
-#include "Compiler.hpp"
+#include "Parse.hpp"
+#include "../Syntax/Symbols.hpp"
+#include "../Syntax/Token.hpp"
+#include "../Lex/Lex.hpp"
+#include "../Lex/Seperate.hpp"
+#include "../Lex/Language.hpp"
+#include "../Gen/Gen.hpp"
+#include <iostream>
+#include <tuple>
 
 namespace Compiler
 {
     using namespace Parse;
+    using namespace Gen;
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)

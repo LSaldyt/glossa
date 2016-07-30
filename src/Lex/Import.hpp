@@ -1,7 +1,7 @@
 #pragma once
 #include "../Syntax/Token.hpp"
-#include "../Parse/Parse.hpp"
-#include "../Parse/Base/Types.hpp"
+#include "../Match/Match.hpp"
+#include "../Match/Base/Types.hpp"
 
 namespace Lex
 {

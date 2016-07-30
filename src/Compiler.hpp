@@ -9,6 +9,7 @@
 #include "Gen/Gen.hpp"
 #include <iostream>
 #include <tuple>
+#include "Parse/ToStatements.hpp"
 
 namespace Compiler
 {
@@ -20,18 +21,4 @@ namespace Compiler
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
     SymbolicTokens join(std::vector<SymbolicTokens>);
-
-    const auto makeTypeParserFromStrings = [](std::vector<std::string> strings)
-    {
-        using namespace Parse;
-        using namespace Syntax;
-        return typeParser(inOrder(justFrom(strings)));
-    };
-
-    const auto makeTypeParser = [](std::vector<ParseFunction> functions)
-    {
-        using namespace Parse;
-        using namespace Syntax;
-        return typeParser(inOrder(functions));
-    };
 }
