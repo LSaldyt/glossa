@@ -1,1 +1,2 @@
-const auto x = 2;
+const auto f = [=](auto x){ return x; };
+const auto g = [=](auto y){ return y * 40; };

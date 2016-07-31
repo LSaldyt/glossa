@@ -13,8 +13,8 @@ int main()
     term_set.push_back(std::make_tuple(operators, "operator"));
 
     Lex::LanguageParsers  parser_set;
-    parser_set.push_back(LanguageParser(Parse::digits, "int", "type"));
-    parser_set.push_back(LanguageParser(Parse::alphas, "identifier", "identifier"));
+    parser_set.push_back(LanguageParser(digits, "int", "type"));
+    parser_set.push_back(LanguageParser(alphas, "identifier", "identifier"));
 
     Lex::Language test_language(term_set, parser_set);
 
@@ -28,15 +28,18 @@ int main()
         std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
     }
 
-    auto statementresult = buildStatement(joined_tokens);
+    auto statementresults = buildStatements(joined_tokens);
 
     std::vector<std::string> output;
-    if (std::get<0>(statementresult))
+    if (std::get<0>(statementresults))
     {
-        print("Success!");
-        auto generated = std::get<1>(statementresult)->generator();
-        print(generated);
-        output.push_back(generated);
+        for (auto statementresult : std::get<1>(statementresults))
+        {
+            print("Success!");
+            auto generated = statementresult->generator();
+            print(generated);
+            output.push_back(generated);
+        }
     }
     else
     {
@@ -53,6 +56,7 @@ namespace Compiler
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
+            std::cout << "Lexing: " << line << std::endl;
             tokens.push_back(lex(line, language));
         }
         return tokens;
@@ -77,7 +81,6 @@ namespace Compiler
             {
                 tokens.push_back(t);
             }
-            tokens.push_back(SymbolicToken(std::make_shared<NewLine>(NewLine()), "\n", "\n"));
         }
         return tokens;
     }

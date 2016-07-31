@@ -1,8 +1,9 @@
 #pragma once
 #include "../Match/Match.hpp"
 #include "TokenResult.hpp"
-#include "../Syntax/Statements.hpp"
+#include "../Syntax/Syntax.hpp"
 #include "StatementResult.hpp"
+#include "Typename.hpp"
 #include <exception>
 
 namespace Parse
@@ -49,17 +50,31 @@ namespace Parse
         return f;
     }
 
-    template < typename T >
-    void bindTo(T &t, std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator, SymbolicTokens& tokens)
+    template <typename T>
+    std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
     {
-        auto result = typeGenerator(tokens);
-        if (! std::get<0>(result))
+        std::vector<std::tuple<T, T>> pairs;
+
+        auto it = items.begin();
+        while(it != items.end())
         {
-            throw bad_bind("Failed to bind "); 
+            if(it + 1 != items.end())
+            {
+                pairs.push_back(std::make_tuple(*it, *(it+1)));
+                it += 2; //Iterate two items at a time 
+            }
+            else
+            {
+                break;
+            }
         }
-        else
-        {
-            t = std::get<1>(result);
-        }
+        return pairs;
     }
+
+    std::function<StatementResult(SymbolicTokens&)> statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
+
+    std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
+    std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
+
+    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
 }

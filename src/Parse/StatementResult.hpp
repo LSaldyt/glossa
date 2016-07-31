@@ -1,4 +1,5 @@
 #include "../Syntax/Statements.hpp"
+#include "../Types/Token.hpp"
 
 namespace Parse{
 

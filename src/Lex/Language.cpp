@@ -9,9 +9,7 @@ namespace Lex
         type   = set_type;
     }
 
-    Language::Language(const LanguageTermSets& set_term_sets,
-                       const LanguageParsers&  set_language_parsers)
-    {
+    Language::Language(const LanguageTermSets& set_term_sets, const LanguageParsers&  set_language_parsers) {
         language_term_sets = set_term_sets;
 
         seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());
@@ -30,6 +28,10 @@ namespace Lex
 
         language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
 
+        for (auto p : language_parsers)
+        {
+            std::cout << p.name << " " << p.type << std::endl;
+        }
     }
 
     std::tuple<Token, Terms> Language::identify(Terms terms) const
@@ -42,6 +44,6 @@ namespace Lex
                 return std::make_tuple(Token(result.parsed[0], parser.name, parser.type), result.remaining);
             }
         }
-        return std::make_tuple(Token("", "", "failure"), Terms());
+        return std::make_tuple(Token("unidentified", "unidentified", "failure"), Terms());
     }
 }

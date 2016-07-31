@@ -1,1 +1,8 @@
-x = 2
+f(x):
+  return x
+
+g(y):
+  return y * 40
+
+f(2)
+

@@ -1,11 +1,10 @@
 #include "Parse.hpp"
-#include "../Syntax/Symbols.hpp"
-#include "../Syntax/Token.hpp"
-#include <iostream>
-#include <tuple>
 
 namespace Parse
 {
+
+    //Helper functions
+
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)
@@ -23,18 +22,6 @@ namespace Parse
            typeOrIdent,
            many(inOrder({just("operator"), typeOrIdent}))
     });
-
-    const auto check_results = [](std::vector<bool> results)
-    {
-        for (auto r : results)
-        {
-            if (! r)
-            {
-                return false;
-            }
-        }
-        return true;
-    };
 
     const auto everyOther = [](std::vector<std::string> terms)
     {
@@ -57,38 +44,31 @@ namespace Parse
     const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), compose(everyOther, getReprs));
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
 
-    template <typename T>
-    std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
-    {
-        std::vector<std::tuple<T, T>> pairs;
 
-        auto it = items.begin();
-        while(it != items.end())
-        {
-            if(it + 1 != items.end())
+    //
+
+    template <typename T>
+    std::function<void(T&, SymbolicTokens&)> createBinder(std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator)
+    {
+        return [typeGenerator](T& t, SymbolicTokens& tokens){
+            auto result = typeGenerator(tokens);
+            if (! std::get<0>(result))
             {
-                pairs.push_back(std::make_tuple(*it, *(it+1)));
-                it += 2; //Iterate two items at a time
+                throw bad_bind("Failed to bind to " + std::string(get_name<decltype(t)>().data)); 
             }
             else
             {
-                break;
+                t = std::get<1>(result);
             }
-        }
-        return pairs;
+        };
     }
 
-    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
+    const auto bindIdent      = createBinder<std::string>                             (genIdent);
+    const auto bindArgnames   = createBinder<std::vector<std::string>>                (commaSepList);
+    const auto bindStatements = createBinder<std::vector<std::shared_ptr<Statement>>> (buildStatements);
+    const auto bindExpression = createBinder<Expression>                              (buildExpression);
 
-    StatementResult buildAssignment(SymbolicTokens& tokens);
-    StatementResult buildFunction(SymbolicTokens& tokens);
-    StatementResult buildFunctionCall(SymbolicTokens& tokens);
-
-    const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
-    {
-        buildAssignment, buildFunction 
+    const auto parseOp = [](std::string opname){
+        return subTypeParser(just(opname));
     };
-
-    std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
-    std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
 }

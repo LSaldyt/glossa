@@ -24,6 +24,7 @@ namespace Lex
     const Seperators whitespace =
     {
         std::make_tuple(" ",    false),
-        std::make_tuple("\t",   true)
+        std::make_tuple("\t",   false),
+        std::make_tuple("\n",   false)
     };
 }
