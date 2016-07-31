@@ -29,6 +29,11 @@ namespace Lex
                     break;
                 }
             }
+            else
+            {
+                std::cout << "Seperator string is larger than term" << std::endl;
+                std::cout << "-" << seperator_string << "-, -" << s << "-" << std::endl;
+            }
         }
         return found;
     }

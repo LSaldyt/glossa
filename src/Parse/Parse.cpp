@@ -124,8 +124,6 @@ namespace Parse
         }
     }
 
-
-
     std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens)
     {
         std::vector<std::shared_ptr<Statement>> statements;

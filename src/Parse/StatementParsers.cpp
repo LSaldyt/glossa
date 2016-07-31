@@ -2,7 +2,6 @@
 
 namespace Parse 
 {
-
     //Used to create meta statements, ex functions inside of functions
     std::tuple<bool, std::shared_ptr<Statement>> buildStatement(SymbolicTokens& tokens)
     {
@@ -22,6 +21,6 @@ namespace Parse
             }
         }
         std::cout << "Statement building failed" << std::endl;
-        return std::make_tuple(false, std::make_shared<Statement>(Expression()));
+        return std::make_tuple(false, std::make_shared<Statement>(Statement()));
     }
 }
