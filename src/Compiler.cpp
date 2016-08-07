@@ -33,6 +33,7 @@ int main()
     std::vector<std::string> output;
     if (std::get<0>(statementresults))
     {
+        std::cout << "Successfully parsed " << std::get<1>(statementresults).size() << " Statements" << std::endl;
         for (auto statementresult : std::get<1>(statementresults))
         {
             print("Success!");
