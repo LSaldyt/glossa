@@ -44,6 +44,6 @@ namespace Parse
 
     const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
     {
-        buildAssignment, buildFunction, buildFunctionCall 
+        buildAssignment, buildFunction, buildFunctionCall // Larger parsers should come first
     };
 }

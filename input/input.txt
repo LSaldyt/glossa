@@ -1,13 +1,9 @@
 f(x):
-  return x
+    g(y):
+      return y
+    return g
 
+print(2)
 
-
-g(y):
-  return y
-
-
-
-
-f(2)
+x = 42
 

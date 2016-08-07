@@ -31,6 +31,8 @@ int main()
     auto statementresults = buildStatements(joined_tokens);
 
     std::vector<std::string> output;
+    output.push_back("#include \"std/std.hpp\"");
+    output.push_back("int main(){");
     if (std::get<0>(statementresults))
     {
         std::cout << "Successfully parsed " << std::get<1>(statementresults).size() << " Statements" << std::endl;
@@ -46,6 +48,7 @@ int main()
     {
         print("ERROR - Function template did not match syntax");
     }
+    output.push_back("}");
 
     writeFile(output, "../output/output.cpp");
 }
