@@ -11,7 +11,7 @@ namespace Lex
         for (auto seperator : seperators)
         {
             auto seperator_string = std::get<0>(seperator);
-            if (seperator_string.size() < s.size())
+            if (seperator_string.size() <= s.size())
             {
                 bool exited_early = false;
                 for (unsigned i = 0; i < seperator_string.size(); i++)
@@ -25,14 +25,11 @@ namespace Lex
 
                 if (!exited_early)
                 {
+                    std::cout << "Seperated by \"" << seperator_string << "\"" << std::endl;
+                    std::cout << "Size: " << seperator_string.size() << std::endl;
                     found = std::make_tuple(true, std::get<1>(seperator), seperator_string.size());
                     break;
                 }
-            }
-            else
-            {
-                std::cout << "Seperator string is larger than term" << std::endl;
-                std::cout << "-" << seperator_string << "-, -" << s << "-" << std::endl;
             }
         }
         return found;

@@ -44,6 +44,11 @@ namespace Lex
                 return std::make_tuple(Token(result.parsed[0], parser.name, parser.type), result.remaining);
             }
         }
+        std::cout << "Could not identify terms:" << std::endl;
+        for (auto t : terms)
+        {
+            std::cout << "\"" << t << "\"" << std::endl;
+        }
         return std::make_tuple(Token("unidentified", "unidentified", "failure"), Terms());
     }
 }
