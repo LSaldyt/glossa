@@ -1,8 +1,13 @@
 f(x):
   return x
 
+
+
 g(y):
-  return y * 40
+  return y
+
+
+
 
 f(2)
 
