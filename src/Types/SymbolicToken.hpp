@@ -1,3 +1,4 @@
+#pragma once
 #include "../Match/Base/Types.hpp"
 #include "../Syntax/Symbols.hpp"
 
