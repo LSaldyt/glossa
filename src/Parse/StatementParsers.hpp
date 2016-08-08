@@ -1,9 +1,8 @@
 #include "Parse.hpp"
-#include "TypeParsers.hpp"
 
 namespace Parse
 {
-    std::function<StatementResult(SymbolicTokens&)> statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
+    StatementParser statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
 
     std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
     std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
@@ -42,7 +41,7 @@ namespace Parse
         return std::make_shared<FunctionCall>(fc);
     });
 
-    const std::vector<std::function<StatementResult(SymbolicTokens&)>> statementBuilders = 
+    const std::vector<StatementParser> statementBuilders = 
     {
         buildAssignment, buildFunction, buildFunctionCall // Larger parsers should come first
     };
