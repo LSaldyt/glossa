@@ -8,6 +8,7 @@
 #include <iostream>
 #include <tuple>
 #include "Parse/StatementParsers.hpp"
+#include "Types/Symbolize.hpp"
 
 namespace Compiler
 {
