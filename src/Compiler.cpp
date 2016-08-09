@@ -6,21 +6,21 @@ int main()
     using namespace Compiler;
 
     Terms keywords  = {"return"};
-    Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ","};
+    Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ",", "\""};
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
 
-    Lex::LanguageParsers  parser_set;
-    parser_set.push_back(LanguageParser(digits, "int", "type"));
-    parser_set.push_back(LanguageParser(alphas, "identifier", "identifier"));
+    Lex::LanguageParsers  parser_set = {
+        LanguageParser(digits, "int", "type"),
+        LanguageParser(inOrder({just("\""), many(alphas), just("\"")}), "string", "string"),
+        LanguageParser(alphas, "identifier", "identifier")};
 
     Lex::Language test_language(term_set, parser_set);
 
     auto content         = readFile     ("../input/input.txt");
-    auto tokens          = tokenPass    (content, test_language);
-    auto symbolic_tokens = symbolicPass (tokens);
+    auto tokens          = tokenPass    (content, test_language); auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
     for(auto jt : joined_tokens)

@@ -3,12 +3,12 @@
 
 struct Token
 {
-    std::string value;
+    std::vector<std::string> values;
     std::string sub_type;
     std::string type;
-    Token(std::string set_value, std::string set_sub_type, std::string set_type)
+    Token(std::vector<std::string> set_values, std::string set_sub_type, std::string set_type)
     {
-        value    = set_value;
+        values   = set_values;
         sub_type = set_sub_type;
         type     = set_type;
     }

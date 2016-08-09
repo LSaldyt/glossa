@@ -10,7 +10,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, Syntax::SymbolGenerat
         auto search = generatorMap.find(type);
         if (search != generatorMap.end())
         {
-            auto symbolic = SymbolicToken(search->second(token.value), token.sub_type, type);
+            auto symbolic = SymbolicToken(search->second(token.values), token.sub_type, type);
             symbolic_tokens.push_back(symbolic);
         }
         else
