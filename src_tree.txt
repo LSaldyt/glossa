@@ -33,16 +33,14 @@
 │   ├── TokenParsers.hpp
 │   ├── TokenResult.hpp
 │   └── Typename.hpp
-├── src_tree.txt
 ├── Syntax
 │   ├── Statements.cpp
 │   ├── Statements.hpp
-│   ├── Symbols.hpp
-│   └── Syntax.hpp
+│   └── Symbols.hpp
 └── Types
     ├── Import.hpp
     ├── SymbolicToken.hpp
     ├── Symbolize.hpp
     └── Token.hpp
 
-7 directories, 38 files
+7 directories, 36 files
