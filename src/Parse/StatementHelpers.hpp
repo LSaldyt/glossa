@@ -1,7 +1,7 @@
 #pragma once
 #include "../Match/Match.hpp"
 #include "TokenResult.hpp"
-#include "../Syntax/Syntax.hpp"
+#include "../Syntax/Statements.hpp"
 #include "StatementResult.hpp"
 #include "Typename.hpp"
 #include <exception>
@@ -27,7 +27,8 @@ namespace Parse
     };
 
     template < typename T >
-    std::function<std::tuple<bool, T>(SymbolicTokens&)> builder (std::function<TokenResult(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
+    std::function<std::tuple<bool, T>(SymbolicTokens&)> builder 
+    (std::function<TokenResult(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
     {
         std::function<std::tuple<bool, T>(SymbolicTokens&)> f = [function, converter](SymbolicTokens& tokens)
         {
@@ -112,8 +113,6 @@ namespace Parse
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
 
 
-    //
-
     template <typename T>
     std::function<void(T&, SymbolicTokens&)> createBinder(std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator)
     {
@@ -135,7 +134,7 @@ namespace Parse
     const auto bindStatements = createBinder<std::vector<std::shared_ptr<Statement>>> (buildStatements);
     const auto bindExpression = createBinder<Expression>                              (buildExpression);
 
-    const auto parseOp = [](std::string opname){
+    const auto subType = [](std::string opname){
         return subTypeParser(just(opname));
     };
 }

@@ -12,21 +12,21 @@ namespace Parse
     const auto buildAssignment = statementBuilder([=](SymbolicTokens& tokens){
         Assignment a;
         bindIdent(a.identifier, tokens);
-        advance(parseOp("="),   tokens);
+        advance(subType("="),   tokens);
         bindExpression(a.value, tokens);
-        advance(parseOp("\n"),  tokens);
+        advance(subType("\n"),  tokens);
         return std::make_shared<Assignment>(a);
         });
 
     const auto buildFunction = statementBuilder([=](SymbolicTokens& tokens){
         Function f;
         bindIdent(f.identifier,             tokens);
-        advance(parseOp("("),               tokens);
+        advance(subType("("),               tokens);
         bindArgnames(f.argnames,            tokens);
-        advance(parseOp(")"),               tokens);
-        advance(parseOp(":"),               tokens);
+        advance(subType(")"),               tokens);
+        advance(subType(":"),               tokens);
         bindStatements(f.body,              tokens);
-        advance(parseOp("return"),          tokens);
+        advance(subType("return"),          tokens);
         bindExpression(f.return_expression, tokens);
         return std::make_shared<Function>(f);
     });
@@ -35,9 +35,9 @@ namespace Parse
     const auto buildFunctionCall = statementBuilder([=](SymbolicTokens& tokens){
         FunctionCall fc;
         bindIdent(fc.identifier, tokens);
-        advance(parseOp("("),   tokens);
+        advance(subType("("),   tokens);
         bindArgnames(fc.args,    tokens);
-        advance(parseOp(")"),   tokens);
+        advance(subType(")"),   tokens);
         return std::make_shared<FunctionCall>(fc);
     });
 

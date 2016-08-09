@@ -1,6 +1,6 @@
 #pragma once
 #include "IO/IO.hpp"
-#include "Syntax/Syntax.hpp"
+#include "Syntax/Statements.hpp"
 #include "Lex/Lex.hpp"
 #include "Lex/Seperate.hpp"
 #include "Lex/Language.hpp"
