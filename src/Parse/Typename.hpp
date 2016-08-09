@@ -1,3 +1,5 @@
+#include <ostream>
+
 struct string_view
 {
     char const* data;
