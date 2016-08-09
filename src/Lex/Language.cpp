@@ -14,6 +14,8 @@ namespace Lex
 
         seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());
 
+        language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
+
         for (auto term_set : language_term_sets)
         {
             for (auto term : std::get<0>(term_set))
@@ -26,8 +28,6 @@ namespace Lex
             }
         }
 
-        language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
-
         for (auto p : language_parsers)
         {
             std::cout << p.name << " " << p.type << std::endl;
@@ -38,9 +38,16 @@ namespace Lex
     {
         for (auto parser : language_parsers)
         {
+            std::cout << "Attempting to identify if term is " << parser.name << std::endl;
             auto result = parser.parser(terms);
+            std::cout << "Parsed: " << std::endl;
+            for (auto p : result.parsed)
+            {
+                std::cout << p << std::endl;
+            }
             if(result.result)
             {
+                std::cout << "Term identified" << std::endl;
                 return std::make_tuple(Token(result.parsed, parser.name, parser.type), result.remaining);
             }
         }

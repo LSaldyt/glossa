@@ -73,6 +73,21 @@ namespace Syntax
 
     const auto keywordGenerator = [](std::string s){ return std::make_shared<Keyword>(Keyword(s)); };
 
+    struct String : public Symbol
+    {
+        std::string value;
+        String(std::string set_value)
+        {
+            value = set_value;
+        }
+        std::string representation()
+        {
+            return "\"" + value + "\"";
+        }
+    };
+
+    const auto stringGenerator = [](std::vector<std::string> s){return std::make_shared<String>(String(s[1]));};
+
     const auto single = [](std::function<std::shared_ptr<Symbol>(std::string)> f){
         return [f](std::vector<std::string> values){return f(values[0]); };
     };
@@ -81,7 +96,8 @@ namespace Syntax
      {"type",       single(intGenerator)},
      {"operator",   single(opGenerator)},
      {"identifier", single(identifierGenerator)},
-     {"keyword",    single(keywordGenerator)}
+     {"keyword",    single(keywordGenerator)},
+     {"string",     stringGenerator}
     };
 
 }

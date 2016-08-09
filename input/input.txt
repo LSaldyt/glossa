@@ -1,9 +1,1 @@
-f(x):
-    g(y):
-      return y
-    return g
-
-print(2)
-
-x = 42
-
+print("Hello")

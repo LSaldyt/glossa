@@ -12,9 +12,10 @@ int main()
     term_set.push_back(std::make_tuple(keywords, "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
 
-    Lex::LanguageParsers  parser_set;
-    parser_set.push_back(LanguageParser(digits, "int", "type"));
-    parser_set.push_back(LanguageParser(alphas, "identifier", "identifier"));
+    Lex::LanguageParsers  parser_set = {
+        LanguageParser(digits, "int", "type"),
+        LanguageParser(inOrder({just("\""), many(alphas), just("\"")}), "string", "string"),
+        LanguageParser(alphas, "identifier", "identifier")};
 
     Lex::Language test_language(term_set, parser_set);
 
