@@ -26,7 +26,7 @@ namespace Syntax
         }
     };
 
-    using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
+    using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::vector<std::string>)>;
     using SymbolGenerators = std::vector<SymbolGenerator>;
 
     struct Operator : public Symbol
@@ -73,11 +73,15 @@ namespace Syntax
 
     const auto keywordGenerator = [](std::string s){ return std::make_shared<Keyword>(Keyword(s)); };
 
+    const auto single = [](std::function<std::shared_ptr<Symbol>(std::string)> f){
+        return [f](std::vector<std::string> values){return f(values[0]); };
+    };
+
     const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
-     {"type",       intGenerator},
-     {"operator",   opGenerator},
-     {"identifier", identifierGenerator},
-     {"keyword",    keywordGenerator}
+     {"type",       single(intGenerator)},
+     {"operator",   single(opGenerator)},
+     {"identifier", single(identifierGenerator)},
+     {"keyword",    single(keywordGenerator)}
     };
 
 }
