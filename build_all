@@ -4,7 +4,7 @@ LDFLAGS   =
 BDIR      = build
 VPATH     = src src/Match src/IO src/Match/Base src/Lex src/Gen src/Syntax src/Parse
 SOURCES   = Compiler.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lex.cpp \
-            StatementParsers.cpp Parse.cpp Language.cpp StatementResult.cpp \
+            StatementBuilders.cpp StatementHelpers.cpp Language.cpp StatementResult.cpp \
             Statements.cpp TokenParsers.cpp
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
 EXECUTABLE= $(BDIR)/Compiler

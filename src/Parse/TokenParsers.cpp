@@ -3,9 +3,9 @@
 namespace Parse
 {
 
-    std::function<TokenResult(std::vector<SymbolicToken>)> subTypeParser(ParseFunction parser)
+    SymbolicTokenParser subTypeParser(ParseFunction parser)
     {
-        auto parseTokens = [parser](std::vector<SymbolicToken> tokens)
+        auto parseTokens = [parser](SymbolicTokens tokens)
         {
             auto terms = Terms();
             terms.reserve(tokens.size());
@@ -18,17 +18,17 @@ namespace Parse
             if(result.result)
             {
                 return TokenResult(true,
-                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        std::vector<SymbolicToken>(tokens.begin() + result.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult(false, std::vector<SymbolicToken>(), tokens);
+            return TokenResult(false, SymbolicTokens(), tokens);
         };
         return parseTokens;
     }
 
-    std::function<TokenResult(std::vector<SymbolicToken>)> typeParser(ParseFunction parser)
+    SymbolicTokenParser typeParser(ParseFunction parser)
     {
-        auto parseTokens = [parser](std::vector<SymbolicToken> tokens)
+        auto parseTokens = [parser](SymbolicTokens tokens)
         {
             auto terms = Terms();
             terms.reserve(tokens.size());
@@ -41,17 +41,17 @@ namespace Parse
             if(result.result)
             {
                 return TokenResult(true,
-                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        std::vector<SymbolicToken>(tokens.begin() + result.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + result.parsed.size()),
+                        SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end()));
             }
-            return TokenResult(false, std::vector<SymbolicToken>(), tokens);
+            return TokenResult(false, SymbolicTokens(), tokens);
         };
         return parseTokens;
     }
 
-    std::function<TokenResult(std::vector<SymbolicToken>)> dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType)
+    SymbolicTokenParser dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType)
     {
-        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](std::vector<SymbolicToken> tokens)
+        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](SymbolicTokens tokens)
         {
             auto typeResult    = typeParser    (typeParserFunc)    (tokens);
             auto subTypeResult = subTypeParser (subTypeParserFunc) (tokens);
@@ -60,17 +60,17 @@ namespace Parse
                 if(byType)
                 {
                 return TokenResult(true,
-                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
-                        std::vector<SymbolicToken>(tokens.begin() + typeResult.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
+                        SymbolicTokens(tokens.begin() + typeResult.parsed.size(), tokens.end()));
                 }
                 else
                 {
                 return TokenResult(true,
-                        std::vector<SymbolicToken>(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
-                        std::vector<SymbolicToken>(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
+                        SymbolicTokens(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
                 }
             }
-            return TokenResult(false, std::vector<SymbolicToken>(), tokens);
+            return TokenResult(false, SymbolicTokens(), tokens);
         };
         return parseTokens;
     }
