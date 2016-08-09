@@ -1,7 +1,7 @@
-#include <algorithm>
-#include <tuple>
 #include "Seperate.hpp"
 #include <iostream>
+#include <algorithm>
+#include <tuple>
 
 namespace Lex
 {

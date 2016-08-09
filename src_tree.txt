@@ -1,0 +1,48 @@
+.
+├── Compiler.cpp
+├── Compiler.hpp
+├── IO
+│   ├── IO.cpp
+│   └── IO.hpp
+├── Lex
+│   ├── Import.hpp
+│   ├── Language.cpp
+│   ├── Language.hpp
+│   ├── Lex.cpp
+│   ├── Lex.hpp
+│   ├── Seperate.cpp
+│   └── Seperate.hpp
+├── Match
+│   ├── Base
+│   │   ├── Consumed.hpp
+│   │   ├── Locale.cpp
+│   │   ├── Locale.hpp
+│   │   ├── Result.hpp
+│   │   ├── Templates.cpp
+│   │   ├── Templates.hpp
+│   │   └── Types.hpp
+│   └── Match.hpp
+├── Parse
+│   ├── StatementBuilders.cpp
+│   ├── StatementBuilders.hpp
+│   ├── StatementHelpers.cpp
+│   ├── StatementHelpers.hpp
+│   ├── StatementResult.cpp
+│   ├── StatementResult.hpp
+│   ├── TokenParsers.cpp
+│   ├── TokenParsers.hpp
+│   ├── TokenResult.hpp
+│   └── Typename.hpp
+├── src_tree.txt
+├── Syntax
+│   ├── Statements.cpp
+│   ├── Statements.hpp
+│   ├── Symbols.hpp
+│   └── Syntax.hpp
+└── Types
+    ├── Import.hpp
+    ├── SymbolicToken.hpp
+    ├── Symbolize.hpp
+    └── Token.hpp
+
+7 directories, 38 files

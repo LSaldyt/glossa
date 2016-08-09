@@ -5,27 +5,25 @@
 
 namespace Syntax
 {
-    enum class Op : char
-    {
-        Add = '+',
-        Sub = '-',
-        Mul = '*',
-        Div = '/',
-        Exp = '^',
-        Eq  = '=',
-        RP  = ')',
-        LP  = '(',
-        Col = ':'
-    };
-
     struct Symbol
     {
         virtual std::string representation(){ return ""; }
     };
 
-    struct NewLine : public Symbol
+    template < typename T>
+    class Literal : public Symbol
     {
-        std::string representation(){return "\n";}
+        T value;
+    public:
+        Literal(T set_value)
+        {
+            value = set_value; 
+        }
+
+        virtual std::string representation()
+        {
+            return std::to_string(value);
+        }
     };
 
     using SymbolGenerator  = std::function<std::shared_ptr<Symbol>(std::string)>;
@@ -33,32 +31,16 @@ namespace Syntax
 
     struct Operator : public Symbol
     {
-        Op op;
-        Operator(Op set_op){op = set_op;}
-        std::string representation()
+        std::string value;
+        Operator(std::string set_value)
         {
-            return std::string(1, (char)op);
+            value = set_value;
         }
     };
 
-    const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(Op(term[0])));};
+    const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(term));};
 
-
-    struct Literal : public Symbol
-    {
-
-    };
-
-    struct Integer : public Literal
-    {
-        int value;
-        Integer(int set_value) { value = set_value; }
-        std::string representation()
-        {
-            return std::to_string(value);
-        }
-    };
-
+    using Integer = Literal<int>;
     const auto intGenerator = [](std::string s){ return std::make_shared<Integer>(Integer(std::stoi(s))); };
 
     struct Identifier : public Symbol

@@ -1,16 +1,15 @@
 #pragma once
-#include "../Types/Token.hpp"
+#include "../Types/SymbolicToken.hpp"
 
-template< typename TokenType >
 struct TokenResult
 {
     bool result;
-    std::vector<TokenType> parsed;
-    std::vector<TokenType> remaining;
+    SymbolicTokens parsed;
+    SymbolicTokens remaining;
 
     TokenResult(bool set_result              = false,
-                std::vector<TokenType> set_parsed    = std::vector<TokenType>(),
-                std::vector<TokenType> set_remaining = std::vector<TokenType>())
+                SymbolicTokens set_parsed    = SymbolicTokens(),
+                SymbolicTokens set_remaining = SymbolicTokens())
     {
         result    = set_result;
         parsed    = set_parsed;

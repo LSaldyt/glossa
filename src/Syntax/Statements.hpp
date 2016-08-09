@@ -2,7 +2,6 @@
 #include "Symbols.hpp"
 namespace Syntax
 {
-
     struct Statement
     {
         virtual std::string generator();
