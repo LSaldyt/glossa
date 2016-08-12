@@ -21,6 +21,7 @@ namespace Lex
             tokens.push_back(std::get<0>(result));
             terms = std::get<1>(result);
         }
+        std::cout << "Identification finished" << std::endl;
 
         return tokens;
     }

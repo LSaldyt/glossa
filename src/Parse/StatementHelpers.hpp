@@ -15,7 +15,7 @@ namespace Parse
 
     using StatementParser = std::function<StatementResult(SymbolicTokens&)>;
 
-    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens);
+    void advance(SymbolicTokenParser function, SymbolicTokens& tokens);
 
     struct bad_bind : public std::exception 
     {

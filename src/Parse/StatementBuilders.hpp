@@ -14,7 +14,6 @@ namespace Parse
         bindIdent(a.identifier, tokens);
         advance(subType("="),   tokens);
         bindExpression(a.value, tokens);
-        advance(subType("\n"),  tokens);
         return std::make_shared<Assignment>(a);
         });
 

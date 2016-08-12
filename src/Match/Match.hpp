@@ -38,6 +38,13 @@ namespace Match
         return singleTemplate(comparator);
     };
 
+    //Parse a single string, exactly
+    const auto startswith = [](std::string value)
+    {
+        auto comparator = [value](Term term){ return std::string(term.begin(), term.begin() + value.size()) == value; };
+        return singleTemplate(comparator);
+    };
+
     // Change the success of a parser
     const auto inverse = [](ParseFunction parser)
     {

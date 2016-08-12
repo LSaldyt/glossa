@@ -42,6 +42,18 @@ namespace Lex
 
         for(auto it = sentence.begin(); it != sentence.end(); ++it)
         {
+            if (*it == '"')
+            {
+                std::string remaining(it + 1, sentence.end());
+                std::size_t found = remaining.find("\"");
+                if (found!=std::string::npos)
+                {
+                    found += 2; //Account for " characters
+                    terms.push_back(std::string(it, it + found));
+                    current = it + found;
+                    it      = it + found;
+                }
+            }
             auto found = find_seperator(std::string(it, sentence.end()), seperators);
             if(std::get<0>(found))
             {

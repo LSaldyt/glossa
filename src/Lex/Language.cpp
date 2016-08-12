@@ -2,11 +2,12 @@
 
 namespace Lex
 {
-    LanguageParser::LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type)
+    LanguageParser::LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type, int set_precedence)
     {
-        parser = set_parser;
-        name   = set_name;
-        type   = set_type;
+        parser     = set_parser;
+        name       = set_name;
+        type       = set_type;
+        precedence = set_precedence;
     }
 
     Language::Language(const LanguageTermSets& set_term_sets, const LanguageParsers&  set_language_parsers) {
@@ -20,7 +21,7 @@ namespace Lex
         {
             for (auto term : std::get<0>(term_set))
             {
-                language_parsers.push_back(LanguageParser(just(term), term, std::get<1>(term_set)));
+                language_parsers.push_back(LanguageParser(just(term), term, std::get<1>(term_set), 1));
                 if(std::get<1>(term_set) != "keyword") //seperating by keywords would make identifiers containing keywords impossible
                 {
                     seperators.push_back(std::make_tuple(term, true));
@@ -28,6 +29,9 @@ namespace Lex
             }
         }
 
+        std::sort(language_parsers.begin(), language_parsers.end(), [](auto &left, auto &right) {
+                    return left.precedence < right.precedence;
+                    });
         for (auto p : language_parsers)
         {
             std::cout << p.name << " " << p.type << std::endl;
