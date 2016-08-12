@@ -50,7 +50,6 @@ namespace Parse
                 }
             }
             tokens = SymbolicTokens(tokens.begin() + e.extensions.size() + 1, tokens.end());
-            advance(subTypeParser(just("\n")), tokens);
             return std::make_tuple(true, e);
         }
         else

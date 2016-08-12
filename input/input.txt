@@ -1,3 +1,5 @@
 
+print("hello world")
+
 foo(x):
   return x

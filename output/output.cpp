@@ -1,4 +1,5 @@
 #include "std/std.hpp"
 int main(){
-foo(x);
+print("hello world");
+const auto foo = [=](auto x){ return x; };
 }
