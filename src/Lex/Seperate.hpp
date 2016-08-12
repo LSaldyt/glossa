@@ -8,23 +8,10 @@ namespace Lex
 
     Terms seperate(const std::string& sentence, const Seperators &seperators);
 
-    const Seperators mathematical =
-    {
-    std::make_tuple(" ", false),
-    std::make_tuple("+", true),
-    std::make_tuple("-", true),
-    std::make_tuple("*", true),
-    std::make_tuple("/", true),
-    std::make_tuple("(", true),
-    std::make_tuple(")", true),
-    std::make_tuple("^", true),
-    std::make_tuple("=", true)
-    };
-
     const Seperators whitespace =
     {
-        std::make_tuple(" ",    false),
-        std::make_tuple("\t",   false),
-        std::make_tuple("\n",   false)
+        std::make_tuple(" ",  false),
+        std::make_tuple("\t", false),
+        std::make_tuple("\n", false)
     };
 }

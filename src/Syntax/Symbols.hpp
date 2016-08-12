@@ -86,7 +86,9 @@ namespace Syntax
         }
     };
 
-    const auto stringGenerator = [](std::vector<std::string> s){return std::make_shared<String>(String(s[1]));};
+    const auto stringGenerator = [](std::string s){
+        return std::make_shared<String>(String(std::string(s.begin() + 1, s.end() - 1)));
+    };
 
     const auto single = [](std::function<std::shared_ptr<Symbol>(std::string)> f){
         return [f](std::vector<std::string> values){return f(values[0]); };
@@ -97,7 +99,7 @@ namespace Syntax
      {"operator",   single(opGenerator)},
      {"identifier", single(identifierGenerator)},
      {"keyword",    single(keywordGenerator)},
-     {"string",     stringGenerator}
+     {"string",     single(stringGenerator)}
     };
 
 }

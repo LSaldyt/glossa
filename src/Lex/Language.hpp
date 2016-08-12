@@ -11,7 +11,8 @@ namespace Lex
         ParseFunction parser;
         std::string name;
         std::string type;
-        LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type);
+        int precedence;
+        LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type, int set_precedence);
     };
 
     using LanguageParsers  = std::vector<LanguageParser>;

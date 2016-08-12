@@ -1,2 +1,3 @@
-print("Hello foo(x) : return yes * 2")
 
+foo(x):
+  return x

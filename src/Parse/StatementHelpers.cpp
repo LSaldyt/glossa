@@ -2,17 +2,16 @@
 
 namespace Parse
 {
-    bool advance(SymbolicTokenParser function, SymbolicTokens& tokens)
+    void advance(SymbolicTokenParser function, SymbolicTokens& tokens)
     {
         auto result = function(tokens);
         if (!result.result)
         {
-            return false;
+            throw bad_bind("Failed to bind to advance parser"); 
         }
         else
         {
             tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
-            return true;
         }
     }
 

@@ -13,9 +13,9 @@ int main()
     term_set.push_back(std::make_tuple(operators, "operator"));
 
     Lex::LanguageParsers  parser_set = {
-        LanguageParser(digits, "int", "type"),
-        LanguageParser(inOrder({just("\""), many(alphas), just("\"")}), "string", "string"),
-        LanguageParser(alphas, "identifier", "identifier")};
+        LanguageParser(digits, "int", "type", 3),
+        LanguageParser(startswith("\""), "string", "string", 1),
+        LanguageParser(alphas, "identifier", "identifier", 3)};
 
     Lex::Language test_language(term_set, parser_set);
 
