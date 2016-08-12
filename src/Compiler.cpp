@@ -6,7 +6,7 @@ int main()
     using namespace Compiler;
 
     Terms keywords  = {"return"};
-    Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ",", "\""};
+    Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ","};
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(keywords, "keyword"));

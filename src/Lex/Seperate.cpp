@@ -35,6 +35,7 @@ namespace Lex
         return found;
     }
 
+    /*
     Terms seperate(const std::string& sentence, const Seperators &seperators)
     {
         auto terms = Terms();
@@ -42,6 +43,51 @@ namespace Lex
 
         for(auto it = sentence.begin(); it != sentence.end(); ++it)
         {
+            auto found = find_seperator(std::string(it, sentence.end()), seperators);
+            if(std::get<0>(found))
+            {
+                if (current != it)
+                {
+                    terms.push_back(std::string(current, it));
+                }
+                if(std::get<1>(found))
+                {
+                    terms.push_back(std::string(it, it+std::get<2>(found)));
+                }
+                current = it + std::get<2>(found);
+                if (std::get<2>(found) > 0)
+                {
+                    it += std::get<2>(found) - 1;
+                }
+            }
+            else if(it+1 == sentence.end())
+            {
+                terms.push_back(std::string(current, it+1));
+            }
+        }
+        return terms;
+    }
+    */
+
+    Terms seperate(const std::string& sentence, const Seperators &seperators)
+    {
+        auto terms = Terms();
+        auto current = sentence.begin();
+
+        for(auto it = sentence.begin(); it != sentence.end(); ++it)
+        {
+            if (*it == '"')
+            {
+                std::string remaining(it + 1, sentence.end());
+                std::size_t found = remaining.find("\"");
+                if (found!=std::string::npos)
+                {
+                    found += 2; //Account for " characters
+                    terms.push_back(std::string(it, it + found));
+                    current = it + found;
+                    it      = it + found;
+                }
+            }
             auto found = find_seperator(std::string(it, sentence.end()), seperators);
             if(std::get<0>(found))
             {
