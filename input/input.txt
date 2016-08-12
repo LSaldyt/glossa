@@ -1,5 +1,17 @@
 
 print("hello world")
 
-foo(x):
-  return x
+bar(y):
+    print("Creating meta-function foo")
+
+    foo(x):
+
+      print("running foo with values:")
+      print(x)
+      print(y)
+
+      return x
+
+    return foo
+
+bar(2)
