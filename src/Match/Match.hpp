@@ -140,11 +140,11 @@ namespace Match
         return multiTemplate(consumer);
     };
 
-    const auto sepBy = [](ParseFunction parser)
+    const auto sepBy = [](ParseFunction sep, ParseFunction val=wildcard)
     {
         return inOrder({
-        wildcard,
-        many(inOrder({parser, wildcard}))
+        val,
+        many(inOrder({sep, val}))
         });
     };
 
