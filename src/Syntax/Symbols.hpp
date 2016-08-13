@@ -36,6 +36,10 @@ namespace Syntax
         {
             value = set_value;
         }
+        std::string representation()
+        {
+            return value;
+        }
     };
 
     const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(term));};

@@ -15,11 +15,9 @@ namespace Parse
         }
     }
 
-
-
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
     {
-        const auto validType = typeParser(allOf({anyOf({just("type"), just("identifier")}), inverse(just("keyword"))}));
+        const auto validType = typeParser(anyOf({just("type"), just("identifier")}));
         Expression e;
         const auto validPair = [validType](std::tuple<SymbolicToken, SymbolicToken> pair)
         {

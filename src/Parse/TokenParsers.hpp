@@ -5,7 +5,8 @@
 namespace Parse
 {
     using namespace Match;
-    using SymbolicTokenParser = std::function<TokenResult(SymbolicTokens)>;
+    using SymbolicTokenParser  = std::function<TokenResult(SymbolicTokens)>;
+    using SymbolicTokenParsers = std::vector<SymbolicTokenParser>;
 
     //Convert a standard parseFunction to one that parses Tokens
     SymbolicTokenParser subTypeParser(ParseFunction parser);
