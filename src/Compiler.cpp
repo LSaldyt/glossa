@@ -9,7 +9,7 @@ int main()
     Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ","};
 
     Lex::LanguageTermSets term_set;
-    term_set.push_back(std::make_tuple(keywords, "keyword"));
+    term_set.push_back(std::make_tuple(keywords,  "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
 
     Lex::LanguageParsers  parser_set = {
@@ -20,7 +20,8 @@ int main()
     Lex::Language test_language(term_set, parser_set);
 
     auto content         = readFile     ("../input/input.txt");
-    auto tokens          = tokenPass    (content, test_language); auto symbolic_tokens = symbolicPass (tokens);
+    auto tokens          = tokenPass    (content, test_language); 
+    auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
     for(auto jt : joined_tokens)
@@ -38,9 +39,8 @@ int main()
         std::cout << "Successfully parsed " << std::get<1>(statementresults).size() << " Statements" << std::endl;
         for (auto statementresult : std::get<1>(statementresults))
         {
-            print("Success!");
-            auto generated = statementresult->generator();
-            print(generated);
+            auto generated = statementresult->representation();
+            std::cout << generated << std::endl;
             output.push_back(generated);
         }
     }

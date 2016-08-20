@@ -1,7 +1,7 @@
+f(x):
+  print(x)
+  return x * 8
 
-print("hello world")
+x = 5 * f(42)
 
-
-foo(x, y):
-  return x + y
-
+y = 3 + 2
