@@ -59,6 +59,6 @@ namespace Syntax
                 arglist += ", ";
             }
         }
-        return identifier + "(" + arglist + ")";
+        return identifier + "(" + arglist + ");";
     }
 }

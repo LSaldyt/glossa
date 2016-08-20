@@ -39,9 +39,8 @@ int main()
         std::cout << "Successfully parsed " << std::get<1>(statementresults).size() << " Statements" << std::endl;
         for (auto statementresult : std::get<1>(statementresults))
         {
-            print("Success!");
             auto generated = statementresult->representation();
-            print(generated);
+            std::cout << generated << std::endl;
             output.push_back(generated);
         }
     }

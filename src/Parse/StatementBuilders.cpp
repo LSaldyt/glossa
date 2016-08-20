@@ -64,10 +64,11 @@ namespace Parse
             {
                 tokens_copy = tokens;
             }
-            if (value(tokens_copy).result)
+            auto valresult = value(tokens_copy);
+            if (valresult.result)
             {
-                tokens = SymbolicTokens(tokens_copy.begin() + 1, tokens_copy.end());
-                return std::make_tuple(true, tokens_copy[0].value);
+                tokens = valresult.remaining;
+                return std::make_tuple(true, valresult.parsed[0].value);
             }
         }
         return std::make_tuple(false, std::make_shared<Symbol>(Symbol()));
@@ -95,7 +96,7 @@ namespace Parse
         while (parsing)
         {
             std::cout << "Parsing extensions" << std::endl;
-            auto first  = SymbolicTokens(1, tokens_copy[0]);
+            auto first  = SymbolicTokens(tokens_copy.begin(), tokens_copy.begin() + 1);
             tokens_copy = SymbolicTokens(tokens_copy.begin() + 1, tokens_copy.end());
 
             auto opresult  = typeParser(just("operator"))(first);
@@ -111,12 +112,12 @@ namespace Parse
                                         std::get<1>(valresult)));
                 std::cout << opresult.parsed[0].value->representation() << std::endl;
                 std::cout << std::get<1>(valresult)->representation() << std::endl;
+                parsing = tokens.size() > 1; 
             }
             else
             {
                 parsing = false;
             }
-            parsing = tokens.size() > 1; 
         }
         return std::make_tuple(true, e);
     }
