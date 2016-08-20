@@ -1,4 +1,6 @@
 #include "std/std.hpp"
 int main(){
-const auto f = [=](auto x){ return x = f(42) + 5; };
+const auto f = [=](auto x){ return x * 8; };
+const auto x = 5 * f(42);
+const auto y = 3 + 2;
 }

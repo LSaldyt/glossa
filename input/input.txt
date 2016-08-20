@@ -1,4 +1,7 @@
 f(x):
-  return x
+  return x * 8
 
-x = f(42) + 5
+
+x = 5 * f(42)
+
+y = 3 + 2
