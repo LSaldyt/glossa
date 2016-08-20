@@ -4,12 +4,12 @@
 namespace Syntax
 {
 
-    std::string Statement::generator(){ return ""; }
+    std::string Statement::representation(){ return ""; }
 
     Expression::Expression() : base(std::make_shared<Symbol>(Integer(0))),
                                extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>()){}
 
-    std::string Expression::generator()
+    std::string Expression::representation()
     {
         std::string generated = base->representation();
         for (auto e : extensions)
@@ -19,14 +19,14 @@ namespace Syntax
         return generated;
     }
 
-    std::string Assignment::generator()
+    std::string Assignment::representation()
     {
-        return ("const auto " + identifier + " = " + value.generator() + ";");
+        return ("const auto " + identifier + " = " + value.representation() + ";");
     }
 
     Function::Function() : body(std::vector<std::shared_ptr<Statement>>()){}
 
-    std::string Function::generator()
+    std::string Function::representation()
     {
         std::string args = "";
         for (int i =0; i < argnames.size(); i++)
@@ -42,13 +42,13 @@ namespace Syntax
         std::string body_string = "";
         for (auto statement : body)
         {
-            body_string += statement->generator();
+            body_string += statement->representation();
         }
 
-        return "const auto " + identifier + " = [=](" + args + "){" + body_string + " return "+ return_expression.generator() + "; };";
+        return "const auto " + identifier + " = [=](" + args + "){" + body_string + " return "+ return_expression.representation() + "; };";
     }
 
-    std::string FunctionCall::generator()
+    std::string FunctionCall::representation()
     {
         std::string arglist = "";
         for (int i =0; i < args.size(); i++)
@@ -59,6 +59,6 @@ namespace Syntax
                 arglist += ", ";
             }
         }
-        return identifier + "(" + arglist + ");";
+        return identifier + "(" + arglist + ")";
     }
 }

@@ -8,6 +8,8 @@ namespace Syntax
     struct Symbol
     {
         virtual std::string representation(){ return ""; }
+
+        Symbol(){}
     };
 
     template < typename T>

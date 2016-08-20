@@ -2,9 +2,9 @@
 #include "Symbols.hpp"
 namespace Syntax
 {
-    struct Statement
+    struct Statement : public Symbol
     {
-        virtual std::string generator();
+        virtual std::string representation();
     };
 
     struct Expression : public Statement
@@ -14,7 +14,7 @@ namespace Syntax
         std::shared_ptr<Symbol> base;
         std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>> extensions;
 
-        std::string generator();
+        std::string representation();
     };
 
     struct Assignment : public Statement
@@ -22,7 +22,7 @@ namespace Syntax
         std::string identifier;
         Expression value;
 
-        std::string generator();
+        std::string representation();
     };
 
     struct Function : public Statement
@@ -34,13 +34,13 @@ namespace Syntax
         std::vector<std::shared_ptr<Statement>> body;
         Expression                              return_expression;
 
-        std::string generator();
+        std::string representation();
     };
 
     struct FunctionCall : public Statement
     {
         std::string              identifier;
         std::vector<std::string> args;
-        std::string              generator();
+        std::string              representation();
     };
 }

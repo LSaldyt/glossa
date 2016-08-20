@@ -1,7 +1,4 @@
+f(x):
+  return x
 
-print("hello world")
-
-
-foo(x, y):
-  return x + y
-
+x = f(42) + 5
