@@ -1,19 +1,39 @@
 # IO
 
-### Currently, the `IO` module only defines a `readFile` function, which returns a vector of strings (lines) given a file name.
+### Currently, the `IO` module only defines `readFile` and `writeFile` functions
 
+`readFile`: returns a vector of strings (lines) given a file name.
+
+```cpp
     std::vector<std::string> readFile(std::string filename)
     {
-        std::vector<std::string> toReturn;
-    
+        // Read an entire file, line by line into a vector
+        std::vector<std::string> content;
+
         std::ifstream infile(filename);
         std::string line;
+
         while (std::getline(infile, line))
         {
-            toReturn.push_back(line);
+            content.push_back(line);
         }
-    
-        return toReturn;
+
+        return content;
     }
+```
   
-##### Eventually, this module will be used for writing either source to file, or creating object files. Most likely, the compiler will generate C++, and then compile it.
+`writeFile`: given a vector of strings and a filename, creates a file with the given lines
+
+```cpp
+void writeFile(std::vector<std::string> content, std::string filename)
+{
+    // Write a vector of lines into a file
+    std::ofstream file;
+    file.open(filename);
+    for (auto line : content)
+    {
+        file << (line + "\n");
+    }
+    file.close();
+}
+```
