@@ -4,7 +4,7 @@ LDFLAGS    =
 TESTBDIR   = tests/build
 BDIR       = build
 VPATH      = tests 
-SOURCES    = parse_tests.cpp suite.cpp 
+SOURCES    = match_tests.cpp suite.cpp 
 PREBUILT   = Templates.o Locale.o 
 PREOBJS    = $(PREBUILT:%.o=$(BDIR)/%.o)
 OBJECTS    = $(SOURCES:%.cpp=$(TESTBDIR)/%.o)

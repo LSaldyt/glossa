@@ -19,6 +19,7 @@ TEST_CASE( "Basic matching works")
         REQUIRE(inverse(just("nothello"))({"hello"}).result == true);
         REQUIRE(alphas(expected).consumed               == expected);
         REQUIRE(lowers(expected).consumed               == expected);
+        REQUIRE(startswith("h")(expected).consumed == expected);
     }
 
     SECTION ("more advanced matching works")
@@ -31,7 +32,12 @@ TEST_CASE( "Basic matching works")
         REQUIRE(allOf({hello, just("nothello")})({"hello"}).result == false);
 
         REQUIRE(inOrder(justFrom({"hello", "hello"}))(expected).consumed     == expected);
+    }
 
+    SECTION ("sepBy")
+    {
+        expected = {"a", ",", "b"};
+        REQUIRE(sepBy(just(","), alphas)(expected).consumed == expected); // Wont discard the comma, but will recognize it as valid
     }
 
     SECTION("digits")
@@ -58,3 +64,18 @@ TEST_CASE( "Basic matching works")
         REQUIRE(puncts(expected).consumed               == expected);
     }
 }
+
+/*
+ *
+namespace Match 
+{
+
+    const auto sepBy = [](MatchFunction sep, MatchFunction val=wildcard)
+    {
+        return inOrder({
+        val,
+        many(inOrder({sep, val}))
+        });
+    };
+
+ * */
