@@ -2,6 +2,7 @@
 
 namespace Parse
 {
+    // Parse a symbolic token, but discard it (throwing an exeption if it doesn't parse)
     void advance(SymbolicTokenParser function, SymbolicTokens& tokens)
     {
         auto result = function(tokens);
@@ -15,6 +16,8 @@ namespace Parse
         }
     }
 
+    // Helper function for catching exceptions during Statement Building
+    // Will convert exception handled interface into tuple of the form (success, remaining_tokens, statement)
     StatementParser statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder)
     {
        return [builder](SymbolicTokens& tokens)

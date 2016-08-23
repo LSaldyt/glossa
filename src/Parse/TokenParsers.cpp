@@ -3,7 +3,7 @@
 namespace Parse
 {
 
-    SymbolicTokenParser subTypeParser(ParseFunction parser)
+    SymbolicTokenParser subTypeParser(MatchFunction parser)
     {
         auto parseTokens = [parser](SymbolicTokens tokens)
         {
@@ -18,15 +18,15 @@ namespace Parse
             if(result.result)
             {
                 return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + result.consumed.size()),
+                        SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end()));
             }
             return TokenResult(false, SymbolicTokens(), tokens);
         };
         return parseTokens;
     }
 
-    SymbolicTokenParser typeParser(ParseFunction parser)
+    SymbolicTokenParser typeParser(MatchFunction parser)
     {
         auto parseTokens = [parser](SymbolicTokens tokens)
         {
@@ -41,15 +41,15 @@ namespace Parse
             if(result.result)
             {
                 return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + result.parsed.size()),
-                        SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + result.consumed.size()),
+                        SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end()));
             }
             return TokenResult(false, SymbolicTokens(), tokens);
         };
         return parseTokens;
     }
 
-    SymbolicTokenParser dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType)
+    SymbolicTokenParser dualTypeParser(MatchFunction typeParserFunc, MatchFunction subTypeParserFunc, bool byType)
     {
         auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](SymbolicTokens tokens)
         {

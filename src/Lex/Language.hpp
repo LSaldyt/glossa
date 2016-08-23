@@ -6,26 +6,28 @@ namespace Lex
     using LanguageTermSet  = std::tuple<Terms, std::string>;
     using LanguageTermSets = std::vector<LanguageTermSet>;
 
-    struct LanguageParser
+    // A single definition for lexing a language element (ie int, operator)
+    struct LanguageLexer
     {
-        ParseFunction parser;
+        MatchFunction match;
         std::string name;
         std::string type;
         int precedence;
-        LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type, int set_precedence);
+        LanguageLexer(MatchFunction set_match_function, std::string set_name, std::string set_type, int set_precedence);
     };
 
-    using LanguageParsers  = std::vector<LanguageParser>;
+    using LanguageLexers  = std::vector<LanguageLexer>;
 
+    // A collection of lexers/term sets that can Identify terms
     struct Language
     {
         Seperators    seperators;
 
         LanguageTermSets language_term_sets;
-        LanguageParsers  language_parsers;
+        LanguageLexers   language_lexers;
 
         Language(const LanguageTermSets& set_term_sets,
-                 const LanguageParsers&  set_language_parsers);
+                 const LanguageLexers&  set_language_lexers);
 
         std::tuple<Token, Terms> identify(Terms terms) const;
     };

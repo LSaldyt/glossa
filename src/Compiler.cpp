@@ -12,12 +12,12 @@ int main()
     term_set.push_back(std::make_tuple(keywords,  "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
 
-    Lex::LanguageParsers  parser_set = {
-        LanguageParser(digits, "int", "type", 3),
-        LanguageParser(startswith("\""), "string", "string", 1),
-        LanguageParser(alphas, "identifier", "identifier", 3)};
+    Lex::LanguageLexers lexer_set = {
+        LanguageLexer(digits, "int", "type", 3),
+        LanguageLexer(startswith("\""), "string", "string", 1),
+        LanguageLexer(alphas, "identifier", "identifier", 3)};
 
-    Lex::Language test_language(term_set, parser_set);
+    Lex::Language test_language(term_set, lexer_set);
 
     auto content         = readFile     ("../input/input.txt");
     auto tokens          = tokenPass    (content, test_language); 

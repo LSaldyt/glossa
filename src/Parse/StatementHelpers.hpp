@@ -17,6 +17,7 @@ namespace Parse
 
     void advance(SymbolicTokenParser function, SymbolicTokens& tokens);
 
+    // Thrown when a parser fails - allows cleanest early exit without constant boolean checks
     struct bad_bind : public std::exception 
     {
         std::string s;
@@ -26,43 +27,25 @@ namespace Parse
         }
     };
 
+    // Helper function for creating a Statement Builder from a function that returns a TokenResult and a function that creates a type from a set of tokens
     template < typename T >
     std::function<std::tuple<bool, T>(SymbolicTokens&)> builder 
-    (std::function<TokenResult(std::vector<SymbolicToken>)> function, std::function<T(SymbolicTokens)> converter)
+    (std::function<TokenResult(SymbolicTokens)> function, std::function<T(SymbolicTokens)> converter)
     {
         std::function<std::tuple<bool, T>(SymbolicTokens&)> f = [function, converter](SymbolicTokens& tokens)
         {
+            // Parse the tokens
             auto result = function(tokens);
             auto to_return = std::make_tuple(false, T());
             if (result.result)
             {
+                // If successful, build a statement from them using the converter function
                 tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
                 to_return = std::make_tuple(true, converter(result.parsed));
             }
             return to_return;
         };
         return f;
-    }
-
-    template <typename T>
-    std::vector<std::tuple<T, T>> toPairs(std::vector<T> items)
-    {
-        std::vector<std::tuple<T, T>> pairs;
-
-        auto it = items.begin();
-        while(it != items.end())
-        {
-            if(it + 1 != items.end())
-            {
-                pairs.push_back(std::make_tuple(*it, *(it+1)));
-                it += 2; //Iterate two items at a time 
-            }
-            else
-            {
-                break;
-            }
-        }
-        return pairs;
     }
 
     StatementParser statementBuilder(std::function<std::shared_ptr<Statement>(SymbolicTokens&)> builder);
@@ -73,6 +56,7 @@ namespace Parse
     std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
 
 
+    // helper functions used in binders/builders
     const auto identifierParser = typeParser(just("identifier"));
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)
@@ -113,6 +97,7 @@ namespace Parse
     const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
 
 
+    // Convert a builder to a binder
     template <typename T>
     std::function<void(T&, SymbolicTokens&)> createBinder(std::function<std::tuple<bool, T>(SymbolicTokens&)> typeGenerator)
     {
@@ -129,6 +114,7 @@ namespace Parse
         };
     }
 
+    // Commonly used binders
     const auto bindIdent      = createBinder<std::string>                             (genIdent);
     const auto bindArgnames   = createBinder<std::vector<std::string>>                (commaSepList);
     const auto bindStatements = createBinder<std::vector<std::shared_ptr<Statement>>> (buildStatements);

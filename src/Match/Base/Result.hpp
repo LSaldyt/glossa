@@ -8,9 +8,9 @@ namespace Match
         Terms remaining;
 
         Result(bool set_result=false,
-               Terms set_parsed    = Terms(),
+               Terms set_consumed    = Terms(),
                Terms set_remaining = Terms())
-               : Consumed(set_result, set_parsed)
+               : Consumed(set_result, set_consumed)
         {
             remaining = set_remaining;
         }
