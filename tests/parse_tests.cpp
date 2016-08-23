@@ -1,60 +1,60 @@
 #include "catch.hpp"
-#include "../src/Utilities/Parse/Parse.hpp"
+#include "../src/Match/Match.hpp"
 
-TEST_CASE( "Basic Parsers work")
+TEST_CASE( "Basic matching works")
 {
-    using namespace Parse;
+    using namespace Match;
     Terms expected;
 
     auto hello = just("hello");
 
-    SECTION ("standard parsers work")
+    SECTION ("standard matching works")
     {
         expected = {"hello"};
-        REQUIRE(hello(expected).parsed        == expected);
-        REQUIRE(wildcard(expected).parsed             == expected);
-        REQUIRE(subsetOf("ehlo")(expected).parsed     == expected);
-        ParseFunctions parsers = {hello, wildcard, subsetOf("ehlo")};
-        REQUIRE(anyOf(parsers)(expected).parsed       == expected);
+        REQUIRE(hello(expected).consumed        == expected);
+        REQUIRE(wildcard(expected).consumed             == expected);
+        REQUIRE(subsetOf("ehlo")(expected).consumed     == expected);
+        MatchFunctions matchers = {hello, wildcard, subsetOf("ehlo")};
+        REQUIRE(anyOf(matchers)(expected).consumed       == expected);
         REQUIRE(inverse(just("nothello"))({"hello"}).result == true);
-        REQUIRE(alphas(expected).parsed               == expected);
-        REQUIRE(lowers(expected).parsed               == expected);
+        REQUIRE(alphas(expected).consumed               == expected);
+        REQUIRE(lowers(expected).consumed               == expected);
     }
 
-    SECTION ("more advanced parsers work")
+    SECTION ("more advanced matching works")
     {
         expected = {"hello", "hello"};
-        REQUIRE(many(hello)(expected).parsed  == expected);
-        REQUIRE(inOrder({hello, hello})(expected).parsed == expected);
+        REQUIRE(many(hello)(expected).consumed  == expected);
+        REQUIRE(inOrder({hello, hello})(expected).consumed == expected);
 
         REQUIRE(allOf({hello, wildcard})({"hello"}).result         == true);
         REQUIRE(allOf({hello, just("nothello")})({"hello"}).result == false);
 
-        REQUIRE(inOrder(justFrom({"hello", "hello"}))(expected).parsed     == expected);
+        REQUIRE(inOrder(justFrom({"hello", "hello"}))(expected).consumed     == expected);
 
     }
 
     SECTION("digits")
     {
         expected = {"123"};
-        REQUIRE(digits(expected).parsed               == expected);
+        REQUIRE(digits(expected).consumed               == expected);
     }
 
     SECTION("uppers")
     {
         expected = {"HELLO"};
-        REQUIRE(uppers(expected).parsed               == expected);
+        REQUIRE(uppers(expected).consumed               == expected);
     }
 
     SECTION("operators")
     {
         expected = {"+"};
-        REQUIRE(subsetOf("+-/*")(expected).parsed              == expected);
+        REQUIRE(subsetOf("+-/*")(expected).consumed              == expected);
     }
 
     SECTION("punctuation")
     {
         expected = {"!?"};
-        REQUIRE(puncts(expected).parsed               == expected);
+        REQUIRE(puncts(expected).consumed               == expected);
     }
 }

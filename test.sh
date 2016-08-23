@@ -7,6 +7,7 @@ function runtests {
 }
 
 echo Running application ..
+make all
 make test_suite
 makesuccess=$?
 

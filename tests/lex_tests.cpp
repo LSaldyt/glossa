@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "../src/Utilities/Lex/Lex.hpp"
-#include "../src/Utilities/Language.hpp"
+#include "../src/Lex/Lex.hpp"
+#include "../src/Language.hpp"
 
 TEST_CASE("The lexer and language modules work")
 {
