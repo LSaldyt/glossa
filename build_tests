@@ -4,8 +4,8 @@ LDFLAGS    =
 TESTBDIR   = tests/build
 BDIR       = build
 VPATH      = tests 
-SOURCES    = match_tests.cpp suite.cpp 
-PREBUILT   = Templates.o Locale.o 
+SOURCES    = match_tests.cpp suite.cpp lex_tests.cpp 
+PREBUILT   = Templates.o Locale.o Language.o Seperate.o Lex.o 
 PREOBJS    = $(PREBUILT:%.o=$(BDIR)/%.o)
 OBJECTS    = $(SOURCES:%.cpp=$(TESTBDIR)/%.o)
 EXECUTABLE = $(TESTBDIR)/suite
