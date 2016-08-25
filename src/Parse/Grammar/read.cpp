@@ -2,12 +2,13 @@
 
 int main()
 {
+    using namespace Grammar;
 
     auto assignment = read("assignment.grm");
-    auto result     = assignment({SymbolicToken(std::make_shared<Symbol>(Statement), "identifier", "identifier"),
-                                  SymbolicToken(std::make_shared<Symbol>(Statement), "=", "operator"),
-                                  SymbolicToken(std::make_shared<Symbol>(Statement), "int", "type")})
-    std::cout << std::get<0>(result); 
+    //auto result     = assignment({SymbolicToken(std::make_shared<Symbol>(Statement), "identifier", "identifier"),
+    //                              SymbolicToken(std::make_shared<Symbol>(Statement), "=", "operator"),
+    //                              SymbolicToken(std::make_shared<Symbol>(Statement), "int", "type")})
+    //std::cout << std::get<0>(result); 
 }
 
 /*
