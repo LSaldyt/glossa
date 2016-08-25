@@ -6,14 +6,14 @@ namespace Match
 
     struct Consumed
     {
-        bool   result;
-        Terms parsed;
+        bool  result;
+        Terms consumed;
 
-        Consumed(bool set_result = false,
-                 Terms set_parsed = Terms())
+        Consumed(bool set_result    = false,
+                 Terms set_consumed = Terms())
         {
             result = set_result;
-            parsed = set_parsed;
+            consumed = set_consumed;
         }
     };
 }

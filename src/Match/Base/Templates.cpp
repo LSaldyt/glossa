@@ -2,25 +2,25 @@
 
 namespace Match 
 {
-    ParseFunction parseTemplate(Consumer consumer)
+    MatchFunction matchTemplate(Consumer consumer)
     {
-        ParseFunction func_template = [consumer](Terms terms)
+        MatchFunction func_template = [consumer](Terms terms)
             {
                 auto result = Result(false, Terms(), terms);
 
                 auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
-                    Terms parsed    = consumer_result.parsed;
-                    Terms remaining (terms.begin() + parsed.size(), terms.end());
-                    result = Result(true, parsed, remaining);
+                    Terms consumed    = consumer_result.consumed;
+                    Terms remaining (terms.begin() + consumed.size(), terms.end());
+                    result = Result(true, consumed, remaining);
                 }
                 return result;
             };
         return func_template;
     }
 
-    ParseFunction singleTemplate(Comparator comparator)
+    MatchFunction singleTemplate(Comparator comparator)
     {
         Consumer consumer = [comparator](Terms terms)
         {
@@ -35,29 +35,29 @@ namespace Match
             }
             return consumed;
         };
-        return parseTemplate(consumer);
+        return matchTemplate(consumer);
     }
 
-    ParseFunction multiTemplate(Consumer consumer)
+    MatchFunction multiTemplate(Consumer consumer)
     {
         Consumer template_consumer = [consumer](Terms terms)
         {
-            auto parsed = Terms(); //An empty list of terms
+            auto consumed = Terms(); //An empty list of terms
             while(terms.size() > 0)
             {
                 auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
-                    parsed.insert(parsed.end(), consumer_result.parsed.begin(), consumer_result.parsed.end());
-                    terms = Terms(terms.begin() + consumer_result.parsed.size(), terms.end());
+                    consumed.insert(consumed.end(), consumer_result.consumed.begin(), consumer_result.consumed.end());
+                    terms = Terms(terms.begin() + consumer_result.consumed.size(), terms.end());
                 }
                 else
                 {
                     break;
                 }
             }
-            return Consumed(true, parsed);
+            return Consumed(true, consumed);
         };
-        return parseTemplate(template_consumer);
+        return matchTemplate(template_consumer);
     }
 }

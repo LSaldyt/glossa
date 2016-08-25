@@ -9,8 +9,8 @@ namespace Parse
     using SymbolicTokenParsers = std::vector<SymbolicTokenParser>;
 
     //Convert a standard parseFunction to one that parses Tokens
-    SymbolicTokenParser subTypeParser(ParseFunction parser);
-    SymbolicTokenParser typeParser(ParseFunction parser);
-    SymbolicTokenParser dualTypeParser(ParseFunction typeParserFunc, ParseFunction subTypeParserFunc, bool byType);
+    SymbolicTokenParser subTypeParser(MatchFunction parser);
+    SymbolicTokenParser typeParser(MatchFunction parser);
+    SymbolicTokenParser dualTypeParser(MatchFunction typeParserFunc, MatchFunction subTypeParserFunc, bool byType);
 }
 

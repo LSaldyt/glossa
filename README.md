@@ -2,9 +2,10 @@
 
 A simple compiler:
 
-[Parser](./src/Parse/Parser.md)  
-[Lexer](./src/Lex/Lexer.md)  
-[IO](./src/IO/IO.md)  
+[Matching](./docs/Match.md)
+[Parser](./docs/Parser.md)  
+[Lexer](./docs/Lexer.md)  
+[IO](./docs/IO.md)  
 
 (Documentation for code gen and other features will be added as they become more robust)
 

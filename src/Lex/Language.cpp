@@ -2,60 +2,61 @@
 
 namespace Lex
 {
-    LanguageParser::LanguageParser(ParseFunction set_parser, std::string set_name, std::string set_type, int set_precedence)
+    LanguageLexer::LanguageLexer(MatchFunction set_match_function, std::string set_name, std::string set_type, int set_precedence)
     {
-        parser     = set_parser;
+        match      = set_match_function;
         name       = set_name;
         type       = set_type;
         precedence = set_precedence;
     }
 
-    Language::Language(const LanguageTermSets& set_term_sets, const LanguageParsers&  set_language_parsers) {
+    Language::Language(const LanguageTermSets& set_term_sets, const LanguageLexers&  set_language_lexers) {
         language_term_sets = set_term_sets;
 
+        // Always seperate by whitespace
         seperators.insert(seperators.end(), whitespace.begin(), whitespace.end());
 
-        language_parsers.insert(language_parsers.end(), set_language_parsers.begin(), set_language_parsers.end());
+        // Custom language lexers (like int, string, etc..)
+        language_lexers.insert(language_lexers.end(), set_language_lexers.begin(), set_language_lexers.end());
 
+        // Add term sets (like operators) to a language's seperators
         for (auto term_set : language_term_sets)
         {
             for (auto term : std::get<0>(term_set))
             {
-                language_parsers.push_back(LanguageParser(just(term), term, std::get<1>(term_set), 1));
+                language_lexers.push_back(LanguageLexer(just(term), term, std::get<1>(term_set), 1));
                 if(std::get<1>(term_set) != "keyword") //seperating by keywords would make identifiers containing keywords impossible
                 {
-                    seperators.push_back(std::make_tuple(term, true));
+                    seperators.push_back(std::make_tuple(term, true)); // Keep seperators from term sets (ie operators)
                 }
             }
         }
 
-        std::sort(language_parsers.begin(), language_parsers.end(), [](auto &left, auto &right) {
+        // Enforce lexing precedence
+        std::sort(language_lexers.begin(), language_lexers.end(), [](auto &left, auto &right) {
                     return left.precedence < right.precedence;
                     });
-        for (auto p : language_parsers)
+        std::cout << "Language lexers (sorted by precedence): " << std::endl;
+        for (auto lexer : language_lexers)
         {
-            std::cout << p.name << " " << p.type << std::endl;
+            std::cout << lexer.name << " " << lexer.type << std::endl;
         }
     }
 
     std::tuple<Token, Terms> Language::identify(Terms terms) const
     {
-        for (auto parser : language_parsers)
+        // Return result of first lexer to match against remaining terms
+        for (auto lexer : language_lexers)
         {
-            std::cout << "Attempting to identify if term is " << parser.name << std::endl;
-            auto result = parser.parser(terms);
-            std::cout << "Parsed: " << std::endl;
-            for (auto p : result.parsed)
-            {
-                std::cout << p << std::endl;
-            }
+            auto result = lexer.match(terms);
             if(result.result)
             {
-                std::cout << "Term identified" << std::endl;
-                return std::make_tuple(Token(result.parsed, parser.name, parser.type), result.remaining);
+                std::cout << "Term identified as " << lexer.name << std::endl;
+                return std::make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
             }
         }
 
+        // Error handling
         std::cout << "Could not identify terms:" << std::endl;
         for (auto t : terms)
         {

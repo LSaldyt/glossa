@@ -6,29 +6,29 @@ namespace Match
 {
 
     // Parse a list of functions in order, failing if any of them fail
-    const auto inOrder = [](ParseFunctions parsers)
+    const auto inOrder = [](MatchFunctions matchers)
     {
-        auto parse = [parsers](const Terms& original_terms)
+        auto match = [matchers](const Terms& original_terms)
         {
-            Terms parsed;
+            Terms consumed;
             Terms terms = original_terms;
 
-            for (auto parser : parsers)
+            for (auto matcher : matchers)
             {
-                auto parse_result = parser(terms);
-                if(parse_result.result)
+                auto match_result = matcher(terms);
+                if(match_result.result)
                 {
-                    parsed.insert( parsed.end(), parse_result.parsed.begin(), parse_result.parsed.end() );
-                    terms  = parse_result.remaining;
+                    consumed.insert( consumed.end(), match_result.consumed.begin(), match_result.consumed.end() );
+                    terms  = match_result.remaining;
                 }
                 else
                 {
                     return Result (false, Terms(), original_terms);
                 }
             }
-            return Result (true, parsed, terms);
+            return Result (true, consumed, terms);
         };
-        return parse;
+        return match;
     };
 
     //Parse a single string, exactly
@@ -45,21 +45,21 @@ namespace Match
         return singleTemplate(comparator);
     };
 
-    // Change the success of a parser
-    const auto inverse = [](ParseFunction parser)
+    // Change the success of a matcher
+    const auto inverse = [](MatchFunction matcher)
     {
-        return parseTemplate([parser](Terms terms)
+        return matchTemplate([matcher](Terms terms)
         {
-            auto result = parser(terms);
+            auto result = matcher(terms);
             result.result = !result.result;
             return result;
         });
     };
 
-    // Attempt to parse any parser from a list of Parsers, failing only if all of the parsers fail, and passing if any of them pass
-    const auto anyOf = [](ParseFunctions functions)
+    // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
+    const auto anyOf = [](MatchFunctions functions)
     {
-        return parseTemplate([functions](Terms terms)
+        return matchTemplate([functions](Terms terms)
         {
             auto result = Result(false, Terms(), terms);
             for (auto function : functions)
@@ -75,10 +75,10 @@ namespace Match
         });
     };
 
-    //Parse all parsers from a list of parsers, passing only if all of them pass
-    const auto allOf = [](ParseFunctions functions)
+    //Parse all matchers from a list of matchers, passing only if all of them pass
+    const auto allOf = [](MatchFunctions functions)
     {
-        return parseTemplate([functions](Terms terms)
+        return matchTemplate([functions](Terms terms)
         {
             auto result = Result(false, Terms(), terms);
             for (auto function : functions)
@@ -101,7 +101,7 @@ namespace Match
     // Convert a list of strings to a list of just(string)s
     const auto justFrom = [](std::vector<std::string> strings)
     {
-        auto functions = ParseFunctions();
+        auto functions = MatchFunctions();
         functions.reserve(strings.size());
         for (auto s : strings)
         {
@@ -129,18 +129,18 @@ namespace Match
         });
     };
 
-    // Takes a parser and parses it repeatedly, never fails
-    const auto many = [](ParseFunction parser)
+    // Takes a matcher and parses it repeatedly, never fails
+    const auto many = [](MatchFunction matcher)
     {
-        Consumer consumer = [parser](Terms terms)
+        Consumer consumer = [matcher](Terms terms)
         {
-            auto result = parser(terms);
-            return Consumed(result.result, result.parsed);
+            auto result = matcher(terms);
+            return Consumed(result.result, result.consumed);
         };
         return multiTemplate(consumer);
     };
 
-    const auto sepBy = [](ParseFunction sep, ParseFunction val=wildcard)
+    const auto sepBy = [](MatchFunction sep, MatchFunction val=wildcard)
     {
         return inOrder({
         val,
