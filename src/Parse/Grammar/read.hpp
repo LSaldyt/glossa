@@ -2,7 +2,6 @@
 #include "../../Lex/Seperate.hpp"
 #include "../../Syntax/Statements.hpp"
 #include "../TokenParsers.hpp"
-//std::vector<std::string> readFile(std::string filename);
 
 #include <string>
 
@@ -18,8 +17,11 @@ const auto read = [](std::string filename)
 {
     SymbolicTokenParsers parsers;
     auto content = readFile(filename);
+    if (content.size() > 0)
+        content = Terms(content.begin(), content.end() - 1);
     for (auto line : content)
     {
+        std::cout << line << std::endl;
         auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
         if (terms.size() == 1)
         {
@@ -31,6 +33,27 @@ const auto read = [](std::string filename)
         }
     }
     return parsers;
+};
+
+const auto run = [](SymbolicTokenParsers parsers, SymbolicTokens& tokens)
+{
+    std::vector<SymbolicTokens> results;
+
+    for (auto parser : parsers)
+    {
+        auto result = parser(tokens);
+        if (result.result)
+        {
+            tokens = result.remaining;
+            results.push_back(result.parsed);
+        }
+        else
+        {
+            return std::make_tuple(false, results);
+        }
+    }
+
+    return std::make_tuple(true, results);
 };
 
 }
