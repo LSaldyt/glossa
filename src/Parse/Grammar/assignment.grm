@@ -1,4 +1,4 @@
 identifier 
 operator   =
 type
-0 2
+const auto [0][0] = [2][0] ;

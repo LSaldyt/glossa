@@ -31,7 +31,7 @@ namespace Lex
                 // If we matched an entire seperator, return success
                 if (!exited_early)
                 {
-                    std::cout << "Seperated by \"" << seperator_string << "\"" << std::endl;
+                    //std::cout << "Seperated by \"" << seperator_string << "\"" << std::endl;
                     found = std::make_tuple(true, std::get<1>(seperator), seperator_string.size());
                     break;
                 }
