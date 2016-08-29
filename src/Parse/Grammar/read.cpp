@@ -13,22 +13,10 @@ int main()
         std::cout << t.value->representation() << std::endl;
     }
 
-    std::cout << "Finished parsing grammar file:" << std::endl;
-
-    auto results = run(std::get<0>(assignment), tokens);
+    auto results = run(assignment, tokens);
     if (std::get<0>(results))
     {
-        auto repr = std::get<1>(assignment)(std::get<1>(results));
-        std::cout << repr << std::endl;
+        std::cout << "Parsed assignment from grammar file" << std::endl;
     }
 }
 
-/*
-const auto buildAssignment = statementBuilder([=](SymbolicTokens& tokens){
-    Assignment a;
-    bindIdent(a.identifier, tokens);
-    advance(subType("="),   tokens);
-    bindExpression(a.value, tokens);
-    return std::make_shared<Assignment>(a);
-    });
-*/
