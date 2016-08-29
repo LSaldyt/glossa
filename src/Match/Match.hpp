@@ -162,7 +162,7 @@ namespace Match
         Consumer consumer = [matcher](Terms terms)
         {
             auto result = matcher(terms);
-            return Consumed(result.result, result.consumed);
+            return Consumed<Term>(result.result, result.consumed);
         };
         return multiTemplate(consumer);
     };

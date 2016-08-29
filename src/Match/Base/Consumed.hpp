@@ -3,15 +3,16 @@
 
 namespace Match 
 {
+    template <typename T>
     struct Consumed
     {
         bool  result;
-        Terms consumed;
+        std::vector<T> consumed;
 
         Consumed(bool set_result    = false,
-                 Terms set_consumed = Terms())
+                 std::vector<T> set_consumed = std::vector<T>())
         {
-            result = set_result;
+            result   = set_result;
             consumed = set_consumed;
         }
     };

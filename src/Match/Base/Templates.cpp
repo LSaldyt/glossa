@@ -24,13 +24,13 @@ namespace Match
     {
         Consumer consumer = [comparator](Terms terms)
         {
-            Consumed consumed =  Consumed(false, Terms()); //An empty list of terms, as nothing was yet consumed
+            Consumed<Term> consumed =  Consumed<Term>(false, Terms()); //An empty list of terms, as nothing was yet consumed
             if (terms.size() > 0)
             {
                 auto result = comparator(terms[0]);
                 if (result)
                 {
-                    consumed =  Consumed(result, Terms(terms.begin(), terms.begin() + 1));
+                    consumed =  Consumed<Term>(result, Terms(terms.begin(), terms.begin() + 1));
                 }
             }
             return consumed;
@@ -56,7 +56,7 @@ namespace Match
                     break;
                 }
             }
-            return Consumed(true, consumed);
+            return Consumed<Term>(true, consumed);
         };
         return matchTemplate(template_consumer);
     }
