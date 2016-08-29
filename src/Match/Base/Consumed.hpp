@@ -3,7 +3,6 @@
 
 namespace Match 
 {
-
     struct Consumed
     {
         bool  result;

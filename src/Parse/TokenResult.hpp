@@ -4,7 +4,7 @@
 struct TokenResult
 {
     bool result;
-    SymbolicTokens parsed;
+    SymbolicTokens consumed;
     SymbolicTokens remaining;
 
     TokenResult(bool set_result              = false,

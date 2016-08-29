@@ -5,6 +5,31 @@
 namespace Match 
 {
 
+    template <typename T>
+    Result<T> inOrderP (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
+    {
+        return [matchers](const std::vector<T>& original_terms)
+        {
+            std::vector<T> consumed;
+            std::vector<T> terms(original_terms);
+
+            for (auto matcher : matchers)
+            {
+                auto result = matcher(terms);
+                if (result.result)
+                {
+                    consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
+                    terms = result.remaining;
+                }
+                else
+                {
+                    return Result<T>(false, std::vector<T>(), original_terms);
+                }
+            }
+            return Result<T>(true, consumed, terms);
+        };
+    }
+
     // Parse a list of functions in order, failing if any of them fail
     const auto inOrder = [](MatchFunctions matchers)
     {
