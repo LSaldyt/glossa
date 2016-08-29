@@ -5,6 +5,7 @@
 namespace Match 
 {
 
+    /*
     template <typename T>
     Result<T> inOrderP (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
@@ -29,6 +30,7 @@ namespace Match
             return Result<T>(true, consumed, terms);
         };
     }
+    */
 
     // Parse a list of functions in order, failing if any of them fail
     const auto inOrder = [](MatchFunctions matchers)

@@ -40,8 +40,8 @@ namespace Parse
             if (result.result)
             {
                 // If successful, build a statement from them using the converter function
-                tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
-                to_return = std::make_tuple(true, converter(result.parsed));
+                tokens = SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end());
+                to_return = std::make_tuple(true, converter(result.consumed));
             }
             return to_return;
         };

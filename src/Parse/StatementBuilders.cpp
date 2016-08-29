@@ -68,7 +68,7 @@ namespace Parse
             if (valresult.result)
             {
                 tokens = valresult.remaining;
-                return std::make_tuple(true, valresult.parsed[0].value);
+                return std::make_tuple(true, valresult.consumed[0].value);
             }
         }
         return std::make_tuple(false, std::make_shared<Symbol>(Symbol()));
@@ -108,9 +108,9 @@ namespace Parse
             {
                 tokens = tokens_copy;
                 e.extensions.push_back(
-                        std::make_tuple(opresult.parsed[0].value,
+                        std::make_tuple(opresult.consumed[0].value,
                                         std::get<1>(valresult)));
-                std::cout << opresult.parsed[0].value->representation() << std::endl;
+                std::cout << opresult.consumed[0].value->representation() << std::endl;
                 std::cout << std::get<1>(valresult)->representation() << std::endl;
                 parsing = tokens.size() > 1; 
             }

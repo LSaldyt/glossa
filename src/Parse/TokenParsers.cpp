@@ -60,14 +60,14 @@ namespace Parse
                 if(byType)
                 {
                 return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + typeResult.parsed.size()),
-                        SymbolicTokens(tokens.begin() + typeResult.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + typeResult.consumed.size()),
+                        SymbolicTokens(tokens.begin() + typeResult.consumed.size(), tokens.end()));
                 }
                 else
                 {
                 return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + subTypeResult.parsed.size()),
-                        SymbolicTokens(tokens.begin() + subTypeResult.parsed.size(), tokens.end()));
+                        SymbolicTokens(tokens.begin(), tokens.begin() + subTypeResult.consumed.size()),
+                        SymbolicTokens(tokens.begin() + subTypeResult.consumed.size(), tokens.end()));
                 }
             }
             return TokenResult(false, SymbolicTokens(), tokens);
