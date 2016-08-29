@@ -6,14 +6,14 @@ namespace Match
     {
         MatchFunction func_template = [consumer](Terms terms)
             {
-                auto result = Result(false, Terms(), terms);
+                auto result = MatchResult(false, Terms(), terms);
 
                 auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
                     Terms consumed    = consumer_result.consumed;
                     Terms remaining (terms.begin() + consumed.size(), terms.end());
-                    result = Result(true, consumed, remaining);
+                    result = MatchResult(true, consumed, remaining);
                 }
                 return result;
             };

@@ -7,7 +7,7 @@ namespace Match
 
     /*
     template <typename T>
-    Result<T> inOrderP (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
+    MatchResult<T> inOrderP (std::vector<std::function<MatchResult<T>(std::vector<T>)>> matchers)
     {
         return [matchers](const std::vector<T>& original_terms)
         {
@@ -24,10 +24,10 @@ namespace Match
                 }
                 else
                 {
-                    return Result<T>(false, std::vector<T>(), original_terms);
+                    return MatchResult<T>(false, std::vector<T>(), original_terms);
                 }
             }
-            return Result<T>(true, consumed, terms);
+            return MatchResult<T>(true, consumed, terms);
         };
     }
     */
@@ -50,10 +50,10 @@ namespace Match
                 }
                 else
                 {
-                    return Result (false, Terms(), original_terms);
+                    return MatchResult (false, Terms(), original_terms);
                 }
             }
-            return Result (true, consumed, terms);
+            return MatchResult (true, consumed, terms);
         };
         return match;
     };
@@ -88,7 +88,7 @@ namespace Match
     {
         return matchTemplate([functions](Terms terms)
         {
-            auto result = Result(false, Terms(), terms);
+            auto result = MatchResult(false, Terms(), terms);
             for (auto function : functions)
             {
                 auto func_result = function(terms);
@@ -107,13 +107,13 @@ namespace Match
     {
         return matchTemplate([functions](Terms terms)
         {
-            auto result = Result(false, Terms(), terms);
+            auto result = MatchResult(false, Terms(), terms);
             for (auto function : functions)
             {
                 auto func_result = function(terms);
                 if(!func_result.result)
                 {
-                    result = Result(false, Terms(), terms);
+                    result = MatchResult(false, Terms(), terms);
                     break;
                 }
                 else

@@ -1,9 +1,9 @@
 #pragma once
-#include "Result.hpp"
+#include "MatchResult.hpp"
 
 namespace Match 
 {
-    using MatchFunction   = std::function<Result(Terms)>;
+    using MatchFunction   = std::function<MatchResult(Terms)>;
     using MatchFunctions  = std::vector<MatchFunction>;
     using Consumer        = std::function<Consumed<Term>(Terms)>;
 

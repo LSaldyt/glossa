@@ -1,18 +1,21 @@
 #pragma once
 #include "Consumed.hpp"
+#include "../../Types/Result.hpp"
 
 namespace Match 
 {
-    struct Result : public Consumed<Term>
+    using MatchResult = Result<Term>; 
+        /*
+    struct MatchResult : public Consumed<Term>
     {
         Terms remaining;
 
-        Result(bool set_result     = false,
+        MatchResult(bool set_result     = false,
                Terms set_consumed  = Terms(),
                Terms set_remaining = Terms())
                : Consumed<Term>(set_result, set_consumed)
         {
             remaining = set_remaining;
         }
-    };
+    };*/
 }
