@@ -7,7 +7,9 @@ namespace Match
 {
 
     template <typename T>
-    Result<T> inOrder (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
+    std::function<Result<T>(std::vector<T>)> 
+    inOrder 
+    (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
         return [matchers](const std::vector<T>& original_terms)
         {
@@ -53,7 +55,7 @@ namespace Match
     };
 
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     inverse
     (std::function<Result<T>(std::vector<T>)> matcher)
     {
@@ -67,7 +69,7 @@ namespace Match
 
     // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     anyOf 
     (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
@@ -90,7 +92,7 @@ namespace Match
 
     //Parse all matchers from a list of matchers, passing only if all of them pass
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     allOf
     (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
@@ -125,7 +127,7 @@ namespace Match
 
     // Takes a matcher and parses it repeatedly, never fails
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     many
     (std::function<Result<T>(std::vector<T>)> matcher)
     {
@@ -137,7 +139,7 @@ namespace Match
     };
 
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     sepBy
     (std::function<Result<T>(std::vector<T>)> sep, std::function<Result<T>(std::vector<T>)> val=wildcard<T>())
     {

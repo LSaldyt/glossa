@@ -29,9 +29,9 @@ namespace Match
     singleTemplate 
     (std::function<bool(T)> comparator)
     {
-        return matchTemplate([comparator](std::vector<T> terms)
+        std::function<Consumed<T>(std::vector<T>)> consumer = [comparator](std::vector<T> terms)
         {
-            Consumed<T> consumed =  Consumed<T>(false, std::vector<T>()); //An empty list of terms, as nothing was yet consumed
+            Consumed<T> consumed(false, std::vector<T>()); //An empty list of terms, as nothing was yet consumed
             if (terms.size() > 0)
             {
                 auto result = comparator(terms[0]);
@@ -41,7 +41,8 @@ namespace Match
                 }
             }
             return consumed;
-        });
+        };
+        return matchTemplate(consumer);
     }
 
     template <typename T>

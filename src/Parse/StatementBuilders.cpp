@@ -50,7 +50,7 @@ namespace Parse
     {
         std::cout << "Building Value" << std::endl;
         SymbolicTokens tokens_copy(tokens);
-        const auto value = typeParser(anyOf({just("type"), just("identifier")}));
+        const auto value = anyOf<SymbolicToken>({typeParser("type"), typeParser("identifier")});
 
         if (tokens_copy.size() > 0)
         {
@@ -99,7 +99,7 @@ namespace Parse
             auto first  = SymbolicTokens(tokens_copy.begin(), tokens_copy.begin() + 1);
             tokens_copy = SymbolicTokens(tokens_copy.begin() + 1, tokens_copy.end());
 
-            auto opresult  = typeParser(just("operator"))(first);
+            auto opresult  = typeParser("operator")(first);
             auto valresult = buildValue(tokens_copy);
 
             bool result(opresult.result && std::get<0>(valresult));
