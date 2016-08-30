@@ -2,76 +2,26 @@
 
 namespace Parse
 {
-
-    SymbolicTokenParser subTypeParser(MatchFunction parser)
+    SymbolicTokenParser subTypeParser(std::string sub_type)
     {
-        auto parseTokens = [parser](SymbolicTokens tokens)
+        const auto comparator = [sub_type](SymbolicToken token)
         {
-            auto terms = Terms();
-            terms.reserve(tokens.size());
-            for (auto token : tokens)
-            {
-                terms.push_back(token.sub_type);
-            }
-
-            auto result = parser(terms);
-            if(result.result)
-            {
-                return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + result.consumed.size()),
-                        SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end()));
-            }
-            return TokenResult(false, SymbolicTokens(), tokens);
+            return token.sub_type == sub_type
         };
-        return parseTokens;
+        return singleTemplate<SymbolicToken>(comparator);
     }
 
-    SymbolicTokenParser typeParser(MatchFunction parser)
+    SymbolicTokenParser typeParser(std::string type)
     {
-        auto parseTokens = [parser](SymbolicTokens tokens)
+        const auto comparator = [type](SymbolicToken token)
         {
-            auto terms = Terms();
-            terms.reserve(tokens.size());
-            for (auto token : tokens)
-            {
-                terms.push_back(token.type);
-            }
-
-            auto result = parser(terms);
-            if(result.result)
-            {
-                return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + result.consumed.size()),
-                        SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end()));
-            }
-            return TokenResult(false, SymbolicTokens(), tokens);
+            return token.type == type
         };
-        return parseTokens;
+        return singleTemplate<SymbolicToken>(comparator);
     }
 
-    SymbolicTokenParser dualTypeParser(MatchFunction typeParserFunc, MatchFunction subTypeParserFunc, bool byType)
+    SymbolicTokenParser dualTypeParser(std::string type, std::string sub_type)
     {
-        auto parseTokens = [typeParserFunc, subTypeParserFunc, byType](SymbolicTokens tokens)
-        {
-            auto typeResult    = typeParser    (typeParserFunc)    (tokens);
-            auto subTypeResult = subTypeParser (subTypeParserFunc) (tokens);
-            if(typeResult.result && subTypeResult.result)
-            {
-                if(byType)
-                {
-                return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + typeResult.consumed.size()),
-                        SymbolicTokens(tokens.begin() + typeResult.consumed.size(), tokens.end()));
-                }
-                else
-                {
-                return TokenResult(true,
-                        SymbolicTokens(tokens.begin(), tokens.begin() + subTypeResult.consumed.size()),
-                        SymbolicTokens(tokens.begin() + subTypeResult.consumed.size(), tokens.end()));
-                }
-            }
-            return TokenResult(false, SymbolicTokens(), tokens);
-        };
-        return parseTokens;
+        return allOf({typeParser(type), subTypeParser(sub_type)});
     }
 }

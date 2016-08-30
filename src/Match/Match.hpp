@@ -31,34 +31,6 @@ namespace Match
         };
     }
 
-    /*
-    // Parse a list of functions in order, failing if any of them fail
-    const auto inOrder = [](MatchFunctions matchers)
-    {
-        auto match = [matchers](const Terms& original_terms)
-        {
-            Terms consumed;
-            Terms terms = original_terms;
-
-            for (auto matcher : matchers)
-            {
-                auto match_result = matcher(terms);
-                if(match_result.result)
-                {
-                    consumed.insert( consumed.end(), match_result.consumed.begin(), match_result.consumed.end() );
-                    terms  = match_result.remaining;
-                }
-                else
-                {
-                    return MatchResult (false, Terms(), original_terms);
-                }
-            }
-            return MatchResult (true, consumed, terms);
-        };
-        return match;
-    };
-    */
-
     const auto just = [](auto value)
     {
         auto comparator = [value](decltype(value) term){ return value == term; };
@@ -144,7 +116,7 @@ namespace Match
 
     // Parse any term
     template <typename T>
-    Result<T>
+    std::function<Result<T>(std::vector<T>)>
     wildcard
     ()
     {
@@ -167,7 +139,7 @@ namespace Match
     template <typename T>
     Result<T>
     sepBy
-    (std::function<Result<T>(std::vector<T>)> sep, std::function<Result<T>(std::vector<T>)> val=wildcard)
+    (std::function<Result<T>(std::vector<T>)> sep, std::function<Result<T>(std::vector<T>)> val=wildcard<T>())
     {
         return inOrder<T>({
         val,

@@ -1,6 +1,5 @@
 #pragma once
 #include "../Match/Match.hpp"
-#include "TokenResult.hpp"
 #include "../Syntax/Statements.hpp"
 #include "StatementResult.hpp"
 #include "Typename.hpp"
@@ -30,7 +29,7 @@ namespace Parse
     // Helper function for creating a Statement Builder from a function that returns a TokenResult and a function that creates a type from a set of tokens
     template < typename T >
     std::function<std::tuple<bool, T>(SymbolicTokens&)> builder 
-    (std::function<TokenResult(SymbolicTokens)> function, std::function<T(SymbolicTokens)> converter)
+    (std::function<Result<SymbolicToken>(SymbolicTokens)> function, std::function<T(SymbolicTokens)> converter)
     {
         std::function<std::tuple<bool, T>(SymbolicTokens&)> f = [function, converter](SymbolicTokens& tokens)
         {
@@ -57,7 +56,7 @@ namespace Parse
 
 
     // helper functions used in binders/builders
-    const auto identifierParser = typeParser(just("identifier"));
+    const auto identifierParser = typeParser("identifier");
     const auto getRepr          = [](SymbolicToken s){return s.value->representation();};
     const auto getReprs         = [](SymbolicTokens tokens)
         {
@@ -68,12 +67,6 @@ namespace Parse
             }
             return strings;
         };
-
-    const auto typeOrIdent = anyOf({just("type"), just("identifier")});
-    const auto expression_parser = inOrder({
-           typeOrIdent,
-           many(inOrder({just("operator"), typeOrIdent}))
-    });
 
     const auto everyOther = [](std::vector<std::string> terms)
     {
@@ -93,9 +86,8 @@ namespace Parse
         return [f, g](auto x){ return f(g(x)); };
     };
 
-    const auto commaSepList = builder<std::vector<std::string>>(subTypeParser(sepBy(just(","))), compose(everyOther, getReprs));
-    const auto genIdent = builder<std::string>(typeParser(just("identifier")), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
-
+    const auto commaSepList = builder<std::vector<std::string>>(sepBy<SymbolicToken>(subTypeParser(",")), compose(everyOther, getReprs));
+    const auto genIdent     = builder<std::string>(typeParser("identifier"), [](SymbolicTokens tokens){return getRepr(tokens[0]);});
 
     // Convert a builder to a binder
     template <typename T>

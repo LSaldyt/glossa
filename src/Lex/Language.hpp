@@ -9,11 +9,14 @@ namespace Lex
     // A single definition for lexing a language element (ie int, operator)
     struct LanguageLexer
     {
-        MatchFunction match;
+        std::function<Result<std::string>(std::vector<std::string>)> match;
         std::string name;
         std::string type;
         int precedence;
-        LanguageLexer(MatchFunction set_match_function, std::string set_name, std::string set_type, int set_precedence);
+        LanguageLexer(std::function<Result<std::string>(std::vector<std::string>)> set_match_function, 
+                      std::string set_name, 
+                      std::string set_type, 
+                      int set_precedence);
     };
 
     using LanguageLexers  = std::vector<LanguageLexer>;
@@ -27,7 +30,7 @@ namespace Lex
         LanguageLexers   language_lexers;
 
         Language(const LanguageTermSets& set_term_sets,
-                 const LanguageLexers&  set_language_lexers);
+                 const LanguageLexers&   set_language_lexers);
 
         std::tuple<Token, Terms> identify(Terms terms) const;
     };
