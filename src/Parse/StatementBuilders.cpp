@@ -50,7 +50,8 @@ namespace Parse
     {
         std::cout << "Building Value" << std::endl;
         SymbolicTokens tokens_copy(tokens);
-        const auto value = anyOf<SymbolicToken>({typeParser("type"), typeParser("identifier")});
+        const auto value = typeParser("type");
+        //const auto value = anyOf<SymbolicToken>({typeParser("type"), typeParser("identifier")});
 
         if (tokens_copy.size() > 0)
         {

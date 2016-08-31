@@ -42,14 +42,15 @@ namespace Match
             }
             return consumed;
         };
-        return matchTemplate(consumer);
+        return matchTemplate<T>(consumer);
     }
 
     template <typename T>
     std::function<Result<T>(std::vector<T>)>
-    multiTemplate(std::function<Consumed<T>(std::vector<T>)> consumer)
+    multiTemplate
+    (std::function<Consumed<T>(std::vector<T>)> consumer)
     {
-        return matchTemplate([consumer](std::vector<T> terms)
+        return matchTemplate<T>([consumer](std::vector<T> terms)
         {
             auto consumed = std::vector<T>(); 
             while(terms.size() > 0)
