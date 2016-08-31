@@ -73,7 +73,7 @@ namespace Match
     anyOf 
     (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
-        std::function<Consumed<T>(std::vector<T>)> consumer = [matchers](std::vector<T> terms)
+        return [matchers](std::vector<T> terms)
         {
             auto result = Result<T>(false, std::vector<T>(), terms);
             for (auto matcher : matchers)
@@ -87,8 +87,6 @@ namespace Match
             }
             return result;
         };
-
-        return matchTemplate<T>(consumer);
     };
 
 
