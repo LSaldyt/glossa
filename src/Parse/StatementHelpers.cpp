@@ -12,7 +12,7 @@ namespace Parse
         }
         else
         {
-            tokens = SymbolicTokens(tokens.begin() + result.parsed.size(), tokens.end());
+            tokens = SymbolicTokens(tokens.begin() + result.consumed.size(), tokens.end());
         }
     }
 

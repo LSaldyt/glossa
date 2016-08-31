@@ -50,7 +50,8 @@ namespace Parse
     {
         std::cout << "Building Value" << std::endl;
         SymbolicTokens tokens_copy(tokens);
-        const auto value = typeParser(anyOf({just("type"), just("identifier")}));
+        //const auto value = typeParser("type");
+        const auto value = anyOf<SymbolicToken>({typeParser("type"), typeParser("identifier")});
 
         if (tokens_copy.size() > 0)
         {
@@ -68,7 +69,7 @@ namespace Parse
             if (valresult.result)
             {
                 tokens = valresult.remaining;
-                return std::make_tuple(true, valresult.parsed[0].value);
+                return std::make_tuple(true, valresult.consumed[0].value);
             }
         }
         return std::make_tuple(false, std::make_shared<Symbol>(Symbol()));
@@ -99,7 +100,7 @@ namespace Parse
             auto first  = SymbolicTokens(tokens_copy.begin(), tokens_copy.begin() + 1);
             tokens_copy = SymbolicTokens(tokens_copy.begin() + 1, tokens_copy.end());
 
-            auto opresult  = typeParser(just("operator"))(first);
+            auto opresult  = typeParser("operator")(first);
             auto valresult = buildValue(tokens_copy);
 
             bool result(opresult.result && std::get<0>(valresult));
@@ -108,9 +109,9 @@ namespace Parse
             {
                 tokens = tokens_copy;
                 e.extensions.push_back(
-                        std::make_tuple(opresult.parsed[0].value,
+                        std::make_tuple(opresult.consumed[0].value,
                                         std::get<1>(valresult)));
-                std::cout << opresult.parsed[0].value->representation() << std::endl;
+                std::cout << opresult.consumed[0].value->representation() << std::endl;
                 std::cout << std::get<1>(valresult)->representation() << std::endl;
                 parsing = tokens.size() > 1; 
             }

@@ -2,7 +2,7 @@
 
 namespace Lex
 {
-    LanguageLexer::LanguageLexer(MatchFunction set_match_function, std::string set_name, std::string set_type, int set_precedence)
+    LanguageLexer::LanguageLexer(std::function<Result<std::string>(std::vector<std::string>)> set_match_function, std::string set_name, std::string set_type, int set_precedence)
     {
         match      = set_match_function;
         name       = set_name;
