@@ -33,10 +33,14 @@ namespace Match
         };
     }
 
-    const auto just = [](auto value)
+    
+    template <typename T>
+    std::function<Result<T>(std::vector<T>)>
+    just
+    (T value)
     {
-        auto comparator = [value](decltype(value) term){ return value == term; };
-        return singleTemplate<decltype(value)>(comparator);
+        auto comparator = [value](T term){ return value == term; };
+        return singleTemplate<T>(comparator);
     };
 
     const auto startswith = [](std::string value)
@@ -59,12 +63,12 @@ namespace Match
     inverse
     (std::function<Result<T>(std::vector<T>)> matcher)
     {
-        return matchTemplate<T>([matcher](std::vector<T> terms)
+        return [matcher](std::vector<T> terms)
         {
             auto result = matcher(terms);
             result.result = !result.result;
             return result;
-        });
+        };
     }
 
     // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
@@ -96,7 +100,7 @@ namespace Match
     allOf
     (std::vector<std::function<Result<T>(std::vector<T>)>> matchers)
     {
-        return matchTemplate<T>([matchers](std::vector<T> terms)
+        return [matchers](std::vector<T> terms)
         {
             auto result = Result<T>(false, std::vector<T>(), terms);
             for (auto matcher : matchers)
@@ -113,7 +117,7 @@ namespace Match
                 }
             }
             return result;
-        });
+        };
     };
 
     // Parse any term

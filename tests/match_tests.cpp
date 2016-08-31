@@ -6,76 +6,57 @@ TEST_CASE( "Basic matching works")
     using namespace Match;
     Terms expected;
 
-    auto hello = just("hello");
+    auto hello = just<std::string>("hello");
+
+    const auto assertEqual = [](auto a, auto b)
+    {
+        REQUIRE((a == b));
+    };
 
     SECTION ("standard matching works")
     {
-        expected = {"hello"};
-        REQUIRE(hello(expected).consumed        == expected);
-        REQUIRE(wildcard(expected).consumed             == expected);
-        REQUIRE(subsetOf("ehlo")(expected).consumed     == expected);
-        MatchFunctions matchers = {hello, wildcard, subsetOf("ehlo")};
-        REQUIRE(anyOf(matchers)(expected).consumed       == expected);
-        REQUIRE(inverse(just("nothello"))({"hello"}).result == true);
-        REQUIRE(alphas(expected).consumed               == expected);
-        REQUIRE(lowers(expected).consumed               == expected);
-        REQUIRE(startswith("h")(expected).consumed == expected);
+        std::vector<std::string> expected = {"hello"};
+        assertEqual(hello(expected).consumed , expected);
+        assertEqual(wildcard<std::string>()(expected).consumed, expected);
+        assertEqual(anyOf<std::string>({hello, wildcard<std::string>()})(expected).consumed, expected);
+        assertEqual(inverse<std::string>(just<std::string>("nothello"))(expected).result, true);
+        assertEqual(alphas(expected).consumed, expected);
+        assertEqual(lowers(expected).consumed, expected);
+        assertEqual(startswith("h")(expected).consumed, expected);
     }
 
     SECTION ("more advanced matching works")
     {
         expected = {"hello", "hello"};
-        REQUIRE(many(hello)(expected).consumed  == expected);
-        REQUIRE(inOrder({hello, hello})(expected).consumed == expected);
+        assertEqual(many(hello)(expected).consumed  , expected);
+        assertEqual(inOrder<std::string>({hello, hello})(expected).consumed , expected);
 
-        REQUIRE(allOf({hello, wildcard})({"hello"}).result         == true);
-        REQUIRE(allOf({hello, just("nothello")})({"hello"}).result == false);
-
-        REQUIRE(inOrder(justFrom({"hello", "hello"}))(expected).consumed     == expected);
+        assertEqual(allOf<std::string>({hello, wildcard<std::string>()})({"hello"}).result         , true);
+        assertEqual(allOf<std::string>({hello, just<std::string>("nothello")})({"hello"}).result , false);
     }
 
     SECTION ("sepBy")
     {
         expected = {"a", ",", "b"};
-        REQUIRE(sepBy(just(","), alphas)(expected).consumed == expected); // Wont discard the comma, but will recognize it as valid
+        assertEqual(sepBy<std::string>(just<std::string>(","), alphas)(expected).consumed , expected); // Wont discard the comma, but will recognize it as valid
     }
 
     SECTION("digits")
     {
         expected = {"123"};
-        REQUIRE(digits(expected).consumed               == expected);
+        assertEqual(digits(expected).consumed               , expected);
     }
 
     SECTION("uppers")
     {
         expected = {"HELLO"};
-        REQUIRE(uppers(expected).consumed               == expected);
-    }
-
-    SECTION("operators")
-    {
-        expected = {"+"};
-        REQUIRE(subsetOf("+-/*")(expected).consumed              == expected);
+        assertEqual(uppers(expected).consumed               , expected);
     }
 
     SECTION("punctuation")
     {
         expected = {"!?"};
-        REQUIRE(puncts(expected).consumed               == expected);
+        assertEqual(puncts(expected).consumed               , expected);
     }
 }
 
-/*
- *
-namespace Match 
-{
-
-    const auto sepBy = [](MatchFunction sep, MatchFunction val=wildcard)
-    {
-        return inOrder({
-        val,
-        many(inOrder({sep, val}))
-        });
-    };
-
- * */
