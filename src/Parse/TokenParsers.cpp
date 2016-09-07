@@ -20,10 +20,8 @@ namespace Parse
         return singleTemplate<SymbolicToken>(comparator);
     }
 
-    /*
     SymbolicTokenParser dualTypeParser(std::string type, std::string sub_type)
     {
-        return allOf({typeParser(type), subTypeParser(sub_type)});
+        return allOf<SymbolicToken>({typeParser(type), subTypeParser(sub_type)});
     }
-    */
 }

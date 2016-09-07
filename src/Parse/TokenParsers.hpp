@@ -11,6 +11,6 @@ namespace Parse
     //Convert a standard parseFunction to one that parses Tokens
     SymbolicTokenParser subTypeParser  (std::string sub_type);
     SymbolicTokenParser typeParser     (std::string type);
-    //SymbolicTokenParser dualTypeParser (MatchFunction typeParserFunc, MatchFunction subTypeParserFunc, bool byType);
+    SymbolicTokenParser dualTypeParser (std::string type, std::string sub_type);
 }
 

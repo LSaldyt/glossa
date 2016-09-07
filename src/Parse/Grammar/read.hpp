@@ -25,11 +25,11 @@ const auto read = [](std::string filename)
         auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
         if (terms.size() == 1)
         {
-            parsers.push_back(typeParser(just(terms[0])));
+            parsers.push_back(typeParser(terms[0]));
         }
         else
         {
-            parsers.push_back(dualTypeParser(just(terms[0]), just(terms[1]), true));
+            parsers.push_back(dualTypeParser(terms[0], terms[1]));
         }
     }
     return parsers;
@@ -45,7 +45,7 @@ const auto run = [](SymbolicTokenParsers parsers, SymbolicTokens& tokens)
         if (result.result)
         {
             tokens = result.remaining;
-            results.push_back(result.parsed);
+            results.push_back(result.consumed);
         }
         else
         {
