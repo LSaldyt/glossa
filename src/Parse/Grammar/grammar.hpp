@@ -5,6 +5,7 @@
 
 namespace Grammar
 {
+
 class Grammar
 {
 public:
@@ -12,7 +13,8 @@ public:
     std::unordered_map<std::string, SymbolicTokenParsers> grammar_map; 
 
 private:
-
     SymbolicTokenParsers read(std::string filename);
+    SymbolicTokenParser  retrieve_grammar(std::string filename); 
 };
+
 }
