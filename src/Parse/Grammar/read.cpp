@@ -1,26 +1,8 @@
 #include "read.hpp"
+#include "grammar.hpp"
+
 namespace Grammar
 {
-
-SymbolicTokenParsers read(std::string filename)
-{
-    SymbolicTokenParsers parsers;
-    auto content = readFile(filename);
-    
-    for (auto line : content)
-    {
-        auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
-        if (terms.size() == 1)
-        {
-            parsers.push_back(typeParser(terms[0]));
-        }
-        else
-        {
-            parsers.push_back(dualTypeParser(terms[0], terms[1]));
-        }
-    }
-    return parsers;
-}
 
 std::tuple<bool, std::vector<SymbolicTokens>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
 {
@@ -49,7 +31,8 @@ int main()
 {
     using namespace Grammar;
 
-    auto assignment = read("assignment.grm");
+    auto grammar = Grammar::Grammar({"assignment.grm"});
+
     SymbolicTokens tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("x")), "identifier", "identifier"),
                              SymbolicToken(std::make_shared<Operator>(Operator("=")), "=", "operator"),
                              SymbolicToken(std::make_shared<Integer>(Integer(42)), "int", "literal")};
@@ -58,7 +41,7 @@ int main()
         std::cout << t.value->representation() << std::endl;
     }
 
-    auto results = run(assignment, tokens);
+    auto results = run(grammar.grammar_map["assignment.grm"], tokens);
     if (std::get<0>(results))
     {
         std::cout << "Parsed assignment from grammar file" << std::endl;
