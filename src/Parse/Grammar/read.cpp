@@ -1,4 +1,50 @@
 #include "read.hpp"
+namespace Grammar
+{
+
+SymbolicTokenParsers read(std::string filename)
+{
+    SymbolicTokenParsers parsers;
+    auto content = readFile(filename);
+    
+    for (auto line : content)
+    {
+        std::cout << line << std::endl;
+        auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
+        if (terms.size() == 1)
+        {
+            parsers.push_back(typeParser(terms[0]));
+        }
+        else
+        {
+            parsers.push_back(dualTypeParser(terms[0], terms[1]));
+        }
+    }
+    return parsers;
+}
+
+std::tuple<bool, std::vector<SymbolicTokens>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
+{
+    std::vector<SymbolicTokens> results;
+
+    for (auto parser : parsers)
+    {
+        auto result = parser(tokens);
+        if (result.result)
+        {
+            tokens = result.remaining;
+            results.push_back(result.consumed);
+        }
+        else
+        {
+            return std::make_tuple(false, results);
+        }
+    }
+
+    return std::make_tuple(true, results);
+};
+
+}
 
 int main()
 {
