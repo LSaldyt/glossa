@@ -101,7 +101,7 @@ namespace Syntax
     };
 
     const std::unordered_map<std::string, SymbolGenerator> generatorMap = {
-     {"type",       single(intGenerator)},
+     {"literal",       single(intGenerator)},
      {"operator",   single(opGenerator)},
      {"identifier", single(identifierGenerator)},
      {"keyword",    single(keywordGenerator)},

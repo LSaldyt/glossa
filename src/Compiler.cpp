@@ -13,7 +13,7 @@ int main()
     term_set.push_back(std::make_tuple(operators, "operator"));
 
     Lex::LanguageLexers lexer_set = {
-        LanguageLexer(digits, "int", "type", 3),
+        LanguageLexer(digits, "int", "literal", 3),
         LanguageLexer(startswith("\""), "string", "string", 1),
         LanguageLexer(alphas, "identifier", "identifier", 3)};
 

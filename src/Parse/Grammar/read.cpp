@@ -9,7 +9,6 @@ SymbolicTokenParsers read(std::string filename)
     
     for (auto line : content)
     {
-        std::cout << line << std::endl;
         auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
         if (terms.size() == 1)
         {
@@ -53,7 +52,7 @@ int main()
     auto assignment = read("assignment.grm");
     SymbolicTokens tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("x")), "identifier", "identifier"),
                              SymbolicToken(std::make_shared<Operator>(Operator("=")), "=", "operator"),
-                             SymbolicToken(std::make_shared<Integer>(Integer(42)), "int", "type")};
+                             SymbolicToken(std::make_shared<Integer>(Integer(42)), "int", "literal")};
     for (auto t : tokens)
     {
         std::cout << t.value->representation() << std::endl;
