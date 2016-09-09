@@ -14,6 +14,7 @@ public:
 
 private:
     SymbolicTokenParsers read(std::string filename);
+    SymbolicTokenParser  readGrammarTerms(std::vector<std::string> terms);
     SymbolicTokenParser  retrieve_grammar(std::string filename); 
 };
 

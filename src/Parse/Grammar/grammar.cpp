@@ -8,12 +8,44 @@ Grammar::Grammar::Grammar(std::vector<std::string> filenames)
 {
     for (auto filename : filenames)
     {
-        grammar_map.insert(std::make_pair(filename, SymbolicTokenParsers()));
+        grammar_map[filename] = read(filename);
     }
+}
 
-    for (auto filename : filenames)
+SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string> terms)
+{
+    if (terms.size() == 1)
     {
-        grammar_map.insert(std::make_pair(filename, read(filename)));
+        std::string term = terms[0];
+        if (term.find(".grm") != std::string::npos) 
+        {
+            std::cout << "Found grammar linkage to " << term << std::endl;
+            return retrieve_grammar(term); // Term will be a filename
+        }
+        else
+        {
+            return typeParser(term);
+        }
+    }
+    else
+    {
+        if (terms[0] == "many")
+        {
+            return many<SymbolicToken>(readGrammarTerms(std::vector<std::string>(terms.begin() + 1, terms.end()))); 
+        }
+        else if (terms[0] == "inOrder")
+        {
+            SymbolicTokenParsers ordered;
+            for (auto term : std::vector<std::string>(terms.begin() + 1, terms.end()))
+            {
+                ordered.push_back(typeParser(term));
+            }
+            return inOrder<SymbolicToken>(ordered);
+        }
+        else
+        {
+            return dualTypeParser(terms[0], terms[1]);
+        }
     }
 }
 
@@ -25,24 +57,9 @@ SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
     for (auto line : content)
     {
         auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
-        if (terms.size() == 1)
-        {
-            std::string term = terms[0];
-            if (term.find(".grm") != std::string::npos) 
-            {
-                std::cout << "Found grammar linkage" << std::endl;
-                parsers.push_back(retrieve_grammar(term)); // Term will be a filename
-            }
-            else
-            {
-                parsers.push_back(typeParser(term));
-            }
-        }
-        else
-        {
-            parsers.push_back(dualTypeParser(terms[0], terms[1]));
-        }
+        parsers.push_back(readGrammarTerms(terms));
     }
+
     return parsers;
 }
 
