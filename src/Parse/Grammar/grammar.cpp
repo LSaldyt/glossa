@@ -29,22 +29,32 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string> 
     }
     else
     {
-        if (terms[0] == "many")
+        const auto& keyword = terms[0];
+        if (keyword == "many")
         {
             return many<SymbolicToken>(readGrammarTerms(std::vector<std::string>(terms.begin() + 1, terms.end()))); 
         }
-        else if (terms[0] == "inOrder")
+        else if (keyword == "inOrder")
         {
             SymbolicTokenParsers ordered;
             for (auto term : std::vector<std::string>(terms.begin() + 1, terms.end()))
             {
-                ordered.push_back(typeParser(term));
+                ordered.push_back(readGrammarTerms(std::vector<std::string>(1, term)));
             }
             return inOrder<SymbolicToken>(ordered);
         }
-        else
+        else if (keyword == "anyOf")
         {
-            return dualTypeParser(terms[0], terms[1]);
+            SymbolicTokenParsers possible;
+            for (auto term : std::vector<std::string>(terms.begin() + 1, terms.end()))
+            {
+                possible.push_back(readGrammarTerms(std::vector<std::string>(1, term)));
+            }
+            return anyOf<SymbolicToken>(possible);
+        }
+        else if (keyword == "dual")
+        {
+            return dualTypeParser(terms[1], terms[2]);
         }
     }
 }
@@ -77,6 +87,7 @@ SymbolicTokenParser Grammar::Grammar::retrieve_grammar(std::string filename)
         else
         {
             std::cout << filename << " is not an element of the grammar map" << std::endl;
+            throw std::exception();
         }
 
         Result<SymbolicToken> result = parser(tokens);

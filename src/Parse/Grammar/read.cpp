@@ -31,7 +31,7 @@ int main()
 {
     using namespace Grammar;
 
-    auto grammar = Grammar::Grammar({"assignment.grm", "expression.grm"});
+    auto grammar = Grammar::Grammar({"assignment.grm", "expression.grm", "value.grm", "functioncall.grm"});
 
     SymbolicTokens tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("x")), "identifier", "identifier"),
                              SymbolicToken(std::make_shared<Operator>(Operator("=")), "=", "operator"),

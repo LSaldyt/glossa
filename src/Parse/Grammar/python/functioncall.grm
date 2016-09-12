@@ -1,5 +1,0 @@
-identifier
-operator (
-optional value
-many (operator ,) value
-operator )
