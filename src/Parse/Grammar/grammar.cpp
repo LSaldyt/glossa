@@ -95,12 +95,17 @@ SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
 {
     SymbolicTokenParsers parsers;
     auto content = readFile(filename);
+    auto construct_line = content.back();
+    content = std::vector<std::string>(content.begin(), content.end() - 1);
     
     for (auto line : content)
     {
         auto terms = Lex::seperate(line, {std::make_tuple(" ", false)});
         parsers.push_back(readGrammarTerms(terms));
     }
+
+    std::cout << "The construction line for " << filename << " is" << std::endl;
+    std::cout << construct_line << std::endl;
 
     return parsers;
 }
