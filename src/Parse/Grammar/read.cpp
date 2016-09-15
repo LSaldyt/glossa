@@ -40,17 +40,28 @@ int main()
                              SymbolicToken(std::make_shared<Integer>(Integer(7)), "int", "literal"),
         };
 
-    auto results = run(grammar.grammar_map["assignment.grm"], tokens);
+    auto assignment_grammar = grammar.grammar_map["assignment.grm"];
+    auto results = run(std::get<0>(assignment_grammar), tokens);
     if (std::get<0>(results))
     {
         std::cout << "Parsed assignment from grammar file" << std::endl;
-        for (auto tokens : std::get<1>(results))
+        
+        auto parsed = std::get<1>(results);
+        std::vector<SymbolicTokens> construction_tokens;
+        for (auto i : std::get<1>(assignment_grammar))
+        {
+            construction_tokens.push_back(parsed[i]); // Keep only the lines designated by the grammar file
+        }
+
+        for (auto tokens : parsed)
         {
             for (auto t : tokens)
             {
                 std::cout << t.value->representation() << std::endl;
             }
         }
+
+        Assignment assignment(construction_tokens);
     }
     else
     {

@@ -91,7 +91,7 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
     return parser;
 }
 
-SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
+std::tuple<SymbolicTokenParsers, std::vector<int>> Grammar::Grammar::read(std::string filename)
 {
     SymbolicTokenParsers parsers;
     auto content = readFile(filename);
@@ -104,10 +104,14 @@ SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
         parsers.push_back(readGrammarTerms(terms));
     }
 
-    std::cout << "The construction line for " << filename << " is" << std::endl;
-    std::cout << construct_line << std::endl;
+    std::vector<int> construct_indices;
+    auto construct_terms = Lex::seperate(construct_line, {std::make_tuple(" ", false)});
+    for (auto t : construct_terms)
+    {
+        construct_indices.push_back(std::stoi(t));
+    }
 
-    return parsers;
+    return std::make_tuple(parsers, construct_indices);
 }
 
 SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
@@ -119,7 +123,7 @@ SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
         auto search = grammar_map.find(filename);
         if (search != grammar_map.end())
         {
-             parser = inOrder<SymbolicToken>(search->second);
+             parser = inOrder<SymbolicToken>(std::get<0>(search->second));
         }
         else
         {
