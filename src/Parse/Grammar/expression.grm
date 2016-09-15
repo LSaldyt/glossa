@@ -1,2 +1,3 @@
-literal
-many inOrder operator literal
+link value.grm
+many inOrder operator wildcard link value.grm 
+0 1

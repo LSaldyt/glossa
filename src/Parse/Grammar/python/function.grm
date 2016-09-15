@@ -1,9 +1,0 @@
-identifier
-operator (
-optional identifier
-many (operator ,) + identifier
-operator )
-operator :
-many statement
-keyword return
-expression

@@ -1,5 +1,7 @@
 #pragma once
 #include "Symbols.hpp"
+#include "../Types/SymbolicToken.hpp"
+
 namespace Syntax
 {
     struct Statement : public Symbol
@@ -19,6 +21,8 @@ namespace Syntax
 
     struct Assignment : public Statement
     {
+        Assignment(std::vector<SymbolicTokens>);
+
         std::string identifier;
         Expression value;
 

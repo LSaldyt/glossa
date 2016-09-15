@@ -9,6 +9,7 @@ namespace Syntax
     Expression::Expression() : base(std::make_shared<Symbol>(Integer(0))),
                                extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>()){}
 
+
     std::string Expression::representation()
     {
         std::string generated = base->representation();
@@ -17,6 +18,12 @@ namespace Syntax
             generated += (" " + std::get<0>(e)->representation() + " " + std::get<1>(e)->representation());
         }
         return generated;
+    }
+
+    Assignment::Assignment(std::vector<SymbolicTokens> construction_tokens)
+    {
+        identifier = construction_tokens[0][0].sub_type;
+
     }
 
     std::string Assignment::representation()
