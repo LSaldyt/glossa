@@ -1,5 +1,5 @@
 identifier wildcard
 operator (
-link value.grm
-many inOrder operator , link value.grm
+link expression.grm
+many inOrder operator , link expression.grm
 operator )
