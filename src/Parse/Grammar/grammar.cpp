@@ -12,51 +12,83 @@ Grammar::Grammar::Grammar(std::vector<std::string> filenames)
     }
 }
 
-SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string> terms)
+SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(std::vector<std::string>& terms)
 {
-    if (terms.size() == 1)
+    SymbolicTokenParsers parsers;
+
+    if (terms.size() % 2 != 0)
     {
-        std::string term = terms[0];
-        if (term.find(".grm") != std::string::npos) 
+        std::cout << "Could not read type pairs:" << std::endl;
+        for (auto t : terms)
         {
-            std::cout << "Found grammar linkage to " << term << std::endl;
-            return retrieve_grammar(term); // Term will be a filename
+            std::cout << t << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < (terms.size() / 2); i++)
+    {
+        int x = i * 2;
+        std::vector<std::string> pair(terms.begin() + x, terms.begin() + x + 2);
+        parsers.push_back(readGrammarTerms(pair));
+    }
+
+    return parsers;
+}
+
+SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>& terms)
+{
+    SymbolicTokenParser parser;
+
+    if (terms.size() == 2)
+    {
+        if (terms[0] == "link")
+        {
+            parser = retrieveGrammar(terms[1]);
+        }
+        else if (terms[1] == "wildcard")
+        {
+            parser = typeParser(terms[0]);
         }
         else
         {
-            return typeParser(term);
+            parser = dualTypeParser(terms[0], terms[1]);
+        }
+    }
+    else if (terms.size() > 2)
+    {
+        const auto keyword = terms[0];
+        terms = std::vector<std::string>(terms.begin() + 1, terms.end());
+
+        if (keyword == "many")
+        {
+            parser = many<SymbolicToken>(readGrammarTerms(terms)); 
+        }
+        else if (keyword == "inOrder")
+        {
+            parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
+        }
+        else if (keyword == "anyOf")
+        {
+            parser = anyOf<SymbolicToken>(readGrammarPairs(terms));
+        }
+        else
+        {
+            std::cout << "Expected keyword..." << std::endl;
         }
     }
     else
     {
-        const auto& keyword = terms[0];
-        if (keyword == "many")
+        std::cout << "Grammar file incorrectly formatted: " << std::endl;
+        for (auto t : terms)
         {
-            return many<SymbolicToken>(readGrammarTerms(std::vector<std::string>(terms.begin() + 1, terms.end()))); 
+            std::cout << t << " ";
         }
-        else if (keyword == "inOrder")
-        {
-            SymbolicTokenParsers ordered;
-            for (auto term : std::vector<std::string>(terms.begin() + 1, terms.end()))
-            {
-                ordered.push_back(readGrammarTerms(std::vector<std::string>(1, term)));
-            }
-            return inOrder<SymbolicToken>(ordered);
-        }
-        else if (keyword == "anyOf")
-        {
-            SymbolicTokenParsers possible;
-            for (auto term : std::vector<std::string>(terms.begin() + 1, terms.end()))
-            {
-                possible.push_back(readGrammarTerms(std::vector<std::string>(1, term)));
-            }
-            return anyOf<SymbolicToken>(possible);
-        }
-        else if (keyword == "dual")
-        {
-            return dualTypeParser(terms[1], terms[2]);
-        }
+        std::cout << std::endl;
+        throw std::exception();
     }
+
+    return parser;
 }
 
 SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
@@ -73,7 +105,7 @@ SymbolicTokenParsers Grammar::Grammar::read(std::string filename)
     return parsers;
 }
 
-SymbolicTokenParser Grammar::Grammar::retrieve_grammar(std::string filename)
+SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
 {
     SymbolicTokenParser grammar_parser = [filename, this](SymbolicTokens tokens)
     {

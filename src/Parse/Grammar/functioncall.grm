@@ -1,3 +1,5 @@
-identifier
-dual operator (
-dual operator )
+identifier wildcard
+operator (
+link value.grm
+many inOrder operator , link value.grm
+operator )

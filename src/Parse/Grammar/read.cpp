@@ -37,7 +37,8 @@ int main()
                              SymbolicToken(std::make_shared<Operator>(Operator("=")), "=", "operator"),
                              SymbolicToken(std::make_shared<Integer>(Integer(42)), "int", "literal"),
                              SymbolicToken(std::make_shared<Operator>(Operator("+")), "+", "operator"),
-                             SymbolicToken(std::make_shared<Integer>(Integer(7)), "int", "literal")};
+                             SymbolicToken(std::make_shared<Integer>(Integer(7)), "int", "literal"),
+        };
 
     auto results = run(grammar.grammar_map["assignment.grm"], tokens);
     if (std::get<0>(results))
@@ -50,6 +51,10 @@ int main()
                 std::cout << t.value->representation() << std::endl;
             }
         }
+    }
+    else
+    {
+        std::cout << "Parsing failed" << std::endl;
     }
 }
 
