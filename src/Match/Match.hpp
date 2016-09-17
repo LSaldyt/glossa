@@ -71,6 +71,19 @@ namespace Match
         };
     }
 
+    template <typename T>
+    std::function<Result<T>(std::vector<T>)>
+    discard
+    (std::function<Result<T>(std::vector<T>)> matcher)
+    {
+        return [matcher](std::vector<T> terms)
+        {
+            auto result = matcher(terms);
+            result.consumed = std::vector<T>();
+            return result;
+        };
+    }
+
     // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
     template <typename T>
     std::function<Result<T>(std::vector<T>)>
