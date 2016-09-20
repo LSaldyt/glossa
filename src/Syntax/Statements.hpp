@@ -22,6 +22,7 @@ namespace Syntax
     struct Assignment : public Statement
     {
         Assignment(std::vector<SymbolicTokens>);
+        Assignment();
 
         std::string identifier;
         Expression value;

@@ -26,6 +26,11 @@ namespace Syntax
 
     }
 
+    Assignment::Assignment()
+    {
+
+    }
+
     std::string Assignment::representation()
     {
         return ("const auto " + identifier + " = " + value.representation() + ";");
