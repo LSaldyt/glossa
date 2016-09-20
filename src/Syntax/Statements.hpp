@@ -47,4 +47,12 @@ namespace Syntax
         std::vector<std::string> args;
         std::string              representation();
     };
+
+    struct Conditional : public Statement
+    {
+        Expression condition;
+
+        std::vector<std::shared_ptr<Statement>> a; // If
+        std::vector<std::shared_ptr<Statement>> b; // Else
+    };
 }
