@@ -4,9 +4,9 @@
 namespace Grammar
 {
 
-std::tuple<bool, std::vector<SymbolicTokens>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
+std::tuple<bool, std::vector<Result<SymbolicToken>>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
 {
-    std::vector<SymbolicTokens> results;
+    std::vector<Result<SymbolicToken>> results;
 
     for (auto parser : parsers)
     {
@@ -14,7 +14,7 @@ std::tuple<bool, std::vector<SymbolicTokens>> run(SymbolicTokenParsers parsers, 
         if (result.result)
         {
             tokens = result.remaining;
-            results.push_back(result.consumed);
+            results.push_back(result);
         }
         else
         {
@@ -41,27 +41,21 @@ int main()
         };
 
     auto assignment_grammar = grammar.grammar_map["assignment.grm"];
-    auto results = run(std::get<0>(assignment_grammar), tokens);
-    if (std::get<0>(results))
+    auto run_result = run(std::get<0>(assignment_grammar), tokens);
+    if (std::get<0>(run_result))
     {
-        std::cout << "Parsed assignment from grammar file" << std::endl;
+        std::cout << "Parsing successful, collecting results" << std::endl;
         
-        auto parsed = std::get<1>(results);
-        std::vector<SymbolicTokens> construction_tokens;
-        for (auto i : std::get<1>(assignment_grammar))
+        auto results = std::get<1>(run_result);
+        for (auto result : results)
         {
-            construction_tokens.push_back(parsed[i]); // Keep only the lines designated by the grammar file
-        }
-
-        for (auto tokens : parsed)
-        {
-            for (auto t : tokens)
+            std::cout << result.annotation << std::endl;
+            for (auto t : result.consumed)
             {
                 std::cout << t.value->representation() << std::endl;
             }
-        }
 
-        Assignment assignment(construction_tokens);
+        }
     }
     else
     {

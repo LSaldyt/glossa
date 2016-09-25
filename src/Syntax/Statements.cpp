@@ -43,7 +43,7 @@ namespace Syntax
         std::string args = "";
         for (int i =0; i < argnames.size(); i++)
         { 
-            args += ("auto " + argnames[i]);
+            args += (argnames[i]);
             if (i+1 != argnames.size()) //If not on last iteration
             {
                 args += ", ";

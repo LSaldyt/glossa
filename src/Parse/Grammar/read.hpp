@@ -14,5 +14,5 @@ using namespace Match;
 using namespace Syntax;
 
 
-std::tuple<bool, std::vector<SymbolicTokens>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
+std::tuple<bool, std::vector<Result<SymbolicToken>>> run(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
 }
