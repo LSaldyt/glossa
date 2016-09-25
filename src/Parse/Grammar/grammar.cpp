@@ -42,17 +42,30 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
 
     if (terms.size() == 2)
     {
-        if (terms[0] == "link")
+        auto first   = terms[0];
+        bool keep    = true;
+        // If first of pair starts with !, discard its parse result
+        if (first[0] == '!')
+        {
+            first = std::string(first.begin() + 1, first.end());
+            keep = false;
+        }
+        if (first == "link")
         {
             parser = retrieveGrammar(terms[1]);
         }
         else if (terms[1] == "wildcard")
         {
-            parser = typeParser(terms[0]);
+            parser = typeParser(first);
         }
         else
         {
-            parser = dualTypeParser(terms[0], terms[1]);
+            parser = dualTypeParser(first, terms[1]);
+        }
+
+        if (not keep)
+        {
+            parser = discard(parser);
         }
     }
     else if (terms.size() > 2)

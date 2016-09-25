@@ -1,6 +1,11 @@
 #include "std/std.hpp"
 int main(){
-const auto f = [=](auto x){print(x); return x * 8; };
-const auto x = 5 * f(42);;
-const auto y = 3 + 2;
+Function f:
+	Arguments: (auto x)
+	Body: FunctionCall print: (
+	Arguments: (x))
+	Returns: Expression: x * 8)
+Assignment: (x = Expression: 5 * FunctionCall f: (
+	Arguments: (42)))
+Assignment: (y = Expression: 3 + 2)
 }

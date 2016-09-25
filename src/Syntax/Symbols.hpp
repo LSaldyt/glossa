@@ -24,7 +24,7 @@ namespace Syntax
 
         virtual std::string representation()
         {
-            return std::to_string(value);
+            return "Literal: " + std::to_string(value);
         }
     };
 
@@ -40,7 +40,7 @@ namespace Syntax
         }
         std::string representation()
         {
-            return value;
+            return "Operator: " + value;
         }
     };
 
@@ -58,7 +58,7 @@ namespace Syntax
         }
         std::string representation()
         {
-            return name;
+            return "Identifier: " + name;
         }
     };
 
@@ -73,7 +73,7 @@ namespace Syntax
         }
         std::string representation()
         {
-            return name;
+            return "Keyword: " + name;
         }
     };
 
@@ -88,7 +88,7 @@ namespace Syntax
         }
         std::string representation()
         {
-            return "\"" + value + "\"";
+            return "String: \"" + value + "\"";
         }
     };
 

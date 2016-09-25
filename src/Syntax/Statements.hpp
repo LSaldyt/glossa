@@ -22,6 +22,7 @@ namespace Syntax
     struct Assignment : public Statement
     {
         Assignment(std::vector<SymbolicTokens>);
+        Assignment();
 
         std::string identifier;
         Expression value;
@@ -46,5 +47,13 @@ namespace Syntax
         std::string              identifier;
         std::vector<std::string> args;
         std::string              representation();
+    };
+
+    struct Conditional : public Statement
+    {
+        Expression condition;
+
+        std::vector<std::shared_ptr<Statement>> a; // If
+        std::vector<std::shared_ptr<Statement>> b; // Else
     };
 }

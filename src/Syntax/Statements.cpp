@@ -12,7 +12,7 @@ namespace Syntax
 
     std::string Expression::representation()
     {
-        std::string generated = base->representation();
+        std::string generated = "Expression: " + base->representation();
         for (auto e : extensions)
         {
             generated += (" " + std::get<0>(e)->representation() + " " + std::get<1>(e)->representation());
@@ -26,9 +26,14 @@ namespace Syntax
 
     }
 
+    Assignment::Assignment()
+    {
+
+    }
+
     std::string Assignment::representation()
     {
-        return ("const auto " + identifier + " = " + value.representation() + ";");
+        return ("Assignment: (" + identifier + " = " + value.representation() + ")");
     }
 
     Function::Function() : body(std::vector<std::shared_ptr<Statement>>()){}
@@ -38,7 +43,6 @@ namespace Syntax
         std::string args = "";
         for (int i =0; i < argnames.size(); i++)
         { 
-            std::cout << "Argname: " << argnames[i] << std::endl;
             args += ("auto " + argnames[i]);
             if (i+1 != argnames.size()) //If not on last iteration
             {
@@ -52,7 +56,7 @@ namespace Syntax
             body_string += statement->representation();
         }
 
-        return "const auto " + identifier + " = [=](" + args + "){" + body_string + " return "+ return_expression.representation() + "; };";
+        return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression.representation() + ")";
     }
 
     std::string FunctionCall::representation()
@@ -66,6 +70,6 @@ namespace Syntax
                 arglist += ", ";
             }
         }
-        return identifier + "(" + arglist + ");";
+        return "FunctionCall " + identifier + ": (\n\tArguments: (" + arglist + "))";
     }
 }
