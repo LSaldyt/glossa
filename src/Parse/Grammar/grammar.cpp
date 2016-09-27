@@ -24,8 +24,8 @@ SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(std::vector<std::string>
             std::cout << t << " ";
         }
         std::cout << std::endl;
+        throw std::exception();
     }
-
     for (int i = 0; i < (terms.size() / 2); i++)
     {
         int x = i * 2;
@@ -145,6 +145,7 @@ SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
         }
 
         Result<SymbolicToken> result = parser(tokens);
+        result.annotation = filename;
         return result;
     };
     return grammar_parser;

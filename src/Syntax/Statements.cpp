@@ -9,7 +9,6 @@ namespace Syntax
     Expression::Expression() : base(std::make_shared<Symbol>(Integer(0))),
                                extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>()){}
 
-
     std::string Expression::representation()
     {
         std::string generated = "Expression: " + base->representation();

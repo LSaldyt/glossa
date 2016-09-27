@@ -33,6 +33,29 @@ int main()
 
     auto grammar = Grammar::Grammar({"assignment.grm", "expression.grm", "value.grm", "functioncall.grm"});
 
+    using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vector<SymbolicToken>)>;
+    std::unordered_map<std::string, StatementConstructor> construction_map = {
+        {
+            "expression.grm", 
+            [](std::vector<SymbolicToken> tokens){
+                Expression e;
+                e.base = tokens[0].value;
+                if (tokens.size() > 1)
+                {
+                    if ((tokens.size() - 1) % 2 != 0)
+                        throw std::exception();
+
+                    for (int i = 1; i < tokens.size(); i += 2)
+                    {
+                        e.extensions.push_back(std::make_tuple(tokens[i].value, tokens[i + 1].value));
+                    }
+                }
+
+                return std::make_shared<Expression>(e);
+            }
+        }
+    };
+
     SymbolicTokens tokens = {SymbolicToken(std::make_shared<Identifier>(Identifier("x")), "identifier", "identifier"),
                              SymbolicToken(std::make_shared<Operator>(Operator("=")), "=", "operator"),
                              SymbolicToken(std::make_shared<Integer>(Integer(42)), "int", "literal"),
@@ -46,15 +69,31 @@ int main()
     {
         std::cout << "Parsing successful, collecting results" << std::endl;
         
+        std::vector<std::shared_ptr<Symbol>> result_symbols;
+
         auto results = std::get<1>(run_result);
         for (auto result : results)
         {
-            std::cout << result.annotation << std::endl;
-            for (auto t : result.consumed)
+            if (result.annotation == "none")
             {
-                std::cout << t.value->representation() << std::endl;
+                if (result.consumed.size() == 1)
+                {
+                    result_symbols.push_back(result.consumed.back().value);
+                }
+                else
+                {
+                    throw std::exception();
+                }
             }
+            else
+            {
+                result_symbols.push_back(construction_map[result.annotation](result.consumed));
+            }
+        }
 
+        for (auto symbol : result_symbols)
+        {
+            std::cout << symbol->representation() << std::endl;
         }
     }
     else
