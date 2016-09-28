@@ -71,13 +71,16 @@ int main()
         
         std::vector<std::shared_ptr<Symbol>> result_symbols;
 
+        auto construction_indices = std::get<1>(assignment_grammar);
         auto results = std::get<1>(run_result);
-        for (auto result : results)
+        for (auto i : construction_indices)
         {
+            auto result = results[i];
             if (result.annotation == "none")
             {
                 if (result.consumed.size() == 1)
                 {
+                    std::cout << result.consumed.back().value->representation() << std::endl; // ouch
                     result_symbols.push_back(result.consumed.back().value);
                 }
                 else
@@ -87,14 +90,14 @@ int main()
             }
             else
             {
+                std::cout << construction_map[result.annotation](result.consumed)->representation() << std::endl;
                 result_symbols.push_back(construction_map[result.annotation](result.consumed));
             }
         }
 
-        for (auto symbol : result_symbols)
-        {
-            std::cout << symbol->representation() << std::endl;
-        }
+        Assignment a(result_symbols);
+        std::cout << a.representation() << std::endl;
+
     }
     else
     {

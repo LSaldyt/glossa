@@ -19,20 +19,17 @@ namespace Syntax
         return generated;
     }
 
-    Assignment::Assignment(std::vector<SymbolicTokens> construction_tokens)
+    Assignment::Assignment(std::vector<std::shared_ptr<Symbol>> construction_tokens)
     {
-        identifier = construction_tokens[0][0].sub_type;
-
+        identifier = construction_tokens[0]->representation();
+        value      = construction_tokens[1];
     }
 
-    Assignment::Assignment()
-    {
-
-    }
+    Assignment::Assignment(){}
 
     std::string Assignment::representation()
     {
-        return ("Assignment: (" + identifier + " = " + value.representation() + ")");
+        return ("Assignment: (" + identifier + " = " + value->representation() + ")");
     }
 
     Function::Function() : body(std::vector<std::shared_ptr<Statement>>()){}

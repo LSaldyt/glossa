@@ -21,11 +21,11 @@ namespace Syntax
 
     struct Assignment : public Statement
     {
-        Assignment(std::vector<SymbolicTokens>);
+        Assignment(std::vector<std::shared_ptr<Symbol>>);
         Assignment();
 
         std::string identifier;
-        Expression value;
+        std::shared_ptr<Symbol> value;
 
         std::string representation();
     };
