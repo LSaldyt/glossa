@@ -75,7 +75,7 @@ namespace Parse
         return std::make_tuple(false, std::make_shared<Symbol>(Symbol()));
     }
 
-    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens)
+    std::tuple<bool, std::shared_ptr<Symbol>> buildExpression(SymbolicTokens& tokens)
     {
         Expression e;
         SymbolicTokens tokens_copy(tokens);
@@ -90,7 +90,7 @@ namespace Parse
             }
             else
             {
-                return std::make_tuple(false, e);
+                return std::make_tuple(false, std::make_shared<Expression>(e));
             }
         }
         parsing = tokens.size() > 1; // An operator and single-token literal, at least
@@ -120,6 +120,6 @@ namespace Parse
                 parsing = false;
             }
         }
-        return std::make_tuple(true, e);
+        return std::make_tuple(true, std::make_shared<Expression>(e));
     }
 }

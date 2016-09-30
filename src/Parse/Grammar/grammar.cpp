@@ -50,19 +50,23 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
             first = std::string(first.begin() + 1, first.end());
             keep = false;
         }
+        // Allow linking to other grammar files
         if (first == "link")
         {
             parser = retrieveGrammar(terms[1]);
         }
+        // Parse by type only
         else if (terms[1] == "wildcard")
         {
             parser = typeParser(first);
         }
+        // Parse by a specific subtype (ex "keyword return")
         else
         {
             parser = dualTypeParser(first, terms[1]);
         }
 
+        // Take care of a "!" if it was found early - make the parser discard its result
         if (not keep)
         {
             parser = discard(parser);
@@ -73,14 +77,17 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         const auto keyword = terms[0];
         terms = std::vector<std::string>(terms.begin() + 1, terms.end());
 
+        // Repeatedly parse a parser!
         if (keyword == "many")
         {
             parser = many<SymbolicToken>(readGrammarTerms(terms)); 
         }
+        // Run several parsers in order, failing if any of them fail
         else if (keyword == "inOrder")
         {
             parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
         }
+        // Choose from several parsers
         else if (keyword == "anyOf")
         {
             parser = anyOf<SymbolicToken>(readGrammarPairs(terms));
@@ -88,6 +95,7 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         else
         {
             std::cout << "Expected keyword..." << std::endl;
+            throw std::exception();
         }
     }
     else

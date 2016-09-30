@@ -52,7 +52,7 @@ namespace Syntax
             body_string += statement->representation();
         }
 
-        return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression.representation() + ")";
+        return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression->representation() + ")";
     }
 
     std::string FunctionCall::representation()

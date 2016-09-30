@@ -54,7 +54,7 @@ namespace Parse
     std::tuple<bool, std::shared_ptr<Statement>>              buildStatement (SymbolicTokens& tokens);
     std::tuple<bool, std::vector<std::shared_ptr<Statement>>> buildStatements(SymbolicTokens& tokens);
 
-    std::tuple<bool, Expression> buildExpression(SymbolicTokens& tokens);
+    std::tuple<bool, std::shared_ptr<Symbol>> buildExpression(SymbolicTokens& tokens);
 
 
     // helper functions used in binders/builders
@@ -115,6 +115,5 @@ namespace Parse
     const auto bindIdent      = createBinder<std::string>                             (genIdent);
     const auto bindArgnames   = createBinder<std::vector<std::string>>                (commaSepList);
     const auto bindStatements = createBinder<std::vector<std::shared_ptr<Statement>>> (buildStatements);
-    const auto bindExpression = createBinder<Expression>                              (buildExpression);
-
+    const auto bindExpression = createBinder<std::shared_ptr<Symbol>>                 (buildExpression);
 }
