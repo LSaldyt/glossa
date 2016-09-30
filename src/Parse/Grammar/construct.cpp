@@ -1,6 +1,4 @@
-#include "grammar.hpp"
 #include "construct.hpp"
-#include "run.hpp"
 
 namespace Grammar
 {
@@ -18,8 +16,9 @@ std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken> token
     return symbols;
 }
 
-void {
-    auto run_result = run(std::get<0>(assignment_grammar), tokens);
+std::shared_ptr<Symbol> construct(std::tuple<bool, std::vector<Result<SymbolicToken>>> run_result, std::vector<int> construction_indices)
+{
+    //auto run_result = run(std::get<0>(assignment_grammar), tokens);
 
     if (std::get<0>(run_result))
     {
@@ -27,7 +26,7 @@ void {
         
         std::vector<std::shared_ptr<Symbol>> result_symbols;
 
-        auto construction_indices = std::get<1>(assignment_grammar);
+        // auto construction_indices = std::get<1>(assignment_grammar);
         auto results = std::get<1>(run_result);
         for (auto i : construction_indices)
         {
@@ -46,7 +45,7 @@ void {
             }
             else
             {
-                auto constructed = construction_map[result.annotation](result.consumed);
+                auto constructed = find_constructor(result.annotation)(fromTokens(result.consumed));
                 std::cout << constructed->representation() << std::endl;
                 result_symbols.push_back(constructed);
             }
@@ -55,11 +54,12 @@ void {
 
         Assignment a(result_symbols);
         std::cout << a.representation() << std::endl;
-
+        return std::make_shared<Assignment>(a);
     }
     else
     {
         std::cout << "Parsing failed" << std::endl;
+        throw std::exception();
     }
 }
 

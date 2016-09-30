@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../IO/IO.hpp"
 #include "../../Lex/Seperate.hpp"
 #include "../../Syntax/Statements.hpp"

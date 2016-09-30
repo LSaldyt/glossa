@@ -1,6 +1,9 @@
+#pragma once
+
 #include <unordered_map>
 #include <string>
 
+#include "run.hpp"
 #include "grammar.hpp"
 
 namespace Grammar
@@ -9,7 +12,7 @@ using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vecto
 
 std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken>);
 
-std::unordered_map<std::string, StatementConstructor> construction_map = {
+const std::unordered_map<std::string, StatementConstructor> construction_map = {
         {"expression.grm", 
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
@@ -35,5 +38,16 @@ std::unordered_map<std::string, StatementConstructor> construction_map = {
                 return std::make_shared<Assignment>(Assignment(tokens));
             }
         }
-    };
+   };
+
+const auto find_constructor = [](std::string name)
+{
+    StatementConstructor constructor;
+    auto it = construction_map.find(name);
+    if (it != construction_map.end())
+        constructor = it->second;
+    else
+        throw std::exception();
+    return constructor;
+};
 }
