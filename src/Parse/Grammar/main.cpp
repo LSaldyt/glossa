@@ -1,10 +1,7 @@
-//#include "grammar.hpp"
 #include "construct.hpp"
-//#include "run.hpp"
 
 int main()
 {
-    /*
     using namespace Grammar;
 
     auto grammar = Grammar::Grammar({"assignment.grm", "expression.grm", "value.grm", "functioncall.grm"});
@@ -18,7 +15,6 @@ int main()
 
     auto assignment_grammar = grammar.grammar_map["assignment.grm"];
     auto run_result = run(std::get<0>(assignment_grammar), tokens);
-    */
 
 }
 

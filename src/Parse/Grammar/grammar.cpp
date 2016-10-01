@@ -8,7 +8,7 @@ Grammar::Grammar::Grammar(std::vector<std::string> filenames)
 {
     for (auto filename : filenames)
     {
-        grammar_map[filename] = read(filename);
+        grammar_map[filename] = read("python/" + filename);
     }
 }
 
