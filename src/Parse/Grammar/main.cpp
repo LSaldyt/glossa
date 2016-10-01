@@ -13,8 +13,8 @@ int main()
                              SymbolicToken(std::make_shared<Integer>   (Integer(7)),      "int",        "literal"),
         };
 
-    auto run_result = run(grammar.grammar_map, tokens);
-    std::cout << std::get<0>(run_result) << std::endl;
+    auto result = grammar.identify(tokens);
+    std::cout << std::get<0>(result) << std::endl;
 
 }
 
