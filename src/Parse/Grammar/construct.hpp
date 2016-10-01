@@ -13,7 +13,7 @@ using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vecto
 std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken>);
 
 const std::unordered_map<std::string, StatementConstructor> construction_map = {
-        {"expression.grm", 
+        {"expression", 
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
                 Expression e;
@@ -32,7 +32,7 @@ const std::unordered_map<std::string, StatementConstructor> construction_map = {
                 return std::make_shared<Expression>(e);
             }
         },
-        {"assignment.grm",
+        {"assignment",
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
                 return std::make_shared<Assignment>(Assignment(tokens));

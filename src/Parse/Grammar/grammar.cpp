@@ -4,11 +4,11 @@
 namespace Grammar
 {
 
-Grammar::Grammar::Grammar(std::vector<std::string> filenames)
+Grammar::Grammar::Grammar(std::vector<std::string> filenames, std::string directory)
 {
     for (auto filename : filenames)
     {
-        grammar_map[filename] = read("python/" + filename);
+        grammar_map[filename] = read(directory + filename);
     }
 }
 
