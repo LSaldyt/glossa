@@ -17,25 +17,28 @@ using namespace Parse;
 using namespace Match;
 using namespace Syntax;
 
-    
 using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vector<std::shared_ptr<Symbol>>)>;
-
-std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken>);
 
 using GrammarMap = std::unordered_map<std::string, std::tuple<SymbolicTokenParsers, std::vector<int>>>; 
 
+std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken>);
+
 class Grammar
 {
-    static std::unordered_map<std::string, StatementConstructor> construction_map;
+    const static std::unordered_map<std::string, StatementConstructor> construction_map;
 
 public:
     Grammar(std::vector<std::string> grammar_files, std::string directory);
+
+    std::vector<std::shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
+
+
+private:
     GrammarMap grammar_map; 
 
     std::tuple<std::string, std::vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     std::shared_ptr<Symbol> construct(std::string name, std::vector<Result<SymbolicToken>> results);
 
-private:
     std::tuple<SymbolicTokenParsers, std::vector<int>> read(std::string filename);
     std::tuple<bool, std::vector<Result<SymbolicToken>>> evaluateGrammar(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
 

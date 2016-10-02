@@ -14,13 +14,10 @@ int main()
         };
 
 
-    while (tokens.size() > 0)
+    auto symbols = grammar.constructFrom(tokens);
+    for (auto s : symbols)
     {
-        auto result = grammar.identify(tokens);
-        auto name   = std::get<0>(result);
-        auto constructed = grammar.construct(name, std::get<1>(result)); 
-        std::cout << "Constructed: " << std::endl;
-        std::cout << constructed->representation() << std::endl;
+        std::cout << s->representation() << std::endl;
     }
 }
 

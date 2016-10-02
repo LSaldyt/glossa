@@ -4,7 +4,7 @@
 namespace Grammar
 {
 
-std::unordered_map<std::string, StatementConstructor> Grammar::construction_map = {
+const std::unordered_map<std::string, StatementConstructor> Grammar::construction_map = {
         {"expression", 
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
@@ -39,6 +39,21 @@ Grammar::Grammar::Grammar(std::vector<std::string> filenames, std::string direct
         grammar_map[filename] = read(directory + filename);
     }
 }
+
+std::vector<std::shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
+{
+    std::vector<std::shared_ptr<Symbol>> symbols;
+
+    while (tokens.size() > 0)
+    {
+        auto result = identify(tokens);
+        auto constructed = construct(std::get<0>(result), std::get<1>(result)); 
+        symbols.push_back(constructed);
+    }
+
+    return symbols;
+}
+
 
 SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(std::vector<std::string>& terms)
 {
