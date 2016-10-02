@@ -165,12 +165,32 @@ Grammar::identify
 (SymbolicTokens& tokens)
 {
     SymbolicTokens tokens_copy(tokens);
+
+    std::vector<std::string> keys;
+    keys.reserve(grammar_map.size());
     for (auto kv : grammar_map)
     {
-        auto result = evaluateGrammar(std::get<0>(kv.second), tokens_copy);
+        keys.push_back(kv.first);
+    }
+
+    // Sort keys by the lengths of the parsers they refer to
+    std::sort(keys.begin(), keys.end(),
+                      [this] (auto a, auto b) 
+                      {
+                          auto a_len = std::get<0>(grammar_map[a]).size();
+                          auto b_len = std::get<0>(grammar_map[b]).size();
+                          return a_len > b_len; 
+                      });
+
+    for (auto key : keys)
+    {
+        auto value   = grammar_map[key];
+        auto parsers = std::get<0>(value);
+        auto result  = evaluateGrammar(parsers, tokens_copy);
         if (std::get<0>(result))
         {
-            return std::make_tuple(kv.first, std::get<1>(result));
+            tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
+            return std::make_tuple(key, std::get<1>(result));
         }
         else
         {
