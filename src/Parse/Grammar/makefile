@@ -3,7 +3,7 @@ CXXFLAGS  = -c -std=c++14
 LDFLAGS   =
 BDIR      = build
 VPATH     = ../../Match ../../IO ../../Match/Base ../../Lex ../../Gen ../../Syntax ../
-SOURCES   = construct.cpp main.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lex.cpp \
+SOURCES   = main.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lex.cpp \
             StatementBuilders.cpp StatementHelpers.cpp Language.cpp StatementResult.cpp \
             Statements.cpp TokenParsers.cpp grammar.cpp 
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)

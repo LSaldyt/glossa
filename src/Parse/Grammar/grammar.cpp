@@ -4,6 +4,34 @@
 namespace Grammar
 {
 
+std::unordered_map<std::string, StatementConstructor> Grammar::construction_map = {
+        {"expression", 
+            [](std::vector<std::shared_ptr<Symbol>> tokens)
+            {
+                Expression e;
+                e.base = tokens[0];
+                if (tokens.size() > 1)
+                {
+                    if ((tokens.size() - 1) % 2 != 0)
+                        throw std::exception();
+
+                    for (int i = 1; i < tokens.size(); i += 2)
+                    {
+                        e.extensions.push_back(std::make_tuple(tokens[i], tokens[i + 1]));
+                    }
+                }
+
+                return std::make_shared<Expression>(e);
+            }
+        },
+        {"assignment",
+            [](std::vector<std::shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Assignment>(Assignment(tokens));
+            }
+        }
+   };
+
 Grammar::Grammar::Grammar(std::vector<std::string> filenames, std::string directory)
 {
     for (auto filename : filenames)
@@ -224,5 +252,57 @@ Grammar::evaluateGrammar
 
     return std::make_tuple(true, results);
 };
+
+
+std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken> tokens)
+{
+    std::vector<std::shared_ptr<Symbol>> symbols;
+    symbols.reserve(tokens.size());
+
+    for (auto t : tokens)
+    {
+        symbols.push_back(t.value);
+    }
+
+    return symbols;
+}
+
+std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<SymbolicToken>> results)
+{
+    auto construction_indices = std::get<1>(grammar_map[name]);
+
+    std::vector<std::shared_ptr<Symbol>> result_symbols;
+
+    for (auto i : construction_indices)
+    {
+        auto result = results[i];
+        if (result.annotation == "none")
+        {
+            if (result.consumed.size() == 1)
+            {
+                result_symbols.push_back(result.consumed.back().value);
+            }
+            else
+            {
+                throw std::exception();
+            }
+        }
+        else
+        {
+            StatementConstructor constructor;
+            auto it = Grammar::construction_map.find(result.annotation);
+            if (it != Grammar::construction_map.end())
+                constructor = it->second;
+            else
+                throw std::exception();
+
+            auto constructed = constructor(fromTokens(result.consumed));
+            result_symbols.push_back(constructed);
+        }
+    }
+
+    Assignment a(result_symbols);
+    return std::make_shared<Assignment>(a);
+}
 
 }

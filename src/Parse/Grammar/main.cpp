@@ -1,4 +1,4 @@
-#include "construct.hpp"
+#include "grammar.hpp"
 
 int main()
 {
@@ -18,9 +18,7 @@ int main()
     {
         auto result = grammar.identify(tokens);
         auto name   = std::get<0>(result);
-        auto construction_indices = std::get<1>(grammar.grammar_map[name]);
-
-        auto constructed = construct(std::get<1>(result), construction_indices); 
+        auto constructed = grammar.construct(name, std::get<1>(result)); 
         std::cout << "Constructed: " << std::endl;
         std::cout << constructed->representation() << std::endl;
     }
