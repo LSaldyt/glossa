@@ -1,6 +1,6 @@
 identifier wildcard
 operator (
 link expression
-many inOrder operator , link expression
+many inOrder !operator , link expression
 operator )
 0 2 3

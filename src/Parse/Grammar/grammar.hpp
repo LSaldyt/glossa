@@ -19,7 +19,6 @@ using namespace Syntax;
 
 using GrammarMap = std::unordered_map<std::string, std::tuple<SymbolicTokenParsers, std::vector<int>>>; 
 
-
 class Grammar
 {
 public:

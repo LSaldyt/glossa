@@ -7,6 +7,9 @@
 
 namespace Grammar
 {
+    
+std::shared_ptr<Symbol> construct(std::vector<Result<SymbolicToken>> results, std::vector<int> construction_indices);
+    
 using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vector<std::shared_ptr<Symbol>>)>;
 
 std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken>);

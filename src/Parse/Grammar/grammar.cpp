@@ -54,6 +54,7 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         if (first == "link")
         {
             parser = retrieveGrammar(terms[1]);
+            parser = annotate(parser, terms[1]); // Mark the link as such
         }
         // Parse by type only
         else if (terms[1] == "wildcard")
