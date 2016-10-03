@@ -21,11 +21,11 @@ namespace Syntax
 
     struct Assignment : public Statement
     {
-        Assignment(std::vector<SymbolicTokens>);
+        Assignment(std::vector<std::shared_ptr<Symbol>>);
         Assignment();
 
         std::string identifier;
-        Expression value;
+        std::shared_ptr<Symbol> value;
 
         std::string representation();
     };
@@ -37,15 +37,19 @@ namespace Syntax
         std::string                             identifier;
         std::vector<std::string>                argnames;
         std::vector<std::shared_ptr<Statement>> body;
-        Expression                              return_expression;
+        std::shared_ptr<Symbol>                 return_expression;
 
         std::string representation();
     };
 
     struct FunctionCall : public Statement
     {
+        FunctionCall();
+        FunctionCall(std::vector<std::shared_ptr<Symbol>>);
+
         std::string              identifier;
-        std::vector<std::string> args;
+        std::vector<std::shared_ptr<Symbol>> args;
+
         std::string              representation();
     };
 

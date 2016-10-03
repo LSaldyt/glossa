@@ -1,6 +1,0 @@
-identifier wildcard
-operator (
-link expression.grm
-many inOrder operator , link expression.grm
-operator )
-0 2 3
