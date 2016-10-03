@@ -5,6 +5,8 @@ int main()
 {
     using namespace Compiler;
 
+    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "../grammars/python/");
+
     Terms keywords  = {"return"};
     Terms operators = {"+", "-", "*", "/", "=", ")", "(", ":", ",", "and", "or"};
 
@@ -28,29 +30,12 @@ int main()
     {
         std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
     }
-    
-    auto statementresults = buildStatements(joined_tokens);
 
-    std::vector<std::string> output;
-    output.push_back("#include \"std/std.hpp\"");
-    output.push_back("int main(){");
-    if (std::get<0>(statementresults))
+    auto symbols = grammar.constructFrom(joined_tokens);
+    for (auto s : symbols)
     {
-        std::cout << "Successfully parsed " << std::get<1>(statementresults).size() << " Statements" << std::endl;
-        for (auto statementresult : std::get<1>(statementresults))
-        {
-            auto generated = statementresult->representation();
-            std::cout << generated << std::endl;
-            output.push_back(generated);
-        }
+        std::cout << s->representation() << std::endl;
     }
-    else
-    {
-        print("ERROR - Function template did not match syntax");
-    }
-    output.push_back("}");
-
-    writeFile(output, "../output/output.cpp");
 }
 
 namespace Compiler

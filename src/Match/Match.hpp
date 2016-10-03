@@ -5,6 +5,19 @@
 
 namespace Match 
 {
+    template <typename T>
+    std::function<Result<T>(std::vector<T>)>
+    annotate
+    (std::function<Result<T>(std::vector<T>)> parser, std::string annotation)
+    {
+        return [parser, annotation](std::vector<T> tokens)
+        {
+            auto result = parser(tokens);
+            result.annotation = annotation;
+            return result;
+        };
+    };
+
 
     template <typename T>
     std::function<Result<T>(std::vector<T>)> 
@@ -40,7 +53,8 @@ namespace Match
     (T value)
     {
         auto comparator = [value](T term){ return value == term; };
-        return singleTemplate<T>(comparator);
+        auto parser     = singleTemplate<T>(comparator);
+        return annotate(parser, "just");
     };
 
     const auto startswith = [](std::string value)
