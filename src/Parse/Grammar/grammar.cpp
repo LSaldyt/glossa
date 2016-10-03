@@ -9,6 +9,7 @@ const std::unordered_map<std::string, StatementConstructor> Grammar::constructio
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
                 Expression e;
+                std::cout << tokens.size() << std::endl;
                 e.base = tokens[0];
                 if (tokens.size() > 1)
                 {
@@ -96,8 +97,8 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
 
     if (terms.size() == 2)
     {
-        auto first   = terms[0];
-        bool keep    = true;
+        auto first = terms[0];
+        bool keep  = true;
         // If first of pair starts with !, discard its parse result
         if (first[0] == '!')
         {
@@ -299,6 +300,22 @@ std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken> token
     return symbols;
 }
 
+std::shared_ptr<Symbol> Grammar::build(std::string name, std::vector<std::shared_ptr<Symbol>> symbols)
+{
+    StatementConstructor constructor;
+    auto it = Grammar::construction_map.find(name);
+    if (it != Grammar::construction_map.end())
+        constructor = it->second;
+    else
+    {
+        std::cout << name << " is not an element of the construction map" << std::endl;
+        throw std::exception();
+    }
+
+    auto constructed = constructor(symbols);
+    return constructed;
+}
+
 std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<SymbolicToken>> results)
 {
     std::cout << "Constructing " << name << std::endl;
@@ -322,35 +339,15 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
                 throw std::exception();
             }
         }
-        else if (not result.consumed.empty())
+        else if (result.consumed.size() > 0) 
         {
-            StatementConstructor constructor;
-            auto it = Grammar::construction_map.find(result.annotation);
-            if (it != Grammar::construction_map.end())
-                constructor = it->second;
-            else
-            {
-                std::cout << result.annotation << " is not an element of the construction map" << std::endl;
-                throw std::exception();
-            }
-
-            auto constructed = constructor(fromTokens(result.consumed));
+            std::cout << "Building sub-symbol " << result.annotation << std::endl;
+            auto constructed = build(result.annotation, fromTokens(result.consumed));
             result_symbols.push_back(constructed);
         }
     }
 
-    StatementConstructor constructor;
-    auto it = Grammar::construction_map.find(name);
-    if (it != Grammar::construction_map.end())
-        constructor = it->second;
-    else
-    {
-        std::cout << name << " is not an element of the construction map" << std::endl;
-        throw std::exception();
-    }
-
-    auto constructed = constructor(result_symbols);
-
+    auto constructed = build(name, result_symbols);
     return constructed; 
 }
 

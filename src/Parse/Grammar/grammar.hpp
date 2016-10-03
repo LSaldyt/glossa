@@ -32,9 +32,10 @@ public:
 
     std::vector<std::shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
-
 private:
     GrammarMap grammar_map; 
+
+    std::shared_ptr<Symbol> build(std::string name, std::vector<std::shared_ptr<Symbol>> symbols);
 
     std::tuple<std::string, std::vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     std::shared_ptr<Symbol> construct(std::string name, std::vector<Result<SymbolicToken>> results);
