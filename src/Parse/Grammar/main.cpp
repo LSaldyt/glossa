@@ -10,7 +10,11 @@ int main()
                              SymbolicToken(std::make_shared<Operator>  (Operator("=")),   "=",          "operator"),
                              SymbolicToken(std::make_shared<Integer>   (Integer(42)),     "int",        "literal"),
                              SymbolicToken(std::make_shared<Operator>  (Operator("+")),   "+",          "operator"),
-                             SymbolicToken(std::make_shared<Integer>   (Integer(7)),      "int",        "literal")
+                             SymbolicToken(std::make_shared<Integer>   (Integer(7)),      "int",        "literal"),
+                             SymbolicToken(std::make_shared<Identifier>(Identifier("f")), "identifier", "identifier"),
+                             SymbolicToken(std::make_shared<Operator>  (Operator("(")),   "(",          "operator"),
+                             SymbolicToken(std::make_shared<Integer>   (Integer(7)),      "int",        "literal"),
+                             SymbolicToken(std::make_shared<Operator>  (Operator(")")),   ")",          "operator")
         };
 
 

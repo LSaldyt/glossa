@@ -31,17 +31,8 @@ namespace Parse
     });
 
 
-    const auto buildFunctionCall = statementBuilder([=](SymbolicTokens& tokens){
-        FunctionCall fc;
-        bindIdent(fc.identifier, tokens);
-        advance(subTypeParser("("),   tokens);
-        bindArgnames(fc.args,    tokens);
-        advance(subTypeParser(")"),   tokens);
-        return std::make_shared<FunctionCall>(fc);
-    });
-
     const std::vector<StatementParser> statementBuilders = 
     {
-        buildAssignment, buildFunction, buildFunctionCall // Larger parsers should come first
+        buildAssignment, buildFunction // Larger parsers should come first
     };
 }

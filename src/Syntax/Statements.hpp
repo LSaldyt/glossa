@@ -44,8 +44,12 @@ namespace Syntax
 
     struct FunctionCall : public Statement
     {
+        FunctionCall();
+        FunctionCall(std::vector<std::shared_ptr<Symbol>>);
+
         std::string              identifier;
-        std::vector<std::string> args;
+        std::vector<std::shared_ptr<Symbol>> args;
+
         std::string              representation();
     };
 

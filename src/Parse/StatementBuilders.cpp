@@ -53,25 +53,6 @@ namespace Parse
         //const auto value = typeParser("literal");
         const auto value = anyOf<SymbolicToken>({typeParser("literal"), typeParser("identifier")});
 
-        if (tokens_copy.size() > 0)
-        {
-            auto result = buildFunctionCall(tokens_copy); // Will eventually be any complex R-value (Which, right now, is only function calls)
-            if (result.result)
-            {
-                tokens = tokens_copy;
-                return std::make_tuple(true, result.statement);
-            }
-            else
-            {
-                tokens_copy = tokens;
-            }
-            auto valresult = value(tokens_copy);
-            if (valresult.result)
-            {
-                tokens = valresult.remaining;
-                return std::make_tuple(true, valresult.consumed[0].value);
-            }
-        }
         return std::make_tuple(false, std::make_shared<Symbol>(Symbol()));
     }
 

@@ -55,12 +55,21 @@ namespace Syntax
         return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression->representation() + ")";
     }
 
+    FunctionCall::FunctionCall(std::vector<std::shared_ptr<Symbol>> symbols) 
+    {
+        identifier = symbols[0]->representation();
+        args = std::vector<std::shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
+    }
+
+    FunctionCall::FunctionCall() 
+    {}
+
     std::string FunctionCall::representation()
     {
         std::string arglist = "";
         for (int i =0; i < args.size(); i++)
         { 
-            arglist += args[i];
+            arglist += args[i]->representation();
             if (i+1 != args.size()) //If not on last iteration
             {
                 arglist += ", ";
