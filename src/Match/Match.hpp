@@ -74,6 +74,22 @@ namespace Match
 
     template <typename T>
     std::function<Result<T>(std::vector<T>)>
+    optional
+    (std::function<Result<T>(std::vector<T>)> matcher)
+    {
+        return [matcher](std::vector<T> terms)
+        {
+            auto result = matcher(terms);
+            if (!result.result)
+            {
+                result.result = true;
+            }
+            return result;
+        };
+    }
+
+    template <typename T>
+    std::function<Result<T>(std::vector<T>)>
     inverse
     (std::function<Result<T>(std::vector<T>)> matcher)
     {

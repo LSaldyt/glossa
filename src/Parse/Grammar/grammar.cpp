@@ -137,6 +137,11 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         {
             parser = many<SymbolicToken>(readGrammarTerms(terms)); 
         }
+        // Optionally parse a parser
+        else if (keyword == "optional")
+        {
+            parser = optional<SymbolicToken>(readGrammarTerms(terms));
+        }
         // Run several parsers in order, failing if any of them fail
         else if (keyword == "inOrder")
         {
@@ -296,6 +301,7 @@ std::vector<std::shared_ptr<Symbol>> fromTokens(std::vector<SymbolicToken> token
 
 std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<SymbolicToken>> results)
 {
+    std::cout << "Constructing " << name << std::endl;
     auto construction_indices = std::get<1>(grammar_map[name]);
 
     std::vector<std::shared_ptr<Symbol>> result_symbols;
@@ -303,6 +309,7 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
     for (auto i : construction_indices)
     {
         auto result = results[i];
+
         if (result.annotation == "none")
         {
             if (result.consumed.size() == 1)
@@ -315,7 +322,7 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
                 throw std::exception();
             }
         }
-        else
+        else if (not result.consumed.empty())
         {
             StatementConstructor constructor;
             auto it = Grammar::construction_map.find(result.annotation);

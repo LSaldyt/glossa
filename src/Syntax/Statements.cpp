@@ -57,8 +57,13 @@ namespace Syntax
 
     FunctionCall::FunctionCall(std::vector<std::shared_ptr<Symbol>> symbols) 
     {
-        identifier = symbols[0]->representation();
-        args = std::vector<std::shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
+        /*
+        if (not symbols.empty())
+        {
+            identifier = symbols[0]->representation();
+            args = std::vector<std::shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
+        }
+        */
     }
 
     FunctionCall::FunctionCall() 
