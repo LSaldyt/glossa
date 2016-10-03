@@ -6,14 +6,15 @@
 #include "Lex/Language.hpp"
 #include <iostream>
 #include <tuple>
-#include "Parse/StatementBuilders.hpp"
 #include "Types/Symbolize.hpp"
+#include "Parse/Grammar/grammar.hpp"
 
 namespace Compiler
 {
     using namespace Parse;
     using namespace Lex;
     using namespace Syntax;
+    using namespace Grammar;
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);

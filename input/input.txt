@@ -1,7 +1,1 @@
-f(x):
-  print(x)
-  return x * 8
-
-x = 5 * f(42)
-
 y = 3 + 2
