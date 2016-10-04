@@ -1,6 +1,6 @@
 identifier wildcard
-operator (
-optional link expression
-many inOrder !operator , link expression
-operator )
-0 2 
+punctuator (
+optional link expression 
+optional many inOrder !punctuator , link expression
+punctuator )
+0 2 3 

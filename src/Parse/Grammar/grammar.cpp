@@ -39,6 +39,12 @@ const std::unordered_map<std::string, StatementConstructor> Grammar::constructio
             {
                 return std::make_shared<FunctionCall>(FunctionCall(tokens));
             }
+        },
+        {"value",
+            [](std::vector<std::shared_ptr<Symbol>> tokens)
+            { 
+                return std::make_shared<Symbol>(Symbol());
+            }
         }
 
    };
@@ -58,7 +64,14 @@ std::vector<std::shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& toke
     while (tokens.size() > 0)
     {
         auto result = identify(tokens);
-        std::cout << std::get<0>(result) << std::endl;
+        std::cout << "Identified tokens as " << std::get<0>(result) << std::endl;
+        for (auto sub_result : std::get<1>(result))
+        {
+            for (auto t : sub_result.consumed)
+            {
+                std::cout << t.value->representation() << std::endl;
+            }
+        }
         auto constructed = construct(std::get<0>(result), std::get<1>(result)); 
         symbols.push_back(constructed);
     }
@@ -245,9 +258,12 @@ Grammar::identify
 
     for (auto key : keys)
     {
+        std::cout << "Attempting to identify as: " << key << std::endl;
+
         auto value   = grammar_map[key];
         auto parsers = std::get<0>(value);
         auto result  = evaluateGrammar(parsers, tokens_copy);
+
         if (std::get<0>(result))
         {
             tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
@@ -279,6 +295,11 @@ Grammar::evaluateGrammar
         }
         else
         {
+            std::cout << "Failed. Remaining tokens were: " << std::endl;
+            for (auto t : tokens)
+            {
+                std::cout << t.value->representation() << std::endl;
+            }
             return std::make_tuple(false, results);
         }
     }
@@ -326,6 +347,7 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
     for (auto i : construction_indices)
     {
         auto result = results[i];
+        result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
 
         if (result.annotation == "none")
         {
@@ -336,7 +358,7 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
             else if (result.consumed.size() > 1)
             {
                 std::cout << "Result size is too large" << std::endl;
-                throw std::exception();
+                //throw std::exception();
             }
         }
         else if (result.consumed.size() > 0) 

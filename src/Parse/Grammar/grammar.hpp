@@ -17,7 +17,7 @@ using namespace Parse;
 using namespace Match;
 using namespace Syntax;
 
-using StatementConstructor = std::function<std::shared_ptr<Statement>(std::vector<std::shared_ptr<Symbol>>)>;
+using StatementConstructor = std::function<std::shared_ptr<Symbol>(std::vector<std::shared_ptr<Symbol>>)>;
 
 using GrammarMap = std::unordered_map<std::string, std::tuple<SymbolicTokenParsers, std::vector<int>>>; 
 

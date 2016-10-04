@@ -52,12 +52,14 @@ namespace Match
     {
         return matchTemplate<T>([consumer](std::vector<T> terms)
         {
+            std::string annotation = "none";
             auto consumed = std::vector<T>(); 
             while(terms.size() > 0)
             {
                 auto consumer_result = consumer(terms);
                 if (consumer_result.result)
                 {
+                    annotation = consumer_result.annotation;
                     consumed.insert(consumed.end(), consumer_result.consumed.begin(), consumer_result.consumed.end());
                     terms = std::vector<T>(terms.begin() + consumer_result.consumed.size(), terms.end());
                 }
@@ -66,7 +68,7 @@ namespace Match
                     break;
                 }
             }
-            return Consumed<T>(true, consumed);
+            return Consumed<T>(true, consumed, annotation);
         });
     }
 }

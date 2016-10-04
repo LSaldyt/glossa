@@ -53,8 +53,7 @@ namespace Match
     (T value)
     {
         auto comparator = [value](T term){ return value == term; };
-        auto parser     = singleTemplate<T>(comparator);
-        return annotate(parser, "just");
+        return singleTemplate<T>(comparator);
     };
 
     const auto startswith = [](std::string value)
@@ -101,18 +100,6 @@ namespace Match
         };
     }
 
-    template <typename T>
-    std::function<Result<T>(std::vector<T>)>
-    discard
-    (std::function<Result<T>(std::vector<T>)> matcher)
-    {
-        return [matcher](std::vector<T> terms)
-        {
-            auto result = matcher(terms);
-            result.consumed = std::vector<T>();
-            return result;
-        };
-    }
 
     // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
     template <typename T>
@@ -178,11 +165,30 @@ namespace Match
     many
     (std::function<Result<T>(std::vector<T>)> matcher)
     {
-        return multiTemplate<T>([matcher](std::vector<T> terms)
+        return [matcher](std::vector<T> terms)
         {
-            auto result = matcher(terms);
-            return Consumed<T>(result.result, result.consumed);
-        });
+            auto consumed = std::vector<T>(); 
+            std::string annotation = "none";
+
+            while(terms.size() > 0)
+            {
+                auto result = matcher(terms);
+                if (result.result)
+                {
+                    annotation = result.annotation;
+                    consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
+                    terms = std::vector<T>(terms.begin() + result.consumed.size(), terms.end());
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            auto result = Result<T>(true, consumed, terms);
+            result.annotation = annotation;
+            return result;
+        };
     };
 
     template <typename T>

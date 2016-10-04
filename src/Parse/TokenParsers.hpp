@@ -12,5 +12,11 @@ namespace Parse
     SymbolicTokenParser subTypeParser  (std::string sub_type);
     SymbolicTokenParser typeParser     (std::string type);
     SymbolicTokenParser dualTypeParser (std::string type, std::string sub_type);
+
+    std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)>
+    discard
+    (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher);
+
+    std::vector<SymbolicToken> clean(const std::vector<SymbolicToken>& tokens);
 }
 
