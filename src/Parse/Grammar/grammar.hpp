@@ -32,6 +32,9 @@ public:
 
     std::vector<std::shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
+
+    std::vector<std::string> keywords;
+
 private:
     GrammarMap grammar_map; 
 
@@ -46,6 +49,7 @@ private:
     SymbolicTokenParsers readGrammarPairs(std::vector<std::string>& terms);
     SymbolicTokenParser  readGrammarTerms(std::vector<std::string>& terms);
     SymbolicTokenParser  retrieveGrammar(std::string filename); 
+
 };
 
 }

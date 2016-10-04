@@ -132,6 +132,10 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         // Parse by a specific subtype (ex "keyword return")
         else
         {
+            if (first == "keyword")
+            {
+                keywords.push_back(terms[1]);
+            }
             parser = dualTypeParser(first, terms[1]);
         }
 
@@ -351,14 +355,9 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
 
         if (result.annotation == "none")
         {
-            if (result.consumed.size() == 1)
+            for (auto t : result.consumed)
             {
-                result_symbols.push_back(result.consumed.back().value);
-            }
-            else if (result.consumed.size() > 1)
-            {
-                std::cout << "Result size is too large" << std::endl;
-                //throw std::exception();
+                result_symbols.push_back(t.value);
             }
         }
         else if (result.consumed.size() > 0) 

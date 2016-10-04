@@ -194,12 +194,12 @@ namespace Match
     template <typename T>
     std::function<Result<T>(std::vector<T>)>
     sepBy
-    (std::function<Result<T>(std::vector<T>)> sep, std::function<Result<T>(std::vector<T>)> val=wildcard<T>())
+    (std::function<Result<T>(std::vector<T>)> sep, std::function<Result<T>(std::vector<T>)> val=wildcard<T>(), std::string annotation="none")
     {
-        return inOrder<T>({
+        return annotate(inOrder<T>({
         val,
         many<T>(inOrder<T>({sep, val}))
-        });
+        }), annotation);
     };
 
     //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters

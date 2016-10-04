@@ -7,12 +7,11 @@ int main()
 
     auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "../grammars/python/");
 
-    Terms keywords  = {"return"};
     Terms operators = {"+", "-", "*", "/", "=", ":", "and", "or"};
     Terms punctuators = {",", "(", ")"};
 
     Lex::LanguageTermSets term_set;
-    term_set.push_back(std::make_tuple(keywords,  "keyword"));
+    term_set.push_back(std::make_tuple(grammar.keywords,  "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
     term_set.push_back(std::make_tuple(punctuators, "punctuator"));
 
