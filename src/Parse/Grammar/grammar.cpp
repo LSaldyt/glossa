@@ -160,6 +160,12 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         {
             parser = optional<SymbolicToken>(readGrammarTerms(terms));
         }
+        else if (keyword == "annotate")
+        // Annotate a parser for 
+        {
+            std::vector<std::string> remaining(terms.begin() + 1, terms.end());
+            parser = annotate<SymbolicToken>(readGrammarTerms(remaining), terms[0]);
+        }
         // Run several parsers in order, failing if any of them fail
         else if (keyword == "inOrder")
         {
