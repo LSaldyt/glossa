@@ -5,26 +5,26 @@
 namespace Parse
 {
     using namespace Match;
-    using SymbolicTokenParser  = std::function<Result<SymbolicToken>(SymbolicTokens)>;
-    using SymbolicTokenParsers = std::vector<SymbolicTokenParser>;
+    using SymbolicTokenParser  = function<Result<SymbolicToken>(SymbolicTokens)>;
+    using SymbolicTokenParsers = vector<SymbolicTokenParser>;
 
     //Convert a standard parseFunction to one that parses Tokens
-    SymbolicTokenParser subTypeParser  (std::string sub_type);
-    SymbolicTokenParser typeParser     (std::string type);
-    SymbolicTokenParser dualTypeParser (std::string type, std::string sub_type);
+    SymbolicTokenParser subTypeParser  (string sub_type);
+    SymbolicTokenParser typeParser     (string type);
+    SymbolicTokenParser dualTypeParser (string type, string sub_type);
 
-    std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)>
+    function<Result<SymbolicToken>(vector<SymbolicToken>)>
     discard
-    (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher);
+    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher);
 
-    std::vector<SymbolicToken> clean(const std::vector<SymbolicToken>& tokens);
+    vector<SymbolicToken> clean(const vector<SymbolicToken>& tokens);
     // Version of many for seperating nested multi-token parsers. Unnestable
-    std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)>
+    function<Result<SymbolicToken>(vector<SymbolicToken>)>
     manySeperated
-    (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher);
+    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher);
 
-    std::vector<std::vector<SymbolicToken>>
+    vector<vector<SymbolicToken>>
     reSeperate
-    (const std::vector<SymbolicToken>& tokens);
+    (const vector<SymbolicToken>& tokens);
 }
 

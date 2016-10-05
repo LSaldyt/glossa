@@ -3,10 +3,10 @@
 struct string_view
 {
     char const* data;
-    std::size_t size;
+    size_t size;
 };
 
-inline std::ostream& operator<<(std::ostream& o, string_view const& s)
+inline ostream& operator<<(ostream& o, string_view const& s)
 {
     return o.write(s.data, s.size);
 }
@@ -29,7 +29,7 @@ constexpr string_view get_name()
             case ']':
             --count;
             if (!count)
-            return {p, std::size_t(p2 - p)};
+            return {p, size_t(p2 - p)};
         }
     }
     return {};

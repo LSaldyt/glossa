@@ -4,22 +4,22 @@
 namespace Syntax
 {
 
-    std::string Statement::representation(){ return ""; }
+    string Statement::representation(){ return ""; }
 
-    Expression::Expression() : base(std::make_shared<Symbol>(Integer(0))),
-                               extensions(std::vector<std::tuple<std::shared_ptr<Symbol>, std::shared_ptr<Symbol>>>()){}
+    Expression::Expression() : base(make_shared<Symbol>(Integer(0))),
+                               extensions(vector<tuple<shared_ptr<Symbol>, shared_ptr<Symbol>>>()){}
 
-    std::string Expression::representation()
+    string Expression::representation()
     {
-        std::string generated = "Expression: " + base->representation();
+        string generated = "Expression: " + base->representation();
         for (auto e : extensions)
         {
-            generated += (" " + std::get<0>(e)->representation() + " " + std::get<1>(e)->representation());
+            generated += (" " + get<0>(e)->representation() + " " + get<1>(e)->representation());
         }
         return generated;
     }
 
-    Assignment::Assignment(std::vector<std::shared_ptr<Symbol>> construction_tokens)
+    Assignment::Assignment(vector<shared_ptr<Symbol>> construction_tokens)
     {
         identifier = construction_tokens[0]->representation();
         value      = construction_tokens[1];
@@ -27,16 +27,16 @@ namespace Syntax
 
     Assignment::Assignment(){}
 
-    std::string Assignment::representation()
+    string Assignment::representation()
     {
         return ("Assignment: (" + identifier + " = " + value->representation() + ")");
     }
 
-    Function::Function() : body(std::vector<std::shared_ptr<Statement>>()){}
+    Function::Function() : body(vector<shared_ptr<Statement>>()){}
 
-    std::string Function::representation()
+    string Function::representation()
     {
-        std::string args = "";
+        string args = "";
         for (int i =0; i < argnames.size(); i++)
         { 
             args += (argnames[i]);
@@ -46,7 +46,7 @@ namespace Syntax
             }
         }
 
-        std::string body_string = "";
+        string body_string = "";
         for (auto statement : body)
         {
             body_string += statement->representation();
@@ -55,21 +55,21 @@ namespace Syntax
         return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression->representation() + ")";
     }
 
-    FunctionCall::FunctionCall(std::vector<std::shared_ptr<Symbol>> symbols) 
+    FunctionCall::FunctionCall(vector<shared_ptr<Symbol>> symbols) 
     {
         identifier = symbols[0]->representation();
         if (not symbols.empty())
         {
-            args = std::vector<std::shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
+            args = vector<shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
         }
     }
 
     FunctionCall::FunctionCall() 
     {}
 
-    std::string FunctionCall::representation()
+    string FunctionCall::representation()
     {
-        std::string arglist = "";
+        string arglist = "";
         for (int i =0; i < args.size(); i++)
         { 
             arglist += args[i]->representation();

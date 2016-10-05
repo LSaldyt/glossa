@@ -7,4 +7,5 @@
 namespace Lex
 {
     using namespace Match;
+    using namespace tools;
 }

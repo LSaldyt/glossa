@@ -5,5 +5,5 @@
 
 namespace Lex
 {
-    Tokens lex(const std::string& sentence, const Language& language);
+    Tokens lex(const string& sentence, const Language& language);
 }

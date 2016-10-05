@@ -1,16 +1,17 @@
 #pragma once
+#include "Import.hpp"
 
 template <typename T>
 struct Result
 {
     bool result;
-    std::string annotation;
-    std::vector<T> consumed;
-    std::vector<T> remaining;
+    tools::string annotation;
+    tools::vector<T> consumed;
+    tools::vector<T> remaining;
     
     Result(bool set_result=false,
-           std::vector<T> set_consumed=std::vector<T>(),
-           std::vector<T> set_remaining=std::vector<T>()) :
+           tools::vector<T> set_consumed=tools::vector<T>(),
+           tools::vector<T> set_remaining=tools::vector<T>()) :
        annotation("none") 
     {
         result    = set_result;

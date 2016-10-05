@@ -1,6 +1,9 @@
+#pragma once
+#include "Import.hpp"
 #include "../Syntax/Symbols.hpp"
+#include "../tools/tools.hpp"
 
-const auto toSymbolic = [](std::unordered_map<std::string, Syntax::SymbolGenerator> generatorMap, Tokens tokens)
+const auto toSymbolic = [](unordered_map<string, Syntax::SymbolGenerator> generatorMap, Tokens tokens)
 {
     SymbolicTokens symbolic_tokens;
     symbolic_tokens.reserve(tokens.size());
@@ -15,7 +18,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, Syntax::SymbolGenerat
         }
         else
         {
-            print("Failed to generate type ", token.type);
+            tools::print("Failed to generate type ", token.type);
         }
     }
 

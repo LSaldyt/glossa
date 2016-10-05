@@ -1,5 +1,6 @@
 #pragma once
 #include "Types.hpp"
+#include "Import.hpp"
 
 namespace Match 
 {
@@ -7,12 +8,12 @@ namespace Match
     struct Consumed
     {
         bool  result;
-        std::string annotation;
-        std::vector<T> consumed;
+        string annotation;
+        vector<T> consumed;
 
         Consumed(bool set_result    = false,
-                 std::vector<T> set_consumed = std::vector<T>(),
-                 std::string set_annotation  = "none"
+                 vector<T> set_consumed = vector<T>(),
+                 string set_annotation  = "none"
                 )
         {
             result   = set_result;
