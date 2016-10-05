@@ -60,7 +60,7 @@ namespace Syntax
         identifier = symbols[0]->representation();
         if (not symbols.empty())
         {
-            args = vector<shared_ptr<Symbol>>(symbols.begin() + 1, symbols.end());
+            args = slice(symbols, 1);
         }
     }
 

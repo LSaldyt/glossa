@@ -29,4 +29,13 @@ namespace tools
         }
         file.close();
     }
+
+    named_exception::named_exception(std::string set_name) : name(set_name)
+    {
+    }
+    const char* named_exception::what() const throw()
+    {
+        return name.c_str();
+    }
+    
 }

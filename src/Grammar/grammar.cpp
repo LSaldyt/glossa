@@ -15,8 +15,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 {
                     if ((tokens.size() - 1) % 2 != 0)
                     {
-                        print("Cannot build expression extension from odd number of tokens");
-                        throw exception();
+                        throw named_exception("Cannot build expression extension from odd number of tokens");
                     }
 
                     for (int i = 1; i < tokens.size(); i += 2)
@@ -92,13 +91,7 @@ SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(vector<string>& terms)
 
     if (terms.size() % 2 != 0)
     {
-        print("Could not read type pairs:");
-        for (auto t : terms)
-        {
-            print(t + " ");
-        }
-        print("\n");
-        throw exception();
+        throw named_exception("Could not read type pairs");
     }
     for (int i = 0; i < (terms.size() / 2); i++)
     {
@@ -183,19 +176,12 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(vector<string>& terms)
         }
         else
         {
-            print("Expected keyword...");
-            throw exception();
+            throw named_exception("Expected keyword");
         }
     }
     else
     {
-        print("Grammar file incorrectly formatted: ");
-        for (auto t : terms)
-        {
-            print(t + " ");
-        }
-        print("\n");
-        throw exception();
+        throw named_exception("Grammar file incorrectly formatted");
     }
 
     return parser;
@@ -206,7 +192,7 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::Grammar::read(string filename)
     SymbolicTokenParsers parsers;
     auto content = readFile(filename);
     auto construct_line = content.back();
-    content = vector<string>(content.begin(), content.end() - 1);
+    content = slice(content, 0, -1);
     
     for (auto line : content)
     {
@@ -237,8 +223,7 @@ SymbolicTokenParser Grammar::Grammar::retrieveGrammar(string filename)
         }
         else
         {
-            print(filename + " is not an element of the grammar map");
-            throw exception();
+            throw named_exception(filename + " is not an element of the grammar map");
         }
 
         Result<SymbolicToken> result = parser(tokens);
@@ -263,13 +248,12 @@ Grammar::identify
     }
 
     // Sort keys by the lengths of the parsers they refer to
-    sort(keys.begin(), keys.end(),
-                      [this] (auto a, auto b) 
-                      {
-                          auto a_len = get<0>(grammar_map[a]).size();
-                          auto b_len = get<0>(grammar_map[b]).size();
-                          return a_len > b_len; 
-                      });
+    sortBy(keys, [this] (auto a, auto b) 
+                 {
+                     auto a_len = get<0>(grammar_map[a]).size();
+                     auto b_len = get<0>(grammar_map[b]).size();
+                     return a_len > b_len; 
+                 });
 
     for (auto key : keys)
     {
@@ -290,8 +274,7 @@ Grammar::identify
         }
     }
 
-    print("Could not identify tokens");
-    throw exception();
+    throw named_exception("Could not identify tokens");
 }
 
 tuple<bool, vector<Result<SymbolicToken>>> 
@@ -351,8 +334,7 @@ shared_ptr<Symbol> Grammar::build(string name, vector<shared_ptr<Symbol>> symbol
         constructor = it->second;
     else
     {
-        print(name + " is not an element of the construction map");
-        throw exception();
+        throw named_exception(name + " is not an element of the construction map");
     }
 
     auto constructed = constructor(symbols);

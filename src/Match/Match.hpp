@@ -34,7 +34,7 @@ namespace Match
                 auto result = matcher(terms);
                 if (result.result)
                 {
-                    consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
+                    concat(consumed, result.consumed);
                     terms = result.remaining;
                 }
                 else
@@ -176,8 +176,8 @@ namespace Match
                 if (result.result)
                 {
                     annotation = result.annotation;
-                    consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
-                    terms = vector<T>(terms.begin() + result.consumed.size(), terms.end());
+                    concat(consumed, result.consumed);
+                    terms = slice(terms, result.consumed.size());
                 }
                 else
                 {

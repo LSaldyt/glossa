@@ -29,6 +29,15 @@ using std::exception;
 
 template <typename T> using shared_vec = vector<shared_ptr<T>>;
 
+class named_exception : public exception
+{
+public:
+    named_exception(std::string set_name);
+    virtual const char* what() const throw();
+private:
+    std::string name;
+};
+
 std::vector<std::string> readFile(string filename);
 void writeFile(vector<string> content, string filename);
 
@@ -45,7 +54,7 @@ void print(T first, Args... args) {
 }
 
 template <typename T>
-vector<T> slice(vector<T> original, int begin_offset, int end_offset)
+vector<T> slice(vector<T> original, int begin_offset=0, int end_offset=0)
 {
     auto size = original.size();
     if (begin_offset > size or abs(end_offset) > size)
