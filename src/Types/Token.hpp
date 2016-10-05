@@ -3,16 +3,16 @@
 
 struct Token
 {
-    std::vector<std::string> values;
-    std::string sub_type;
-    std::string type;
-    Token(std::vector<std::string> set_values, std::string set_sub_type, std::string set_type)
+    tools::vector<tools::string> values;
+    tools::string sub_type;
+    tools::string type;
+    Token(tools::vector<tools::string> set_values, tools::string set_sub_type, tools::string set_type)
     {
         values   = set_values;
         sub_type = set_sub_type;
         type     = set_type;
     }
 };
-using Tokens         = std::vector<Token>;
+using Tokens         = tools::vector<Token>;
 
 

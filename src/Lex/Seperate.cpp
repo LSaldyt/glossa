@@ -7,13 +7,13 @@ namespace Lex
 {
     // Given a remaining string, find the first seperator present in the beginning section
     // Return (success, keep_seperator, len_seperator)
-    std::tuple<bool, bool, int> find_seperator(std::string s, const Seperators &seperators)
+    tuple<bool, bool, int> find_seperator(string s, const Seperators &seperators)
     {
         // Default value (failure)
-        auto found = std::make_tuple(false, false, 0);
+        auto found = make_tuple(false, false, 0);
         for (auto seperator : seperators)
         {
-            auto seperator_string = std::get<0>(seperator);
+            auto seperator_string = get<0>(seperator);
             // Match two strings, character by character
             if (seperator_string.size() <= s.size())
             {
@@ -31,8 +31,7 @@ namespace Lex
                 // If we matched an entire seperator, return success
                 if (!exited_early)
                 {
-                    //std::cout << "Seperated by \"" << seperator_string << "\"" << std::endl;
-                    found = std::make_tuple(true, std::get<1>(seperator), seperator_string.size());
+                    found = make_tuple(true, get<1>(seperator), seperator_string.size());
                     break;
                 }
             }
@@ -40,7 +39,7 @@ namespace Lex
         return found;
     }
 
-    Terms seperate(const std::string& sentence, const Seperators &seperators)
+    Terms seperate(const string& sentence, const Seperators &seperators)
     {
         auto terms   = Terms();
         auto current = sentence.begin();
@@ -59,41 +58,41 @@ namespace Lex
             if (*it == '"')
             {
                 // remove the string between two quotemarks and push into terms
-                std::string remaining(it + 1, sentence.end());
-                std::size_t found = remaining.find("\"");
-                if (found!=std::string::npos) // IF there actually is a second quotation mark
+                string remaining(it + 1, sentence.end());
+                size_t found = remaining.find("\"");
+                if (found!=string::npos) // IF there actually is a second quotation mark
                 {
                     found += 2; //Account for " characters surrounding the string
-                    terms.push_back(std::string(it, it + found));
+                    terms.push_back(string(it, it + found));
                     current = it + found;
                     it      = it + found;
                 }
             }
             // Normal seperation
-            auto found = find_seperator(std::string(it, sentence.end()), seperators);
-            if(std::get<0>(found)) // Beginning of the remaining sentence is a seperator
+            auto found = find_seperator(string(it, sentence.end()), seperators);
+            if(get<0>(found)) // Beginning of the remaining sentence is a seperator
             {
                 // If there is a term we have seperated, add it to terms
                 if (current != it)
                 {
-                    terms.push_back(std::string(current, it));
+                    terms.push_back(string(current, it));
                 }
                 // Keep the seperator, if applicable
-                if(std::get<1>(found))
+                if(get<1>(found))
                 {
-                    terms.push_back(std::string(it, it+std::get<2>(found)));
+                    terms.push_back(string(it, it+get<2>(found)));
                 }
                 // Update current to be it + len(seperator)
-                current = it + std::get<2>(found);
-                if (std::get<2>(found) > 0)
+                current = it + get<2>(found);
+                if (get<2>(found) > 0)
                 {
-                    it += std::get<2>(found) - 1;
+                    it += get<2>(found) - 1;
                 }
             }
             // If there is no sentence left to seperate, push it to terms
             else if(it+1 == sentence.end())
             {
-                terms.push_back(std::string(current, it+1));
+                terms.push_back(string(current, it+1));
             }
         }
         return terms;

@@ -3,15 +3,15 @@
 
 namespace Lex
 {
-    using Seperator       = std::tuple<std::string, bool>;
-    using Seperators      = std::vector<Seperator>;
+    using Seperator       = tuple<string, bool>;
+    using Seperators      = vector<Seperator>;
 
-    Terms seperate(const std::string& sentence, const Seperators &seperators);
+    Terms seperate(const string& sentence, const Seperators &seperators);
 
     const Seperators whitespace =
     {
-        std::make_tuple(" ",  false),
-        std::make_tuple("\t", false),
-        std::make_tuple("\n", false)
+        make_tuple(" ",  false),
+        make_tuple("\t", false),
+        make_tuple("\n", false)
     };
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Import.hpp"
 #include "../Match/Base/Types.hpp"
 #include "../Syntax/Symbols.hpp"
 
