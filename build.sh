@@ -5,7 +5,6 @@ cd $(dirname $0)
 
 SRC_PATH=$(pwd)
 BUILD_PATH="$SRC_PATH/build"
-EXE_NAME="progtran"
 
 mkdir "$BUILD_PATH"
 cd "$BUILD_PATH"

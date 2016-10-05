@@ -39,7 +39,7 @@ namespace Lex
         print("Language lexers (sorted by precedence): ");
         for (auto lexer : language_lexers)
         {
-            print(lexer.name + " " + lexer.type);
+            print(lexer.name + " " + lexer.type + std::to_string(lexer.precedence));
         }
     }
     Language::Language(){}

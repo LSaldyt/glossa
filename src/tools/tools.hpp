@@ -63,9 +63,9 @@ void concat(vector<T>& a, const vector<T>& b)
 }
 
 template <typename T>
-void sortBy(vector<T> data, auto predicate)
+void sortBy(vector<T>& data, auto predicate)
 {
-    sort(data.begin(), data.end(), predicate);
+    std::sort(data.begin(), data.end(), predicate);
 }
 
 }
