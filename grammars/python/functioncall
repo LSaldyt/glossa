@@ -1,6 +1,6 @@
 identifier wildcard
 punctuator (
-optional link expression 
+optional link expression
 many annotate expression inOrder !punctuator , link expression
 punctuator )
-0 2 3 
+0 2 3  

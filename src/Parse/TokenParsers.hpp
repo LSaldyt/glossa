@@ -18,5 +18,13 @@ namespace Parse
     (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher);
 
     std::vector<SymbolicToken> clean(const std::vector<SymbolicToken>& tokens);
+    // Version of many for seperating nested multi-token parsers. Unnestable
+    std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)>
+    manySeperated
+    (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher);
+
+    std::vector<std::vector<SymbolicToken>>
+    reSeperate
+    (const std::vector<SymbolicToken>& tokens);
 }
 

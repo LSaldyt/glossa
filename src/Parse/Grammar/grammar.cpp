@@ -45,6 +45,12 @@ const std::unordered_map<std::string, StatementConstructor> Grammar::constructio
             { 
                 return std::make_shared<Symbol>(Symbol());
             }
+        },
+        {"function",
+            [](std::vector<std::shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
         }
 
    };
@@ -122,7 +128,6 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         if (first == "link")
         {
             parser = retrieveGrammar(terms[1]);
-            parser = annotate(parser, terms[1]); // Mark the link as such
         }
         // Parse by type only
         else if (terms[1] == "wildcard")
@@ -153,7 +158,7 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         // Repeatedly parse a parser!
         if (keyword == "many")
         {
-            parser = many<SymbolicToken>(readGrammarTerms(terms)); 
+            parser = manySeperated(readGrammarTerms(terms)); 
         }
         // Optionally parse a parser
         else if (keyword == "optional")
@@ -223,12 +228,12 @@ SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
 {
     SymbolicTokenParser grammar_parser = [filename, this](SymbolicTokens tokens)
     {
-        SymbolicTokenParser parser = typeParser("literal");
+        SymbolicTokenParser parser;
 
         auto search = grammar_map.find(filename);
         if (search != grammar_map.end())
         {
-             parser = inOrder<SymbolicToken>(std::get<0>(search->second));
+             parser = annotate(inOrder<SymbolicToken>(std::get<0>(search->second)), filename);
         }
         else
         {
@@ -295,8 +300,14 @@ Grammar::evaluateGrammar
 {
     std::vector<Result<SymbolicToken>> results;
 
+    int i = 0;
     for (auto parser : parsers)
     {
+        std::cout << "Parsing parser " << i << " against:" << std::endl;
+        for (auto t : tokens)
+        {
+            std::cout << t.value->representation() << std::endl;
+        }
         auto result = parser(tokens);
         if (result.result)
         {
@@ -305,13 +316,14 @@ Grammar::evaluateGrammar
         }
         else
         {
-            std::cout << "Failed. Remaining tokens were: " << std::endl;
+            std::cout << "Failed on parser " << i << ". Remaining " << tokens.size() <<  " tokens were: " << std::endl;
             for (auto t : tokens)
             {
                 std::cout << t.value->representation() << std::endl;
             }
             return std::make_tuple(false, results);
         }
+        i++;
     }
 
     return std::make_tuple(true, results);
@@ -368,9 +380,13 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
         }
         else if (result.consumed.size() > 0) 
         {
-            std::cout << "Building sub-symbol " << result.annotation << std::endl;
-            auto constructed = build(result.annotation, fromTokens(result.consumed));
-            result_symbols.push_back(constructed);
+            auto grouped_tokens = reSeperate(result.consumed);
+            for (auto group : grouped_tokens)
+            {
+                std::cout << "Building sub-symbol " << result.annotation << std::endl;
+                auto constructed = build(result.annotation, fromTokens(group));
+                result_symbols.push_back(constructed);
+            }
         }
     }
 

@@ -1,3 +1,5 @@
+#include <exception>
+#include <iostream>
 #include "TokenParsers.hpp"
 
 namespace Parse
@@ -55,5 +57,71 @@ namespace Parse
             }
         }
         return clean_tokens;
+    }
+
+    // Version of many for seperating nested multi-token parsers. Unnestable
+    std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)>
+    manySeperated
+    (std::function<Result<SymbolicToken>(std::vector<SymbolicToken>)> matcher)
+    {
+        using Syntax::Symbol;
+        return [matcher](std::vector<SymbolicToken> terms)
+        {
+            auto consumed = std::vector<SymbolicToken>(); 
+            std::string annotation = "none";
+
+            while(terms.size() > 0)
+            {
+                auto result = matcher(terms);
+                if (result.result)
+                {
+                    annotation = result.annotation;
+                    terms = result.remaining;
+                    if (not consumed.empty())
+                    {
+                        consumed.push_back(SymbolicToken(std::make_shared<Symbol>(Symbol()), "seperator", "seperator"));
+                    }
+                    consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            auto result = Result<SymbolicToken>(true, consumed, terms);
+            result.annotation = annotation;
+            return result;
+        };
+    };
+
+    std::vector<std::vector<SymbolicToken>>
+    reSeperate
+    (const std::vector<SymbolicToken>& tokens)
+    {
+        std::vector<std::vector<SymbolicToken>> grouped_tokens;
+
+        auto it = tokens.begin();
+        while (it != tokens.end())
+        {
+            if (it->type == "seperator")
+            {
+                if (it + 1!= tokens.end())
+                {
+                    grouped_tokens.push_back(std::vector<SymbolicToken>());
+                }
+            }
+            else 
+            {
+                if (grouped_tokens.empty())
+                {
+                    grouped_tokens.push_back(std::vector<SymbolicToken>());
+                }
+                grouped_tokens.back().push_back(*it);
+            }
+            ++it;
+        }
+
+        return grouped_tokens;
     }
 }
