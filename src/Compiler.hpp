@@ -7,7 +7,7 @@
 #include <iostream>
 #include <tuple>
 #include "Types/Symbolize.hpp"
-#include "Parse/Grammar/grammar.hpp"
+#include "Grammar/grammar.hpp"
 
 namespace Compiler
 {

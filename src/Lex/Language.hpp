@@ -32,6 +32,7 @@ namespace Lex
 
         Language(const LanguageTermSets& set_term_sets,
                  const LanguageLexers&   set_language_lexers);
+        Language();
 
         tuple<Token, Terms> identify(Terms terms) const;
     };

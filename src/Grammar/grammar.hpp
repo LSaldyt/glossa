@@ -4,16 +4,18 @@
 #include <string>
 #include <unordered_map>
 
-#include "../../Lex/Seperate.hpp"
-#include "../../Syntax/Statements.hpp"
-#include "../TokenParsers.hpp"
-#include "../../tools/tools.hpp"
+#include "../Lex/Seperate.hpp"
+#include "../Lex/Language.hpp"
+#include "../Syntax/Statements.hpp"
+#include "../Parse/TokenParsers.hpp"
+#include "../tools/tools.hpp"
 
 
 namespace Grammar
 {
 
 using namespace Parse;
+using namespace Lex;
 using namespace Match;
 using namespace Syntax;
 using namespace tools;
@@ -34,6 +36,7 @@ public:
     vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
     vector<string> keywords;
+    Language language;
 
 private:
     GrammarMap grammar_map; 

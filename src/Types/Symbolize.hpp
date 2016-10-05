@@ -3,7 +3,7 @@
 #include "../Syntax/Symbols.hpp"
 #include "../tools/tools.hpp"
 
-const auto toSymbolic = [](unordered_map<string, Syntax::SymbolGenerator> generatorMap, Tokens tokens)
+const auto toSymbolic = [](std::unordered_map<std::string, Syntax::SymbolGenerator> generatorMap, Tokens tokens)
 {
     SymbolicTokens symbolic_tokens;
     symbolic_tokens.reserve(tokens.size());

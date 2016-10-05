@@ -42,6 +42,7 @@ namespace Lex
             print(lexer.name + " " + lexer.type);
         }
     }
+    Language::Language(){}
 
     tuple<Token, Terms> Language::identify(Terms terms) const
     {
