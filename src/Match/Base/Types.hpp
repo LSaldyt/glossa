@@ -1,10 +1,8 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <functional>
+#include "Import.hpp"
 
 namespace Match 
 {
-    using Term       = std::string;
-    using Terms      = std::vector<Term>;
+    using Term       = string;
+    using Terms      = vector<Term>;
 }

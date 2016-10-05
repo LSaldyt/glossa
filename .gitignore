@@ -1,3 +1,4 @@
 *.o
-build/Compiler
-src/Parse/Grammar/build/Grammar
+build/*
+progtran
+progtrantest

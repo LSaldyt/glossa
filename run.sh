@@ -1,14 +1,7 @@
 echo Running application ..
-make all
-makeresult=$?
+export TESTING=FALSE
+export EXE_NAME="progtran"
+./build.sh
+./progtran
+echo Finished
 
-function run {
-    cd build
-    ./Compiler
-    echo Finished
-}
-
-case $makeresult in
-    0 ) run;;
-    * ) exit $makeresult;;
-esac

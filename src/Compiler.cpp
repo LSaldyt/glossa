@@ -5,39 +5,40 @@ int main()
 {
     using namespace Compiler;
 
-    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "../grammars/python/");
+    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "grammars/python/");
 
     Terms operators = {"+", "-", "*", "/", "=", ":"};
     Terms logicaloperators = {"&", "|"};
     Terms punctuators = {",", "(", ")"};
 
-    Lex::LanguageTermSets term_set;
-    term_set.push_back(std::make_tuple(grammar.keywords,  "keyword"));
-    term_set.push_back(std::make_tuple(operators, "operator"));
-    term_set.push_back(std::make_tuple(logicaloperators, "logicaloperator"));
-    term_set.push_back(std::make_tuple(punctuators, "punctuator"));
+    LanguageTermSets term_sets;
+    term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
+    term_sets.push_back(make_tuple(operators, "operator"));
+    term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
+    term_sets.push_back(make_tuple(punctuators, "punctuator"));
 
-    Lex::LanguageLexers lexer_set = {
+    LanguageLexers lexer_set = {
         LanguageLexer(digits, "int", "literal", 3),
         LanguageLexer(startswith("\""), "string", "string", 1),
         LanguageLexer(alphas, "identifier", "identifier", 3)};
 
-    Lex::Language test_language(term_set, lexer_set);
+    Language test_language(term_sets, lexer_set);
+    grammar.language = test_language;
 
-    auto content         = readFile     ("../input/input.txt");
-    auto tokens          = tokenPass    (content, test_language); 
+    auto content         = readFile     ("input/input.txt");
+    auto tokens          = tokenPass    (content, grammar.language); 
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
 
     for(auto jt : joined_tokens)
     {
-        std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
+        print("Joined Token: " + jt.type + ", " + jt.sub_type);
     }
 
     auto symbols = grammar.constructFrom(joined_tokens);
     for (auto s : symbols)
     {
-        std::cout << s->representation() << std::endl;
+        print(s->representation());
     }
 }
 
@@ -48,7 +49,7 @@ namespace Compiler
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            std::cout << "Lexing: " << line << std::endl;
+            print("Lexing: " + line);
             tokens.push_back(lex(line, language));
         }
         return tokens;
