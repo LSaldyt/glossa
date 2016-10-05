@@ -15,7 +15,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, Syntax::SymbolGenerat
         }
         else
         {
-            std::cout << "Failed to generate type " << token.type << std::endl;
+            print("Failed to generate type ", token.type);
         }
     }
 

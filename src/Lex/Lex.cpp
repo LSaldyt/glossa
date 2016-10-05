@@ -8,12 +8,12 @@ namespace Lex
         // Seperate sentence..
         auto terms  = seperate(sentence, language.seperators);
 
-        std::cout << "Seperated terms:" << std::endl;
+        print("Seperated terms:");
         for (auto t : terms)
         {
-            std::cout << t << std::endl;
+            print(t);
         }
-        std::cout << "Done" << std::endl;
+        print("Done"); 
 
         auto tokens = Tokens(); // Empty vector of tokens
 

@@ -36,10 +36,10 @@ namespace Lex
         std::sort(language_lexers.begin(), language_lexers.end(), [](auto &left, auto &right) {
                     return left.precedence < right.precedence;
                     });
-        std::cout << "Language lexers (sorted by precedence): " << std::endl;
+        print("Language lexers (sorted by precedence): ");
         for (auto lexer : language_lexers)
         {
-            std::cout << lexer.name << " " << lexer.type << std::endl;
+            print(lexer.name + " " + lexer.type);
         }
     }
 
@@ -51,16 +51,16 @@ namespace Lex
             auto result = lexer.match(terms);
             if(result.result)
             {
-                std::cout << "Term identified as " << lexer.name << std::endl;
+                print("Term identified as " + lexer.name);
                 return std::make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
             }
         }
 
         // Error handling
-        std::cout << "Could not identify terms:" << std::endl;
+        print("Could not identify terms:");
         for (auto t : terms)
         {
-            std::cout << "\"" << t << "\"" << std::endl;
+            print("\"" + t + "\"");
         }
         return std::make_tuple(Token({}, "unidentified", "failure"), Terms());
     }

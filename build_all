@@ -2,10 +2,10 @@ CXX       = g++
 CXXFLAGS  = -c -std=c++14
 LDFLAGS   =
 BDIR      = build
-VPATH     = src src/Match src/IO src/Match/Base src/Lex src/Gen src/Syntax src/Parse src/Parse/Grammar
+VPATH     = src src/tools src/Match src/Match/Base src/Lex src/Gen src/Syntax src/Parse src/Parse/Grammar
 SOURCES   = Compiler.cpp IO.cpp Seperate.cpp Locale.cpp Templates.cpp Lex.cpp \
             Language.cpp grammar.cpp \
-            Statements.cpp TokenParsers.cpp
+            Statements.cpp TokenParsers.cpp tools.cpp
 OBJECTS   = $(SOURCES:%.cpp=$(BDIR)/%.o)
 EXECUTABLE= $(BDIR)/Compiler
 

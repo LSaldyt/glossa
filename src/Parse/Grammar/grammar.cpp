@@ -9,13 +9,13 @@ const std::unordered_map<std::string, StatementConstructor> Grammar::constructio
             [](std::vector<std::shared_ptr<Symbol>> tokens)
             {
                 Expression e;
-                std::cout << tokens.size() << std::endl;
+                print(tokens.size());
                 e.base = tokens[0];
                 if (tokens.size() > 1)
                 {
                     if ((tokens.size() - 1) % 2 != 0)
                     {
-                        std::cout << "Cannot build expression extension from odd number of tokens" << std::endl;
+                        print("Cannot build expression extension from odd number of tokens");
                         throw std::exception();
                     }
 
@@ -70,12 +70,12 @@ std::vector<std::shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& toke
     while (tokens.size() > 0)
     {
         auto result = identify(tokens);
-        std::cout << "Identified tokens as " << std::get<0>(result) << std::endl;
+        print("Identified tokens as: " + std::get<0>(result));
         for (auto sub_result : std::get<1>(result))
         {
             for (auto t : sub_result.consumed)
             {
-                std::cout << t.value->representation() << std::endl;
+                print(t.value->representation());
             }
         }
         auto constructed = construct(std::get<0>(result), std::get<1>(result)); 
@@ -92,12 +92,12 @@ SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(std::vector<std::string>
 
     if (terms.size() % 2 != 0)
     {
-        std::cout << "Could not read type pairs:" << std::endl;
+        print("Could not read type pairs:");
         for (auto t : terms)
         {
-            std::cout << t << " ";
+            print(t + " ");
         }
-        std::cout << std::endl;
+        print("\n");
         throw std::exception();
     }
     for (int i = 0; i < (terms.size() / 2); i++)
@@ -183,18 +183,18 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(std::vector<std::string>&
         }
         else
         {
-            std::cout << "Expected keyword..." << std::endl;
+            print("Expected keyword...");
             throw std::exception();
         }
     }
     else
     {
-        std::cout << "Grammar file incorrectly formatted: " << std::endl;
+        print("Grammar file incorrectly formatted: ");
         for (auto t : terms)
         {
-            std::cout << t << " ";
+            print(t + " ");
         }
-        std::cout << std::endl;
+        print("\n");
         throw std::exception();
     }
 
@@ -237,7 +237,7 @@ SymbolicTokenParser Grammar::Grammar::retrieveGrammar(std::string filename)
         }
         else
         {
-            std::cout << filename << " is not an element of the grammar map" << std::endl;
+            print(filename + " is not an element of the grammar map");
             throw std::exception();
         }
 
@@ -273,7 +273,7 @@ Grammar::identify
 
     for (auto key : keys)
     {
-        std::cout << "Attempting to identify as: " << key << std::endl;
+        print("Attempting to identify as: " + key);
 
         auto value   = grammar_map[key];
         auto parsers = std::get<0>(value);
@@ -290,7 +290,7 @@ Grammar::identify
         }
     }
 
-    std::cout << "Could not identify tokens" << std::endl;
+    print("Could not identify tokens");
     throw std::exception();
 }
 
@@ -303,10 +303,10 @@ Grammar::evaluateGrammar
     int i = 0;
     for (auto parser : parsers)
     {
-        std::cout << "Parsing parser " << i << " against:" << std::endl;
+        print("Parsing parser ", i ," against:");
         for (auto t : tokens)
         {
-            std::cout << t.value->representation() << std::endl;
+            print(t.value->representation());
         }
         auto result = parser(tokens);
         if (result.result)
@@ -316,10 +316,10 @@ Grammar::evaluateGrammar
         }
         else
         {
-            std::cout << "Failed on parser " << i << ". Remaining " << tokens.size() <<  " tokens were: " << std::endl;
+            print("Failed on parser ", i ,". Remaining ", tokens.size(), " tokens were: ");
             for (auto t : tokens)
             {
-                std::cout << t.value->representation() << std::endl;
+                print(t.value->representation());
             }
             return std::make_tuple(false, results);
         }
@@ -351,7 +351,7 @@ std::shared_ptr<Symbol> Grammar::build(std::string name, std::vector<std::shared
         constructor = it->second;
     else
     {
-        std::cout << name << " is not an element of the construction map" << std::endl;
+        print(name + " is not an element of the construction map");
         throw std::exception();
     }
 
@@ -361,7 +361,7 @@ std::shared_ptr<Symbol> Grammar::build(std::string name, std::vector<std::shared
 
 std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<SymbolicToken>> results)
 {
-    std::cout << "Constructing " << name << std::endl;
+    print("Constructing " + name);
     auto construction_indices = std::get<1>(grammar_map[name]);
 
     std::vector<std::shared_ptr<Symbol>> result_symbols;
@@ -383,7 +383,7 @@ std::shared_ptr<Symbol> Grammar::construct(std::string name, std::vector<Result<
             auto grouped_tokens = reSeperate(result.consumed);
             for (auto group : grouped_tokens)
             {
-                std::cout << "Building sub-symbol " << result.annotation << std::endl;
+                print("Building sub-symbol " + result.annotation);
                 auto constructed = build(result.annotation, fromTokens(group));
                 result_symbols.push_back(constructed);
             }

@@ -28,3 +28,6 @@ void writeFile(std::vector<std::string> content, std::string filename)
     }
     file.close();
 }
+namespace tools
+{
+}

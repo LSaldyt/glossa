@@ -31,13 +31,13 @@ int main()
 
     for(auto jt : joined_tokens)
     {
-        std::cout << "Joined Token " << jt.type << "  " << jt.sub_type << std::endl;
+        print("Joined Token ", jt.type, "  ", jt.sub_type);
     }
 
     auto symbols = grammar.constructFrom(joined_tokens);
     for (auto s : symbols)
     {
-        std::cout << s->representation() << std::endl;
+        print(s->representation());
     }
 }
 
@@ -48,7 +48,7 @@ namespace Compiler
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            std::cout << "Lexing: " << line << std::endl;
+            print("Lexing: " + line);
             tokens.push_back(lex(line, language));
         }
         return tokens;
