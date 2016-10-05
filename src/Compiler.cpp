@@ -5,7 +5,7 @@ int main()
 {
     using namespace Compiler;
 
-    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "../grammars/python/");
+    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "grammars/python/");
 
     Terms operators = {"+", "-", "*", "/", "=", ":"};
     Terms logicaloperators = {"&", "|"};
@@ -25,7 +25,7 @@ int main()
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;
 
-    auto content         = readFile     ("../input/input.txt");
+    auto content         = readFile     ("input/input.txt");
     auto tokens          = tokenPass    (content, grammar.language); 
     auto symbolic_tokens = symbolicPass (tokens);
     auto joined_tokens   = join         (symbolic_tokens);
