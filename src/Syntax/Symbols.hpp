@@ -44,6 +44,19 @@ namespace Syntax
         }
     };
 
+    struct LogicalOperator : public Symbol
+    {
+        std::string value;
+        LogicalOperator(std::string set_value)
+        {
+            value = set_value;
+        }
+        std::string representation()
+        {
+            return "LogicalOperator: " + value;
+        }
+    };
+
     struct Punctuator : public Symbol
     {
         std::string value;
@@ -58,6 +71,7 @@ namespace Syntax
     };
 
     const auto opGenerator = [](std::string term){ return std::make_shared<Operator>(Operator(term));};
+    const auto logicalOpGenerator = [](std::string term){return std::make_shared<LogicalOperator>(LogicalOperator(term));};
     const auto puncGenerator = [](std::string term){ return std::make_shared<Punctuator>(Punctuator(term));};
 
     using Integer = Literal<int>;
@@ -120,7 +134,8 @@ namespace Syntax
      {"identifier", single(identifierGenerator)},
      {"keyword",    single(keywordGenerator)},
      {"string",     single(stringGenerator)},
-     {"punctuator", single(puncGenerator)}
+     {"punctuator", single(puncGenerator)},
+     {"logicaloperator", single(logicalOpGenerator)}
     };
 
 }

@@ -7,12 +7,14 @@ int main()
 
     auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "../grammars/python/");
 
-    Terms operators = {"+", "-", "*", "/", "=", ":", "and", "or"};
+    Terms operators = {"+", "-", "*", "/", "=", ":"};
+    Terms logicaloperators = {"&", "|"};
     Terms punctuators = {",", "(", ")"};
 
     Lex::LanguageTermSets term_set;
     term_set.push_back(std::make_tuple(grammar.keywords,  "keyword"));
     term_set.push_back(std::make_tuple(operators, "operator"));
+    term_set.push_back(std::make_tuple(logicaloperators, "logicaloperator"));
     term_set.push_back(std::make_tuple(punctuators, "punctuator"));
 
     Lex::LanguageLexers lexer_set = {
