@@ -1,7 +1,9 @@
-echo Running application ..
-export TESTING=FALSE
-export EXE_NAME="progtran"
-./build.sh
-./progtran
-echo Finished
+#!/bin/bash
 
+mkdir build
+cd build
+cmake ..
+make
+./progtrantest
+cd ..
+./build/progtran
