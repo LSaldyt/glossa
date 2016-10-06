@@ -1,9 +1,9 @@
 #include "lex.hpp"
 
-namespace Lex
+namespace lex
 {
     // Convert a sentence to a vector of tokens based off of a defined language
-    Tokens lex(const string& sentence, const Language& language)
+    Tokens lexWith(const string& sentence, const Language& language)
     {
         // Seperate sentence..
         auto terms  = seperate(sentence, language.seperators);

@@ -3,7 +3,7 @@
 #include "base/templates.hpp"
 #include "../types/result.hpp"
 
-namespace Match 
+namespace match 
 {
     template <typename T>
     function<Result<T>(vector<T>)>

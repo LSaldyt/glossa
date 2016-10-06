@@ -1,6 +1,6 @@
 #include "statements.hpp"
 
-namespace Syntax
+namespace syntax
 {
 
     string Statement::representation(){ return ""; }

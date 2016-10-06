@@ -7,13 +7,13 @@
 #include "../tools/tools.hpp"
 
 
-namespace Grammar
+namespace grammar
 {
 
-using namespace Parse;
-using namespace Lex;
-using namespace Match;
-using namespace Syntax;
+using namespace parse;
+using namespace lex;
+using namespace match;
+using namespace syntax;
 using namespace tools;
 
 using StatementConstructor = function<shared_ptr<Symbol>(vector<shared_ptr<Symbol>>)>;

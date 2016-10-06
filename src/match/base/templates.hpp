@@ -2,7 +2,7 @@
 #include "import.hpp"
 #include "matchresult.hpp"
 
-namespace Match 
+namespace match 
 {
     template <typename T>
     function<Result<T>(vector<T>)>

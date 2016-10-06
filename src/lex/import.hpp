@@ -4,8 +4,8 @@
 #include "../match/base/types.hpp"
 #include "../tools/tools.hpp"
 
-namespace Lex
+namespace lex
 {
-    using namespace Match;
+    using namespace match;
     using namespace tools;
 }

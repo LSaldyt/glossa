@@ -3,7 +3,7 @@
 #include "seperate.hpp"
 #include "language.hpp"
 
-namespace Lex
+namespace lex
 {
-    Tokens lex(const string& sentence, const Language& language);
+    Tokens lexWith(const string& sentence, const Language& language);
 }

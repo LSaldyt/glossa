@@ -1,7 +1,7 @@
 #pragma once
 #include "import.hpp"
 
-namespace Syntax
+namespace syntax
 {
     struct Symbol
     {

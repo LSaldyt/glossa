@@ -1,6 +1,6 @@
 #include "language.hpp"
 
-namespace Lex
+namespace lex
 {
     LanguageLexer::LanguageLexer(function<Result<string>(vector<string>)> set_match_function, string set_name, string set_type, int set_precedence)
     {

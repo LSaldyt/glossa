@@ -2,7 +2,7 @@
 #include "seperate.hpp"
 #include "import.hpp"
 
-namespace Lex
+namespace lex
 {
     using LanguageTermSet  = tuple<Terms, string>;
     using LanguageTermSets = vector<LanguageTermSet>;

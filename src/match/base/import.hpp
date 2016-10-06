@@ -1,7 +1,7 @@
 #pragma once
 #include "../../tools/tools.hpp"
 
-namespace Match
+namespace match
 {
     using namespace tools;
 }

@@ -2,7 +2,7 @@
 #include "types.hpp"
 #include "import.hpp"
 
-namespace Match 
+namespace match 
 {
     template <typename T>
     struct Consumed

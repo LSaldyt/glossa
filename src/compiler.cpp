@@ -3,9 +3,9 @@
 
 int main()
 {
-    using namespace Compiler;
+    using namespace compiler;
 
-    auto grammar = Grammar::Grammar({"assignment", "expression", "value", "functioncall"}, "grammars/python/");
+    auto grammar = Grammar({"assignment", "expression", "value", "functioncall"}, "grammars/python/");
 
     Terms operators = {"+", "-", "*", "/", "=", ":"};
     Terms logicaloperators = {"&", "|"};
@@ -42,7 +42,7 @@ int main()
     }
 }
 
-namespace Compiler
+namespace compiler
 {
     std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)
     {
@@ -50,7 +50,7 @@ namespace Compiler
         for (auto line : content)
         {
             print("Lexing: " + line);
-            tokens.push_back(lex(line, language));
+            tokens.push_back(lexWith(line, language));
         }
         return tokens;
     }

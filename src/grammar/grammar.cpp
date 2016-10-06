@@ -1,6 +1,6 @@
 #include "grammar.hpp"
 
-namespace Grammar
+namespace grammar
 {
 
 const unordered_map<string, StatementConstructor> Grammar::construction_map = {
@@ -53,7 +53,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
 
    };
 
-Grammar::Grammar::Grammar(vector<string> filenames, string directory)
+Grammar::Grammar(vector<string> filenames, string directory)
 {
     for (auto filename : filenames)
     {
@@ -84,7 +84,7 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 }
 
 
-SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(vector<string>& terms)
+SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
 {
     SymbolicTokenParsers parsers;
 
@@ -102,7 +102,7 @@ SymbolicTokenParsers Grammar::Grammar::readGrammarPairs(vector<string>& terms)
     return parsers;
 }
 
-SymbolicTokenParser Grammar::Grammar::readGrammarTerms(vector<string>& terms)
+SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 {
     SymbolicTokenParser parser;
 
@@ -186,7 +186,7 @@ SymbolicTokenParser Grammar::Grammar::readGrammarTerms(vector<string>& terms)
     return parser;
 }
 
-tuple<SymbolicTokenParsers, vector<int>> Grammar::Grammar::read(string filename)
+tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
 {
     SymbolicTokenParsers parsers;
     auto content = readFile(filename);
@@ -195,12 +195,12 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::Grammar::read(string filename)
     
     for (auto line : content)
     {
-        auto terms = Lex::seperate(line, {make_tuple(" ", false)});
+        auto terms = lex::seperate(line, {make_tuple(" ", false)});
         parsers.push_back(readGrammarTerms(terms));
     }
 
     vector<int> construct_indices;
-    auto construct_terms = Lex::seperate(construct_line, {make_tuple(" ", false)});
+    auto construct_terms = lex::seperate(construct_line, {make_tuple(" ", false)});
     for (auto t : construct_terms)
     {
         construct_indices.push_back(stoi(t));
@@ -209,7 +209,7 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::Grammar::read(string filename)
     return make_tuple(parsers, construct_indices);
 }
 
-SymbolicTokenParser Grammar::Grammar::retrieveGrammar(string filename)
+SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     SymbolicTokenParser grammar_parser = [filename, this](SymbolicTokens tokens)
     {

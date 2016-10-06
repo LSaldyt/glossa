@@ -2,9 +2,9 @@
 #include "../match/match.hpp"
 #include "../types/symbolictoken.hpp"
 
-namespace Parse
+namespace parse
 {
-    using namespace Match;
+    using namespace match;
     using SymbolicTokenParser  = function<Result<SymbolicToken>(SymbolicTokens)>;
     using SymbolicTokenParsers = vector<SymbolicTokenParser>;
 

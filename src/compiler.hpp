@@ -7,12 +7,12 @@
 #include "types/symbolize.hpp"
 #include "grammar/grammar.hpp"
 
-namespace Compiler
+namespace compiler
 {
-    using namespace Parse;
-    using namespace Lex;
-    using namespace Syntax;
-    using namespace Grammar;
+    using namespace parse;
+    using namespace lex;
+    using namespace syntax;
+    using namespace grammar;
     using namespace tools;
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);

@@ -1,6 +1,6 @@
 #include "seperate.hpp"
 
-namespace Lex
+namespace lex
 {
     // Given a remaining string, find the first seperator present in the beginning section
     // Return (success, keep_seperator, len_seperator)

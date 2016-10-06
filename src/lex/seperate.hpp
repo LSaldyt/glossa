@@ -1,7 +1,7 @@
 #pragma once
 #include "import.hpp"
 
-namespace Lex
+namespace lex
 {
     using Seperator       = tuple<string, bool>;
     using Seperators      = vector<Seperator>;

@@ -3,7 +3,7 @@
 #include "symbols.hpp"
 #include "../types/symbolictoken.hpp"
 
-namespace Syntax
+namespace syntax
 {
     struct Statement : public Symbol
     {

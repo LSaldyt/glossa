@@ -1,6 +1,6 @@
 #include "tokenparsers.hpp"
 
-namespace Parse
+namespace parse
 {
     SymbolicTokenParser subTypeParser(string sub_type)
     {
@@ -29,7 +29,7 @@ namespace Parse
     discard
     (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher)
     {
-        using Syntax::Symbol;
+        using syntax::Symbol;
         return [matcher](vector<SymbolicToken> terms)
         {
             auto result = matcher(terms);
@@ -62,7 +62,7 @@ namespace Parse
     manySeperated
     (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher)
     {
-        using Syntax::Symbol;
+        using syntax::Symbol;
         return [matcher](vector<SymbolicToken> terms)
         {
             auto consumed = vector<SymbolicToken>(); 

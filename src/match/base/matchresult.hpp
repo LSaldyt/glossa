@@ -3,7 +3,7 @@
 #include "consumed.hpp"
 #include "../../types/result.hpp"
 
-namespace Match 
+namespace match 
 {
     using MatchResult = Result<Term>; 
 }
