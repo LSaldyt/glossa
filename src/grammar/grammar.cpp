@@ -8,6 +8,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             [](vector<shared_ptr<Symbol>> tokens)
             {
                 Expression e;
+                print("Calling expression lambda constructor");
                 print(tokens.size());
                 e.base = tokens[0];
                 if (tokens.size() > 1)
@@ -41,7 +42,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"value",
             [](vector<shared_ptr<Symbol>> tokens)
             { 
-                return make_shared<Symbol>(Symbol());
+                return make_shared<Integer>(Integer(1));
             }
         },
         {"function",
@@ -165,12 +166,6 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         {
             parser = optional<SymbolicToken>(readGrammarTerms(terms));
         }
-        else if (keyword == "annotate")
-        // Annotate a parser for 
-        {
-            vector<string> remaining(terms.begin() + 1, terms.end());
-            parser = annotate<SymbolicToken>(readGrammarTerms(remaining), terms[0]);
-        }
         // Run several parsers in order, failing if any of them fail
         else if (keyword == "inOrder")
         {
@@ -224,17 +219,18 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         SymbolicTokenParser parser;
 
         auto search = grammar_map.find(filename);
-        if (search != grammar_map.end())
-        {
-             parser = annotate(inOrder<SymbolicToken>(get<0>(search->second)), filename);
-        }
-        else
+        if (search == grammar_map.end())
         {
             throw named_exception(filename + " is not an element of the grammar map");
         }
 
         Result<SymbolicToken> result = parser(tokens);
-        result.annotation = filename;
+        if (result.result)
+        {
+            auto built_link = build(filename, fromTokens(result.consumed));
+            print("Built link to " + filename);
+            result.consumed = std::vector<SymbolicToken>(1, SymbolicToken(built_link, filename, filename));
+        }
         return result;
     };
     return grammar_parser;
@@ -293,11 +289,13 @@ Grammar::evaluateGrammar
     int i = 0;
     for (auto parser : parsers)
     {
+        /*
         print("Parsing parser ", i ," against:");
         for (auto t : tokens)
         {
             print(t.value->representation());
         }
+        */
         auto result = parser(tokens);
         if (result.result)
         {
@@ -360,21 +358,12 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
         auto result = results[i];
         result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
 
-        if (result.annotation == "none")
+        auto grouped_tokens = reSeperate(result.consumed);
+        for (auto group : grouped_tokens)
         {
-            for (auto t : result.consumed)
+            for (auto t : group)
             {
                 result_symbols.push_back(t.value);
-            }
-        }
-        else if (result.consumed.size() > 0) 
-        {
-            auto grouped_tokens = reSeperate(result.consumed);
-            for (auto group : grouped_tokens)
-            {
-                print("Building sub-symbol " + result.annotation);
-                auto constructed = build(result.annotation, fromTokens(group));
-                result_symbols.push_back(constructed);
             }
         }
     }

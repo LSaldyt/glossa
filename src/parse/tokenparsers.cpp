@@ -66,14 +66,12 @@ namespace parse
         return [matcher](vector<SymbolicToken> terms)
         {
             auto consumed = vector<SymbolicToken>(); 
-            string annotation = "none";
 
             while(terms.size() > 0)
             {
                 auto result = matcher(terms);
                 if (result.result)
                 {
-                    annotation = result.annotation;
                     terms = result.remaining;
                     if (not consumed.empty())
                     {
@@ -88,7 +86,6 @@ namespace parse
             }
 
             auto result = Result<SymbolicToken>(true, consumed, terms);
-            result.annotation = annotation;
             return result;
         };
     };

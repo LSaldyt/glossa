@@ -6,20 +6,6 @@
 namespace match 
 {
     template <typename T>
-    function<Result<T>(vector<T>)>
-    annotate
-    (function<Result<T>(vector<T>)> parser, string annotation)
-    {
-        return [parser, annotation](vector<T> tokens)
-        {
-            auto result = parser(tokens);
-            result.annotation = annotation;
-            return result;
-        };
-    };
-
-
-    template <typename T>
     function<Result<T>(vector<T>)> 
     inOrder 
     (vector<function<Result<T>(vector<T>)>> matchers)
@@ -168,14 +154,12 @@ namespace match
         return [matcher](vector<T> terms)
         {
             auto consumed = vector<T>(); 
-            string annotation = "none";
 
             while(terms.size() > 0)
             {
                 auto result = matcher(terms);
                 if (result.result)
                 {
-                    annotation = result.annotation;
                     concat(consumed, result.consumed);
                     terms = slice(terms, result.consumed.size());
                 }
@@ -186,20 +170,8 @@ namespace match
             }
 
             auto result = Result<T>(true, consumed, terms);
-            result.annotation = annotation;
             return result;
         };
-    };
-
-    template <typename T>
-    function<Result<T>(vector<T>)>
-    sepBy
-    (function<Result<T>(vector<T>)> sep, function<Result<T>(vector<T>)> val=wildcard<T>(), string annotation="none")
-    {
-        return annotate(inOrder<T>({
-        val,
-        many<T>(inOrder<T>({sep, val}))
-        }), annotation);
     };
 
     //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters
