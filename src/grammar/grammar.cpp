@@ -219,7 +219,11 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         SymbolicTokenParser parser;
 
         auto search = grammar_map.find(filename);
-        if (search == grammar_map.end())
+        if (search != grammar_map.end())
+        {
+            parser = inOrder<SymbolicToken>(std::get<0>(search->second));
+        }
+        else
         {
             throw named_exception(filename + " is not an element of the grammar map");
         }
