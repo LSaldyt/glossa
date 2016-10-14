@@ -5,11 +5,17 @@ int main()
 {
     using namespace compiler;
 
-    auto grammar = Grammar({"assignment", "expression", "value", "functioncall"}, "grammars/python/");
+    auto grammar = Grammar({"assignment", "expression", "value", "functioncall", "conditional"}, "grammars/python/");
 
-    Terms operators = {"+", "-", "*", "/", "=", ":"};
-    Terms logicaloperators = {"&", "|"};
-    Terms punctuators = {",", "(", ")"};
+    auto operators = readFile("grammars/python/operators");
+    auto logicaloperators = readFile("grammars/python/logicaloperators"); 
+    auto punctuators = readFile("grammars/python/punctuators");
+
+    print("Keys:");
+    for ( auto k : grammar.keywords)
+    {
+        print(k);
+    }
 
     LanguageTermSets term_sets;
     term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));

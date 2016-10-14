@@ -1,2 +1,1 @@
-f(2 * x, y - x)
-
+if true:

@@ -49,7 +49,15 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             {
                 return make_shared<Symbol>(Symbol());
             }
+        },
+        {"conditional",
+            [](vector<shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
+
         }
+
 
    };
 

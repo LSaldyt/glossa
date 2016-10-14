@@ -1,9 +1,4 @@
 keyword if
-link boolexpr
-link statement
-keyword else
-link boolexpr
-link statement
-keyword end
-1 2 3 4
-
+keyword true
+operator :
+1
