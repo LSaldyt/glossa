@@ -101,9 +101,9 @@ Grammar::Grammar(vector<string> filenames, string directory)
 }
 
 // Master function for converting from lexed tokens to AST (List of symbols)
-vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
+vector<tuple<string, shared_ptr<Symbol>>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
-    vector<shared_ptr<Symbol>> symbols;
+    vector<tuple<string, shared_ptr<Symbol>>> annotated_symbols;
 
     // Consumed all tokens
     while (tokens.size() > 0)
@@ -113,10 +113,10 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
         print("Identified tokens as: " + get<0>(result));
         // Build the language construct
         auto constructed = construct(get<0>(result), get<1>(result)); 
-        symbols.push_back(constructed);
+        annotated_symbols.push_back(make_tuple(get<0>(result), constructed));
     }
 
-    return symbols;
+    return annotated_symbols;
 }
 
 

@@ -49,10 +49,14 @@ int main()
         print("Joined Token: " + jt.type + ", " + jt.sub_type);
     }
 
-    auto symbols = grammar.constructFrom(joined_tokens);
-    for (auto s : symbols)
+    auto annotated_symbols = grammar.constructFrom(joined_tokens);
+
+    print("\nAbstract syntax tree:\n");
+    for (auto s : annotated_symbols)
     {
-        print(s->representation());
+        print("Symbol annotated as \"" + get<0>(s) + "\"");
+        print(get<1>(s)->representation());
+        print("");
     }
 }
 

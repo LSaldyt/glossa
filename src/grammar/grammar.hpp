@@ -28,7 +28,7 @@ class Grammar
 public:
     Grammar(vector<string> grammar_files, string directory);
 
-    vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
+    vector<tuple<string, shared_ptr<Symbol>>> constructFrom(SymbolicTokens& tokens);
 
     vector<string> keywords;
     Language language;
