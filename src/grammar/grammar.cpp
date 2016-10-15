@@ -5,22 +5,22 @@ namespace grammar
 
 const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"expression", 
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
                 Expression e;
                 print("Calling expression lambda constructor");
-                print(tokens.size());
-                e.base = tokens[0];
-                if (tokens.size() > 1)
+                if (symbols.size() > 1)
                 {
-                    if ((tokens.size() - 1) % 2 != 0)
+                    e.base = symbols[0];
+
+                    if ((symbols.size() - 1) % 2 != 0)
                     {
                         throw named_exception("Cannot build expression extension from odd number of tokens");
                     }
 
-                    for (int i = 1; i < tokens.size(); i += 2)
+                    for (int i = 1; i < symbols.size(); i += 2)
                     {
-                        e.extensions.push_back(make_tuple(tokens[i], tokens[i + 1]));
+                        e.extensions.push_back(make_tuple(symbols[i], symbols[i + 1]));
                     }
                 }
 
@@ -28,23 +28,23 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             }
         },
         {"assignment",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
-                return make_shared<Assignment>(Assignment(tokens));
+                return make_shared<Assignment>(Assignment(symbols));
             }
         },
         {"functioncall",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
-                return make_shared<FunctionCall>(FunctionCall(tokens));
+                return make_shared<FunctionCall>(FunctionCall(symbols));
             }
         },
         {"value",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             { 
-                if (tokens.size() == 1)
+                if (symbols.size() == 1)
                 {
-                    return tokens[0];
+                    return symbols[0];
                 }
                 else
                 {
@@ -53,40 +53,91 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             }
         },
         {"function",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
                 return make_shared<Symbol>(Symbol());
             }
         },
         {"conditional",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
-                return std::make_shared<Symbol>(Symbol());
+                Conditional c;
+
+                c.condition = symbols[0];
+
+                bool in_if_body = true;
+                for (auto t : slice(symbols, 1))
+                {
+                    if (t->representation() == "seperator")
+                    {
+                        in_if_body = false;
+                    }
+                    if (in_if_body)
+                    {
+                        c.if_body.push_back(t);
+                    }
+                    else
+                    {
+                        c.else_body.push_back(t);
+                    }
+                }
+
+                return std::make_shared<Conditional>(c);
             }
 
         },
         {"boolvalue",
-            [](vector<shared_ptr<Symbol>> tokens)
-            {
-                return std::make_shared<Symbol>(Symbol());
+            [](vector<shared_ptr<Symbol>> symbols)
+            { 
+                if (symbols.size() == 1)
+                {
+                    return symbols[0];
+                }
+                else
+                {
+                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
+                }
             }
         },
         {"boolexpression",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
-                return std::make_shared<Symbol>(Symbol());
+                Expression e;
+                print("Calling expression lambda constructor");
+                e.base = symbols[0];
+                if (symbols.size() > 1)
+                {
+                    if ((symbols.size() - 1) % 2 != 0)
+                    {
+                        throw named_exception("Cannot build expression extension from odd number of tokens");
+                    }
+
+                    for (int i = 1; i < symbols.size(); i += 2)
+                    {
+                        e.extensions.push_back(make_tuple(symbols[i], symbols[i + 1]));
+                    }
+                }
+
+                return make_shared<Expression>(e);
             }
         },
         {"statement",
-            [](vector<shared_ptr<Symbol>> tokens)
-            {
-                return std::make_shared<Symbol>(Symbol());
+            [](vector<shared_ptr<Symbol>> symbols)
+            { 
+                if (symbols.size() == 1)
+                {
+                    return symbols[0];
+                }
+                else
+                {
+                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
+                }
             }
         },
         {"function",
-            [](vector<shared_ptr<Symbol>> tokens)
+            [](vector<shared_ptr<Symbol>> symbols)
             {
-                return std::make_shared<Symbol>(Symbol());
+                return make_shared<Symbol>(Symbol());
             }
         }
    };
@@ -235,7 +286,14 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     auto construct_terms = lex::seperate(construct_line, {make_tuple(" ", false)});
     for (auto t : construct_terms)
     {
-        construct_indices.push_back(stoi(t));
+        if (t == "sep")
+        {
+            construct_indices.push_back(-1); // Signal for seperator
+        }
+        else
+        {
+            construct_indices.push_back(stoi(t));
+        }
     }
 
     return make_tuple(parsers, construct_indices);
@@ -343,11 +401,13 @@ Grammar::evaluateGrammar
         }
         else
         {
+            /*
             print("Failed on parser ", i ,". Remaining ", tokens.size(), " tokens were: ");
             for (auto t : tokens)
             {
                 print(t.value->representation());
             }
+            */
             return make_tuple(false, results);
         }
         i++;
@@ -394,15 +454,22 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
 
     for (auto i : construction_indices)
     {
-        auto result = results[i];
-        result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
-
-        auto grouped_tokens = reSeperate(result.consumed);
-        for (auto group : grouped_tokens)
+        if (i == -1)
         {
-            for (auto t : group)
+            result_symbols.push_back(make_shared<syntax::Seperator>(syntax::Seperator()));
+        }
+        else
+        {
+            auto result = results[i];
+            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
+
+            auto grouped_tokens = reSeperate(result.consumed);
+            for (auto group : grouped_tokens)
             {
-                result_symbols.push_back(t.value);
+                for (auto t : group)
+                {
+                    result_symbols.push_back(t.value);
+                }
             }
         }
     }

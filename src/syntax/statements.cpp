@@ -79,4 +79,22 @@ namespace syntax
         }
         return "FunctionCall " + identifier + ": (\n\tArguments: (" + arglist + "))";
     }
+
+    Conditional::Conditional()
+    {}
+
+    string Conditional::representation()
+    {
+        string if_body_rep   = "";
+        string else_body_rep = "";
+        for (auto s : if_body)
+        {
+            if_body_rep += s->representation();
+        }
+        for (auto s : else_body)
+        {
+            else_body_rep += s->representation();
+        }
+        return "Conditional:\nIf: (" + condition->representation() + ")\nThen: (" + if_body_rep + ")\nElse: (" + else_body_rep + ")";
+    }
 }

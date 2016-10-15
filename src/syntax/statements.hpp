@@ -56,9 +56,11 @@ namespace syntax
 
     struct Conditional : public Statement
     {
-        Expression condition;
+        Conditional();
+        shared_ptr<Symbol> condition;
+        vector<shared_ptr<Symbol>> if_body;
+        vector<shared_ptr<Symbol>> else_body;
 
-        vector<shared_ptr<Statement>> a; // If
-        vector<shared_ptr<Statement>> b; // Else
+        string representation();
     };
 }

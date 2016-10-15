@@ -10,6 +10,12 @@ namespace syntax
         Symbol(){}
     };
 
+    struct Seperator : public Symbol
+    {
+        virtual string representation(){ return "seperator"; }
+
+    };
+
     template < typename T>
     class Literal : public Symbol
     {
