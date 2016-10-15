@@ -1,6 +1,15 @@
 f(a):
-c = a * 2
-return c
+return a * 2
+
+g(x):
+return x
+
+h(x):
+return x * x
+
+x = 2
+y = 3
+n = 10
 
 if true:
 f(g(x) * y)
