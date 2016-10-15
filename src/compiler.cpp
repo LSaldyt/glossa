@@ -5,7 +5,15 @@ int main()
 {
     using namespace compiler;
 
-    auto grammar = Grammar({"assignment", "expression", "value", "functioncall", "conditional"}, "grammars/python/");
+    auto grammar = Grammar({"assignment", 
+                            "expression", 
+                            "value", 
+                            "functioncall", 
+                            "conditional", 
+                            "boolexpression", 
+                            "boolvalue",
+                            "function", 
+                            "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");
     auto logicaloperators = readFile("grammars/python/logicaloperators"); 

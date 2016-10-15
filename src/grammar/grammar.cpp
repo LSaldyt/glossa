@@ -64,9 +64,31 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return std::make_shared<Symbol>(Symbol());
             }
 
+        },
+        {"boolvalue",
+            [](vector<shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
+        },
+        {"boolexpression",
+            [](vector<shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
+        },
+        {"statement",
+            [](vector<shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
+        },
+        {"function",
+            [](vector<shared_ptr<Symbol>> tokens)
+            {
+                return std::make_shared<Symbol>(Symbol());
+            }
         }
-
-
    };
 
 Grammar::Grammar(vector<string> filenames, string directory)

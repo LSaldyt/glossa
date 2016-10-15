@@ -1,1 +1,4 @@
+if true:
 f(g(x) * y)
+else:
+h(n)

@@ -1,4 +1,8 @@
 keyword if
-keyword true
+link boolexpression
 operator :
+many link statement
+keyword else
+operator :
+many link statement
 1
