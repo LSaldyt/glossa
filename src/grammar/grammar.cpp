@@ -41,7 +41,6 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
                 return make_shared<Function>(Function(symbol_groups));
-                //return make_shared<Symbol>(Symbol());
             }
         },
         {"conditional",
@@ -92,6 +91,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         }
    };
 
+// Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory)
 {
     for (auto filename : filenames)
@@ -100,21 +100,18 @@ Grammar::Grammar(vector<string> filenames, string directory)
     }
 }
 
+// Master function for converting from lexed tokens to AST (List of symbols)
 vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
     vector<shared_ptr<Symbol>> symbols;
 
+    // Consumed all tokens
     while (tokens.size() > 0)
     {
+        // Tag groups of tokens as certain language constructs
         auto result = identify(tokens);
         print("Identified tokens as: " + get<0>(result));
-        for (auto sub_result : get<1>(result))
-        {
-            for (auto t : sub_result.consumed)
-            {
-                print(t.value->representation());
-            }
-        }
+        // Build the language construct
         auto constructed = construct(get<0>(result), get<1>(result)); 
         symbols.push_back(constructed);
     }
@@ -123,13 +120,15 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 }
 
 
+// Helper function for reading in grammar files
+// (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
 SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
 {
     SymbolicTokenParsers parsers;
 
     if (terms.size() % 2 != 0)
     {
-        throw named_exception("Could not read type pairs");
+        throw named_exception("Could not read type pairs"); // Need an even number of terms
     }
     for (int i = 0; i < (terms.size() / 2); i++)
     {
@@ -141,6 +140,7 @@ SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
     return parsers;
 }
 
+// Convert a seperated line from a grammar file to a parser
 SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 {
     SymbolicTokenParser parser;
@@ -219,6 +219,7 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
     return parser;
 }
 
+// Master function for reading a grammar file
 tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
 {
     SymbolicTokenParsers parsers;
@@ -226,16 +227,19 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     auto construct_line = content.back();
     content = slice(content, 0, -1);
     
+    // Convert each line to a parser
     for (auto line : content)
     {
         auto terms = lex::seperate(line, {make_tuple(" ", false)});
         parsers.push_back(readGrammarTerms(terms));
     }
 
+    // The last line of a grammar file describes how to construct the syntax element
     vector<int> construct_indices;
     auto construct_terms = lex::seperate(construct_line, {make_tuple(" ", false)});
     for (auto t : construct_terms)
     {
+        // Allow end user to specify how to group tokens
         if (t == "sep")
         {
             construct_indices.push_back(-1); // Signal for seperator
@@ -249,12 +253,14 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     return make_tuple(parsers, construct_indices);
 }
 
+// Lazily evaluate links between grammar files
 SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
-    SymbolicTokenParser grammar_parser = [filename, this](SymbolicTokens tokens)
+    return [filename, this](SymbolicTokens tokens)
     {
         std::vector<SymbolicTokenParser> parsers;
 
+        // Retrieve a list of parsers from the grammar map
         auto search = grammar_map.find(filename);
         if (search != grammar_map.end())
         {
@@ -265,11 +271,13 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
             throw named_exception(filename + " is not an element of the grammar map");
         }
 
+        // Evaluate the parsers, preserving the tokens on failure
         SymbolicTokens tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
 
         if (get<0>(result))
         {
+            // Build linked constructs immediately, meaning that information can be discarded (and further, higher-level constructions will be simpler)
             auto constructed = construct(filename, std::get<1>(result));
             print("Built link to " + filename);
             auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename));
@@ -280,10 +288,9 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
             return Result<SymbolicToken>(false, {}, tokens);
         }
     };
-    return grammar_parser;
 }
 
-
+// Identify a group of tokens from a larger set
 tuple<string, vector<Result<SymbolicToken>>> 
 Grammar::identify
 (SymbolicTokens& tokens)
@@ -298,6 +305,7 @@ Grammar::identify
     }
 
     // Sort keys by the lengths of the parsers they refer to
+    // (Longer parsers should be tried first)
     sortBy(keys, [this] (auto a, auto b) 
                  {
                      auto a_len = get<0>(grammar_map[a]).size();
@@ -309,7 +317,7 @@ Grammar::identify
     {
         print("Attempting to identify as: " + key);
 
-        auto value   = grammar_map[key];
+        auto value   = grammar_map[key]; // We are certain that key is defined in the grammar_map, so this will not throw
         auto parsers = get<0>(value);
         auto result  = evaluateGrammar(parsers, tokens_copy);
 
@@ -320,6 +328,7 @@ Grammar::identify
         }
         else
         {
+            // If an identification attempt fails, revert tokens to their previous state
             tokens_copy = tokens;
         }
     }
@@ -327,46 +336,32 @@ Grammar::identify
     throw named_exception("Could not identify tokens");
 }
 
+// Evaluate a list of parsers stored in the grammar_map
 tuple<bool, vector<Result<SymbolicToken>>> 
 Grammar::evaluateGrammar
 (SymbolicTokenParsers parsers, SymbolicTokens& tokens)
 {
     vector<Result<SymbolicToken>> results;
 
-    int i = 0;
     for (auto parser : parsers)
     {
-        /*
-        print("Parsing parser ", i ," against:");
-        for (auto t : tokens)
-        {
-            print(t.value->representation());
-        }
-        */
         auto result = parser(tokens);
         if (result.result)
         {
             tokens = result.remaining;
             results.push_back(result);
         }
-        else
+        else // Fail early if possible
         {
-            /*
-            print("Failed on parser ", i ,". Remaining ", tokens.size(), " tokens were: ");
-            for (auto t : tokens)
-            {
-                print(t.value->representation());
-            }
-            */
             return make_tuple(false, results);
         }
-        i++;
     }
 
     return make_tuple(true, results);
 };
 
 
+// Discard type information from SymbolicTokens
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
 {
     vector<shared_ptr<Symbol>> symbols;
@@ -374,12 +369,13 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
 
     for (auto t : tokens)
     {
-        symbols.push_back(t.value);
+        symbols.push_back(t.value); // t.type and t.sub_type are discarded
     }
 
     return symbols;
 }
 
+// Construct a shared_ptr<Symbol> from a symbol grouping
 shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>> symbol_groups)
 {
     StatementConstructor constructor;
@@ -397,6 +393,7 @@ shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>
     return constructed;
 }
 
+// Higher-level function for constructing a symbol
 shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>> results)
 {
     print("Constructing " + name);
@@ -409,6 +406,7 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
 
     for (auto i : construction_indices)
     {
+        // Account for the end-user's grouping instructions (grammar files)
         if (i == -1)
         {
             groups.push_back(vector<shared_ptr<Symbol>>());
@@ -418,7 +416,7 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
             auto result = results[i];
             result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
 
-            auto grouped_tokens = reSeperate(result.consumed);
+            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
             for (auto group : grouped_tokens)
             {
                 for (auto t : group)
