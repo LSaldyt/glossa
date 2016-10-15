@@ -32,9 +32,12 @@ namespace parse
         using syntax::Symbol;
         return [matcher](vector<SymbolicToken> terms)
         {
+            print("DISCARD");
             auto result = matcher(terms);
+            print(result.consumed.size());
             for (auto& term : result.consumed)
             {
+                print("Discarding token: " + term.type + ", " + term.sub_type);
                 term = SymbolicToken(make_shared<Symbol>(Symbol()), "discard", "discard");
             }
             return result;

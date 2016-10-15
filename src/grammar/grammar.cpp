@@ -42,7 +42,14 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"value",
             [](vector<shared_ptr<Symbol>> tokens)
             { 
-                return make_shared<Integer>(Integer(1));
+                if (tokens.size() == 1)
+                {
+                    return tokens[0];
+                }
+                else
+                {
+                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
+                }
             }
         },
         {"function",
@@ -216,26 +223,32 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     SymbolicTokenParser grammar_parser = [filename, this](SymbolicTokens tokens)
     {
-        SymbolicTokenParser parser;
+        std::vector<SymbolicTokenParser> parsers;
 
         auto search = grammar_map.find(filename);
         if (search != grammar_map.end())
         {
-            parser = inOrder<SymbolicToken>(std::get<0>(search->second));
+            parsers = std::get<0>(search->second);
         }
         else
         {
             throw named_exception(filename + " is not an element of the grammar map");
         }
 
-        Result<SymbolicToken> result = parser(tokens);
-        if (result.result)
+        SymbolicTokens tokens_copy(tokens);
+        auto result = evaluateGrammar(parsers, tokens_copy);
+
+        if (get<0>(result))
         {
-            auto built_link = build(filename, fromTokens(result.consumed));
+            auto constructed = construct(filename, std::get<1>(result));
             print("Built link to " + filename);
-            result.consumed = std::vector<SymbolicToken>(1, SymbolicToken(built_link, filename, filename));
+            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename));
+            return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }
-        return result;
+        else
+        {
+            return Result<SymbolicToken>(false, {}, tokens);
+        }
     };
     return grammar_parser;
 }
