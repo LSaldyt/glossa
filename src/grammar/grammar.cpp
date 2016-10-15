@@ -3,45 +3,30 @@
 namespace grammar
 {
 
+// The remaining hardcoded rules for building AST types
 const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"expression", 
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                Expression e;
-                print("Calling expression lambda constructor");
-                if (symbols.size() > 1)
-                {
-                    e.base = symbols[0];
-
-                    if ((symbols.size() - 1) % 2 != 0)
-                    {
-                        throw named_exception("Cannot build expression extension from odd number of tokens");
-                    }
-
-                    for (int i = 1; i < symbols.size(); i += 2)
-                    {
-                        e.extensions.push_back(make_tuple(symbols[i], symbols[i + 1]));
-                    }
-                }
-
-                return make_shared<Expression>(e);
+                return make_shared<Expression>(Expression(symbol_groups));
             }
         },
         {"assignment",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Assignment>(Assignment(symbols));
+                return make_shared<Assignment>(Assignment(symbol_groups));
             }
         },
         {"functioncall",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<FunctionCall>(FunctionCall(symbols));
+                return make_shared<FunctionCall>(FunctionCall(symbol_groups));
             }
         },
         {"value",
-            [](vector<shared_ptr<Symbol>> symbols)
-            { 
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
                     return symbols[0];
@@ -53,42 +38,22 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             }
         },
         {"function",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Symbol>(Symbol());
+                return make_shared<Function>(Function(symbol_groups));
+                //return make_shared<Symbol>(Symbol());
             }
         },
         {"conditional",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                Conditional c;
-
-                c.condition = symbols[0];
-
-                bool in_if_body = true;
-                for (auto t : slice(symbols, 1))
-                {
-                    if (t->representation() == "seperator")
-                    {
-                        in_if_body = false;
-                    }
-                    if (in_if_body)
-                    {
-                        c.if_body.push_back(t);
-                    }
-                    else
-                    {
-                        c.else_body.push_back(t);
-                    }
-                }
-
-                return std::make_shared<Conditional>(c);
+                return std::make_shared<Conditional>(Conditional(symbol_groups));
             }
-
         },
         {"boolvalue",
-            [](vector<shared_ptr<Symbol>> symbols)
-            { 
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
                     return symbols[0];
@@ -100,42 +65,27 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             }
         },
         {"boolexpression",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                Expression e;
-                print("Calling expression lambda constructor");
-                e.base = symbols[0];
-                if (symbols.size() > 1)
-                {
-                    if ((symbols.size() - 1) % 2 != 0)
-                    {
-                        throw named_exception("Cannot build expression extension from odd number of tokens");
-                    }
-
-                    for (int i = 1; i < symbols.size(); i += 2)
-                    {
-                        e.extensions.push_back(make_tuple(symbols[i], symbols[i + 1]));
-                    }
-                }
-
-                return make_shared<Expression>(e);
+                return make_shared<Expression>(Expression(symbol_groups));
             }
         },
         {"statement",
-            [](vector<shared_ptr<Symbol>> symbols)
-            { 
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
                     return symbols[0];
                 }
                 else
                 {
-                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
+                    throw named_exception("Statement lambda constructor was provided multiple tokens (illegal)");
                 }
             }
         },
         {"function",
-            [](vector<shared_ptr<Symbol>> symbols)
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
                 return make_shared<Symbol>(Symbol());
             }
@@ -430,18 +380,20 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     return symbols;
 }
 
-shared_ptr<Symbol> Grammar::build(string name, vector<shared_ptr<Symbol>> symbols)
+shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>> symbol_groups)
 {
     StatementConstructor constructor;
     auto it = Grammar::construction_map.find(name);
     if (it != Grammar::construction_map.end())
+    {
         constructor = it->second;
+    }
     else
     {
         throw named_exception(name + " is not an element of the construction map");
     }
 
-    auto constructed = constructor(symbols);
+    auto constructed = constructor(symbol_groups);
     return constructed;
 }
 
@@ -452,11 +404,14 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
 
     vector<shared_ptr<Symbol>> result_symbols;
 
+    vector<vector<shared_ptr<Symbol>>> groups;
+    groups.push_back(vector<shared_ptr<Symbol>>());
+
     for (auto i : construction_indices)
     {
         if (i == -1)
         {
-            result_symbols.push_back(make_shared<syntax::Seperator>(syntax::Seperator()));
+            groups.push_back(vector<shared_ptr<Symbol>>());
         }
         else
         {
@@ -468,13 +423,13 @@ shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>>
             {
                 for (auto t : group)
                 {
-                    result_symbols.push_back(t.value);
+                    groups.back().push_back(t.value);
                 }
             }
         }
     }
 
-    auto constructed = build(name, result_symbols);
+    auto constructed = build(name, groups);
     return constructed; 
 }
 

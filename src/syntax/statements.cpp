@@ -5,8 +5,23 @@ namespace syntax
 
     string Statement::representation(){ return ""; }
 
-    Expression::Expression() : base(make_shared<Symbol>(Integer(0))),
-                               extensions(vector<tuple<shared_ptr<Symbol>, shared_ptr<Symbol>>>()){}
+    Expression::Expression(){}
+    Expression::Expression(vector<vector<shared_ptr<Symbol>>> symbol_groups)
+    {
+        auto symbols = symbol_groups[0];
+        base = symbols[0];
+        if (symbols.size() > 1)
+        {
+            if ((symbols.size() - 1) % 2 != 0)
+            {
+                throw named_exception("Cannot build expression extension from odd number of tokens");
+            }
+            for (int i = 1; i < symbols.size(); i += 2)
+            {
+                extensions.push_back(make_tuple(symbols[i], symbols[i + 1]));
+            }
+        }
+    }
 
     string Expression::representation()
     {
@@ -18,20 +33,32 @@ namespace syntax
         return generated;
     }
 
-    Assignment::Assignment(vector<shared_ptr<Symbol>> construction_tokens)
+    Assignment::Assignment(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
-        identifier = construction_tokens[0]->representation();
-        value      = construction_tokens[1];
+        auto symbols = symbol_groups[0];
+        identifier   = symbols[0]->representation();
+        value        = symbols[1];
     }
-
-    Assignment::Assignment(){}
 
     string Assignment::representation()
     {
         return ("Assignment: (" + identifier + " = " + value->representation() + ")");
     }
 
-    Function::Function() : body(vector<shared_ptr<Statement>>()){}
+    Function::Function() 
+    {
+    }
+    Function::Function(vector<vector<shared_ptr<Symbol>>> symbol_groups)
+    {
+        print(symbol_groups.size());
+        identifier = symbol_groups[0][0]->representation();
+        for (auto argname : symbol_groups[1])
+        {
+            argnames.push_back(argname->representation());
+        }
+        body = symbol_groups[2];
+        return_expression = symbol_groups[3][0];
+    }
 
     string Function::representation()
     {
@@ -51,11 +78,12 @@ namespace syntax
             body_string += statement->representation();
         }
 
-        return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: "+ return_expression->representation() + ")";
+        return "Function " + identifier + ":\n\tArguments: (" + args + ")\n\tBody: " + body_string + "\n\tReturns: " + return_expression->representation() + ")";
     }
 
-    FunctionCall::FunctionCall(vector<shared_ptr<Symbol>> symbols) 
+    FunctionCall::FunctionCall(vector<vector<shared_ptr<Symbol>>> symbol_groups) 
     {
+        auto symbols = symbol_groups[0];
         identifier = symbols[0]->representation();
         if (not symbols.empty())
         {
@@ -80,8 +108,12 @@ namespace syntax
         return "FunctionCall " + identifier + ": (\n\tArguments: (" + arglist + "))";
     }
 
-    Conditional::Conditional()
-    {}
+    Conditional::Conditional(vector<vector<shared_ptr<Symbol>>> symbol_groups)
+    {
+        condition = symbol_groups[0][0];
+        if_body   = symbol_groups[1];
+        else_body = symbol_groups[2];
+    }
 
     string Conditional::representation()
     {

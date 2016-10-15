@@ -1,6 +1,11 @@
+f(a):
+c = a * 2
+return c
+
 if true:
 f(g(x) * y)
 a = 2
 else:
 h(n)
 end
+

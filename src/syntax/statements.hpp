@@ -13,6 +13,7 @@ namespace syntax
     struct Expression : public Statement
     {
         Expression();
+        Expression(vector<vector<shared_ptr<Symbol>>> symbol_groups);
 
         shared_ptr<Symbol> base;
         vector<tuple<shared_ptr<Symbol>, shared_ptr<Symbol>>> extensions;
@@ -22,8 +23,7 @@ namespace syntax
 
     struct Assignment : public Statement
     {
-        Assignment(vector<shared_ptr<Symbol>>);
-        Assignment();
+        Assignment(vector<vector<shared_ptr<Symbol>>>);
 
         string identifier;
         shared_ptr<Symbol> value;
@@ -34,11 +34,12 @@ namespace syntax
     struct Function : public Statement
     {
         Function();
+        Function(vector<vector<shared_ptr<Symbol>>>);
 
-        string                             identifier;
-        vector<string>                argnames;
-        vector<shared_ptr<Statement>> body;
-        shared_ptr<Symbol>                 return_expression;
+        string                     identifier;
+        vector<string>             argnames;
+        vector<shared_ptr<Symbol>> body;
+        shared_ptr<Symbol>         return_expression;
 
         string representation();
     };
@@ -46,7 +47,7 @@ namespace syntax
     struct FunctionCall : public Statement
     {
         FunctionCall();
-        FunctionCall(vector<shared_ptr<Symbol>>);
+        FunctionCall(vector<vector<shared_ptr<Symbol>>>);
 
         string              identifier;
         vector<shared_ptr<Symbol>> args;
@@ -56,7 +57,8 @@ namespace syntax
 
     struct Conditional : public Statement
     {
-        Conditional();
+        Conditional(vector<vector<shared_ptr<Symbol>>> symbol_groups);
+
         shared_ptr<Symbol> condition;
         vector<shared_ptr<Symbol>> if_body;
         vector<shared_ptr<Symbol>> else_body;

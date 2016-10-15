@@ -16,8 +16,7 @@ using namespace match;
 using namespace syntax;
 using namespace tools;
 
-using StatementConstructor = function<shared_ptr<Symbol>(vector<shared_ptr<Symbol>>)>;
-
+using StatementConstructor = function<shared_ptr<Symbol>(vector<vector<shared_ptr<Symbol>>>)>;
 using GrammarMap = unordered_map<string, tuple<SymbolicTokenParsers, vector<int>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
@@ -37,7 +36,7 @@ public:
 private:
     GrammarMap grammar_map; 
 
-    shared_ptr<Symbol> build(string name, vector<shared_ptr<Symbol>> symbols);
+    shared_ptr<Symbol> build(string name, vector<vector<shared_ptr<Symbol>>> symbols);
 
     tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     shared_ptr<Symbol> construct(string name, vector<Result<SymbolicToken>> results);
