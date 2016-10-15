@@ -1,14 +1,15 @@
-echo Running application ..
-make all
-makeresult=$?
+#!/bin/bash
 
-function run {
-    cd build
-    ./Compiler
-    echo Finished
-}
+mkdir build
+cd build
+cmake ..
+make
 
-case $makeresult in
-    0 ) run;;
-    * ) exit $makeresult;;
-esac
+if [[ $? != 0 ]];
+then
+    exit 1
+fi
+   
+
+cd ..
+./build/progtran

@@ -16,7 +16,7 @@ TEST_CASE("The lexer and language modules work")
 
     Lex::LanguageLexers  lexer_set;
     lexer_set.push_back(LanguageLexer(digits, "int", "type", 1));
-    lexer_set.push_back(LanguageLexer(alphas, "identifier", "identifier", 3));
+    lexer_set.push_back(LanguageLexer(alphas, "identifier", "identifier", 5));
 
     Lex::Language test_language(term_set, lexer_set);
 

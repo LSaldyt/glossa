@@ -1,8 +1,9 @@
 keyword if
-link boolexpr
-link statement
+link boolexpression
+operator :
+many link statement
 keyword else
-link boolexpr
-link statement
+operator :
+many link statement
 keyword end
-
+1 sep 3 sep 6
