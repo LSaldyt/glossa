@@ -1,11 +1,9 @@
 #pragma once
-
 #include "../lex/seperate.hpp"
 #include "../lex/language.hpp"
-#include "../syntax/statements.hpp"
+#include "../syntax/syntax.hpp"
 #include "../parse/tokenparsers.hpp"
 #include "../tools/tools.hpp"
-
 
 namespace grammar
 {

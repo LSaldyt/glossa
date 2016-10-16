@@ -1,5 +1,5 @@
 #include "gen.hpp"
-#include "../syntax/symbols.hpp"
+#include "../syntax/symbols/export.hpp"
 
 namespace gen
 {

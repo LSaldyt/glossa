@@ -9,7 +9,7 @@ auto y = 3;
 auto n = 10;
 auto c = [=](){return true; };
 auto b = true;
-if (b || c()){ f(g(x) * y);auto a = 2;} else { h(n);};
+if (b | c()){ f(g(x) * y);auto a = 2;} else { h(n);};
 print("hello world");
 print(f(g(h(2))) * h(200));
 }

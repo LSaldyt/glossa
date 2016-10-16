@@ -1,6 +1,6 @@
 #pragma once
 #include "import.hpp"
-#include "../syntax/symbols.hpp"
+#include "../syntax/symbols/export.hpp"
 #include "../tools/tools.hpp"
 
 const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerator> generatorMap, Tokens tokens)

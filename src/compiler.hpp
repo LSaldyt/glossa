@@ -1,6 +1,6 @@
 #pragma once
 #include "tools/tools.hpp"
-#include "syntax/statements.hpp"
+#include "syntax/syntax.hpp"
 #include "lex/lex.hpp"
 #include "lex/seperate.hpp"
 #include "lex/language.hpp"

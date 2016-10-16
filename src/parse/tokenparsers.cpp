@@ -1,4 +1,5 @@
 #include "tokenparsers.hpp"
+#include "../syntax/symbols/export.hpp"
 
 namespace parse
 {
