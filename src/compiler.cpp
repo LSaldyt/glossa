@@ -54,8 +54,8 @@ int main()
     print("\nAbstract syntax tree:\n");
     for (auto s : annotated_symbols)
     {
-        print("Symbol annotated as \"" + get<0>(s) + "\"");
-        print(get<1>(s)->representation());
+        print("Symbol annotated as \"" + s->annotation + "\" ");
+        print(s->representation());
         print("");
     }
 }

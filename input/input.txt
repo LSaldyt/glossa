@@ -1,20 +1,25 @@
 f(a):
-return a * 2
+    return a * 2
 
 g(x):
-return x
+    return x
 
 h(x):
-return x * x
+    return x * x
 
 x = 2
 y = 3
 n = 10
 
-if true:
-f(g(x) * y)
-a = 2
+c():
+    return true
+
+b = true
+
+if b | c():
+    f(g(x) * y)
+    a = 2
 else:
-h(n)
+    h(n)
 end
 

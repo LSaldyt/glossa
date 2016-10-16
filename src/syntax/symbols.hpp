@@ -6,6 +6,7 @@ namespace syntax
     struct Symbol
     {
         virtual string representation(){ return ""; }
+        string annotation = "symbol";
 
         Symbol(){}
     };

@@ -2,25 +2,30 @@
 
 namespace grammar
 {
+shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
+{
+    s->annotation = annotation;
+    return s;
+}
 
 // The remaining hardcoded rules for building AST types
 const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"expression", 
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Expression>(Expression(symbol_groups));
+                return createSymbol(Expression(symbol_groups), "expression"); 
             }
         },
         {"assignment",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Assignment>(Assignment(symbol_groups));
+                return createSymbol(Assignment(symbol_groups), "assignment");
             }
         },
         {"functioncall",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<FunctionCall>(FunctionCall(symbol_groups));
+                return createSymbol(FunctionCall(symbol_groups), "functioncall");
             }
         },
         {"value",
@@ -29,6 +34,10 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "value");
+                    }
                     return symbols[0];
                 }
                 else
@@ -40,13 +49,13 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"function",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Function>(Function(symbol_groups));
+                return createSymbol(Function(symbol_groups), "function");
             }
         },
         {"conditional",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return std::make_shared<Conditional>(Conditional(symbol_groups));
+                return createSymbol(Conditional(symbol_groups), "conditional");
             }
         },
         {"boolvalue",
@@ -55,6 +64,10 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "boolvalue");
+                    }
                     return symbols[0];
                 }
                 else
@@ -66,7 +79,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"boolexpression",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Expression>(Expression(symbol_groups));
+                return createSymbol(Expression(symbol_groups), "boolexpression");
             }
         },
         {"statement",
@@ -75,18 +88,16 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "statement");
+                    }
                     return symbols[0];
                 }
                 else
                 {
                     throw named_exception("Statement lambda constructor was provided multiple tokens (illegal)");
                 }
-            }
-        },
-        {"function",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return make_shared<Symbol>(Symbol());
             }
         }
    };
@@ -101,9 +112,9 @@ Grammar::Grammar(vector<string> filenames, string directory)
 }
 
 // Master function for converting from lexed tokens to AST (List of symbols)
-vector<tuple<string, shared_ptr<Symbol>>> Grammar::constructFrom(SymbolicTokens& tokens)
+vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
-    vector<tuple<string, shared_ptr<Symbol>>> annotated_symbols;
+    vector<shared_ptr<Symbol>> annotated_symbols;
 
     // Consumed all tokens
     while (tokens.size() > 0)
@@ -113,7 +124,7 @@ vector<tuple<string, shared_ptr<Symbol>>> Grammar::constructFrom(SymbolicTokens&
         print("Identified tokens as: " + get<0>(result));
         // Build the language construct
         auto constructed = construct(get<0>(result), get<1>(result)); 
-        annotated_symbols.push_back(make_tuple(get<0>(result), constructed));
+        annotated_symbols.push_back(constructed);
     }
 
     return annotated_symbols;

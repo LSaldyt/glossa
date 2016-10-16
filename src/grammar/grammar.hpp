@@ -21,6 +21,14 @@ using GrammarMap = unordered_map<string, tuple<SymbolicTokenParsers, vector<int>
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
+shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation);
+
+template <typename T> 
+shared_ptr<Symbol> createSymbol(T t, string annotation)
+{
+    return annotateSymbol(make_shared<T>(t), annotation);
+}
+
 class Grammar
 {
     const static unordered_map<string, StatementConstructor> construction_map;
@@ -28,7 +36,7 @@ class Grammar
 public:
     Grammar(vector<string> grammar_files, string directory);
 
-    vector<tuple<string, shared_ptr<Symbol>>> constructFrom(SymbolicTokens& tokens);
+    vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
     vector<string> keywords;
     Language language;
