@@ -3,6 +3,7 @@
 #include <tuple>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 
 #include <exception>
@@ -17,6 +18,7 @@ namespace tools
 
 using std::vector;
 using std::unordered_map;
+using std::unordered_set;
 using std::shared_ptr;
 using std::make_shared;
 using std::string;

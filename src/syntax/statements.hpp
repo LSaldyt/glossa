@@ -19,6 +19,7 @@ namespace syntax
         vector<tuple<shared_ptr<Symbol>, shared_ptr<Symbol>>> extensions;
 
         string representation();
+        string source(unordered_set<string>&);
     };
 
     struct Assignment : public Statement
@@ -29,6 +30,8 @@ namespace syntax
         shared_ptr<Symbol> value;
 
         string representation();
+        string source(unordered_set<string>&);
+        string name();
     };
 
     struct Function : public Statement
@@ -42,6 +45,8 @@ namespace syntax
         shared_ptr<Symbol>         return_expression;
 
         string representation();
+        string source(unordered_set<string>&);
+        string name();
     };
 
     struct FunctionCall : public Statement
@@ -53,6 +58,7 @@ namespace syntax
         vector<shared_ptr<Symbol>> args;
 
         string              representation();
+        string source(unordered_set<string>&);
     };
 
     struct Conditional : public Statement
@@ -64,5 +70,6 @@ namespace syntax
         vector<shared_ptr<Symbol>> else_body;
 
         string representation();
+        string source(unordered_set<string>&);
     };
 }

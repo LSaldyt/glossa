@@ -1,11 +1,12 @@
 #include "std/std.hpp"
 int main(){
-Function Identifier: f:
-	Arguments: (Identifier: x)
-	Body: FunctionCall Identifier: print: (
-	Arguments: (Identifier: x))
-	Returns: Expression: Identifier: x Operator: * Literal: 8)
-Assignment: (Identifier: x = Expression: Literal: 5 Operator: * FunctionCall Identifier: f: (
-	Arguments: (Literal: 42)))
-Assignment: (Identifier: y = Expression: Literal: 3 Operator: + Literal: 2)
+auto f = [=](auto a){return a * 2; };
+auto g = [=](auto x){return x; };
+auto h = [=](auto x){return x * x; };
+auto x = 2;
+auto y = 3;
+auto n = 10;
+auto c = [=](){return true; };
+auto b = true;
+if (b || c()){} else{};
 }

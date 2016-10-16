@@ -6,6 +6,9 @@ namespace syntax
     struct Symbol
     {
         virtual string representation(){ return ""; }
+        virtual string source(unordered_set<string>& generated){ return "symbol"; }
+        virtual string name(){ return "none"; }
+
         string annotation = "symbol";
 
         Symbol(){}
@@ -26,6 +29,10 @@ namespace syntax
         {
             return "Literal: " + std::to_string(value);
         }
+        virtual string source(unordered_set<string>& names)
+        {
+            return std::to_string(value);
+        }
     };
 
     using SymbolGenerator  = function<shared_ptr<Symbol>(vector<string>)>;
@@ -42,6 +49,10 @@ namespace syntax
         {
             return "Operator: " + value;
         }
+        string source(unordered_set<string>& names)
+        {
+            return value;
+        }
     };
 
     struct LogicalOperator : public Symbol
@@ -54,6 +65,10 @@ namespace syntax
         string representation()
         {
             return "LogicalOperator: " + value;
+        }
+        string source(unordered_set<string>& generated)
+        { 
+            return value + value; 
         }
     };
 
@@ -86,7 +101,11 @@ namespace syntax
         }
         string representation()
         {
-            return "Identifier: " + name;
+            return name;
+        }
+        string source(unordered_set<string>& generated)
+        { 
+            return name; 
         }
     };
 
@@ -102,6 +121,10 @@ namespace syntax
         string representation()
         {
             return "Keyword: " + name;
+        }
+        string source(unordered_set<string>& names)
+        {
+            return name;
         }
     };
 

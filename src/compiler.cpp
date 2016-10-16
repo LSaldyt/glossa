@@ -58,6 +58,9 @@ int main()
         print(s->representation());
         print("");
     }
+
+    auto output = generate(annotated_symbols);
+    writeFile(output, "output/output.cpp");
 }
 
 namespace compiler

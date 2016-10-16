@@ -6,6 +6,7 @@
 #include "lex/language.hpp"
 #include "types/symbolize.hpp"
 #include "grammar/grammar.hpp"
+#include "gen/gen.hpp"
 
 namespace compiler
 {
@@ -13,6 +14,7 @@ namespace compiler
     using namespace lex;
     using namespace syntax;
     using namespace grammar;
+    using namespace gen;
     using namespace tools;
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);
