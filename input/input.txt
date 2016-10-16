@@ -8,6 +8,7 @@ h(x):
     return x * x
 
 x = 2
+x = 4
 y = 3
 n = 10
 
@@ -23,3 +24,5 @@ else:
     h(n)
 end
 
+print("hello world")
+print(f(g(h(2))) * h(200))

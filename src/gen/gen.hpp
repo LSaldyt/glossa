@@ -1,6 +1,11 @@
 #pragma once
 
-#include "../syntax/statements.hpp"
+// Avoid a circular include
+namespace syntax
+{
+class Symbol;
+}
+
 #include "../tools/tools.hpp"
 
 namespace gen

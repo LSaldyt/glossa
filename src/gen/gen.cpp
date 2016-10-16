@@ -1,4 +1,5 @@
 #include "gen.hpp"
+#include "../syntax/symbols.hpp"
 
 namespace gen
 {
@@ -7,7 +8,6 @@ namespace gen
         vector<string> output;
         output.reserve(symbols.size());
 
-        output.push_back("#include \"std/std.hpp\"\nint main(){");
 
         unordered_set<string> names;
 
@@ -22,8 +22,6 @@ namespace gen
                 names.insert(s->name());
             }
         }
-
-        output.push_back("}");
         return output;
     }
 }

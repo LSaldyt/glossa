@@ -141,10 +141,27 @@ namespace syntax
         {
             return "String: \"" + value + "\"";
         }
+        string source(unordered_set<string>& names)
+        {
+            return "\"" + value + "\"";
+        }
     };
 
     const auto stringGenerator = [](string s){
         return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
+    };
+
+    const auto literalGenerator = [](string s)
+    {
+        shared_ptr<Symbol> value;
+        try {
+            value = intGenerator(s);
+        }
+        catch(std::exception)
+        {
+            value = stringGenerator(s);
+        }
+        return value;
     };
 
     const auto single = [](function<shared_ptr<Symbol>(string)> f){
@@ -152,11 +169,10 @@ namespace syntax
     };
 
     const unordered_map<string, SymbolGenerator> generatorMap = {
-     {"literal",       single(intGenerator)},
+     {"literal",       single(literalGenerator)},
      {"operator",   single(opGenerator)},
      {"identifier", single(identifierGenerator)},
      {"keyword",    single(keywordGenerator)},
-     {"string",     single(stringGenerator)},
      {"punctuator", single(puncGenerator)},
      {"logicaloperator", single(logicalOpGenerator)}
     };

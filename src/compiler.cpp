@@ -33,7 +33,7 @@ int main()
 
     LanguageLexers lexer_set = {
         LanguageLexer(digits, "int", "literal", 3),
-        LanguageLexer(startswith("\""), "string", "string", 1),
+        LanguageLexer(startswith("\""), "string", "literal", 1),
         LanguageLexer(alphas, "identifier", "identifier", 3)};
 
     Language test_language(term_sets, lexer_set);
@@ -59,7 +59,10 @@ int main()
         print("");
     }
 
-    auto output = generate(annotated_symbols);
+    vector<string> output;
+    output.push_back("#include \"std/std.hpp\"\nint main(){");
+    concat(output, generate(annotated_symbols));
+    output.push_back("}");
     writeFile(output, "output/output.cpp");
 }
 
