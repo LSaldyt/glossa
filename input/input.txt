@@ -19,7 +19,9 @@ b = true
 
 if b | c():
     f(g(x) * y)
+    if c():
     a = 2
+    else: end
 else:
     h(n)
 end
