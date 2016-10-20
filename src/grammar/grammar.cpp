@@ -348,6 +348,14 @@ Grammar::identify
         else
         {
             // If an identification attempt fails, revert tokens to their previous state
+            print("Failed for " + key);// + " , remaining tokens were:");
+            /*
+            unordered_set<string> names;
+            for (auto& t : tokens_copy)
+            {
+                print("\"" + t.value->source(names) + "\"");
+            }
+            */
             tokens_copy = tokens;
         }
     }
@@ -362,6 +370,7 @@ Grammar::evaluateGrammar
 {
     vector<Result<SymbolicToken>> results;
 
+    int i = 0;
     for (auto parser : parsers)
     {
         auto result = parser(tokens);

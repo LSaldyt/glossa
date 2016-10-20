@@ -12,5 +12,5 @@ auto b = true;
 if (b | c()){ f(g(x) * y);if (c()){ auto a = 2;} else { };} else { h(n);};
 print("hello world");
 print(f(g(h(2))) * h(200));
-for (auto& i : range(10)){};
+for (auto& i : range(10)){ print(i); };
 }

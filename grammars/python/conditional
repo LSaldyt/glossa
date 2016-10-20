@@ -1,9 +1,9 @@
 keyword if
 link boolexpression
-operator :
+punctuator :
 many link statement
 keyword else
-operator :
+punctuator :
 many link statement
 keyword end
 1 sep 3 sep 6

@@ -2,7 +2,7 @@ keyword for
 identifier wildcard
 keyword in
 link expression
-operator :
+punctuator :
 many link statement
 keyword end
-1 sep 3 sep 5
+1 sep 3 sep 5 

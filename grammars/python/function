@@ -3,7 +3,7 @@ punctuator (
 optional identifier wildcard
 many inOrder !punctuator , identifier wildcard
 punctuator )
-operator :
+punctuator :
 many link statement
 keyword return
 link expression
