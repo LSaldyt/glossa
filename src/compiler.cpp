@@ -13,6 +13,7 @@ int main()
                             "boolexpression", 
                             "boolvalue",
                             "function", 
+                            "forloop",
                             "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");

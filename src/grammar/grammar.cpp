@@ -99,7 +99,14 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                     throw named_exception("Statement lambda constructor was provided multiple tokens (illegal)");
                 }
             }
+        },
+        {"forloop",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(ForLoop(symbol_groups), "forloop");
+            }
         }
+
    };
 
 // Standard grammar constructor (From list of files)
@@ -219,7 +226,7 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         }
         else
         {
-            throw named_exception("Expected keyword");
+            throw named_exception("Expected keyword, got: " + keyword);
         }
     }
     else
@@ -312,6 +319,7 @@ Grammar::identify
     keys.reserve(grammar_map.size());
     for (auto kv : grammar_map)
     {
+        print("Adding grammar element to keys: " + kv.first);
         keys.push_back(kv.first);
     }
 
