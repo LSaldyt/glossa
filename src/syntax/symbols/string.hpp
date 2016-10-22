@@ -10,7 +10,7 @@ namespace syntax
         }
         string source(unordered_set<string>& names)
         {
-            return "\"" + value + "\"";
+            return "\"" + value + "\"s";
         }
     };
 }

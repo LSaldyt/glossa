@@ -34,7 +34,7 @@ string Vector::source(unordered_set<string>& names)
         }
     }
 
-    return "std::vector<decltype(" + content[0]->source(names) + ")>({" + content_initializer + "});";
+    return "std::vector<decltype(" + content[0]->source(names) + ")>({" + content_initializer + "})";
 }
 
 }
