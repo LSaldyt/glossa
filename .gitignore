@@ -2,3 +2,4 @@
 build/*
 progtran
 progtrantest
+output/a.out

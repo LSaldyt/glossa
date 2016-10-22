@@ -13,3 +13,10 @@ fi
 
 cd ..
 ./build/progtran
+
+echo ""
+echo "Running compiled program:"
+echo ""
+
+cd output
+./run_output.sh
