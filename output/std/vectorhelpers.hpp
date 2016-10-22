@@ -4,4 +4,3 @@ void append(std::vector<T>& v, const T& t)
 {
     v.push_back(t);
 }
-

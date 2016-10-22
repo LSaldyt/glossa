@@ -15,7 +15,7 @@ namespace gen
         {
             print("Generated:");
             print(s->source(names) + ";");
-            output.push_back(s->source(names) + ";");
+            output.push_back(s->source(names) + ";\n");
             if (s->name() != "none")
             { 
                 print("Added name to scope: " + s->name());
