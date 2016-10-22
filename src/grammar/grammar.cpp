@@ -2,25 +2,30 @@
 
 namespace grammar
 {
+shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
+{
+    s->annotation = annotation;
+    return s;
+}
 
 // The remaining hardcoded rules for building AST types
 const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"expression", 
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Expression>(Expression(symbol_groups));
+                return createSymbol(Expression(symbol_groups), "expression"); 
             }
         },
         {"assignment",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Assignment>(Assignment(symbol_groups));
+                return createSymbol(Assignment(symbol_groups), "assignment");
             }
         },
         {"functioncall",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<FunctionCall>(FunctionCall(symbol_groups));
+                return createSymbol(FunctionCall(symbol_groups), "functioncall");
             }
         },
         {"value",
@@ -29,6 +34,10 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "value");
+                    }
                     return symbols[0];
                 }
                 else
@@ -40,13 +49,13 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"function",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Function>(Function(symbol_groups));
+                return createSymbol(Function(symbol_groups), "function");
             }
         },
         {"conditional",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return std::make_shared<Conditional>(Conditional(symbol_groups));
+                return createSymbol(Conditional(symbol_groups), "conditional");
             }
         },
         {"boolvalue",
@@ -55,6 +64,10 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "boolvalue");
+                    }
                     return symbols[0];
                 }
                 else
@@ -66,7 +79,7 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
         {"boolexpression",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Expression>(Expression(symbol_groups));
+                return createSymbol(Expression(symbol_groups), "boolexpression");
             }
         },
         {"statement",
@@ -75,6 +88,10 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 auto symbols = symbol_groups[0];
                 if (symbols.size() == 1)
                 {
+                    if (symbols[0]->annotation == "symbol")
+                    {
+                        annotateSymbol(symbols[0], "statement");
+                    }
                     return symbols[0];
                 }
                 else
@@ -83,10 +100,16 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 }
             }
         },
-        {"function",
+        {"forloop",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
-                return make_shared<Symbol>(Symbol());
+                return createSymbol(ForLoop(symbol_groups), "forloop");
+            }
+        },
+        {"vector",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(Vector(symbol_groups), "forloop");
             }
         }
    };
@@ -103,7 +126,7 @@ Grammar::Grammar(vector<string> filenames, string directory)
 // Master function for converting from lexed tokens to AST (List of symbols)
 vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
-    vector<shared_ptr<Symbol>> symbols;
+    vector<shared_ptr<Symbol>> annotated_symbols;
 
     // Consumed all tokens
     while (tokens.size() > 0)
@@ -113,10 +136,10 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
         print("Identified tokens as: " + get<0>(result));
         // Build the language construct
         auto constructed = construct(get<0>(result), get<1>(result)); 
-        symbols.push_back(constructed);
+        annotated_symbols.push_back(constructed);
     }
 
-    return symbols;
+    return annotated_symbols;
 }
 
 
@@ -208,7 +231,7 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         }
         else
         {
-            throw named_exception("Expected keyword");
+            throw named_exception("Expected keyword, got: " + keyword);
         }
     }
     else
@@ -301,6 +324,7 @@ Grammar::identify
     keys.reserve(grammar_map.size());
     for (auto kv : grammar_map)
     {
+        print("Adding grammar element to keys: " + kv.first);
         keys.push_back(kv.first);
     }
 
@@ -329,6 +353,14 @@ Grammar::identify
         else
         {
             // If an identification attempt fails, revert tokens to their previous state
+            print("Failed for " + key);// + " , remaining tokens were:");
+            /*
+            unordered_set<string> names;
+            for (auto& t : tokens_copy)
+            {
+                print("\"" + t.value->source(names) + "\"");
+            }
+            */
             tokens_copy = tokens;
         }
     }
@@ -343,6 +375,7 @@ Grammar::evaluateGrammar
 {
     vector<Result<SymbolicToken>> results;
 
+    int i = 0;
     for (auto parser : parsers)
     {
         auto result = parser(tokens);

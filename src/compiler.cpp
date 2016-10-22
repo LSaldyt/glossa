@@ -12,7 +12,9 @@ int main()
                             "conditional", 
                             "boolexpression", 
                             "boolvalue",
-                            "function", 
+                            "function",
+                            "vector", 
+                            "forloop",
                             "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");
@@ -33,7 +35,7 @@ int main()
 
     LanguageLexers lexer_set = {
         LanguageLexer(digits, "int", "literal", 3),
-        LanguageLexer(startswith("\""), "string", "string", 1),
+        LanguageLexer(startswith("\""), "string", "literal", 1),
         LanguageLexer(alphas, "identifier", "identifier", 3)};
 
     Language test_language(term_sets, lexer_set);
@@ -49,11 +51,21 @@ int main()
         print("Joined Token: " + jt.type + ", " + jt.sub_type);
     }
 
-    auto symbols = grammar.constructFrom(joined_tokens);
-    for (auto s : symbols)
+    auto annotated_symbols = grammar.constructFrom(joined_tokens);
+
+    print("\nAbstract syntax tree:\n");
+    for (auto s : annotated_symbols)
     {
+        print("Symbol annotated as \"" + s->annotation + "\" ");
         print(s->representation());
+        print("");
     }
+
+    vector<string> output;
+    output.push_back("#include \"std/std.hpp\"\nint main(){");
+    concat(output, generate(annotated_symbols));
+    output.push_back("}");
+    writeFile(output, "output/output.cpp");
 }
 
 namespace compiler

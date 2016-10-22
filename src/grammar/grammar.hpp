@@ -1,11 +1,9 @@
 #pragma once
-
 #include "../lex/seperate.hpp"
 #include "../lex/language.hpp"
-#include "../syntax/statements.hpp"
+#include "../syntax/syntax.hpp"
 #include "../parse/tokenparsers.hpp"
 #include "../tools/tools.hpp"
-
 
 namespace grammar
 {
@@ -20,6 +18,14 @@ using StatementConstructor = function<shared_ptr<Symbol>(vector<vector<shared_pt
 using GrammarMap = unordered_map<string, tuple<SymbolicTokenParsers, vector<int>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
+
+shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation);
+
+template <typename T> 
+shared_ptr<Symbol> createSymbol(T t, string annotation)
+{
+    return annotateSymbol(make_shared<T>(t), annotation);
+}
 
 class Grammar
 {
