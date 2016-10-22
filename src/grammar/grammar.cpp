@@ -105,8 +105,13 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             {
                 return createSymbol(ForLoop(symbol_groups), "forloop");
             }
+        },
+        {"vector",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(Vector(symbol_groups), "forloop");
+            }
         }
-
    };
 
 // Standard grammar constructor (From list of files)

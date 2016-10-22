@@ -4,3 +4,4 @@
 #include "functioncall.hpp"
 #include "conditional.hpp"
 #include "forloop.hpp"
+#include "vector.hpp"

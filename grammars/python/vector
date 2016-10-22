@@ -1,0 +1,5 @@
+punctuator [
+optional link expression
+many inOrder !punctuator , link expression
+punctuator ]
+2 3

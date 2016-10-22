@@ -12,7 +12,8 @@ int main()
                             "conditional", 
                             "boolexpression", 
                             "boolvalue",
-                            "function", 
+                            "function",
+                            "vector", 
                             "forloop",
                             "statement"}, "grammars/python/");
 

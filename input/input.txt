@@ -32,3 +32,5 @@ print(f(g(h(2))) * h(200))
 for i in range(10):
 print(i)
 end
+
+v = [2, 3]
