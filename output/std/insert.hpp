@@ -1,7 +1,8 @@
-#include <vector>
+#include <unordered_map>
 
-template <typename T>
-void insert(std::vector<T>& v, const T& t)
+template <typename T1, typename T2>
+void insert(std::unordered_map<T1, T2>& d, const T1& t1, const T2& t2)
 {
-    v.push_back(t);
+    d[t1] = t2;
 }
+

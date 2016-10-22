@@ -14,6 +14,11 @@ fi
 cd ..
 ./build/progtran
 
+if [[ $? != 0 ]];
+then
+    exit 1
+fi
+
 echo ""
 echo "Running compiled program:"
 echo ""

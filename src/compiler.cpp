@@ -13,7 +13,8 @@ int main()
                             "boolexpression", 
                             "boolvalue",
                             "function",
-                            "vector", 
+                            "vector",
+                            "dictionary", 
                             "forloop",
                             "statement"}, "grammars/python/");
 

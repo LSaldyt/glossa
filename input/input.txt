@@ -34,8 +34,10 @@ for i in range(10):
 end
 
 v = [2, 3]
-insert(v, 4);
+append(v, 4);
 
 for i in v:
     print(i)
 end
+
+d = {"a" : 1}
