@@ -14,4 +14,5 @@ print("hello world");
 print(f(g(h(2))) * h(200));
 for (auto& i : range(10)){ print(i); };
 auto v = std::vector<decltype(2)>({2, 3});;
+for (auto& i : v){ print(i); };
 }
