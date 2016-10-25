@@ -67,6 +67,8 @@ vector<T> slice(vector<T> original, int begin_offset=0, int end_offset=0)
     return vector<T>(original.begin() + begin_offset, original.end() + end_offset);
 }
 
+string sliceString(string original, int begin_offset=0, int end_offset=0);
+
 template <typename T>
 void concat(vector<T>& a, const vector<T>& b)
 {

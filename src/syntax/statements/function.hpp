@@ -13,8 +13,8 @@ namespace syntax
         vector<shared_ptr<Symbol>> body;
         shared_ptr<Symbol>         return_expression;
 
-        string representation();
-        string source(unordered_set<string>&);
-        string name();
+        virtual string representation();
+        virtual string source(unordered_set<string>&);
+        virtual string name();
     };
 }

@@ -15,7 +15,7 @@ namespace syntax
     }
     string Assignment::name()
     {
-        return identifier;
+        return "*" + identifier;
     }
     string Assignment::source(unordered_set<string>& names)
     {

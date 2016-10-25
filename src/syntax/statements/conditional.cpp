@@ -25,8 +25,8 @@ namespace syntax
     }
     string Conditional::source(unordered_set<string>& names)
     {
-        auto if_body_source   = generate(if_body);
-        auto else_body_source = generate(else_body);
+        auto if_body_source   = generate(if_body, names);
+        auto else_body_source = generate(else_body, names);
 
         string source = "if (" + condition->source(names) + "){ ";
         for (auto s : if_body_source)

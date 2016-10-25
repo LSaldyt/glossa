@@ -13,5 +13,6 @@ namespace syntax
 
         string              representation();
         string source(unordered_set<string>&);
+        string name();
     };
 }

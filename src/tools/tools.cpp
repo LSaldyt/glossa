@@ -38,4 +38,14 @@ namespace tools
         return name.c_str();
     }
     
+    string sliceString(string original, int begin_offset, int end_offset)
+    {
+        auto size = original.size();
+        if (begin_offset > size or abs(end_offset) > size)
+        {
+            print("Could not slice vector of size ", size);
+            throw exception();
+        }
+        return string(original.begin() + begin_offset, original.end() + end_offset);
+    }
 }

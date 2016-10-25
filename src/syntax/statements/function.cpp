@@ -39,7 +39,7 @@ namespace syntax
     }
     string Function::name()
     {
-        return identifier;
+        return "*" + identifier;
     }
     string Function::source(unordered_set<string>& names)
     {

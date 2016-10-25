@@ -29,5 +29,9 @@ namespace syntax
         {
             return value;
         }
+        virtual string name()
+        {
+            return "none";
+        }
     };
 }

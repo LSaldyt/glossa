@@ -44,6 +44,7 @@ d = {"a" : 1}
 insert(d, "b", 2)
 
 for kv in d:
-print(first(kv))
-print(second(kv))
+    print(first(kv))
+    print(second(kv))
 end
+
