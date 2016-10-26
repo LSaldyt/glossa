@@ -16,6 +16,7 @@ int main()
                             "vector",
                             "dictionary", 
                             "forloop",
+                            "class",
                             "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");
@@ -63,9 +64,9 @@ int main()
     }
 
     vector<string> output;
-    output.push_back("#include \"std/std.hpp\"\nint main(){");
+    output.push_back("#include \"std/std.hpp\"\n");//int main(){");
     concat(output, generate(symbols));
-    output.push_back("}");
+    //output.push_back("}");
     writeFile(output, "output/output.cpp");
 }
 
