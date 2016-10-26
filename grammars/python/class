@@ -1,0 +1,9 @@
+keyword class
+identifier wildcard
+punctuator (
+optional identifier wildcard
+punctuator )
+punctuator :
+many anyOf link function link assignment
+keyword end
+1 sep 3 sep 6

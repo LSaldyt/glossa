@@ -39,10 +39,19 @@ namespace syntax
     }
     string Function::name()
     {
-        return identifier;
+        return "*" + identifier;
     }
     string Function::source(unordered_set<string>& names)
     {
+        /*
+        template<class T, class U>
+        auto add(T t, U u) -> decltype(t + u) // the return type is the type of operator+(T, U)
+        {
+            return t + u;
+        }
+        */
+
+        //string templateline = "template <";
         string arglist = "";
         for (int i =0; i < argnames.size(); i++)
         { 
@@ -53,11 +62,15 @@ namespace syntax
             }
         }
         string body_source = "";
-        for (auto statement : body)
+        for (auto statement : generate(body))
         {
-            body_source += statement->source(names);
+            body_source += statement;
         }
 
-        return "auto " + identifier + " = [=](" + arglist + "){" + body_source + "return " + return_expression->source(names) + "; }";
+        string return_source = return_expression->source(names);
+        print("RETURN SOURCE");
+        print(return_source);
+
+        return "auto " + identifier + "(" + arglist + ") -> decltype(" + return_source + ")\n{\n" + body_source + "return " + return_source + ";\n}";
     }
 }

@@ -16,6 +16,7 @@ int main()
                             "vector",
                             "dictionary", 
                             "forloop",
+                            "class",
                             "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");
@@ -52,10 +53,10 @@ int main()
         print("Joined Token: " + jt.type + ", " + jt.sub_type);
     }
 
-    auto annotated_symbols = grammar.constructFrom(joined_tokens);
+    auto symbols = grammar.constructFrom(joined_tokens);
 
     print("\nAbstract syntax tree:\n");
-    for (auto s : annotated_symbols)
+    for (auto s : symbols)
     {
         print("Symbol annotated as \"" + s->annotation + "\" ");
         print(s->representation());
@@ -63,9 +64,9 @@ int main()
     }
 
     vector<string> output;
-    output.push_back("#include \"std/std.hpp\"\nint main(){");
-    concat(output, generate(annotated_symbols));
-    output.push_back("}");
+    output.push_back("#include \"std/std.hpp\"\n");//int main(){");
+    concat(output, generate(symbols));
+    //output.push_back("}");
     writeFile(output, "output/output.cpp");
 }
 

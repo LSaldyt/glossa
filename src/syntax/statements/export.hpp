@@ -6,3 +6,4 @@
 #include "forloop.hpp"
 #include "vector.hpp"
 #include "dictionary.hpp"
+#include "class.hpp"
