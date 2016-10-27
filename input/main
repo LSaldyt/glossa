@@ -1,14 +1,5 @@
 import std
-
-class Animal():
-    sound():
-        return "none" 
-end
-
-class Dog(Animal):
-    sound():
-        return "bark"
-end
+import dog
 
 main():
     print("Running Main")

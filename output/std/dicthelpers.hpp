@@ -1,3 +1,4 @@
+#pragma once
 #include <unordered_map>
 
 template <typename T1, typename T2>

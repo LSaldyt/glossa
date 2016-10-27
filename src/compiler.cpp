@@ -38,7 +38,7 @@ int main()
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;
 
-    vector<string> files = {"main"};
+    vector<string> files = {"main", "animal", "dog"};
     for (auto& file : files)
     {
         compile(file, grammar, "input", "output");

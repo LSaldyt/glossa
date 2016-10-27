@@ -3,19 +3,8 @@
 #include "std.hpp"
 ;
 
-class Animal
-{
-auto sound() -> decltype("none"s);
+#include "dog.hpp"
 ;
-
-};
-
-class Dog : public Animal
-{
-auto sound() -> decltype("bark"s);
-;
-
-};
 
 auto main() -> decltype(0);
 ;
