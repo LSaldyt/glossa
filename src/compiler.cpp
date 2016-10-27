@@ -16,6 +16,7 @@ int main()
                             "dictionary", 
                             "forloop",
                             "class",
+                            "import",
                             "statement"}, "grammars/python/");
 
     auto operators = readFile("grammars/python/operators");

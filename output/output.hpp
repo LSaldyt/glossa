@@ -1,6 +1,8 @@
 #pragma once
 
-#include "std/std.hpp"
+#include "std.hpp"
+;
+
 class Animal
 {
 auto sound() -> decltype("none"s);

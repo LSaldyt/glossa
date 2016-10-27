@@ -105,6 +105,12 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             {
                 return createSymbol(Class(symbol_groups), "class");
             }
+        },
+        {"import",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(Import(symbol_groups), "import");
+            }
         }
    };
 
