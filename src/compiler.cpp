@@ -26,8 +26,8 @@ int main()
 
     LanguageTermSets term_sets;
     term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
-    term_sets.push_back(make_tuple(operators, "operator"));
     term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
+    term_sets.push_back(make_tuple(operators, "operator"));
     term_sets.push_back(make_tuple(punctuators, "punctuator"));
 
     LanguageLexers lexer_set = {

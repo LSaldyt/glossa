@@ -12,9 +12,16 @@ end
 
 main():
     print("Running Main")
-    i = 10
-    while i > 0:
-        i = i - 1
-        print(i)
+    for n in range(10):
+        i = n
+        while i > 0:
+            i = i - 1
+            if i % 2 == 0:
+                print("EVEN")
+            else:
+                print("ODD")
+            end
+            print(i)
+        end
     end
     return 0

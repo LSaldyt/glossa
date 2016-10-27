@@ -16,9 +16,13 @@ return "bark"s;
 auto main() -> decltype(0)
 {
 print("Running Main"s);
-auto i = 10;
+for (auto& n : range(10)){ auto i = n;
 while ( i > 0 ){ i = i - 1;
+if (i % 2 == 0){ print("EVEN"s);
+} else { print("ODD"s);
+};
 print(i);
+ };
  };
 return 0;
 };
