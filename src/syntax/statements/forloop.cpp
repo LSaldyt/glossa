@@ -9,11 +9,6 @@ namespace syntax
         body          = symbol_groups[2];
     }
 
-    string ForLoop::representation()
-    {
-        return "forloop";
-
-    }
     string ForLoop::source(unordered_set<string>& names)
     {
         string combined_body_source;

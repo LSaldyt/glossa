@@ -11,7 +11,6 @@ int main()
                             "functioncall", 
                             "conditional", 
                             "boolexpression", 
-                            "boolvalue",
                             "function",
                             "vector",
                             "dictionary", 
@@ -63,11 +62,11 @@ int main()
         print("");
     }
 
-    vector<string> output;
-    output.push_back("#include \"std/std.hpp\"\n");//int main(){");
-    concat(output, generate(symbols));
-    //output.push_back("}");
-    writeFile(output, "output/output.cpp");
+    auto files = generateFiles("output", symbols);
+    auto source = get<0>(files);
+    auto header = get<1>(files);
+    writeFile(source, "output/output.cpp");
+    writeFile(header, "output/output.hpp");
 }
 
 namespace compiler

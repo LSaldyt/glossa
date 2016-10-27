@@ -15,25 +15,11 @@ namespace syntax
     FunctionCall::FunctionCall() 
     {}
 
-    string FunctionCall::representation()
-    {
-        string arglist = "";
-        for (int i =0; i < args.size(); i++)
-        { 
-            arglist += args[i]->representation();
-            if (i+1 != args.size()) //If not on last iteration
-            {
-                arglist += ", ";
-            }
-        }
-        return "FunctionCall " + identifier + ": (\n\tArguments: (" + arglist + "))";
-    }
     string FunctionCall::source(unordered_set<string>& names)
     {
         string arglist = "";
         for (int i =0; i < args.size(); i++)
         { 
-            checkName(args[i]->name(), names);
             arglist += args[i]->source(names);
             if (i+1 != args.size()) //If not on last iteration
             {

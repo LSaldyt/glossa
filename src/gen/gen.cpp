@@ -3,6 +3,20 @@
 
 namespace gen
 {
+    tuple<vector<string>, vector<string>> generateFiles(string filename, vector<shared_ptr<Symbol>>& symbols)
+    {
+        vector<string> header;
+        header.push_back("#pragma once\n");
+        concat(header, generateHeader(symbols));
+
+        vector<string> source;
+        source.push_back("#include \"" + filename + ".hpp\""); 
+        source.push_back("#include \"std/std.hpp\"");
+        concat(source, generate(symbols));
+
+        return make_tuple(source, header);
+    }
+
     vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names)
     {
         vector<string> output;
@@ -25,36 +39,35 @@ namespace gen
                     names.insert(name);
                     print(names.size());
                 }
-                else
-                {
-                    checkName(name, names);
-                }
             }
         }
         return output;
     }
 
-    void checkName(string name, const unordered_set<string>& names)
+    vector<string> generateHeader(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names)
     {
-        if (name != "none")
+        vector<string> output;
+        output.reserve(symbols.size());
+
+        unordered_set<string> names(outer_names);
+
+        for (auto s : symbols)
         {
-            auto got = names.find(name);
-            if ( got == names.end() )
-            {
-                for (auto n : names)
+            print("Generated:");
+            print(s->header(names) + ";");
+            output.push_back(s->header(names) + ";\n");
+            auto name = s->name();
+            if (name != "none")
+            { 
+                if (name[0] == '*')
                 {
-                    print("Scope contained: " + n);
+                    name = sliceString(name, 1);
+                    print("Added name to scope: " + name);
+                    names.insert(name);
+                    print(names.size());
                 }
-                throw named_exception(name + " is not defined");
-            }
-            else
-            {
-                print("Using defined name " + name);
             }
         }
-        else
-        {
-            print("no name defined");
-        }
+        return output;
     }
 }

@@ -10,7 +10,6 @@ namespace syntax
         string identifier;
         shared_ptr<Symbol> value;
 
-        string representation();
         string source(unordered_set<string>&);
         string name();
     };

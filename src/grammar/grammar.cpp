@@ -58,24 +58,6 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return createSymbol(Conditional(symbol_groups), "conditional");
             }
         },
-        {"boolvalue",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                auto symbols = symbol_groups[0];
-                if (symbols.size() == 1)
-                {
-                    if (symbols[0]->annotation == "symbol")
-                    {
-                        annotateSymbol(symbols[0], "boolvalue");
-                    }
-                    return symbols[0];
-                }
-                else
-                {
-                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
-                }
-            }
-        },
         {"boolexpression",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {

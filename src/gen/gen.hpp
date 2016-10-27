@@ -13,6 +13,8 @@ namespace gen
 using namespace syntax;
 using namespace tools;
 
+tuple<vector<string>, vector<string>> generateFiles(string filename, vector<shared_ptr<Symbol>>& symbols);
+
 vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names=unordered_set<string>());
-void checkName(string name, const unordered_set<string>& names);
+vector<string> generateHeader(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names=unordered_set<string>());
 }

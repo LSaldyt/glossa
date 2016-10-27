@@ -11,5 +11,6 @@ struct Class : public Symbol
 
     Class(vector<vector<shared_ptr<Symbol>>> symbol_groups);
     string source(unordered_set<string>& names);
+    string header(unordered_set<string>& names);
 };
 }

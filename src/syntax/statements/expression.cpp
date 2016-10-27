@@ -20,15 +20,6 @@ namespace syntax
         }
     }
 
-    string Expression::representation()
-    {
-        string generated = "Expression: " + base->representation();
-        for (auto e : extensions)
-        {
-            generated += (" " + get<0>(e)->representation() + " " + get<1>(e)->representation());
-        }
-        return generated;
-    }
     string Expression::source(unordered_set<string>& names)
     {
         string generated = base->source(names);

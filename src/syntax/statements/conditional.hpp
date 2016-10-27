@@ -11,7 +11,6 @@ namespace syntax
         vector<shared_ptr<Symbol>> if_body;
         vector<shared_ptr<Symbol>> else_body;
 
-        string representation();
         string source(unordered_set<string>&);
     };
 }

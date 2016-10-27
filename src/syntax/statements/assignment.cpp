@@ -9,10 +9,6 @@ namespace syntax
         value        = symbols[1];
     }
 
-    string Assignment::representation()
-    {
-        return ("Assignment: (" + identifier + " = " + value->representation() + ")");
-    }
     string Assignment::name()
     {
         return "*" + identifier;

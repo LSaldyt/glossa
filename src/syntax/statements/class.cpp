@@ -17,6 +17,25 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     body = symbol_groups[2];
 }
 
+string Class::header(unordered_set<string>& names)
+{
+    string representation = "";
+    representation += "class ";
+    representation += name;
+    if (inheritance != "none")
+    {
+        representation += " : public ";
+        representation += inheritance;
+    }
+    representation += "\n{\n";
+    for (auto element : generate(body))
+    {
+        representation += element;
+    }
+    representation += "\n}";
+    return representation;
+}
+
 string Class::source(unordered_set<string>& names)
 {
     string representation = "";

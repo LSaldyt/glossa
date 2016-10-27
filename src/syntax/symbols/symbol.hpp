@@ -8,6 +8,7 @@ namespace syntax
     {
         virtual string representation();
         virtual string source(unordered_set<string>& generated);
+        virtual string header(unordered_set<string>& generated);
         virtual string name();
 
         string annotation = "symbol";

@@ -11,7 +11,6 @@ namespace syntax
         shared_ptr<Symbol> base;
         vector<tuple<shared_ptr<Symbol>, shared_ptr<Symbol>>> extensions;
 
-        string representation();
         string source(unordered_set<string>&);
     };
 }
