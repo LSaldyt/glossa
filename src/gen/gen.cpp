@@ -7,17 +7,17 @@ namespace gen
     {
         vector<string> header;
         header.push_back("#pragma once\n");
+        header.push_back("#include \"std/std.hpp\"");
         concat(header, generateHeader(symbols));
 
         vector<string> source;
         source.push_back("#include \"" + filename + ".hpp\""); 
-        source.push_back("#include \"std/std.hpp\"");
         concat(source, generate(symbols));
 
         return make_tuple(source, header);
     }
 
-    vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names)
+    vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names, string n_space)
     {
         vector<string> output;
         output.reserve(symbols.size());
@@ -27,8 +27,8 @@ namespace gen
         for (auto s : symbols)
         {
             print("Generated:");
-            print(s->source(names) + ";");
-            output.push_back(s->source(names) + ";\n");
+            print(s->source(names, n_space) + ";");
+            output.push_back(s->source(names, n_space) + ";\n");
             auto name = s->name();
             if (name != "none")
             { 

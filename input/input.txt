@@ -4,6 +4,11 @@ class Animal():
         return "none" 
 end
 
+class Dog(Animal):
+    sound():
+        return "bark"
+end
+
 main():
     if true:
         print("Hello World")

@@ -5,6 +5,7 @@ namespace lex
     // Convert a sentence to a vector of tokens based off of a defined language
     Tokens lexWith(const string& sentence, const Language& language)
     {
+        print("Seperating sentence");
         // Seperate sentence..
         auto terms  = seperate(sentence, language.seperators);
 

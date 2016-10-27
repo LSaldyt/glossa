@@ -15,7 +15,7 @@ namespace syntax
     FunctionCall::FunctionCall() 
     {}
 
-    string FunctionCall::source(unordered_set<string>& names)
+    string FunctionCall::source(unordered_set<string>& names, string n_space)
     {
         string arglist = "";
         for (int i =0; i < args.size(); i++)

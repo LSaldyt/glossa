@@ -7,8 +7,8 @@ namespace syntax
     struct Symbol
     {
         virtual string representation();
-        virtual string source(unordered_set<string>& generated);
-        virtual string header(unordered_set<string>& generated);
+        virtual string source(unordered_set<string>& generated, string n_space="");
+        virtual string header(unordered_set<string>& generated, string n_space="");
         virtual string name();
 
         string annotation = "symbol";

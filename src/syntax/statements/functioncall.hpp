@@ -11,7 +11,7 @@ namespace syntax
         string              identifier;
         vector<shared_ptr<Symbol>> args;
 
-        string source(unordered_set<string>&);
+        string source(unordered_set<string>&, string n_space="");
         string name();
     };
 }

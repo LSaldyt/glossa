@@ -8,7 +8,7 @@ namespace syntax
         {
             return "String: \"" + value + "\"";
         }
-        string source(unordered_set<string>& names)
+        string source(unordered_set<string>& names, string n_space="")
         {
             return "\"" + value + "\"s";
         }

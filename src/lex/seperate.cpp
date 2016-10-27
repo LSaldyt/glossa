@@ -49,7 +49,7 @@ namespace lex
         // push the seperator into terms if it should be kept (bool second tuple field)
         // repeat until no sentence is left, push remaining sentence into terms
         // (Seperate a sentence into terms in <O(n^2)? time)
-        for(auto it = sentence.begin(); it != sentence.end(); ++it)
+        for(auto it = sentence.begin(); it < sentence.end(); ++it)
         {
             // Special case for strings (save some work)
             if (*it == '"')
@@ -60,13 +60,15 @@ namespace lex
                 if (found!=string::npos) // IF there actually is a second quotation mark
                 {
                     found += 2; //Account for " characters surrounding the string
-                    terms.push_back(string(it, it + found));
+                    string content(it, it + found);
+                    terms.push_back(content);
                     current = it + found;
                     it      = it + found;
                 }
             }
             // Normal seperation
-            auto found = find_seperator(string(it, sentence.end()), seperators);
+            string remaining(it, sentence.end());
+            auto found = find_seperator(remaining, seperators);
             if(get<0>(found)) // Beginning of the remaining sentence is a seperator
             {
                 // If there is a term we have seperated, add it to terms
@@ -83,13 +85,14 @@ namespace lex
                 current = it + get<2>(found);
                 if (get<2>(found) > 0)
                 {
-                    it += get<2>(found) - 1;
+                    it += (get<2>(found) - 1);
                 }
             }
             // If there is no sentence left to seperate, push it to terms
-            else if(it+1 == sentence.end())
+            else if(it + 1 == sentence.end())
             {
-                terms.push_back(string(current, it+1));
+                string remaining(current, it + 1);
+                terms.push_back(remaining);
             }
         }
         return terms;

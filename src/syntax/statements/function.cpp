@@ -20,7 +20,7 @@ namespace syntax
     {
         return "*" + identifier;
     }
-    string Function::source(unordered_set<string>& names)
+    string Function::source(unordered_set<string>& names, string n_space)
     {
         string arglist = "";
         for (int i =0; i < argnames.size(); i++)
@@ -38,14 +38,24 @@ namespace syntax
         }
 
         string return_source = return_expression->source(names);
-        print("RETURN SOURCE");
-        print(return_source);
 
-        return "auto " + identifier + "(" + arglist + ") -> decltype(" + return_source + ")\n{\n" + body_source + "return " + return_source + ";\n}";
+        return "auto " + n_space + identifier + "(" + arglist + ") -> decltype(" + return_source + ")\n{\n" + body_source + "return " + return_source + ";\n}";
     }
 
-    string Function::header(unordered_set<string>& names)
+    string Function::header(unordered_set<string>& names, string n_space)
     {
-        return "";
+        string arglist = "";
+        for (int i =0; i < argnames.size(); i++)
+        { 
+            arglist += ("auto " + argnames[i]);
+            if (i+1 != argnames.size()) //If not on last iteration
+            {
+                arglist += ", ";
+            }
+        }
+
+        string return_source = return_expression->source(names);
+
+        return "auto " + n_space + identifier + "(" + arglist + ") -> decltype(" + return_source + ");\n";
     }
 }

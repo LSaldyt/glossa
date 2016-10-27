@@ -12,7 +12,7 @@ Dictionary::Dictionary(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     }
 }
 
-string Dictionary::source(unordered_set<string>& names)
+string Dictionary::source(unordered_set<string>& names, string n_space)
 {
     string kv_pairs = "";
     for (int i =0; i < keys.size(); i++)

@@ -9,7 +9,7 @@ namespace syntax
         else_body = symbol_groups[2];
     }
 
-    string Conditional::source(unordered_set<string>& names)
+    string Conditional::source(unordered_set<string>& names, string n_space)
     {
         auto if_body_source   = generate(if_body, names);
         auto else_body_source = generate(else_body, names);

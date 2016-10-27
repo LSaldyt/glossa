@@ -11,7 +11,7 @@ struct ForLoop : public Statement
     shared_ptr<Symbol>         loop_source;
     vector<shared_ptr<Symbol>> body;
     
-    string source(unordered_set<string>&);
+    string source(unordered_set<string>&, string n_space="");
 };
 
 }

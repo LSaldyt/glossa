@@ -9,7 +9,7 @@ namespace syntax
         body          = symbol_groups[2];
     }
 
-    string ForLoop::source(unordered_set<string>& names)
+    string ForLoop::source(unordered_set<string>& names, string n_space)
     {
         string combined_body_source;
         auto body_source   = generate(body);

@@ -20,7 +20,7 @@ namespace syntax
         }
     }
 
-    string Expression::source(unordered_set<string>& names)
+    string Expression::source(unordered_set<string>& names, string n_space)
     {
         string generated = base->source(names);
         for (auto e : extensions)

@@ -13,7 +13,7 @@ namespace syntax
     {
         return "*" + identifier;
     }
-    string Assignment::source(unordered_set<string>& names)
+    string Assignment::source(unordered_set<string>& names, string n_space)
     {
         if (names.find(identifier) == names.end())
         {

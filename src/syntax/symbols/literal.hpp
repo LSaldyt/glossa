@@ -12,7 +12,7 @@ namespace syntax
         {
             value = set_value; 
         }
-        virtual string source(unordered_set<string>& names)
+        virtual string source(unordered_set<string>& names, string n_space="")
         {
             return std::to_string(value);
         }
@@ -25,7 +25,7 @@ namespace syntax
         StringLiteral(string set_value) : value(set_value)
         {
         }
-        virtual string source(unordered_set<string>& names)
+        virtual string source(unordered_set<string>& names, string n_space="")
         {
             return value;
         }

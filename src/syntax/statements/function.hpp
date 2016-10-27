@@ -13,8 +13,8 @@ namespace syntax
         vector<shared_ptr<Symbol>> body;
         shared_ptr<Symbol>         return_expression;
 
-        string source(unordered_set<string>&);
-        string header(unordered_set<string>&);
+        string source(unordered_set<string>&, string n_space="");
+        string header(unordered_set<string>&, string n_space="");
         string name();
     };
 }
