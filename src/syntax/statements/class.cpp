@@ -27,7 +27,7 @@ string Class::header(unordered_set<string>& names, string n_space)
         representation += " : public ";
         representation += inheritance;
     }
-    representation += "\n{\n";
+    representation += "\n{\npublic:\n";
     for (auto element : generateHeader(body, names))
     {
         representation += element;

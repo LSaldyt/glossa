@@ -5,6 +5,7 @@
 
 class Animal
 {
+public:
 auto sound() -> decltype("none"s);
 ;
 

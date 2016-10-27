@@ -9,3 +9,4 @@
 #include "class.hpp"
 #include "import.hpp"
 #include "whileloop.hpp"
+#include "memberaccess.hpp"

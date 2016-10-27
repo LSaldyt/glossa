@@ -3,6 +3,10 @@ import dog
 
 main():
     print("Running Main")
+
+    d = Dog()
+    print(d.sound())
+
     for n in [10, 5]:
         i = n
         while i > 0:
@@ -15,4 +19,5 @@ main():
             print(i)
         end
     end
+
     return 0

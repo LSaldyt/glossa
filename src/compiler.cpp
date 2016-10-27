@@ -16,6 +16,7 @@ int main()
                             "dictionary", 
                             "forloop",
                             "whileloop",
+                            "memberaccess",
                             "class",
                             "import",
                             "statement"}, "grammars/python/");

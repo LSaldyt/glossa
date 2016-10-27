@@ -88,6 +88,12 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return createSymbol(ForLoop(symbol_groups), "forloop");
             }
         },
+        {"memberaccess",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(MemberAccess(symbol_groups), "memberaccess");
+            }
+        },
         {"whileloop",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
