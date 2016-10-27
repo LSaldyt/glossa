@@ -12,7 +12,7 @@ end
 
 main():
     print("Running Main")
-    for n in range(10):
+    for n in [10, 5]:
         i = n
         while i > 0:
             i = i - 1
