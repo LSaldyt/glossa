@@ -1,4 +1,4 @@
-#include "output.hpp"
+#include "program.hpp"
 ;
 
 auto Animal::sound() -> decltype("none"s)

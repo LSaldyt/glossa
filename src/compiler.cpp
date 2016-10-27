@@ -19,15 +19,9 @@ int main()
                             "import",
                             "statement"}, "grammars/python/");
 
-    auto operators = readFile("grammars/python/operators");
+    auto operators        = readFile("grammars/python/operators");
     auto logicaloperators = readFile("grammars/python/logicaloperators"); 
-    auto punctuators = readFile("grammars/python/punctuators");
-
-    print("Keys:");
-    for ( auto k : grammar.keywords)
-    {
-        print(k);
-    }
+    auto punctuators      = readFile("grammars/python/punctuators");
 
     LanguageTermSets term_sets;
     term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
@@ -43,35 +37,41 @@ int main()
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;
 
-    auto content         = readFile     ("input/input.txt");
-    auto tokens          = tokenPass    (content, grammar.language); 
-    auto symbolic_tokens = symbolicPass (tokens);
-    auto joined_tokens   = join         (symbolic_tokens);
-
-    for(auto jt : joined_tokens)
-    {
-        print("Joined Token: " + jt.type + ", " + jt.sub_type);
-    }
-
-    auto symbols = grammar.constructFrom(joined_tokens);
-
-    print("\nAbstract syntax tree:\n");
-    for (auto s : symbols)
-    {
-        print("Symbol annotated as \"" + s->annotation + "\" ");
-        print(s->representation());
-        print("");
-    }
-
-    auto files = generateFiles("output", symbols);
-    auto source = get<0>(files);
-    auto header = get<1>(files);
-    writeFile(source, "output/output.cpp");
-    writeFile(header, "output/output.hpp");
+    compile("program", grammar, "input", "output");
 }
 
 namespace compiler
 {
+    void compile(string filename, Grammar& grammar, string input_directory, string output_directory)
+    {
+        auto content         = readFile     (input_directory + "/" + filename);
+        auto tokens          = tokenPass    (content, grammar.language); 
+        auto symbolic_tokens = symbolicPass (tokens);
+        auto joined_tokens   = join         (symbolic_tokens);
+
+        for(auto jt : joined_tokens)
+        {
+            print("Joined Token: " + jt.type + ", " + jt.sub_type);
+        }
+
+        auto symbols = grammar.constructFrom(joined_tokens);
+
+        print("\nAbstract syntax tree:\n");
+        for (auto s : symbols)
+        {
+            print("Symbol annotated as \"" + s->annotation + "\" ");
+            print(s->representation());
+            print("");
+        }
+
+        auto files = generateFiles(filename, symbols);
+        auto source = get<0>(files);
+        auto header = get<1>(files);
+        writeFile(source, output_directory + "/" + filename + ".cpp");
+        writeFile(header, output_directory + "/" + filename + ".hpp");
+
+    }
+
     std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)
     {
         std::vector<Tokens> tokens;
