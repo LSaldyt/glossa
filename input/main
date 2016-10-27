@@ -4,8 +4,12 @@ import dog
 main():
     print("Running Main")
 
-    d = Dog()
-    print(d.sound())
+    dogs = [Dog(), Dog()]
+    for dog in dogs:
+        print(dog.sound())
+    end
+
+    dog_tuple = <Dog(), Dog()>
 
     for n in [10, 5]:
         i = n

@@ -14,6 +14,7 @@ int main()
                             "function",
                             "vector",
                             "dictionary", 
+                            "tuple",
                             "forloop",
                             "whileloop",
                             "memberaccess",

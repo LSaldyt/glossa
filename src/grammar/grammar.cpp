@@ -106,6 +106,12 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return createSymbol(Vector(symbol_groups), "forloop");
             }
         },
+        {"tuple",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(Vector(symbol_groups), "forloop");
+            }
+        },
         {"dictionary",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
