@@ -15,8 +15,8 @@ namespace syntax
         return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
     };
     const auto keywordGenerator = [](string s){ return make_shared<Keyword>(Keyword(s)); };
-    const auto intGenerator = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
-    const auto puncGenerator = [](string term){ return make_shared<Punctuator>(Punctuator(term));};
+    const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
+    const auto puncGenerator    = [](string term){ return make_shared<Punctuator>(Punctuator(term));};
 
     const auto literalGenerator = [](string s)
     {

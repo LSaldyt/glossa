@@ -38,7 +38,11 @@ int main()
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;
 
-    compile("program", grammar, "input", "output");
+    vector<string> files = {"main"};
+    for (auto& file : files)
+    {
+        compile(file, grammar, "input", "output");
+    }
 }
 
 namespace compiler

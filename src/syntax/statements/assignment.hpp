@@ -5,7 +5,7 @@ namespace syntax
 {
     struct Assignment : public Statement
     {
-        Assignment(vector<vector<shared_ptr<Symbol>>>);
+        Assignment(vector<vector<shared_ptr<Symbol>>> symbol_groups);
 
         string identifier;
         shared_ptr<Symbol> value;

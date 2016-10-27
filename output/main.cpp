@@ -1,4 +1,4 @@
-#include "program.hpp"
+#include "main.hpp"
 ;
 
 auto Animal::sound() -> decltype("none"s)
@@ -15,9 +15,11 @@ return "bark"s;
 
 auto main() -> decltype(0)
 {
-if (true){ while ( 1 < 2 ){ print("Hello World"s);
+print("Running Main"s);
+auto i = 10;
+while ( i > 0 ){ i = i - 1;
+print(i);
  };
-} else { };
 return 0;
 };
 

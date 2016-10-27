@@ -11,7 +11,7 @@ namespace syntax
     string WhileLoop::source(unordered_set<string>& names, string n_space)
     {
         string combined_body_source;
-        auto body_source   = generate(body);
+        auto body_source   = generate(body, names);
         for (auto& body_element : body_source)
         {
             combined_body_source += body_element;

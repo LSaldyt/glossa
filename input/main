@@ -11,11 +11,10 @@ class Dog(Animal):
 end
 
 main():
-    if true:
-        i = 10
-        while false:
-            print("Hello World")
-        end
-    else:
+    print("Running Main")
+    i = 10
+    while i > 0:
+        i = i - 1
+        print(i)
     end
     return 0

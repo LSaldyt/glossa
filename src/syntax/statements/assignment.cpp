@@ -4,9 +4,8 @@ namespace syntax
 {
     Assignment::Assignment(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
-        auto symbols = symbol_groups[0];
-        identifier   = symbols[0]->name();
-        value        = symbols[1];
+        identifier   = symbol_groups[0][0]->name();
+        value        = symbol_groups[1][0];
     }
 
     string Assignment::name()
