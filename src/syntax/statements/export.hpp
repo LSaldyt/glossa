@@ -8,3 +8,4 @@
 #include "dictionary.hpp"
 #include "class.hpp"
 #include "import.hpp"
+#include "whileloop.hpp"

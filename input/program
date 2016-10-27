@@ -12,7 +12,10 @@ end
 
 main():
     if true:
-        print("Hello World")
+        i = 10
+        while false:
+            print("Hello World")
+        end
     else:
     end
     return 0

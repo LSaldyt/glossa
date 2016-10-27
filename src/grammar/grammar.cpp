@@ -88,6 +88,12 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return createSymbol(ForLoop(symbol_groups), "forloop");
             }
         },
+        {"whileloop",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(WhileLoop(symbol_groups), "whileloop");
+            }
+        },
         {"vector",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {

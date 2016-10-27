@@ -15,7 +15,8 @@ return "bark"s;
 
 auto main() -> decltype(0)
 {
-if (true){ print("Hello World"s);
+if (true){ while ( 1 < 2 ){ print("Hello World"s);
+ };
 } else { };
 return 0;
 };

@@ -15,6 +15,7 @@ int main()
                             "vector",
                             "dictionary", 
                             "forloop",
+                            "whileloop",
                             "class",
                             "import",
                             "statement"}, "grammars/python/");
