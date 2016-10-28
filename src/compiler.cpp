@@ -1,7 +1,7 @@
 #include "compiler.hpp"
 
 
-int main()
+int main(int argc, char* argv[])
 {
     using namespace compiler;
 
@@ -40,7 +40,17 @@ int main()
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;
 
-    vector<string> files = {"main", "animal", "dog"};
+    vector<string> files;
+    string input_directory  = "";
+    string output_directory = "";
+
+    if (argc > 1)
+    {
+        for (int i = 1; i < argc; i++)
+        {
+            files.push_back(argv[i]);
+        }
+    }
     for (auto& file : files)
     {
         compile(file, grammar, "input", "output");

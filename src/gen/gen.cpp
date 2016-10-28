@@ -7,6 +7,7 @@ namespace gen
     {
         vector<string> header;
         header.push_back("#pragma once\n");
+        header.push_back("#include \"../std/std.hpp\"");
         concat(header, generateHeader(symbols));
 
         vector<string> source;

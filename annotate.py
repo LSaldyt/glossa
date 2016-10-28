@@ -27,5 +27,5 @@ with open(filename, 'r') as content:
 if lastIndent > 0:
     annotated.append('end')
 
-with open(filename + '.annotated', 'w') as output:
+with open(filename, 'w') as output:
     output.write('\n'.join(annotated))

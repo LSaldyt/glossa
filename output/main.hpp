@@ -1,8 +1,6 @@
 #pragma once
 
-#include "std.hpp"
-;
-
+#include "../std/std.hpp"
 #include "dog.hpp"
 ;
 
