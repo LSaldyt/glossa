@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     {
         compile(file, grammar, "input", "output");
     }
+    print("Compilation finished");
 }
 
 namespace compiler

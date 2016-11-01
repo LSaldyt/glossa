@@ -146,15 +146,28 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
     vector<shared_ptr<Symbol>> annotated_symbols;
 
-    // Consumed all tokens
-    while (tokens.size() > 0)
+    try 
     {
-        // Tag groups of tokens as certain language constructs
-        auto result = identify(tokens);
-        print("Identified tokens as: " + get<0>(result));
-        // Build the language construct
-        auto constructed = construct(get<0>(result), get<1>(result)); 
-        annotated_symbols.push_back(constructed);
+        // Consumed all tokens
+        while (tokens.size() > 0)
+        {
+            // Tag groups of tokens as certain language constructs
+            auto result = identify(tokens);
+            print("Identified tokens as: " + get<0>(result));
+            // Build the language construct
+            auto constructed = construct(get<0>(result), get<1>(result)); 
+            annotated_symbols.push_back(constructed);
+        }
+    } 
+    catch (named_exception &failure) 
+    {
+        unordered_set<string> names;
+        print("Generated:");
+        for (auto& s : annotated_symbols)
+        {
+            print(s->source(names));
+        }
+        throw; 
     }
 
     return annotated_symbols;

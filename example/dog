@@ -3,4 +3,3 @@ import animal
 class Dog(Animal):
     sound():
         return "bark"
-end

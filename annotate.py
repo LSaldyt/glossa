@@ -16,15 +16,24 @@ filename   = sys.argv[1]
 annotated  = []
 lastIndent = 0
 
-with open(filename, 'r') as content:
-    for line in content:
-        indent = get_indent(line)
-        annotated.append(line)
-        if indent < lastIndent:
-            annotated.append('end')
-        lastIndent = indent
+with open(filename, 'r') as unannotated:
+    content = [line for line in unannotated]
 
-if lastIndent > 0:
+for line in content:
+    if line == '\n':
+        continue
+    print(line)
+    indent = get_indent(line)
+    print('indent: %s' % indent)
+    if indent < lastIndent:
+        diff = lastIndent - indent
+        print('diff: %s' % diff)
+        for i in range(diff):
+            annotated.append('end')
+    annotated.append(line)
+    lastIndent = indent
+
+for i in range(lastIndent):
     annotated.append('end')
 
 with open(filename, 'w') as output:

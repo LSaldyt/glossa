@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 import subprocess, shutil, sys, os
 
-# Build the compiler
+def run(commands):
+    subprocess.run(commands, check=True)
+
+def cleardir(dirname):
+    for filename in os.listdir(dirname):
+        filepath = os.path.join(dirname, filename)
+        if os.path.isfile(filepath):
+            os.unlink(filepath)
+
+# Build the compiler and test it
 os.chdir('build')
-subprocess.run(['cmake', '..'])
-subprocess.run(['make'])
+run(['cmake', '..'])
+run(['make'])
 os.chdir('..')
+run(['./build/progtrantest'])
 
 # Build the list of input files
 if len(sys.argv) == 1:
@@ -19,17 +29,21 @@ for dirpath, dnames, filenames in os.walk(directory):
     for filename in filenames:
         filepath    = os.path.join(dirpath, filename)
         filename, _ = os.path.splitext(filename)
-        inputfiles.append(filename)
-
         inputfile   = os.path.join('input/', filename)
+
+        inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
         shutil.copyfile(filepath, inputfile)
-        #subprocess.run(['./annotate.py', inputfile])
+        run(['./annotate.py', inputfile])
 
+run(['./build/progtran'] + inputfiles)
 
-# Clear output directory
-for filename in os.listdir('output'):
-    filepath = os.path.join('output', filename)
-    if os.path.isfile(filepath):
-        os.unlink(filepath)
+# Compile output c++ code
+os.chdir('output')
+subprocess.run('g++ -std=c++14 *.cpp ../std/*.cpp', shell=True)
+run(['./a.out'])
+os.chdir('..')
 
-subprocess.run(['./build/progtran'] + inputfiles)
+# Cleanup
+cleardir('output')
+cleardir('input')
+
