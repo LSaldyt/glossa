@@ -1,5 +1,8 @@
 import dog
 
+f(x):
+    print(x)
+
 main():
     print("Running Main")
     dogs = [Dog(), Dog()]

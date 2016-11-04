@@ -7,9 +7,5 @@ auto Animal::f(auto x) -> decltype(x * 2)
 {
 return x * 2;
 };
-auto Animal::Animal() -> decltype(0)
-{
-return 0;
-};
 ;
 

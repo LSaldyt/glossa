@@ -4,6 +4,7 @@
 #include "dog.hpp"
 ;
 
-auto main() -> decltype(0)
-;
+void f(auto x);
+
+auto main() -> decltype(0);
 

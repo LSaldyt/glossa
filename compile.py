@@ -2,7 +2,11 @@
 import subprocess, shutil, sys, os
 
 def run(commands):
-    subprocess.run(commands, check=True)
+    try:
+        subprocess.run(commands, check=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        raise
 
 def cleardir(dirname):
     for filename in os.listdir(dirname):
@@ -35,6 +39,7 @@ for dirpath, dnames, filenames in os.walk(directory):
         shutil.copyfile(filepath, inputfile)
         run(['./annotate.py', inputfile])
 
+print('Running files: %s' % '\n'.join(inputfiles))
 run(['./build/progtran'] + inputfiles)
 
 # Compile output c++ code

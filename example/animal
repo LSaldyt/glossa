@@ -6,5 +6,3 @@ class Animal():
     f(x):
         return x * 2
 
-    __init__():
-        return 0

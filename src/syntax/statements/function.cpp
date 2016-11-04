@@ -14,7 +14,11 @@ namespace syntax
             argnames.push_back(argname->name());
         }
         body = symbol_groups[2];
-        return_expression = symbol_groups[3][0];
+        is_void = symbol_groups[3].empty();
+        if (not is_void)
+        {
+            return_expression = symbol_groups[3][0];
+        }
     }
     string Function::name()
     {
@@ -37,9 +41,33 @@ namespace syntax
             body_source += statement;
         }
 
-        string return_source = return_expression->source(names);
+        string return_source = "";
+        if (not is_void)
+        {
+            return_source = return_expression->source(names);
+        }
 
-        return "auto " + n_space + identifier + "(" + arglist + ") -> decltype(" + return_source + ")\n{\n" + body_source + "return " + return_source + ";\n}";
+        string function_source = "";
+        if (not is_void)
+        {
+            function_source += "auto ";
+        }
+        else
+        {
+            function_source += "void ";
+        }
+        function_source += (n_space + identifier + "(" + arglist + ")");
+        if (not is_void)
+        {
+            function_source += (" -> decltype(" + return_source + ")");
+        }
+        function_source += ("\n{\n" + body_source);
+        if (not is_void)
+        {
+            function_source += ("return " + return_source + ";");
+        }
+        function_source += "\n}";
+        return function_source;
     }
 
     string Function::header(unordered_set<string>& names, string n_space)
@@ -54,8 +82,26 @@ namespace syntax
             }
         }
 
-        string return_source = return_expression->source(names);
+        string return_source = "";
+        if (not is_void)
+        {
+            return_source = return_expression->source(names);
+        }
 
-        return "auto " + n_space + identifier + "(" + arglist + ") -> decltype(" + return_source + ")\n";
+        string function_source = "";
+        if (not is_void)
+        {
+            function_source += "auto ";
+        }
+        else
+        {
+            function_source += "void ";
+        }
+        function_source += (n_space + identifier + "(" + arglist + ")");
+        if (not is_void)
+        {
+            function_source += (" -> decltype(" + return_source + ")");
+        }
+        return function_source;
     }
 }

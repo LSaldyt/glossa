@@ -1,6 +1,12 @@
 #include "main.hpp"
 ;
 
+void f(auto x)
+{
+print(x);
+
+};
+
 auto main() -> decltype(0)
 {
 print("Running Main"s);

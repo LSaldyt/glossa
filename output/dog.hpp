@@ -7,8 +7,7 @@
 class Dog : public Animal
 {
 public:
-auto sound() -> decltype("bark"s)
-;
+auto sound() -> decltype("bark"s);
 
 };
 
