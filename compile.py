@@ -44,6 +44,6 @@ run(['./a.out'])
 os.chdir('..')
 
 # Cleanup
-cleardir('output')
+#cleardir('output')
 cleardir('input')
 

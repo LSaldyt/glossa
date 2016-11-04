@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     LanguageLexers lexer_set = {
         LanguageLexer(digits, "int", "literal", 3),
         LanguageLexer(startswith("\""), "string", "literal", 1),
-        LanguageLexer(alphas, "identifier", "identifier", 3)};
+        LanguageLexer(identifiers, "identifier", "identifier", 3)};
 
     Language test_language(term_sets, lexer_set);
     grammar.language = test_language;

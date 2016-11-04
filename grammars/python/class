@@ -4,6 +4,6 @@ punctuator (
 optional identifier wildcard
 punctuator )
 punctuator :
-many anyOf link function link assignment
+many anyOf link function link statement 
 keyword end
 1 sep 3 sep 6

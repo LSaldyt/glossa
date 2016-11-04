@@ -180,4 +180,5 @@ namespace match
     const auto puncts = singleTemplate<string>(is_puncts);
     const auto uppers = singleTemplate<string>(is_uppers);
     const auto lowers = singleTemplate<string>(is_lowers);
+    const auto identifiers = singleTemplate<string>(is_identifiers);
 }

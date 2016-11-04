@@ -43,6 +43,12 @@ string Class::source(unordered_set<string>& names, string n_space)
     {
         representation += element;
     }
+    size_t start_pos = 0;
+    while((start_pos = representation.find("__init__", start_pos)) != std::string::npos) 
+    {
+        representation.replace(start_pos, 8, name); // Replace __init__ function with classname
+        start_pos += name.length(); 
+    }
     return representation;
 }
 

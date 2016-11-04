@@ -24,3 +24,8 @@ bool is_lowers(const std::string &str)
 {
     return all_of(str.begin(), str.end(), ::islower); // C++11
 }
+
+bool is_identifiers(const std::string &str)
+{
+    return all_of(str.begin(), str.end(), [](auto c){return isalpha(c) or c == '_';});
+}

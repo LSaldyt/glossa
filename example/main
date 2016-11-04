@@ -6,7 +6,6 @@ main():
     for dog in dogs:
         print(dog.sound())
 
-    dog_tuple = <Dog(), Dog()>
     for n in [10, 5]:
         i = n
         while i > 0:
