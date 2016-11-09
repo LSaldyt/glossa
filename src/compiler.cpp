@@ -19,6 +19,8 @@ int main(int argc, char* argv[])
                             "whileloop",
                             "memberaccess",
                             "class",
+                            "classstatement",
+                            "constructor",
                             "import",
                             "statement"}, "grammars/python/");
 

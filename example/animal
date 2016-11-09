@@ -1,8 +1,0 @@
-
-class Animal():
-    sound():
-        return "none" 
-
-    f(x):
-        return x * 2
-
