@@ -177,7 +177,7 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
         {
             // Tag groups of tokens as certain language constructs
             auto result = identify(tokens);
-            print("Identified tokens as: " + get<0>(result));
+            //print("Identified tokens as: " + get<0>(result));
             // Build the language construct
             auto constructed = construct(get<0>(result), get<1>(result)); 
             annotated_symbols.push_back(constructed);
@@ -357,8 +357,8 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         {
             // Build linked constructs immediately, meaning that information can be discarded (and further, higher-level constructions will be simpler)
             auto constructed = construct(filename, std::get<1>(result));
-            print("Built link to " + filename);
-            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename));
+            //print("Built link to " + filename);
+            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
             return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }
         else
@@ -379,7 +379,7 @@ Grammar::identify
     keys.reserve(grammar_map.size());
     for (auto kv : grammar_map)
     {
-        print("Adding grammar element to keys: " + kv.first);
+        //print("Adding grammar element to keys: " + kv.first);
         keys.push_back(kv.first);
     }
 
@@ -394,7 +394,7 @@ Grammar::identify
 
     for (auto key : keys)
     {
-        print("Attempting to identify as: " + key);
+        //print("Attempting to identify as: " + key);
 
         auto value   = grammar_map[key]; // We are certain that key is defined in the grammar_map, so this will not throw
         auto parsers = get<0>(value);
@@ -408,7 +408,7 @@ Grammar::identify
         else
         {
             // If an identification attempt fails, revert tokens to their previous state
-            print("Failed for " + key);// + " , remaining tokens were:");
+            //print("Failed for " + key);// + " , remaining tokens were:");
             /*
             unordered_set<string> names;
             for (auto& t : tokens_copy)
@@ -484,7 +484,7 @@ shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>
 // Higher-level function for constructing a symbol
 shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>> results)
 {
-    print("Constructing " + name);
+    //print("Constructing " + name);
     auto construction_indices = get<1>(grammar_map[name]);
 
     vector<shared_ptr<Symbol>> result_symbols;

@@ -71,7 +71,7 @@ namespace compiler
 
         for(auto jt : joined_tokens)
         {
-            print("Joined Token: " + jt.type + ", " + jt.sub_type);
+            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", " + jt.text);
         }
 
         auto symbols = grammar.constructFrom(joined_tokens);

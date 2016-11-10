@@ -39,7 +39,7 @@ namespace parse
             for (auto& term : result.consumed)
             {
                 print("Discarding token: " + term.type + ", " + term.sub_type);
-                term = SymbolicToken(make_shared<Symbol>(Symbol()), "discard", "discard");
+                term = SymbolicToken(make_shared<Symbol>(Symbol()), "discard", "discard", "");
             }
             return result;
         };
@@ -79,7 +79,7 @@ namespace parse
                     terms = result.remaining;
                     if (not consumed.empty())
                     {
-                        consumed.push_back(SymbolicToken(make_shared<Symbol>(Symbol()), "seperator", "seperator"));
+                        consumed.push_back(SymbolicToken(make_shared<Symbol>(Symbol()), "seperator", "seperator", ""));
                     }
                     consumed.insert(consumed.end(), result.consumed.begin(), result.consumed.end());
                 }
