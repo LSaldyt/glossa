@@ -64,15 +64,21 @@ namespace compiler
 {
     void compile(string filename, Grammar& grammar, string input_directory, string output_directory)
     {
+        print("Reading File");
         auto content         = readFile     (input_directory + "/" + filename);
+        print("Lexing terms");
         auto tokens          = tokenPass    (content, grammar.language); 
+        print("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
+        print("Joining symbolic tokens");
         auto joined_tokens   = join         (symbolic_tokens);
 
         for(auto jt : joined_tokens)
         {
             print("Joined Token: " + jt.type + ", " + jt.sub_type + ", " + jt.text);
         }
+
+        print("Constructing from grammar:");
 
         auto symbols = grammar.constructFrom(joined_tokens);
 

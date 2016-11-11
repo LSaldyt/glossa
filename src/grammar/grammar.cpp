@@ -309,6 +309,10 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     for (auto line : content)
     {
         auto terms = lex::seperate(line, {make_tuple(" ", false)});
+        for (auto t : terms)
+        {
+            print(t);
+        }
         parsers.push_back(readGrammarTerms(terms));
     }
 
@@ -392,6 +396,8 @@ Grammar::identify
                      return a_len > b_len; 
                  });
 
+    vector<string> failures;
+
     for (auto key : keys)
     {
         //print("Attempting to identify as: " + key);
@@ -402,23 +408,23 @@ Grammar::identify
 
         if (get<0>(result))
         {
+            print("Identified " + key);
             tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
             return make_tuple(key, get<1>(result));
         }
         else
         {
             // If an identification attempt fails, revert tokens to their previous state
-            //print("Failed for " + key);// + " , remaining tokens were:");
-            /*
-            unordered_set<string> names;
-            for (auto& t : tokens_copy)
-            {
-                print("\"" + t.value->source(names) + "\"");
-            }
-            */
+            failures.push_back(key);
             tokens_copy = tokens;
         }
     }
+
+    /*print("Failed for");
+    for (auto f : failures)
+    {
+        print(f);
+    }*/
 
     throw named_exception("Could not identify tokens");
 }

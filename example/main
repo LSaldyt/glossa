@@ -1,4 +1,3 @@
-
 class Animal():
     __init__():
         print("Creating Animal")

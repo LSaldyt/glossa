@@ -1,4 +1,4 @@
-identifier __init__ 
+keyword __init__ 
 punctuator (
 optional identifier wildcard
 many inOrder !punctuator , identifier wildcard
@@ -6,4 +6,4 @@ punctuator )
 punctuator :
 many link statement
 keyword end
-2 3 sep 6 
+2 3 sep 6

@@ -4,6 +4,7 @@
 class Animal
 {
 public:
+//Constructor;
 
 };
 
