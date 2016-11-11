@@ -15,7 +15,6 @@ namespace syntax
     }
     string Constructor::source(unordered_set<string>& names, string n_space)
     {
-        return "//Constructor";
         string arglist = "";
         for (int i =0; i < argnames.size(); i++)
         { 
@@ -39,7 +38,6 @@ namespace syntax
 
     string Constructor::header(unordered_set<string>& names, string n_space)
     {
-        return "//Constructor";
         string arglist = "";
         for (int i =0; i < argnames.size(); i++)
         { 

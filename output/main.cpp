@@ -1,5 +1,9 @@
 #include "main.hpp"
-//Constructor;
+Animal::Animal()
+{
+print("Creating Animal"s);
+
+};
 ;
 
 auto main() -> decltype(0)
