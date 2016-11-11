@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
                             "class",
                             "classstatement",
                             "constructor",
+                            "memberinit",
                             "import",
                             "statement"}, "grammars/python/");
 

@@ -28,6 +28,8 @@ string Class::header(unordered_set<string>& names, string n_space)
         representation += inheritance;
     }
     representation += "\n{\npublic:\n";
+    representation += "std::tuple<> __members;\n";
+    representation += "std::unordered_map<std::string, int> __access_map;\n";
     for (auto element : generateHeader(body, names))
     {
         representation += element;

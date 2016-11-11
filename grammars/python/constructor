@@ -4,6 +4,6 @@ optional identifier wildcard
 many inOrder !punctuator , identifier wildcard
 punctuator )
 punctuator :
-many link statement
+many anyOf link statement link memberinit
 keyword end
 2 3 sep 6
