@@ -4,14 +4,6 @@
 class Animal
 {
 public:
-Animal();auto sound() -> decltype("none"s);
-
-};
-
-class Dog : public Animal
-{
-public:
-Dog();auto sound() -> decltype("bark"s);
 
 };
 

@@ -11,5 +11,6 @@ namespace syntax
         shared_ptr<Symbol> value;
 
         string source(unordered_set<string>&, string n_space="");
+        string header(unordered_set<string>&, string n_space="");
     };
 }

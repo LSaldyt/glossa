@@ -14,8 +14,9 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
         inheritance = "none";
     }
-    constructor = symbol_groups[2][0];
-    body = symbol_groups[3];
+    //auto constructor_args = symbol_groups[2];
+    //auto constructor_body = symbol_groups[3];
+    body = symbol_groups[4];
 }
 
 string Class::header(unordered_set<string>& names, string n_space)
@@ -28,7 +29,6 @@ string Class::header(unordered_set<string>& names, string n_space)
         representation += " : public " + inheritance;
     }
     representation += "\n{\npublic:\n";
-    representation += constructor->header(names, n_space) + ";";
     for (auto element : generateHeader(body, names))
     {
         representation += element;
@@ -46,7 +46,6 @@ string Class::header(unordered_set<string>& names, string n_space)
 string Class::source(unordered_set<string>& names, string n_space)
 {
     string representation = "";
-    representation += constructor->source(names, name + "::") + ";";
     for (auto element : generate(body, names, name + "::"))
     {
         representation += element;

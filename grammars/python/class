@@ -4,7 +4,20 @@ punctuator (
 optional identifier wildcard
 punctuator )
 punctuator :
-link constructor
+
+# Class constructor begin
+
+keyword __init__ 
+punctuator (
+optional identifier wildcard
+many inOrder !punctuator , identifier wildcard
+punctuator )
+punctuator :
+many anyOf link statement link memberinit
+keyword end
+
+# Class constructor end
+
 many link function 
 keyword end
-1 sep 3 sep 6 sep 7
+1 sep 3 sep 8 9 sep 12 sep 14

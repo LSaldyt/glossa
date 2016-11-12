@@ -63,17 +63,9 @@ namespace compiler
         }
 
         print("Constructing from grammar:");
-
         auto symbols = grammar.constructFrom(joined_tokens);
 
-        print("\nAbstract syntax tree:\n");
-        for (auto s : symbols)
-        {
-            print("Symbol annotated as \"" + s->annotation + "\" ");
-            print(s->representation());
-            print("");
-        }
-
+        print("Generating code..");
         auto files = generateFiles(filename, symbols);
         auto source = get<0>(files);
         auto header = get<1>(files);

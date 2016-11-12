@@ -130,12 +130,6 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 return createSymbol(Import(symbol_groups), "import");
             }
         },
-        {"constructor",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Constructor(symbol_groups), "constructor");
-            }
-        },
         {"memberinit",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {
@@ -296,12 +290,18 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     // Convert each line to a parser
     for (auto line : content)
     {
-        auto terms = lex::seperate(line, {make_tuple(" ", false)});
-        for (auto t : terms)
+        if (line[0] != '#')
         {
-            print(t);
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            if (not terms.empty())
+            {
+                for (auto t : terms)
+                {
+                    print(t);
+                }
+                parsers.push_back(readGrammarTerms(terms));
+            }
         }
-        parsers.push_back(readGrammarTerms(terms));
     }
 
     // The last line of a grammar file describes how to construct the syntax element

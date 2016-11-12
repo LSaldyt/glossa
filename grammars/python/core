@@ -12,7 +12,6 @@ forloop
 whileloop
 memberaccess
 class
-constructor
 memberinit
 import
 statement

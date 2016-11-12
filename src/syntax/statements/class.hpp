@@ -7,7 +7,6 @@ struct Class : public Symbol
 {
     string name;
     string inheritance;
-    shared_ptr<Symbol> constructor;
     vector<shared_ptr<Symbol>> body;
 
     Class(vector<vector<shared_ptr<Symbol>>> symbol_groups);

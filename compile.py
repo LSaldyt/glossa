@@ -5,6 +5,7 @@ def run(commands):
     try:
         subprocess.run(commands, check=True)
     except subprocess.CalledProcessError as e:
+        print("The command (%s) failed with output:" % commands)
         print(e.output)
         raise
 
