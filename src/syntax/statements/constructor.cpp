@@ -13,6 +13,7 @@ namespace syntax
         }
         body = symbol_groups[1];
     }
+
     string Constructor::source(unordered_set<string>& names, string n_space)
     {
         string arglist = "";
@@ -24,14 +25,16 @@ namespace syntax
                 arglist += ", ";
             }
         }
+
+        string function_source = "";
+        function_source += (n_space + "__init__" + "(" + arglist + ")");
+
         string body_source = "";
         for (auto statement : generate(body))
         {
             body_source += statement;
         }
 
-        string function_source = "";
-        function_source += (n_space + "__init__" + "(" + arglist + ")");
         function_source += ("\n{\n" + body_source + "\n}");
         return function_source;
     }

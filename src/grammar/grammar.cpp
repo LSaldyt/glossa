@@ -82,24 +82,6 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
                 }
             }
         },
-        {"classstatement",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                auto symbols = symbol_groups[0];
-                if (symbols.size() == 1)
-                {
-                    if (symbols[0]->annotation == "symbol")
-                    {
-                        annotateSymbol(symbols[0], "statement");
-                    }
-                    return symbols[0];
-                }
-                else
-                {
-                    throw named_exception("Statement lambda constructor was provided multiple tokens (illegal)");
-                }
-            }
-        },
         {"forloop",
             [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
             {

@@ -2,11 +2,9 @@
 Animal::Animal()
 {
 print("Creating Animal"s);
-auto __new_members = std::tuple_cat(__members, std::make_tuple('a'));
-__access_map[name] = 0;;
+//memberinit;
 
-};
-auto Animal::sound() -> decltype("none"s)
+};auto Animal::sound() -> decltype("none"s)
 {
 return "none"s;
 };
@@ -15,11 +13,9 @@ return "none"s;
 Dog::Dog()
 {
 print("Creating Dog"s);
-auto __new_members = std::tuple_cat(__members, std::make_tuple('a'));
-__access_map[name] = 0;;
+//memberinit;
 
-};
-auto Dog::sound() -> decltype("bark"s)
+};auto Dog::sound() -> decltype("bark"s)
 {
 return "bark"s;
 };

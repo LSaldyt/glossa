@@ -5,25 +5,8 @@ int main(int argc, char* argv[])
 {
     using namespace compiler;
 
-    auto grammar = Grammar({"assignment", 
-                            "expression", 
-                            "value", 
-                            "functioncall", 
-                            "conditional", 
-                            "boolexpression", 
-                            "function",
-                            "vector",
-                            "dictionary", 
-                            "tuple",
-                            "forloop",
-                            "whileloop",
-                            "memberaccess",
-                            "class",
-                            "classstatement",
-                            "constructor",
-                            "memberinit",
-                            "import",
-                            "statement"}, "grammars/python/");
+    auto grammar_files = readFile("grammars/python/core");
+    auto grammar = Grammar(grammar_files, "grammars/python/");
 
     auto operators        = readFile("grammars/python/operators");
     auto logicaloperators = readFile("grammars/python/logicaloperators"); 

@@ -4,20 +4,14 @@
 class Animal
 {
 public:
-std::tuple<> __members;
-std::unordered_map<std::string, int> __access_map;
-Animal();
-auto sound() -> decltype("none"s);
+Animal();auto sound() -> decltype("none"s);
 
 };
 
 class Dog : public Animal
 {
 public:
-std::tuple<> __members;
-std::unordered_map<std::string, int> __access_map;
-Dog();
-auto sound() -> decltype("bark"s);
+Dog();auto sound() -> decltype("bark"s);
 
 };
 

@@ -4,6 +4,7 @@ punctuator (
 optional identifier wildcard
 punctuator )
 punctuator :
-many link classstatement 
+link constructor
+many link function 
 keyword end
-1 sep 3 sep 6
+1 sep 3 sep 6 sep 7
