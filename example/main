@@ -3,7 +3,11 @@ class Animal():
         print("Creating Animal")
         self.name = "none"
 
+    sound():
+        return "none"
+
 main():
     print("Running Main")
     a = Animal()
+    print(a.sound())
     return 0

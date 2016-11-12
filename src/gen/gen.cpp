@@ -70,4 +70,19 @@ namespace gen
         }
         return output;
     }
+
+    string buildArglist(vector<string>& arglist)
+    {
+        string args_representation = "";
+        for (int i =0; i < arglist.size(); i++)
+        { 
+            args_representation += ("auto " + arglist[i]);
+            if (i+1 != arglist.size()) //If not on last iteration
+            {
+                args_representation += ", ";
+            }
+        }
+        return args_representation;
+    }
+
 }

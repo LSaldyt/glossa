@@ -14,49 +14,102 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
         inheritance = "none";
     }
-    //auto constructor_args = symbol_groups[2];
-    //auto constructor_body = symbol_groups[3];
+    for (auto argname : symbol_groups[2])
+    {
+        constructor_args.push_back(argname->name());
+    }
+    constructor_body = symbol_groups[3];
+    for (auto item : constructor_body)
+    {
+        auto name = item->name();
+        if (name != "none")
+        {
+            if (std::string(name.begin(), name.begin() + 8) == "__self__")
+            {
+                members.push_back(std::string(name.begin() + 9, name.end()));
+            }
+        }
+    } 
     body = symbol_groups[4];
 }
 
 string Class::header(unordered_set<string>& names, string n_space)
 {
+    string template_line = "template < ";
+    for (auto member : members)
+    {
+        template_line += "typename T_" + member;
+    } 
+    template_line += " > ";
+
     string representation = "";
     representation += "class ";
-    representation += name;
+    string mangled_name = "__" + name + "__";
+    representation += mangled_name;
     if (inheritance != "none")
     {
         representation += " : public " + inheritance;
     }
     representation += "\n{\npublic:\n";
-    for (auto element : generateHeader(body, names))
+    for (auto member : members)
+    {
+        representation += "T_" + member + " " + member + ";\n"; // ex: T_name name
+    } 
+    for (auto element : generateHeader(constructor_body, names))
     {
         representation += element;
     }
-    representation += "\n}";
-    size_t start_pos = 0;
-    while((start_pos = representation.find("__init__", start_pos)) != std::string::npos) 
-    {
-        representation.replace(start_pos, 8, name); // Replace __init__ function with classname
-        start_pos += name.length(); 
+
+    string inner_constructor_args = "";
+    string initializers = "";
+    for (int i =0; i < members.size(); i++)
+    { 
+        inner_constructor_args += ("T_" + members[i] + " set_" + members[i]);
+        initializers += members[i] + "(set_" + members[i] + ")";
+        if (i+1 != members.size()) // If not on last iteration
+        {
+            inner_constructor_args += ", ";
+            initializers += ", ";
+        }
     }
-    return representation;
+
+    representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
+    for (auto element : generate(body, names, n_space))
+    {
+        representation += element;
+    }
+    representation += "\n};\n";
+
+    representation += "const auto " + name + " = [=](";
+    representation += buildArglist(constructor_args);
+    representation += "){\n";
+    for (auto element : generate(constructor_body, names, n_space))
+    {
+        representation += element;
+    }
+
+    string deduction_line = "";
+    string initialization_line = "";
+    for (int i =0; i < members.size(); i++)
+    { 
+        deduction_line += ("decltype(" + members[i] + ")");
+        initialization_line += members[i];
+        if (i+1 != members.size()) // If not on last iteration
+        {
+            deduction_line += ", ";
+            initialization_line += ", ";
+        }
+    }
+
+    representation += "return " + mangled_name + "<" + deduction_line + ">" + "(" + initialization_line + ");";
+    representation += "\n};\n";
+
+    return template_line + representation;
 }
 
 string Class::source(unordered_set<string>& names, string n_space)
 {
-    string representation = "";
-    for (auto element : generate(body, names, name + "::"))
-    {
-        representation += element;
-    }
-    size_t start_pos = 0;
-    while((start_pos = representation.find("__init__", start_pos)) != std::string::npos) 
-    {
-        representation.replace(start_pos, 8, name); // Replace __init__ function with classname
-        start_pos += name.length(); 
-    }
-    return representation;
+    return "";
 }
 
 }

@@ -10,11 +10,10 @@ namespace syntax
 
     string MemberInit::source(unordered_set<string>& names, string n_space)
     {
-        return identifier + " = " + value->source(names, n_space);
+        return "auto " + identifier + " = " + value->source(names, n_space);
     }
-    string MemberInit::header(unordered_set<string>& names, string n_space)
+    string MemberInit::name()
     {
-        string val_source = value->source(names, n_space);
-        return "decltype(" + val_source + ") " +  identifier + " = " + val_source;
+        return "__self__ " + identifier;
     }
 }

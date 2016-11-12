@@ -26,15 +26,8 @@ namespace syntax
     }
     string Function::source(unordered_set<string>& names, string n_space)
     {
-        string arglist = "";
-        for (int i =0; i < argnames.size(); i++)
-        { 
-            arglist += ("auto " + argnames[i]);
-            if (i+1 != argnames.size()) //If not on last iteration
-            {
-                arglist += ", ";
-            }
-        }
+        string arglist = buildArglist(argnames);
+
         string body_source = "";
         for (auto statement : generate(body))
         {
@@ -72,15 +65,7 @@ namespace syntax
 
     string Function::header(unordered_set<string>& names, string n_space)
     {
-        string arglist = "";
-        for (int i =0; i < argnames.size(); i++)
-        { 
-            arglist += ("auto " + argnames[i]);
-            if (i+1 != argnames.size()) //If not on last iteration
-            {
-                arglist += ", ";
-            }
-        }
+        string arglist = buildArglist(argnames);
 
         string return_source = "";
         if (not is_void)

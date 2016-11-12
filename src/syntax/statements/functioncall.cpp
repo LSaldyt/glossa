@@ -29,8 +29,4 @@ namespace syntax
         return identifier + "(" + arglist + ")";
     }
 
-    string FunctionCall::name()
-    {
-        return "none"; //identifier;
-    }
 }

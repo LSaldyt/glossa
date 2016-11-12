@@ -17,4 +17,6 @@ tuple<vector<string>, vector<string>> generateFiles(string filename, vector<shar
 
 vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names=unordered_set<string>(), string n_space="");
 vector<string> generateHeader(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names=unordered_set<string>());
+
+string buildArglist(vector<string>& arglist);
 }
