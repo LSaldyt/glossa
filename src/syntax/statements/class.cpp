@@ -18,7 +18,8 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
         constructor_args.push_back(argname->name());
     }
-    constructor_body = symbol_groups[3];
+    super_args = symbol_groups[3];
+    constructor_body = symbol_groups[4];
     for (auto item : constructor_body)
     {
         auto name = item->name();
@@ -30,17 +31,18 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
             }
         }
     } 
-    body = symbol_groups[4];
+    body = symbol_groups[5];
 }
 
 string Class::header(unordered_set<string>& names, string n_space)
 {
     string template_line = "template < ";
-    for (auto member : members)
+    template_line += commaSep(members, "typename T_");
+    if (inheritance != "none")
     {
-        template_line += "typename T_" + member;
-    } 
-    template_line += " > ";
+        template_line += ", class T_inheritance";
+    }
+    template_line += " >\n";
 
     string representation = "";
     representation += "class ";
@@ -48,7 +50,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     representation += mangled_name;
     if (inheritance != "none")
     {
-        representation += " : public " + inheritance;
+        representation += " : public T_inheritance";
     }
     representation += "\n{\npublic:\n";
     for (auto member : members)
@@ -57,7 +59,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     } 
     for (auto element : generateHeader(constructor_body, names))
     {
-        representation += element;
+        representation += "virtual " + element;
     }
 
     string inner_constructor_args = "";
@@ -71,6 +73,12 @@ string Class::header(unordered_set<string>& names, string n_space)
             inner_constructor_args += ", ";
             initializers += ", ";
         }
+    }
+
+    string super_args_representation = "(" + commaSep(super_args, names, n_space) + ")";
+    if (inheritance != "none")
+    {
+        initializers += ", T_inheritance(" + inheritance + super_args_representation + ")";
     }
 
     representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
@@ -88,17 +96,12 @@ string Class::header(unordered_set<string>& names, string n_space)
         representation += element;
     }
 
-    string deduction_line = "";
-    string initialization_line = "";
-    for (int i =0; i < members.size(); i++)
-    { 
-        deduction_line += ("decltype(" + members[i] + ")");
-        initialization_line += members[i];
-        if (i+1 != members.size()) // If not on last iteration
-        {
-            deduction_line += ", ";
-            initialization_line += ", ";
-        }
+    string deduction_line      = commaSep(members, "decltype(", ")");
+    string initialization_line = commaSep(members);
+
+    if (inheritance != "none")
+    {
+        deduction_line += ", decltype(" + inheritance + super_args_representation + ")";
     }
 
     representation += "return " + mangled_name + "<" + deduction_line + ">" + "(" + initialization_line + ");";

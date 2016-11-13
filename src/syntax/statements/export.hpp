@@ -12,3 +12,4 @@
 #include "memberaccess.hpp"
 #include "tuple.hpp"
 #include "memberinit.hpp"
+#include "supercall.hpp"

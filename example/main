@@ -1,13 +1,22 @@
 class Animal():
     __init__():
         print("Creating Animal")
-        self.name = "none"
+        self.name  = "none"
+        self.sound = "none"
 
-    sound():
-        return "none"
+    make_sound():
+        print(name + " makes: " + sound)
+
+class Dog(Animal):
+    __init__(set_name):
+        print("Creating dog " + set_name)
+        self.name  = set_name
+        self.sound = "bark"
 
 main():
     print("Running Main")
     a = Animal()
-    print(a.sound())
+    a.make_sound()
+    d = Dog("rover")
+    d.make_sound()
     return 0

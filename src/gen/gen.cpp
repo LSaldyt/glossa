@@ -53,36 +53,59 @@ namespace gen
 
         for (auto s : symbols)
         {
-            print("Generated:");
-            print(s->header(names) + ";");
-            output.push_back(s->header(names) + ";\n");
-            auto name = s->name();
-            if (name != "none")
-            { 
-                if (name[0] == '*')
-                {
-                    name = sliceString(name, 1);
-                    print("Added name to scope: " + name);
-                    names.insert(name);
-                    print(names.size());
+            auto h = s->header(names);
+            if (h != "/*no header*/")
+            {
+                print("Generated:");
+                print(h + ";");
+                output.push_back(h + ";\n");
+                auto name = s->name();
+                if (name != "none")
+                { 
+                    if (name[0] == '*')
+                    {
+                        name = sliceString(name, 1);
+                        print("Added name to scope: " + name);
+                        names.insert(name);
+                        print(names.size());
+                    }
                 }
             }
         }
         return output;
     }
 
-    string buildArglist(vector<string>& arglist)
+    string commaSep(vector<string>& items, string prefix, string suffix)
     {
-        string args_representation = "";
-        for (int i =0; i < arglist.size(); i++)
+        string line = "";
+        for (int i =0; i < items.size(); i++)
         { 
-            args_representation += ("auto " + arglist[i]);
-            if (i+1 != arglist.size()) //If not on last iteration
+            line += (prefix + items[i] + suffix);
+            if (i+1 != items.size()) //If not on last iteration
             {
-                args_representation += ", ";
+                line += ", ";
             }
         }
-        return args_representation;
+        return line;
+    }
+
+    string commaSep(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space, string prefix, string suffix)
+    {
+        string line = "";
+        for (int i =0; i < symbols.size(); i++)
+        { 
+            line += (prefix + symbols[i]->source(names, n_space) + suffix);
+            if (i+1 != symbols.size()) //If not on last iteration
+            {
+                line += ", ";
+            }
+        }
+        return line;
+    }
+
+    string buildArglist(vector<string>& arglist)
+    {
+        return commaSep(arglist, "auto ");
     }
 
 }

@@ -19,4 +19,6 @@ vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<strin
 vector<string> generateHeader(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names=unordered_set<string>());
 
 string buildArglist(vector<string>& arglist);
+string commaSep(vector<string>& items, string prefix="", string suffix="");
+string commaSep(vector<shared_ptr<Symbol>>& items, unordered_set<string>& names, string n_space, string prefix="", string suffix="");
 }
