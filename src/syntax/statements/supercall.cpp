@@ -9,6 +9,6 @@ namespace syntax
 
     string SuperCall::source(unordered_set<string>& names, string n_space)
     {
-        return "// supercall";
+        return commaSep(args, names, n_space);
     }
 }

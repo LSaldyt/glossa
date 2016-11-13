@@ -18,7 +18,10 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
         constructor_args.push_back(argname->name());
     }
-    super_args = symbol_groups[3];
+    if (not symbol_groups[3].empty())
+    {
+        super_call = symbol_groups[3][0];
+    }
     constructor_body = symbol_groups[4];
     for (auto item : constructor_body)
     {
@@ -36,16 +39,17 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
 
 string Class::header(unordered_set<string>& names, string n_space)
 {
-    string template_line = "template < ";
-    template_line += commaSep(members, "typename T_");
+
+    // Treat inheritance as member, but don't declare it in the same way as other members
+    vector<string> templatized_types = members;
     if (inheritance != "none")
     {
-        template_line += ", class T_inheritance";
+        templatized_types.push_back("inheritance");
     }
-    template_line += " >\n";
 
-    string representation = "";
-    representation += "class ";
+    string template_line = "template < " + commaSep(templatized_types, "typename T_") + " >\n";
+
+    string representation = "class ";
     string mangled_name = "__" + name + "__";
     representation += mangled_name;
     if (inheritance != "none")
@@ -59,7 +63,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     } 
     for (auto element : generateHeader(constructor_body, names))
     {
-        representation += "virtual " + element;
+        representation += element;
     }
 
     string inner_constructor_args = "";
@@ -75,10 +79,18 @@ string Class::header(unordered_set<string>& names, string n_space)
         }
     }
 
-    string super_args_representation = "(" + commaSep(super_args, names, n_space) + ")";
     if (inheritance != "none")
     {
-        initializers += ", T_inheritance(" + inheritance + super_args_representation + ")";
+        if (initializers.size() > 0)
+        {
+            initializers += ", ";
+        }
+        if (inner_constructor_args.size() > 0)
+        {
+            inner_constructor_args += ", ";
+        }
+        initializers += "T_inheritance(set_inheritance)"; //+ inheritance + super_args_representation + ")";
+        inner_constructor_args += "auto set_inheritance";
     }
 
     representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
@@ -101,7 +113,18 @@ string Class::header(unordered_set<string>& names, string n_space)
 
     if (inheritance != "none")
     {
-        deduction_line += ", decltype(" + inheritance + super_args_representation + ")";
+        representation += "auto set_inheritance = " + inheritance + "(" + super_call->source(names, n_space) + ");\n";
+        if (deduction_line.size() > 0)
+        {
+            deduction_line += ", ";
+        }
+        deduction_line += "decltype(set_inheritance)";
+        if (initialization_line.size() > 0)
+        {
+            initialization_line += ", ";
+        }
+        initialization_line += "set_inheritance";
+
     }
 
     representation += "return " + mangled_name + "<" + deduction_line + ">" + "(" + initialization_line + ");";

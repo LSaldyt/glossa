@@ -1,9 +1,10 @@
 keyword super 
-punctuator ) 
+punctuator ( 
 punctuator )
+punctuator .
 keyword __init__
 punctuator ( 
 optional link expression
 many inOrder !punctuator , link expression
 optional punctuator )
-5 6
+6 7

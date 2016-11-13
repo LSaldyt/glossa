@@ -9,9 +9,15 @@ class Animal():
 
 class Dog(Animal):
     __init__(set_name):
+        super().__init__()
         print("Creating dog " + set_name)
         self.name  = set_name
         self.sound = "bark"
+
+class GoldenRetriever(Dog):
+    __init__(set_name):
+        super().__init__(set_name)
+        print("Creating golden retriever " + set_name)
 
 main():
     print("Running Main")
@@ -19,4 +25,6 @@ main():
     a.make_sound()
     d = Dog("rover")
     d.make_sound()
+    gr = GoldenRetriever("dylan")
+    gr.make_sound()
     return 0
