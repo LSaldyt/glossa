@@ -8,7 +8,7 @@
 auto main() -> decltype(0)
 {
 print("Running Main"s);
-auto a = Animal();
+auto a = Animal("none"s, "no sound"s);
 a.make_sound();
 auto d = Dog("rover"s);
 d.make_sound();

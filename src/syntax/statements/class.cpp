@@ -89,7 +89,7 @@ string Class::header(unordered_set<string>& names, string n_space)
         {
             inner_constructor_args += ", ";
         }
-        initializers += "T_inheritance(set_inheritance)"; //+ inheritance + super_args_representation + ")";
+        initializers += "T_inheritance(set_inheritance)"; 
         inner_constructor_args += "auto set_inheritance";
     }
 

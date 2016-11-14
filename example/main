@@ -1,18 +1,16 @@
 class Animal():
-    __init__():
+    __init__(set_name, set_sound):
         print("Creating Animal")
-        self.name  = "none"
-        self.sound = "none"
+        self.name  = set_name
+        self.sound = set_sound
 
     make_sound():
         print(name + " makes: " + sound)
 
 class Dog(Animal):
     __init__(set_name):
-        super().__init__()
+        super().__init__(set_name, "bark")
         print("Creating dog " + set_name)
-        self.name  = set_name
-        self.sound = "bark"
 
 class GoldenRetriever(Dog):
     __init__(set_name):
@@ -21,7 +19,7 @@ class GoldenRetriever(Dog):
 
 main():
     print("Running Main")
-    a = Animal()
+    a = Animal("none", "no sound")
     a.make_sound()
     d = Dog("rover")
     d.make_sound()

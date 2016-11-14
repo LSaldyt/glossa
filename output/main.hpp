@@ -15,29 +15,25 @@ print(name + " makes: "s + sound);
 };
 
 };
-const auto Animal = [=](){
+const auto Animal = [=](auto set_name, auto set_sound){
 print("Creating Animal"s);
-auto name = "none"s;
-auto sound = "none"s;
+auto name = set_name;
+auto sound = set_sound;
 return __Animal__<decltype(name), decltype(sound)>(name, sound);
 };
 ;
 
-template < typename T_name, typename T_sound, typename T_inheritance >
+template < typename T_inheritance >
 class __Dog__ : public T_inheritance
 {
 public:
-T_name name;
-T_sound sound;
-__Dog__(T_name set_name, T_sound set_sound, auto set_inheritance) : name(set_name), sound(set_sound), T_inheritance(set_inheritance) {}
+__Dog__(auto set_inheritance) : T_inheritance(set_inheritance) {}
 
 };
 const auto Dog = [=](auto set_name){
 print("Creating dog "s + set_name);
-auto name = set_name;
-auto sound = "bark"s;
-auto set_inheritance = Animal();
-return __Dog__<decltype(name), decltype(sound), decltype(set_inheritance)>(name, sound, set_inheritance);
+auto set_inheritance = Animal(set_name, "bark"s);
+return __Dog__<decltype(set_inheritance)>(set_inheritance);
 };
 ;
 
