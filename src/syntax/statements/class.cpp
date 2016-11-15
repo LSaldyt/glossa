@@ -60,7 +60,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     } 
     for (auto element : generateHeader(constructor_body, names))
     {
-        representation += element;
+        representation += "    " + element;
     }
 
     string inner_constructor_args = "";
@@ -93,7 +93,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
     for (auto element : generateHeader(body))
     {
-        representation += element;
+        representation += "    " + element;
     }
     representation += "\n};\n";
 
@@ -137,11 +137,11 @@ string Class::header(unordered_set<string>& names, string n_space)
     representation += constructor_declaration /*+ "->" + template_return_type*/ + "\n{\n";
     for (auto element : generate(constructor_body, names, n_space))
     {
-        representation += element;
+        representation += "    " + element;
     }
     string return_expr = template_return_type + "(" + initialization_line + ")";
-    representation += "return " + return_expr + ";\n";
-    representation += "\n}\n";
+    representation += "    return " + return_expr + ";\n";
+    representation += "}";
 
     return template_line + representation;
 }

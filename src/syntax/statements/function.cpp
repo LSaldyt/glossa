@@ -27,7 +27,7 @@ namespace syntax
             function_source += "{__args__.push_back(argv[i]);}\n";
             for (auto statement : generate(body))
             {
-                function_source += statement;
+                function_source += "    " + statement;
             }
             function_source += "}\n";
         }
@@ -51,7 +51,7 @@ namespace syntax
         string body_source = "";
         for (auto statement : generate(body))
         {
-            body_source += statement;
+            body_source += "    " + statement;
         }
 
         string function_source = template_line + " auto " + n_space + identifier + "(" + arglist + ")";

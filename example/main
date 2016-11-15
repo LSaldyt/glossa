@@ -25,4 +25,6 @@ main():
     d = Dog("rover")
     d.make_sound()
     print(foo(true))
+    for arg in __args__:
+        print(arg)
     return 0

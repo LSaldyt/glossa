@@ -27,17 +27,20 @@ namespace gen
         for (auto s : symbols)
         {
             print("Generated:");
-            print(s->source(names, n_space) + ";");
-            output.push_back(s->source(names, n_space) + ";\n");
-            auto name = s->name();
-            if (name != "none")
-            { 
-                if (name[0] == '*')
-                {
-                    name = sliceString(name, 1);
-                    print("Added name to scope: " + name);
-                    names.insert(name);
-                    print(names.size());
+            auto repr = s->source(names, n_space);
+            if (not repr.empty())
+            {
+                repr += ";";
+                print(repr);
+                output.push_back(repr + "\n");
+                auto name = s->name();
+                if (name != "none")
+                { 
+                    if (name[0] == '*')
+                    {
+                        name = sliceString(name, 1);
+                        print("Added name to scope: " + name);
+                    }
                 }
             }
         }
