@@ -75,3 +75,49 @@ for line in file:
     else
         # continue to add to current branch/either header or source
 ```
+
+For more complex language constructs, eg class:
+
+```
+template < typename t_type, typename t_inheritance >
+class __dog__ : public t_inheritance
+{
+public:
+t_type type;
+__dog__(t_type set_type, t_inheritance set_inheritance) : type(set_type), t_inheritance(set_inheritance) {}
+
+};
+template < typename t_set_name, typename t_set_type>
+auto dog(t_set_name set_name, t_set_type set_type)
+{
+    return __dog__<decltype(set_type), decltype(animal(set_name, "bark"s))>(set_type, animal(set_name, "bark"s));
+};
+```
+
+```
+header
+branch _inheritance_ is not none or notempty _constructor_args_
+template < 
+branch _inheritance_ is not none
+typename T_inheritance
+endbranch
+>
+endbranch
+class _name_ 
+branch _inheritance_ is not none
+: public T_inheritance
+endbranch
+{
+public:
+genmembers _members_
+_mangledname_ (arglist _members_) : initializers _members_ {}
+};
+
+templateline _members_
+auto _name_ ( arglist _members_ )
+{
+return _mangledname_< decllines _members_ > ( _constructor_args_ );
+}
+source
+# No class source (templates)
+```
