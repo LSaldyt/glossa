@@ -8,7 +8,7 @@ public:
 T_name name;
 T_sound sound;
 __Animal__(T_name set_name, T_sound set_sound) : name(set_name), sound(set_sound) {}
-auto make_sound()
+ auto make_sound()
 {
 print(name + " makes "s + sound);
 
@@ -40,7 +40,14 @@ return __Dog__<decltype(Animal(set_name, "bark"s))>(Animal(set_name, "bark"s));
 }
 ;
 
-auto foo(auto x);
+template < typename T_x >
+ auto foo(T_x x)
+{
+if (x){ return "Yes"s;
+} else { return "No"s;
+};
+
+};
 
 // No main declaration required;
 

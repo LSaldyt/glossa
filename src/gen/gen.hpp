@@ -22,4 +22,6 @@ string buildArglist(vector<string>& arglist);
 string commaSep(vector<string>& items, string prefix="", string suffix="");
 string commaSep(vector<shared_ptr<Symbol>>& items, unordered_set<string>& names, string n_space, string prefix="", string suffix="");
 string commaSepH(vector<shared_ptr<Symbol>>& items, unordered_set<string>& names, string n_space, string prefix="", string suffix="");
+string templateArgList(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space);
+string templateArgListH(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space);
 }

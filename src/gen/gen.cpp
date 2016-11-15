@@ -122,4 +122,33 @@ namespace gen
         return commaSep(arglist, "auto ");
     }
 
+    string templateArgList(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space)
+    {
+        string template_list = "";
+        for (int i =0; i < symbols.size(); i++)
+        { 
+            auto repr = symbols[i]->source(names, n_space);
+            template_list += ("T_" + repr + " " + repr);
+            if (i+1 != symbols.size()) // If not on last iteration
+            {
+                template_list += ", ";
+            }
+        }
+        return template_list;
+    }
+
+    string templateArgListH(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space)
+    {
+        string template_list = "";
+        for (int i =0; i < symbols.size(); i++)
+        { 
+            auto repr = symbols[i]->header(names, n_space);
+            template_list += ("T_" + repr + " " + repr);
+            if (i+1 != template_list.size()) // If not on last iteration
+            {
+                template_list += ", ";
+            }
+        }
+        return template_list;
+    }
 }

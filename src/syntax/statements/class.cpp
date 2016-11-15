@@ -91,7 +91,7 @@ string Class::header(unordered_set<string>& names, string n_space)
     }
 
     representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
-    for (auto element : generate(body, names, n_space))
+    for (auto element : generateHeader(body))
     {
         representation += element;
     }

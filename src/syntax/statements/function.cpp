@@ -18,25 +18,19 @@ namespace syntax
     }
     string Function::source(unordered_set<string>& names, string n_space)
     {
-        string arglist = commaSep(args, names, n_space, "auto ");
-
-        string body_source = "";
-        for (auto statement : generate(body))
-        {
-            body_source += statement;
-        }
-
         string function_source = "";
         if (identifier == "main")
         {
-            function_source += "int ";
+            function_source += "int main(int argc, char ** argv){\n";
+            function_source += "std::vector<std::string> __args__; \n";
+            function_source += "for (int i = 0; i < argc; i++)\n";
+            function_source += "{__args__.push_back(argv[i]);}\n";
+            for (auto statement : generate(body))
+            {
+                function_source += statement;
+            }
+            function_source += "}\n";
         }
-        else
-        {
-            function_source += "auto ";
-        }
-        function_source += (n_space + identifier + "(" + arglist + ")");
-        function_source += "\n{\n" + body_source + "\n}";
         return function_source;
     }
 
@@ -46,11 +40,22 @@ namespace syntax
         {
             return "// No main declaration required";
         }
-        string arglist = commaSepH(args, names, n_space, "auto ");
+        
+        string template_line = "";
+        if (not args.empty())
+        {
+            template_line = "template < " + commaSep(args, names, n_space, "typename T_") + " >\n";
+        }
+        string arglist = templateArgList(args, names, n_space);
 
-        string function_source = "";
-        function_source += "auto ";
-        function_source += (n_space + identifier + "(" + arglist + ")");
+        string body_source = "";
+        for (auto statement : generate(body))
+        {
+            body_source += statement;
+        }
+
+        string function_source = template_line + " auto " + n_space + identifier + "(" + arglist + ")";
+        function_source += "\n{\n" + body_source + "\n}";
         return function_source;
     }
 }
