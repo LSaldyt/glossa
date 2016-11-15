@@ -141,6 +141,12 @@ const unordered_map<string, StatementConstructor> Grammar::construction_map = {
             {
                 return createSymbol(SuperCall(symbol_groups), "supercall");
             }
+        },
+        {"return",
+            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
+            {
+                return createSymbol(Return(symbol_groups), "return");
+            }
         }
    };
 

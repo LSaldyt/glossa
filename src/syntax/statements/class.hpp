@@ -9,7 +9,7 @@ struct Class : public Symbol
     string inheritance;
     shared_ptr<Symbol> super_call;
     vector<string>             members;
-    vector<string>             constructor_args;
+    vector<shared_ptr<Symbol>> constructor_args;
     vector<shared_ptr<Symbol>> constructor_body;
     vector<shared_ptr<Symbol>> body;
 

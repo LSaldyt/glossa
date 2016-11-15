@@ -12,8 +12,8 @@ punctuator (
 
 # Constructor args 
 
-optional identifier wildcard                   
-many inOrder !punctuator , identifier wildcard
+optional identifier wildcard 
+many inOrder !punctuator , identifier wildcard 
 punctuator )
 punctuator :
 

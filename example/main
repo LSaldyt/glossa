@@ -1,25 +1,18 @@
 # Converts to template class
 class Animal():
     __init__(set_name, set_sound):
-        print("Creating Animal")
         self.name  = set_name
         self.sound = set_sound
 
-    # Converts to virtual function
     make_sound():
-        print(name + " makes: " + sound)
+        print(name + " makes " + sound)
 
-# Converts to template class
 class Dog(Animal):
     __init__(set_name):
-        super().__init__(set_name, "bark") # Python style init calls
-        print("Creating dog " + set_name)
+        super().__init__(set_name, "bark")
 
-# Converts to template class
-class GoldenRetriever(Dog):
-    __init__(set_name):
-        super().__init__(set_name)
-        print("Creating golden retriever " + set_name)
+foo(x):
+    print(x)
 
 # Converts to int main()
 main():
@@ -28,6 +21,5 @@ main():
     a.make_sound()
     d = Dog("rover")
     d.make_sound()
-    gr = GoldenRetriever("dylan")
-    gr.make_sound()
+    foo("Hello World")
     return 0

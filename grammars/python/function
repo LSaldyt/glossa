@@ -1,10 +1,9 @@
 identifier wildcard
 punctuator (
-optional identifier wildcard
-many inOrder !punctuator , identifier wildcard
+optional identifier wildcard 
+many inOrder !punctuator , identifier wildcard 
 punctuator )
 punctuator :
 many link statement
-optional inOrder !keyword return link expression
 keyword end
-0 sep 2 3 sep 6 sep 7
+0 sep 2 3 sep 6 

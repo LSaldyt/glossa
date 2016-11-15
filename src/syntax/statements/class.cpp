@@ -14,10 +14,7 @@ Class::Class(vector<vector<shared_ptr<Symbol>>> symbol_groups)
     {
         inheritance = "none";
     }
-    for (auto argname : symbol_groups[2])
-    {
-        constructor_args.push_back(argname->name());
-    }
+    constructor_args = symbol_groups[2];
     if (not symbol_groups[3].empty())
     {
         super_call = symbol_groups[3][0];
@@ -90,7 +87,7 @@ string Class::header(unordered_set<string>& names, string n_space)
             inner_constructor_args += ", ";
         }
         initializers += "T_inheritance(set_inheritance)"; 
-        inner_constructor_args += "auto set_inheritance";
+        inner_constructor_args += "T_inheritance set_inheritance";
     }
 
     representation += mangled_name + "(" + inner_constructor_args + ") : " + initializers + " {}\n";
@@ -100,35 +97,51 @@ string Class::header(unordered_set<string>& names, string n_space)
     }
     representation += "\n};\n";
 
-    representation += "const auto " + name + " = [=](";
-    representation += buildArglist(constructor_args);
-    representation += "){\n";
-    for (auto element : generate(constructor_body, names, n_space))
-    {
-        representation += element;
-    }
 
-    string deduction_line      = commaSep(members, "decltype(", ")");
-    string initialization_line = commaSep(members);
+    string constructor_templates = "template < " + commaSepH(constructor_args, names, n_space, "typename T_") + ">\n";
+    string constructor_declaration = constructor_templates + "auto " + name + "(";
+    for (int i =0; i < constructor_args.size(); i++)
+    { 
+        auto repr = constructor_args[i]->source(names, n_space);
+        constructor_declaration += ("T_" + repr + " " + repr);
+        if (i+1 != constructor_args.size()) // If not on last iteration
+        {
+            constructor_declaration += ", ";
+        }
+    }
+    constructor_declaration += ")";
+
+    string deduction_line      = commaSep(members, "decltype(set_", ")");
+    string initialization_line = commaSep(members, "set_");
+
+    string inheritance_initializer = "";
 
     if (inheritance != "none")
     {
-        representation += "auto set_inheritance = " + inheritance + "(" + super_call->source(names, n_space) + ");\n";
+        inheritance_initializer = inheritance + "(" + super_call->source(names, n_space) + ")";
         if (deduction_line.size() > 0)
         {
             deduction_line += ", ";
         }
-        deduction_line += "decltype(set_inheritance)";
+        deduction_line += "decltype(" + inheritance_initializer + ")";
         if (initialization_line.size() > 0)
         {
             initialization_line += ", ";
         }
-        initialization_line += "set_inheritance";
+        initialization_line += inheritance_initializer;
 
     }
 
-    representation += "return " + mangled_name + "<" + deduction_line + ">" + "(" + initialization_line + ");";
-    representation += "\n};\n";
+    string template_return_type = mangled_name + "<" + deduction_line + ">";
+
+    representation += constructor_declaration /*+ "->" + template_return_type*/ + "\n{\n";
+    for (auto element : generate(constructor_body, names, n_space))
+    {
+        representation += element;
+    }
+    string return_expr = template_return_type + "(" + initialization_line + ")";
+    representation += "return " + return_expr + ";\n";
+    representation += "\n}\n";
 
     return template_line + representation;
 }

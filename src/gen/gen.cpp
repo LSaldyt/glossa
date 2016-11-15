@@ -103,6 +103,20 @@ namespace gen
         return line;
     }
 
+    string commaSepH(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space, string prefix, string suffix)
+    {
+        string line = "";
+        for (int i =0; i < symbols.size(); i++)
+        { 
+            line += (prefix + symbols[i]->header(names, n_space) + suffix);
+            if (i+1 != symbols.size()) //If not on last iteration
+            {
+                line += ", ";
+            }
+        }
+        return line;
+    }
+
     string buildArglist(vector<string>& arglist)
     {
         return commaSep(arglist, "auto ");

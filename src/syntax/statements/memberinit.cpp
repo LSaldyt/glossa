@@ -10,6 +10,7 @@ namespace syntax
 
     string MemberInit::source(unordered_set<string>& names, string n_space)
     {
+        return "";
         return "auto " + identifier + " = " + value->source(names, n_space);
     }
     string MemberInit::name()

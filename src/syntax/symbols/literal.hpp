@@ -16,6 +16,10 @@ namespace syntax
         {
             return std::to_string(value);
         }
+        virtual string header(unordered_set<string>& names, string n_space="")
+        {
+            return std::to_string(value);
+        }
 
     };
 
@@ -26,6 +30,10 @@ namespace syntax
         {
         }
         virtual string source(unordered_set<string>& names, string n_space="")
+        {
+            return value;
+        }
+        virtual string header(unordered_set<string>& names, string n_space="")
         {
             return value;
         }
