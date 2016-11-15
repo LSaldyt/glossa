@@ -5,7 +5,7 @@ class Animal():
         self.sound = set_sound
 
     make_sound():
-        print(name + " makes " + sound)
+        print(self.name + " makes " + self.sound)
 
 class Dog(Animal):
     __init__(set_name):

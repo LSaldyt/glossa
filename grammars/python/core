@@ -17,3 +17,4 @@ import
 statement
 supercall
 return
+classmemberaccess
