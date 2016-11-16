@@ -1,9 +1,0 @@
-
-foo(x=1, y=2):
-    print(x)
-    print(y)
-
-main():
-    foo(2, 3)
-    foo(2)
-    return 0

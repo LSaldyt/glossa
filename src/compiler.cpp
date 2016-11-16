@@ -5,12 +5,12 @@ int main(int argc, char* argv[])
 {
     using namespace compiler;
 
-    auto grammar_files = readFile("grammars/python/core");
-    auto grammar = Grammar(grammar_files, "grammars/python/");
+    auto grammar_files = readFile("languages/python/grammar/core");
+    auto grammar = Grammar(grammar_files, "languages/python/grammar/");
 
-    auto operators        = readFile("grammars/python/operators");
-    auto logicaloperators = readFile("grammars/python/logicaloperators"); 
-    auto punctuators      = readFile("grammars/python/punctuators");
+    auto operators        = readFile("languages/python/grammar/operators");
+    auto logicaloperators = readFile("languages/python/grammar/logicaloperators"); 
+    auto punctuators      = readFile("languages/python/grammar/punctuators");
 
     LanguageTermSets term_sets;
     term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));

@@ -1,4 +1,5 @@
 #pragma once
+#include "generator.hpp"
 
 // Avoid a circular include
 namespace syntax

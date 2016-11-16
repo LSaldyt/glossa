@@ -21,18 +21,18 @@ auto Animal(T_set_name set_name, T_set_sound set_sound)
     return __Animal__<decltype(set_name), decltype(set_sound)>(set_name, set_sound);
 };
 
-template < typename t_type, typename t_inheritance >
-class __dog__ : public t_inheritance
+template < typename T_type, typename T_inheritance >
+class __Dog__ : public T_inheritance
 {
 public:
-t_type type;
-__dog__(t_type set_type, t_inheritance set_inheritance) : type(set_type), t_inheritance(set_inheritance) {}
+T_type type;
+__Dog__(T_type set_type, T_inheritance set_inheritance) : type(set_type), T_inheritance(set_inheritance) {}
 
 };
-template < typename t_set_name, typename t_set_type>
-auto dog(t_set_name set_name, t_set_type set_type)
+template < typename T_set_name, typename T_set_type>
+auto Dog(T_set_name set_name, T_set_type set_type)
 {
-    return __dog__<decltype(set_type), decltype(animal(set_name, "bark"s))>(set_type, animal(set_name, "bark"s));
+    return __Dog__<decltype(set_type), decltype(Animal(set_name, "bark"s))>(set_type, Animal(set_name, "bark"s));
 };
 
 template < typename T_x >
