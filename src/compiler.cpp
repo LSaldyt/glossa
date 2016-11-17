@@ -8,6 +8,9 @@ int main(int argc, char* argv[])
     auto grammar_files = readFile("languages/python/grammar/core");
     auto grammar = Grammar(grammar_files, "languages/python/grammar/");
 
+    auto constructor_files = readFile("languages/cpp/constructors/core");
+    auto generator = Generator(constructor_files, "languages/cpp/constructors/");
+
     auto operators        = readFile("languages/python/grammar/operators");
     auto logicaloperators = readFile("languages/python/grammar/logicaloperators"); 
     auto punctuators      = readFile("languages/python/grammar/punctuators");

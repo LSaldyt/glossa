@@ -7,12 +7,47 @@ const unordered_map<string, Constructor> Generator::construction_map = {};
 
 Generator::Generator(vector<string> filenames, string directory)
 {
-    /*
     for (auto filename : filenames)
     {
-        grammar_map[filename] = read(directory + filename);
+        print("Reading constructor file: " + filename);
+        read(directory + filename);
     }
-    */
+}
+
+tuple<Constructor, Constructor> Generator::read (string filename)
+{
+    auto content = readFile(filename);
+    
+    // Seperate constructor into header and source constructors
+    auto header_i = std::find(content.begin(), content.end(), "header");
+    auto source_i = std::find(content.begin(), content.end(), "source");
+
+    auto declarations = vector<string>(content.begin(), header_i);
+    auto header       = vector<string>(header_i + 1, source_i);
+    auto source       = vector<string>(source_i + 1, content.end());
+
+    print("DECLARATIONS");
+    for (auto line : declarations)
+    {
+        print(line);
+    }
+    print("HEADER");
+    for (auto line : header)
+    {
+        print(line);
+    }
+    print("SOURCE");
+    for (auto line : source)
+    {
+        print(line);
+    }
+    print("ALL");
+    for (auto line : content)
+    {
+        print(line);
+    }
+
+    return make_tuple(Constructor(), Constructor());
 }
 
 /*

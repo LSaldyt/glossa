@@ -31,6 +31,7 @@ class Generator
 
 public:
     Generator(vector<string> grammar_files, string directory);
+    tuple<Constructor, Constructor> read(string filename);
 /*
     vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
