@@ -313,10 +313,6 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             if (not terms.empty())
             {
-                for (auto t : terms)
-                {
-                    print(t);
-                }
                 parsers.push_back(readGrammarTerms(terms));
             }
         }

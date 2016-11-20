@@ -14,11 +14,13 @@ Generator::Generator(vector<string> filenames, string directory)
     }
 }
 
-tuple<Constructor, Constructor> Generator::read (string filename)
+tuple<Constructor, Constructor> Generator::read(string filename)
 {
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
+    assert(contains(content, "header"s));
+    assert(contains(content, "source"s));
     auto header_i = std::find(content.begin(), content.end(), "header");
     auto source_i = std::find(content.begin(), content.end(), "source");
 
@@ -27,30 +29,102 @@ tuple<Constructor, Constructor> Generator::read (string filename)
     auto source       = vector<string>(source_i + 1, content.end());
 
     print("DECLARATIONS");
-    for (auto line : declarations)
-    {
-        print(line);
-    }
+    auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
     print("HEADER");
-    for (auto line : header)
-    {
-        print(line);
-    }
+    auto header_constructor = generateConstructor(source, symbol_storage_generator);
     print("SOURCE");
-    for (auto line : source)
-    {
-        print(line);
-    }
-    print("ALL");
-    for (auto line : content)
-    {
-        print(line);
-    }
+    auto source_constructor = generateConstructor(header, symbol_storage_generator);
 
-    return make_tuple(Constructor(), Constructor());
+    return make_tuple(header_constructor, source_constructor);
+}
+
+Constructor Generator::generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
+{
+    return Constructor();
+    /*
+    return [content, symbol_storage_generator](vector<vector<shared_ptr<Symbol>>>& symbol_groups)
+    {
+        vector<string> generated;
+        auto symbol_storage = symbol_storage_generator(symbol_groups);
+        for (auto line : content)
+        {
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            if (not terms.empty())
+            {
+                auto keyword = terms[0];
+                if (keyword == "if")
+                {
+                }
+                else if (keyword == "elif")
+                {
+                }
+                else if (keyword == "else")
+                {
+                }
+                else if (keyword == "endif")
+                {
+                }
+            }
+            print(line);
+        }
+        return generated;
+    };
+    */
+} 
+
+SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
+{
+    return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
+        SymbolStorage symbol_storage;
+        for (auto line : content)
+        {
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            assert(terms.size() == 3 or 
+                   terms.size() == 4);
+            auto identifier = terms[0];
+            if (terms.size() == 3)
+            {
+                int index = std::stoi(terms[2]);
+                get<1>(symbol_storage)[identifier] = symbol_groups[index]; 
+            }
+            else if (terms.size() == 4)
+            {
+                int index_a = std::stoi(terms[2]);
+                int index_b = std::stoi(terms[3]);
+                get<0>(symbol_storage)[identifier] = symbol_groups[index_a][index_b]; 
+            }
+        }
+        return symbol_storage;
+    };
+}
+
+ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
+{
+    assert(not terms.empty());
+    auto keyword = terms[0];
+    if (keyword == "defined")
+    {
+        assert(terms.size() == 2);
+        auto identifier = terms[1];
+        return [identifier](SymbolStorage& symbol_storage)
+        {
+            return contains(get<0>(symbol_storage), identifier) or
+                   contains(get<1>(symbol_storage), identifier); 
+        };
+    }
+    else
+    {
+        throw named_exception("Constructor keyword " + keyword + " is not defined");
+    }
 }
 
 /*
+header
+source
+if defined _identifier_
+_identifier_ = _value_
+else
+auto _identifier = _value_ ;
 
 // Standard grammar constructor (From list of files)
 

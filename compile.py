@@ -24,7 +24,7 @@ run(['./build/progtrantest'])
 
 # Build the list of input files
 if len(sys.argv) == 1:
-    directory = './'
+    directory = 'example/'
 else:
     directory = sys.argv[1]
 

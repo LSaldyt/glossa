@@ -1,26 +1,8 @@
 #pragma once
-
-// Avoid a circular include
-namespace syntax
-{
-class Symbol;
-}
-
-#include "../tools/tools.hpp"
-#include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
-#include "../parse/tokenparsers.hpp"
+#include "constructor.hpp"
 
 namespace gen 
 {
-
-using namespace syntax;
-using namespace parse;
-using namespace lex;
-using namespace match;
-using namespace tools;
-
-using Constructor = function<vector<string>(vector<vector<shared_ptr<Symbol>>>)>;
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
@@ -32,7 +14,12 @@ class Generator
 public:
     Generator(vector<string> grammar_files, string directory);
     tuple<Constructor, Constructor> read(string filename);
-/*
+    Constructor generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    
+    SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content);
+    ConditionEvaluator generateConditionEvaluator(vector<string> terms);
+
+    /*
     vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
 
 private:
