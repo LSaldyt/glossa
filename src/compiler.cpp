@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
     }
     for (auto& file : files)
     {
-        compile(file, grammar, "input", "output");
+        compile(file, grammar, generator, "input", "output");
     }
     print("Compilation finished");
 }
 
 namespace compiler
 {
-    void compile(string filename, Grammar& grammar, string input_directory, string output_directory)
+    void compile(string filename, Grammar& grammar, Generator& generator, string input_directory, string output_directory)
     {
         print("Reading File");
         auto content         = readFile     (input_directory + "/" + filename);
@@ -69,7 +69,7 @@ namespace compiler
         auto symbols = grammar.constructFrom(joined_tokens);
 
         print("Generating code..");
-        auto files = generateFiles(filename, symbols);
+        auto files = generateFiles(filename, symbols, generator);
         auto source = get<0>(files);
         auto header = get<1>(files);
         writeFile(source, output_directory + "/" + filename + ".cpp");

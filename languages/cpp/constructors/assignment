@@ -5,4 +5,5 @@ source
 if defined _identifier_
 _identifier_ = _value_
 else
-auto _identifier = _value_ ;
+auto _identifier_ = _value_ ;
+endif

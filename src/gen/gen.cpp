@@ -3,7 +3,7 @@
 
 namespace gen
 {
-    tuple<vector<string>, vector<string>> generateFiles(string filename, vector<shared_ptr<Symbol>>& symbols)
+    tuple<vector<string>, vector<string>> generateFiles(string filename, vector<shared_ptr<Symbol>>& symbols, Generator& generator)
     {
         vector<string> header;
         header.push_back("#pragma once\n");

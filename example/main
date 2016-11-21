@@ -1,7 +1,8 @@
 # Converts to template class
 class Animal():
     __init__(set_name, set_sound):
-        self.name  = set_name
+        processed_name = "(" + set_name + ")"
+        self.name  = processed_name 
         self.sound = set_sound
 
     make_sound():

@@ -18,6 +18,7 @@ __Animal__(T_name set_name, T_sound set_sound) : name(set_name), sound(set_sound
 template < typename T_set_name, typename T_set_sound>
 auto Animal(T_set_name set_name, T_set_sound set_sound)
 {
+    auto processed_name = "("s + set_name + ")"s;
     return __Animal__<decltype(set_name), decltype(set_sound)>(set_name, set_sound);
 };
 

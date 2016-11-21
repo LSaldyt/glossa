@@ -197,8 +197,44 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
     return annotated_symbols;
 }
 
+/*
+vector<vector<shared_ptr<Symbol>>> Grammar::toGroups(string name, vector<Result<SymbolicToken>> results)
+{
+    //print("Constructing " + name);
+    auto construction_indices = get<1>(grammar_map[name]);
+
+    vector<shared_ptr<Symbol>> result_symbols;
+
+    vector<vector<shared_ptr<Symbol>>> groups;
+    groups.push_back(vector<shared_ptr<Symbol>>());
+
+    for (auto i : construction_indices)
+    {
+        // Account for the end-user's grouping instructions (grammar files)
+        if (i == -1)
+        {
+            groups.push_back(vector<shared_ptr<Symbol>>());
+        }
+        else
+        {
+            auto result = results[i];
+            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
+
+            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
+            for (auto group : grouped_tokens)
+            {
+                for (auto t : group)
+                {
+                    groups.back().push_back(t.value);
+                }
+            }
+        }
+    }
+}
+*/
 
 // Helper function for reading in grammar files
+//
 // (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
 SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
 {
