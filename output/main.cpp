@@ -1,4 +1,4 @@
-// _identifier_ = _value_ ; ;
+// auto _identifier_ = _value_ ; 
 
-// function ;
+// function 
 

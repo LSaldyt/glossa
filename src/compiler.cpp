@@ -68,12 +68,13 @@ namespace compiler
         print("Constructing from grammar:");
         vector<string> header;
         vector<string> source;
+        unordered_set<string> names;
 
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
             print(get<0>(identified_group));
-            auto generated = generator(get<1>(identified_group), get<0>(identified_group));
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group));
             concat(header, get<0>(generated));
             concat(source, get<1>(generated));
         }

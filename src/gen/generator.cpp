@@ -1,4 +1,5 @@
 #include "generator.hpp"
+#include "../syntax/symbols/symbol.hpp"
 
 namespace gen 
 {
@@ -33,10 +34,10 @@ tuple<Constructor, Constructor> Generator::read(string filename)
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
 
     print("HEADER");
-    auto header_constructor = Constructor(symbol_storage_generator, generateBranch(header, symbol_storage_generator));
+    auto header_constructor = Constructor(symbol_storage_generator, generateBranch(header, symbol_storage_generator), definitions);
 
     print("SOURCE");
-    auto source_constructor = Constructor(symbol_storage_generator, generateBranch(source, symbol_storage_generator));
+    auto source_constructor = Constructor(symbol_storage_generator, generateBranch(source, symbol_storage_generator), definitions);
 
     return make_tuple(header_constructor, source_constructor);
 }
@@ -123,7 +124,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
         {
             representation += t + " ";
         }
-        representation += ";\n";
+        representation += "\n";
         return representation;
     };
 }
@@ -162,11 +163,12 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     {
         assert(terms.size() == 2);
         auto identifier = terms[1];
-        return [identifier](SymbolStorage& symbol_storage)
+        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
-            print("Checking if " + identifier + " is defined");
-            return contains(get<0>(symbol_storage), identifier) or
-                   contains(get<1>(symbol_storage), identifier); 
+            string to_define = get<0>(symbol_storage)[identifier]->name();
+            print("Checking if " + to_define + " is defined");
+            return contains(names, to_define) or
+                   contains(names, to_define); 
         };
     }
     else
@@ -175,14 +177,14 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     }
 }
 
-tuple<vector<string>, vector<string>> Generator::operator()(vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
+tuple<vector<string>, vector<string>> Generator::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
 {
     assert(contains(construction_map, symbol_type));
     auto constructors = construction_map[symbol_type]; 
     auto header = get<0>(constructors);
     auto source = get<1>(constructors);
 
-    return make_tuple(header(symbol_groups), source(symbol_groups));
+    return make_tuple(header(names, symbol_groups), source(names, symbol_groups));
 }
 
 }
