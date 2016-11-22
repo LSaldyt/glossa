@@ -66,15 +66,20 @@ namespace compiler
         }
 
         print("Constructing from grammar:");
-        auto symbols = grammar.constructFrom(joined_tokens);
+        vector<string> header;
+        vector<string> source;
 
-        print("Generating code..");
-        auto files = generateFiles(filename, symbols, generator);
-        auto source = get<0>(files);
-        auto header = get<1>(files);
+        auto identified_groups = grammar.identifyGroups(joined_tokens);
+        for (auto identified_group : identified_groups)
+        {
+            print(get<0>(identified_group));
+            auto generated = generator(get<1>(identified_group), get<0>(identified_group));
+            concat(header, get<0>(generated));
+            concat(source, get<1>(generated));
+        }
+
         writeFile(source, output_directory + "/" + filename + ".cpp");
         writeFile(header, output_directory + "/" + filename + ".hpp");
-
     }
 
     std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)

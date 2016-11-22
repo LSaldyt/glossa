@@ -1,0 +1,66 @@
+# Converts to template class
+
+class Animal():
+
+    __init__(set_name, set_sound):
+
+        processed_name = "(" + set_name + ")"
+
+        self.name  = processed_name 
+
+        self.sound = set_sound
+
+end
+    make_sound():
+
+        print(self.name + " makes " + self.sound)
+
+end
+end
+class Dog(Animal):
+
+    __init__(set_name, set_type):
+
+        super().__init__(set_name, "bark")
+
+        self.type = set_type
+
+end
+end
+foo(x):
+
+    if x:
+
+        return "Yes"
+
+end
+    else:
+
+        return "No"
+
+end
+end
+# Converts to int main()
+
+main():
+
+    print("Running Main")
+
+    a = Animal("none", "no sound")
+
+    a.make_sound()
+
+    d = Dog("rover", "goldenretriever")
+
+    d.make_sound()
+
+    print(foo(true))
+
+    for arg in __args__:
+
+        print(arg)
+
+end
+    return 0
+
+end

@@ -165,6 +165,21 @@ Grammar::Grammar(vector<string> filenames, string directory)
     }
 }
 
+vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
+{
+    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
+    // Consume all tokens
+    while (tokens.size() > 0)
+    {
+        // Tag groups of tokens as certain language constructs
+        auto result = identify(tokens);
+        auto group  = toGroup(get<0>(result), get<1>(result));
+        identified_groups.push_back(make_tuple(get<0>(result), group));
+    }
+
+    return identified_groups;
+}
+
 // Master function for converting from lexed tokens to AST (List of symbols)
 vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
 {
@@ -197,13 +212,9 @@ vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
     return annotated_symbols;
 }
 
-/*
-vector<vector<shared_ptr<Symbol>>> Grammar::toGroups(string name, vector<Result<SymbolicToken>> results)
+vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
 {
-    //print("Constructing " + name);
     auto construction_indices = get<1>(grammar_map[name]);
-
-    vector<shared_ptr<Symbol>> result_symbols;
 
     vector<vector<shared_ptr<Symbol>>> groups;
     groups.push_back(vector<shared_ptr<Symbol>>());
@@ -230,8 +241,8 @@ vector<vector<shared_ptr<Symbol>>> Grammar::toGroups(string name, vector<Result<
             }
         }
     }
+    return groups;
 }
-*/
 
 // Helper function for reading in grammar files
 //

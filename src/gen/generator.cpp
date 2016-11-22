@@ -161,10 +161,10 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     }
 }
 
-tuple<vector<string>, vector<string>> Generator::operator()(vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filename)
+tuple<vector<string>, vector<string>> Generator::operator()(vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
 {
-    assert(contains(construction_map, filename));
-    auto constructors = construction_map[filename]; 
+    assert(contains(construction_map, symbol_type));
+    auto constructors = construction_map[symbol_type]; 
     auto header = get<0>(constructors);
     auto source = get<1>(constructors);
 
