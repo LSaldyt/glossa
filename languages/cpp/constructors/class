@@ -1,5 +1,55 @@
+$name = 0 0
+$inheritance = 1    
+$constructorargs = 2
+$auxillaryargs = 2
+$supercall = 3
+$constructorbody = 4
+$members = 5
+$body = 6
+concat $auxillaryargs $inheritance
 defines
 header
-// class
+/*
+
+template <
+sep , $auxillaryargs typename&T_@
+>
+class 
+format $name __@__
+{
+public:
+sep ^ $members T_@&@;
+format $name __@__
+(
+sep , $members T_@&set_@
+)
+{
+sep & $members @=set_@;
+}
+
+sep ;^ $body
+
+};
+
+};
+template <
+sep , $constructorargs typename&T_set_@
+>
+auto $name (
+sep , $constructorargs T_set_@&set_@
+){
+return 
+format $name __@__(
+sep , $constructorargs set_@
+);
+}
+*/
 source
-// class
+// No source for template class definitions
+/*
+template < typename T_set_name, typename T_set_sound>
+auto Animal(T_set_name set_name, T_set_sound set_sound)
+{
+    return __Animal__<decltype(set_name), decltype(set_sound)>(set_name, set_sound);
+};
+*/

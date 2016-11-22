@@ -3,6 +3,12 @@ a = 2 + 3
 foo(x, y):
     return x * y
 
+class Animal():
+    __init__(set_name, set_sound):
+        print("Creating Animal")
+        self.name  = set_name
+        self.sound = set_sound
+
 # Converts to int main()
 main():
     print(foo(2, 3))

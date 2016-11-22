@@ -27,4 +27,5 @@ string templateArgList(vector<shared_ptr<Symbol>>& symbols, unordered_set<string
 string templateArgListH(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space);
 
 string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>&, unordered_set<string>& names, bool source, string sep=" ", string formatter="@");
+string format(const string& inner, const string& formatter);
 }

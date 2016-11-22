@@ -135,6 +135,21 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
                 representation += sepWith(*this, symbols, names, source, terms[1], formatter);
             }
+            else if (keyword == "format")
+            {
+                assert(terms.size() == 3);
+                assert(contains(get<0>(storage), terms[1]));
+                auto symbol    = get<0>(storage)[terms[1]];
+                auto formatter = terms[2];
+                if (source)
+                {
+                    representation += format(symbol->source(*this, names), formatter) + " ";
+                }
+                else 
+                {
+                    representation += format(symbol->header(*this, names), formatter) + " ";
+                }
+            }
             else
             {
                 print("No keyword found");
@@ -169,7 +184,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
 SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        SymbolStorage symbol_storage;
+        SymbolStorage storage;
         for (auto line : content)
         {
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
@@ -178,17 +193,37 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
             auto identifier = terms[0];
             if (terms.size() == 3)
             {
-                int index = std::stoi(terms[2]);
-                get<1>(symbol_storage)[identifier] = symbol_groups[index]; 
+                auto keyword = terms[0];
+                if (keyword == "append")
+                {
+                    assert(contains(get<1>(storage), terms[2]));
+                    assert(contains(get<0>(storage), terms[1]));
+                    auto& symbols = get<1>(storage)[terms[2]];
+                    auto& symbol  = get<0>(storage)[terms[1]];
+                    symbols.push_back(symbol);
+                }
+                else if (keyword == "concat")
+                {
+                    assert(contains(get<1>(storage), terms[1]));
+                    assert(contains(get<1>(storage), terms[2]));
+                    auto& a_symbols = get<1>(storage)[terms[2]];
+                    auto& b_symbols = get<1>(storage)[terms[1]];
+                    concat(a_symbols, b_symbols);
+                }
+                else
+                {
+                    int index = std::stoi(terms[2]);
+                    get<1>(storage)[identifier] = symbol_groups[index]; 
+                }
             }
             else if (terms.size() == 4)
             {
                 int index_a = std::stoi(terms[2]);
                 int index_b = std::stoi(terms[3]);
-                get<0>(symbol_storage)[identifier] = symbol_groups[index_a][index_b]; 
+                get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
             }
         }
-        return symbol_storage;
+        return storage;
     };
 }
 
@@ -216,6 +251,15 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
             assert(contains(get<0>(symbol_storage), terms[1]));
             auto name = get<0>(symbol_storage)[terms[1]]->name();
             return name == terms[2]; 
+        };
+    }
+    else if (keyword == "empty")
+    {
+        assert(terms.size() == 2);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        {
+            assert(contains(get<1>(symbol_storage), terms[1]));
+            return get<1>(symbol_storage)[terms[1]].empty();
         };
     }
     else

@@ -155,12 +155,18 @@ namespace gen
         return template_list;
     }
 
+    string format(const string& inner, const string& formatter)
+    {
+        string representation(formatter);
+        replaceAll(representation, "@", inner);
+        return representation;
+    }
+
     string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, bool source, string sep, string formatter)
     {
         string line = "";
         for (int i = 0; i < symbols.size(); i++)
         { 
-            string representation(formatter);
             string inner_representation;
             if (source)
             {
@@ -171,8 +177,7 @@ namespace gen
                 inner_representation = symbols[i]->header(generator, names);
             }
 
-            replaceAll(representation, "@", inner_representation);
-            line += representation;
+            line += format(inner_representation, formatter);
 
             if (i+1 != symbols.size()) //If not on last iteration
             {
