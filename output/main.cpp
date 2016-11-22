@@ -1,4 +1,4 @@
-// auto _identifier_ = _value_ ; 
+// auto a = /*no source*/ ; 
 
 // function 
 

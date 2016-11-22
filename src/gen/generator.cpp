@@ -118,11 +118,25 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [terms](SymbolStorage& storage){
+    return [terms](unordered_set<string>& names, SymbolStorage& storage, bool source){
         string representation = "";
         for (auto t : terms)
         {
-            representation += t + " ";
+            if (t[0] == '_')
+            {
+                if (source)
+                {
+                    representation += get<0>(storage)[t]->source(names) + " ";
+                }
+                else 
+                {
+                    representation += get<0>(storage)[t]->header(names) + " ";
+                }
+            }
+            else
+            {
+                representation += t + " ";
+            }
         }
         representation += "\n";
         return representation;
@@ -184,7 +198,7 @@ tuple<vector<string>, vector<string>> Generator::operator()(unordered_set<string
     auto header = get<0>(constructors);
     auto source = get<1>(constructors);
 
-    return make_tuple(header(names, symbol_groups), source(names, symbol_groups));
+    return make_tuple(header(names, symbol_groups, false), source(names, symbol_groups, true));
 }
 
 }

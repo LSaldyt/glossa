@@ -13,7 +13,7 @@ Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator, Br
 {
 }
 
-vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage)
+vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, bool source)
 {
     vector<string> generated;
 
@@ -30,11 +30,11 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
     {
         for (auto line_constructor : branch.line_constructors)
         {
-            generated.push_back(line_constructor(symbol_storage));
+            generated.push_back(line_constructor(names, symbol_storage, source));
         }
         for (auto nested_branch : branch.nested_branches)
         {
-            concat(generated, evaluateBranch(nested_branch, names, symbol_storage));
+            concat(generated, evaluateBranch(nested_branch, names, symbol_storage, source));
         }
     }
     else
@@ -44,9 +44,9 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
     return generated;
 }
 
-vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups)
+vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, bool source)
 {
     auto symbol_storage = symbol_storage_generator(symbol_groups);
-    return evaluateBranch(main_branch, names, symbol_storage);
+    return evaluateBranch(main_branch, names, symbol_storage, source);
 }
 }

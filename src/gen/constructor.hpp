@@ -14,8 +14,8 @@ public:
     Constructor();
     Constructor(SymbolStorageGenerator set_symbol_storage_generator, Branch set_main_branch, vector<string> set_definitions);
 
-    vector<string> evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage);
-    vector<string> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&);
+    vector<string> evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, bool source);
+    vector<string> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, bool source);
 };
 }
 

@@ -408,10 +408,9 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 
         if (get<0>(result))
         {
-            // Build linked constructs immediately, meaning that information can be discarded (and further, higher-level constructions will be simpler)
-            auto constructed = construct(filename, std::get<1>(result));
-            //print("Built link to " + filename);
-            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
+            auto group       = toGroup(filename, get<1>(result));
+            auto constructed = make_shared<Symbol>(MultiSymbol(filename, group));
+            auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
             return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }
         else
