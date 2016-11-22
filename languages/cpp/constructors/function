@@ -1,23 +1,26 @@
-_identifier_ = 0 0
-_args_ = 1
-_body_ = 2
+$identifier = 0 0
+$args = 1
+$body = 2
 defines
 header
-if equalTo _identifier_ main
+if equalTo $identifier main
 // No main definition required
 else
-auto _identifier_ (
-commaSep _args_
+template <
+sep , $args typename&T_@
+>
+auto $identifier (
+sep , $args T_@&@
 )
 {
-newlineSep _body_
+sep ^; $body
 }
 endif
 source
-if equalTo _identifier_ main
+if equalTo $identifier main
 int main(int argc, char ** argv)
 {
-newlineSep _body_
+sep ^; $body
 }
 else
 // No source for non-main functions 

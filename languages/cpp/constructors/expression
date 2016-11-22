@@ -1,6 +1,6 @@
-_body_ = 0
+$body = 0
 defines
 header
-spaceSep _body_
+sep & $body
 source
-spaceSep _body_
+sep & $body

@@ -1,6 +1,6 @@
-_statement_ = 0 0
+$statement = 0 0
 defines
 header
-_statement_
+$statement ;
 source
-_statement_
+$statement ;

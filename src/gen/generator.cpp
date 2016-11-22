@@ -118,33 +118,30 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
     return [terms, this](unordered_set<string>& names, SymbolStorage& storage, bool source){
+        print("Constructing Line");
         string representation = "";
         if (not terms.empty())
         {
             auto keyword = terms[0];
-            if (keyword == "spaceSep")
+            if (keyword == "sep")
             {
-                assert(terms.size() == 2);
-                auto symbols = get<1>(storage)[terms[1]];
-                representation += sepWith(*this, symbols, names, source, " ");
-            }
-            else if (keyword == "commaSep")
-            {
-                assert(terms.size() == 2);
-                auto symbols = get<1>(storage)[terms[1]];
-                representation += sepWith(*this, symbols, names, source, ",");
-            }
-            else if (keyword == "newlineSep")
-            {
-                assert(terms.size() == 2);
-                auto symbols = get<1>(storage)[terms[1]];
-                representation += sepWith(*this, symbols, names, source, ";\n");
+                assert(terms.size() == 3 or terms.size() == 4);
+                assert(contains(get<1>(storage), terms[2]));
+                auto symbols = get<1>(storage)[terms[2]];
+                string formatter = "@";
+                if (terms.size() == 4)
+                {
+                    formatter = terms[3];
+                }
+                representation += sepWith(*this, symbols, names, source, terms[1], formatter);
             }
             else
             {
+                print("No keyword found");
                 for (auto t : terms)
                 {
-                    if (t[0] == '_')
+                    print(t);
+                    if (t[0] == '$')
                     {
                         auto symbol = get<0>(storage)[t];
                         if (source)
@@ -163,6 +160,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
             }
         }
+        replaceAll(representation, "&", " ");
+        replaceAll(representation, "^", "\n");
         return representation;
     };
 }
@@ -214,6 +213,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         assert(terms.size() == 3);
         return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
+            assert(contains(get<0>(symbol_storage), terms[1]));
             auto name = get<0>(symbol_storage)[terms[1]]->name();
             return name == terms[2]; 
         };

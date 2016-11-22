@@ -155,19 +155,25 @@ namespace gen
         return template_list;
     }
 
-    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, bool source, string sep)
+    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, bool source, string sep, string formatter)
     {
         string line = "";
         for (int i = 0; i < symbols.size(); i++)
         { 
+            string representation(formatter);
+            string inner_representation;
             if (source)
             {
-                line += (symbols[i]->source(generator, names));
+                inner_representation = symbols[i]->source(generator, names);
             }
             else
             {
-                line += (symbols[i]->header(generator, names));
+                inner_representation = symbols[i]->header(generator, names);
             }
+
+            replaceAll(representation, "@", inner_representation);
+            line += representation;
+
             if (i+1 != symbols.size()) //If not on last iteration
             {
                 line += sep;

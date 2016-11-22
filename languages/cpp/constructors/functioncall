@@ -1,11 +1,11 @@
-_identifier_ = 0 0
-_args_ = 1
+$identifier = 0 0
+$args = 1
 defines
 header
-_identifier_ (
-commaSep _args_
-);
+$identifier (
+sep , $args
+)
 source
-_identifier_ (
-commaSep _args_
-);
+$identifier (
+sep , $args
+)

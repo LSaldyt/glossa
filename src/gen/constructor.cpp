@@ -26,8 +26,11 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         names.insert(new_name);
     }
 
+    print("Definitions finished");
+
     if (branch.condition_evaluator(names, symbol_storage))
     {
+        print("Condition evaluation passed");
         for (auto line_constructor : branch.line_constructors)
         {
             generated.push_back(line_constructor(names, symbol_storage, source));
@@ -39,7 +42,7 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
     }
     else
     {
-        print("Condition evaluation for branch failed");
+        print("Condition evaluation failed");
     }
     return generated;
 }
