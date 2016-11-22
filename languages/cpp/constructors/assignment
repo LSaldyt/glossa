@@ -1,9 +1,10 @@
 _identifier_ = 0 0
 _value_ = 1 0
+defines
 header
 source
 if defined _identifier_
-_identifier_ = _value_
+// _identifier_ = _value_ ;
 else
-auto _identifier_ = _value_ ;
+// auto _identifier_ = _value_ ;
 endif

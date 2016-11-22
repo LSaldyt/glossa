@@ -15,6 +15,7 @@ vector<string> evaluateBranch(Branch branch, SymbolStorage& symbol_storage)
 {
     vector<string> generated;
 
+    print("Evaluating branch");
     if (branch.condition_evaluator(symbol_storage))
     {
         for (auto line_constructor : branch.line_constructors)
@@ -25,6 +26,10 @@ vector<string> evaluateBranch(Branch branch, SymbolStorage& symbol_storage)
         {
             concat(generated, evaluateBranch(nested_branch, symbol_storage));
         }
+    }
+    else
+    {
+        print("Condition evaluation for branch failed");
     }
     return generated;
 }

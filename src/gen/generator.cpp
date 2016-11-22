@@ -17,14 +17,17 @@ tuple<Constructor, Constructor> Generator::read(string filename)
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
+    assert(contains(content, "defines"s));
     assert(contains(content, "header"s));
     assert(contains(content, "source"s));
-    auto header_i = std::find(content.begin(), content.end(), "header");
-    auto source_i = std::find(content.begin(), content.end(), "source");
+    auto defines_i = std::find(content.begin(), content.end(), "defines");
+    auto header_i  = std::find(content.begin(), content.end(), "header");
+    auto source_i  = std::find(content.begin(), content.end(), "source");
 
-    auto declarations = vector<string>(content.begin(), header_i);
-    auto header       = vector<string>(header_i + 1, source_i);
-    auto source       = vector<string>(source_i + 1, content.end());
+    auto declarations = vector<string>(content.begin(), defines_i);
+    auto definitions  = vector<string>(defines_i + 1, header_i);
+    auto header       = vector<string>(header_i  + 1, source_i);
+    auto source       = vector<string>(source_i  + 1, content.end());
 
     print("DECLARATIONS");
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
@@ -48,6 +51,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
     auto if_body_end     = content.begin();
     auto else_body_end   = content.begin();
 
+    bool in_conditional = false;
     bool has_else = false;
 
     const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
@@ -76,6 +80,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             if (keyword == "if")
             {
                 if_body_start = it;
+                in_conditional = true;
             }
             else if (keyword == "else")
             {
@@ -88,17 +93,19 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
                 if (not has_else)
                 {
                     if_body_end = it;
-                    addNestedBranch(if_body_start, if_body_end, if_body_start, false);
                 }
+                addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
 
                 if (has_else)
                 {
                     else_body_end = it;
-                    addNestedBranch(else_body_start, else_body_end, if_body_start, true);
+                    addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
                 }
+                in_conditional = false;
             }
-            else
+            else if (not in_conditional)
             {
+                print("ADDING LINE CONSTRUCTOR");
                 line_constructors.push_back(generateLineConstructor(terms));
             }
         }
@@ -110,8 +117,14 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [](SymbolStorage& storage){
-        return "//empty :)";
+    return [terms](SymbolStorage& storage){
+        string representation = "";
+        for (auto t : terms)
+        {
+            representation += t + " ";
+        }
+        representation += ";\n";
+        return representation;
     };
 }
 
@@ -151,6 +164,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         auto identifier = terms[1];
         return [identifier](SymbolStorage& symbol_storage)
         {
+            print("Checking if " + identifier + " is defined");
             return contains(get<0>(symbol_storage), identifier) or
                    contains(get<1>(symbol_storage), identifier); 
         };

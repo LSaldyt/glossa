@@ -1,4 +1,4 @@
-//empty :)
-//empty :)
-//empty :)
-//empty :)
+// _identifier_ = _value_ ; ;
+
+// function ;
+

@@ -78,6 +78,17 @@ namespace compiler
             concat(source, get<1>(generated));
         }
 
+        print("Header:");
+        for (auto line : header)
+        {
+            print(line);
+        }
+        print("Source:");
+        for (auto line : source)
+        {
+            print(line);
+        }
+
         writeFile(source, output_directory + "/" + filename + ".cpp");
         writeFile(header, output_directory + "/" + filename + ".hpp");
     }
