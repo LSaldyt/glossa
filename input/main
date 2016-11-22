@@ -1,9 +1,0 @@
-a = 2
-
-# Converts to int main()
-
-main():
-
-    return 0
-
-end

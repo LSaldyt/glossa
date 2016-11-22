@@ -18,7 +18,7 @@ string MultiSymbol::source(Generator& generator, unordered_set<string>& names, s
     auto files = generator(names, groups, tag);
     for (auto line : get<1>(files))
     {
-        representation += line + "\n";
+        representation += line + " ";
     } 
     return representation;
 }
@@ -29,7 +29,7 @@ string MultiSymbol::header(Generator& generator, unordered_set<string>& names, s
     auto files = generator(names, groups, tag);
     for (auto line : get<0>(files))
     {
-        representation += line + "\n";
+        representation += line + " ";
     } 
     return representation;
 }

@@ -1,5 +1,9 @@
-a = 2
+a = 2 + 3
+
+foo(x, y):
+    return x * y
 
 # Converts to int main()
 main():
+    print(foo(2, 3))
     return 0

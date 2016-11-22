@@ -119,28 +119,50 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
     return [terms, this](unordered_set<string>& names, SymbolStorage& storage, bool source){
         string representation = "";
-        for (auto t : terms)
+        if (not terms.empty())
         {
-            if (t[0] == '_')
+            auto keyword = terms[0];
+            if (keyword == "spaceSep")
             {
-                auto symbol = get<0>(storage)[t];
-                print("SYMBOL ANNOTATION");
-                print(symbol->annotation);
-                if (source)
-                {
-                    representation += symbol->source(*this, names) + " ";
-                }
-                else 
-                {
-                    representation += symbol->header(*this, names) + " ";
-                }
+                assert(terms.size() == 2);
+                auto symbols = get<1>(storage)[terms[1]];
+                representation += sepWith(*this, symbols, names, source, " ");
+            }
+            else if (keyword == "commaSep")
+            {
+                assert(terms.size() == 2);
+                auto symbols = get<1>(storage)[terms[1]];
+                representation += sepWith(*this, symbols, names, source, ",");
+            }
+            else if (keyword == "newlineSep")
+            {
+                assert(terms.size() == 2);
+                auto symbols = get<1>(storage)[terms[1]];
+                representation += sepWith(*this, symbols, names, source, ";\n");
             }
             else
             {
-                representation += t + " ";
+                for (auto t : terms)
+                {
+                    if (t[0] == '_')
+                    {
+                        auto symbol = get<0>(storage)[t];
+                        if (source)
+                        {
+                            representation += symbol->source(*this, names) + " ";
+                        }
+                        else 
+                        {
+                            representation += symbol->header(*this, names) + " ";
+                        }
+                    }
+                    else
+                    {
+                        representation += t + " ";
+                    }
+                }
             }
         }
-        representation += "\n";
         return representation;
     };
 }
@@ -187,6 +209,15 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
                    contains(names, to_define); 
         };
     }
+    else if (keyword == "equalTo")
+    {
+        assert(terms.size() == 3);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        {
+            auto name = get<0>(symbol_storage)[terms[1]]->name();
+            return name == terms[2]; 
+        };
+    }
     else
     {
         throw named_exception("Constructor keyword " + keyword + " is not defined");
@@ -195,6 +226,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
 
 tuple<vector<string>, vector<string>> Generator::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
 {
+    print(symbol_type);
     assert(contains(construction_map, symbol_type));
     auto constructors = construction_map[symbol_type]; 
     auto header = get<0>(constructors);

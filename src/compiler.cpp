@@ -70,6 +70,9 @@ namespace compiler
         vector<string> source;
         unordered_set<string> names;
 
+        header.push_back("#include \"../std/std.hpp\"");
+        source.push_back("#include \"" + filename + ".hpp\"");
+
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {

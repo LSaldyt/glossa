@@ -1,5 +1,24 @@
+_identifier_ = 0 0
+_args_ = 1
+_body_ = 2
 defines
 header
-// function
+if equalTo _identifier_ main
+// No main definition required
+else
+auto _identifier_ (
+commaSep _args_
+)
+{
+newlineSep _body_
+}
+endif
 source
-// function
+if equalTo _identifier_ main
+int main(int argc, char ** argv)
+{
+newlineSep _body_
+}
+else
+// No source for non-main functions 
+endif

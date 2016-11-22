@@ -25,4 +25,6 @@ string commaSep(vector<shared_ptr<Symbol>>& items, unordered_set<string>& names,
 string commaSepH(vector<shared_ptr<Symbol>>& items, unordered_set<string>& names, string n_space, string prefix="", string suffix="");
 string templateArgList(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space);
 string templateArgListH(vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string n_space);
+
+string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>&, unordered_set<string>& names, bool source, string sep=" ");
 }

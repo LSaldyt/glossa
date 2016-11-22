@@ -20,6 +20,14 @@ namespace syntax
         {
             return std::to_string(value);
         }
+        virtual string source(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return std::to_string(value);
+        }
+        virtual string header(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return std::to_string(value);
+        }
 
     };
 

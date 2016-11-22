@@ -1,0 +1,11 @@
+_identifier_ = 0 0
+_args_ = 1
+defines
+header
+_identifier_ (
+commaSep _args_
+);
+source
+_identifier_ (
+commaSep _args_
+);

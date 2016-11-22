@@ -154,4 +154,25 @@ namespace gen
         }
         return template_list;
     }
+
+    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, bool source, string sep)
+    {
+        string line = "";
+        for (int i = 0; i < symbols.size(); i++)
+        { 
+            if (source)
+            {
+                line += (symbols[i]->source(generator, names));
+            }
+            else
+            {
+                line += (symbols[i]->header(generator, names));
+            }
+            if (i+1 != symbols.size()) //If not on last iteration
+            {
+                line += sep;
+            }
+        }
+        return line;
+    }
 }
