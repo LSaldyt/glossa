@@ -106,7 +106,6 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             }
             else if (not in_conditional)
             {
-                print("ADDING LINE CONSTRUCTOR");
                 line_constructors.push_back(generateLineConstructor(terms));
             }
         }
@@ -118,19 +117,22 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [terms](unordered_set<string>& names, SymbolStorage& storage, bool source){
+    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, bool source){
         string representation = "";
         for (auto t : terms)
         {
             if (t[0] == '_')
             {
+                auto symbol = get<0>(storage)[t];
+                print("SYMBOL ANNOTATION");
+                print(symbol->annotation);
                 if (source)
                 {
-                    representation += get<0>(storage)[t]->source(names) + " ";
+                    representation += symbol->source(*this, names) + " ";
                 }
                 else 
                 {
-                    representation += get<0>(storage)[t]->header(names) + " ";
+                    representation += symbol->header(*this, names) + " ";
                 }
             }
             else

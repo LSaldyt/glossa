@@ -37,6 +37,14 @@ namespace syntax
         {
             return value;
         }
+        virtual string source(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return value;
+        }
+        virtual string header(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return value;
+        }
         virtual string name()
         {
             return "none";

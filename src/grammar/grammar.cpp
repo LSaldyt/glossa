@@ -409,7 +409,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         if (get<0>(result))
         {
             auto group       = toGroup(filename, get<1>(result));
-            auto constructed = make_shared<Symbol>(MultiSymbol(filename, group));
+            auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, group));
             auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
             return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }

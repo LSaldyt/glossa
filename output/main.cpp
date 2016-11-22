@@ -1,4 +1,6 @@
-// auto a = /*no source*/ ; 
+// auto a = // expression 
+
+ ; 
 
 // function 
 
