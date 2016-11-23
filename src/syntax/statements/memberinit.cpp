@@ -15,6 +15,7 @@ namespace syntax
     }
     string MemberInit::name()
     {
-        return "__self__ " + identifier;
+        print("MEMBERINITNAME");
+        return identifier;
     }
 }

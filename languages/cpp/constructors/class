@@ -1,15 +1,15 @@
 $name = 0 0
 $inheritance = 1    
 $constructorargs = 2
-$auxillaryargs = 2
 $supercall = 3
 $constructorbody = 4
+$auxillaryargs = 5
 $members = 5
 $body = 6
 concat $auxillaryargs $inheritance
+name
 defines
 header
-/*
 
 template <
 sep , $auxillaryargs typename&T_@
@@ -21,35 +21,31 @@ public:
 sep ^ $members T_@&@;
 format $name __@__
 (
-sep , $members T_@&set_@
+sep , $auxillaryargs T_@&@
 )
 {
-sep & $members @=set_@;
+sep & $members @=@;
 }
 
 sep ;^ $body
 
 };
 
-};
 template <
-sep , $constructorargs typename&T_set_@
+sep , $constructorargs typename&T_@
 >
 auto $name (
-sep , $constructorargs T_set_@&set_@
+sep , $constructorargs T_@&@
 ){
+sep ^  $constructorbody @; 
 return 
-format $name __@__(
-sep , $constructorargs set_@
+format $name __@__<
+sep , $members decltype(@) source
+>
+(
+sep , $members @ source
 );
 }
-*/
+
 source
 // No source for template class definitions
-/*
-template < typename T_set_name, typename T_set_sound>
-auto Animal(T_set_name set_name, T_set_sound set_sound)
-{
-    return __Animal__<decltype(set_name), decltype(set_sound)>(set_name, set_sound);
-};
-*/

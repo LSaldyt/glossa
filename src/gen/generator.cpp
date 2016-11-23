@@ -1,5 +1,5 @@
 #include "generator.hpp"
-#include "../syntax/symbols/symbol.hpp"
+#include "../syntax/symbols/export.hpp"
 
 namespace gen 
 {
@@ -18,26 +18,25 @@ tuple<Constructor, Constructor> Generator::read(string filename)
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
+    assert(contains(content, "name"s));
     assert(contains(content, "defines"s));
     assert(contains(content, "header"s));
     assert(contains(content, "source"s));
+    auto name_i    = std::find(content.begin(), content.end(), "name");
     auto defines_i = std::find(content.begin(), content.end(), "defines");
     auto header_i  = std::find(content.begin(), content.end(), "header");
     auto source_i  = std::find(content.begin(), content.end(), "source");
 
-    auto declarations = vector<string>(content.begin(), defines_i);
+    auto declarations = vector<string>(content.begin(), name_i);
+    auto name         = vector<string>(name_i    + 1, defines_i);
     auto definitions  = vector<string>(defines_i + 1, header_i);
     auto header       = vector<string>(header_i  + 1, source_i);
     auto source       = vector<string>(source_i  + 1, content.end());
 
-    print("DECLARATIONS");
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
 
-    print("HEADER");
-    auto header_constructor = Constructor(symbol_storage_generator, generateBranch(header, symbol_storage_generator), definitions);
-
-    print("SOURCE");
-    auto source_constructor = Constructor(symbol_storage_generator, generateBranch(source, symbol_storage_generator), definitions);
+    auto header_constructor = Constructor(symbol_storage_generator, generateBranch(header, symbol_storage_generator), definitions, name);
+    auto source_constructor = Constructor(symbol_storage_generator, generateBranch(source, symbol_storage_generator), definitions, name);
 
     return make_tuple(header_constructor, source_constructor);
 }
@@ -47,6 +46,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
     vector<LineConstructor> line_constructors;
     vector<Branch>          nested_branches;
     
+    auto default_body    = content.begin();
     auto if_body_start   = content.begin();
     auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
     auto if_body_end     = content.begin();
@@ -80,6 +80,12 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             auto keyword = terms[0];
             if (keyword == "if")
             {
+                if (default_body != it)
+                {
+                    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+                    line_constructors.clear();
+                    default_body = it;
+                }
                 if_body_start = it;
                 in_conditional = true;
             }
@@ -103,6 +109,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
                     addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
                 }
                 in_conditional = false;
+                default_body = it;
             }
             else if (not in_conditional)
             {
@@ -110,6 +117,11 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             }
         }
         it++;
+    }
+    if (default_body != content.end())
+    {
+        nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+        line_constructors.clear();
     }
 
     return Branch(defaultBranch, line_constructors, nested_branches);
@@ -125,15 +137,20 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
             auto keyword = terms[0];
             if (keyword == "sep")
             {
-                assert(terms.size() == 3 or terms.size() == 4);
+                assert(terms.size() == 3 or terms.size() == 4 or terms.size() == 5);
                 assert(contains(get<1>(storage), terms[2]));
                 auto symbols = get<1>(storage)[terms[2]];
                 string formatter = "@";
-                if (terms.size() == 4)
+                if (terms.size() > 3)
                 {
                     formatter = terms[3];
                 }
-                representation += sepWith(*this, symbols, names, source, terms[1], formatter);
+                bool use_source = source;
+                if (terms.size() == 5)
+                {
+                    use_source = terms[4] == "source";
+                }
+                representation += sepWith(*this, symbols, names, use_source, terms[1], formatter);
             }
             else if (keyword == "format")
             {
@@ -218,9 +235,22 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
             }
             else if (terms.size() == 4)
             {
-                int index_a = std::stoi(terms[2]);
-                int index_b = std::stoi(terms[3]);
-                get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
+                if (terms[2] == "names")
+                {
+                    vector<shared_ptr<Symbol>> names;
+                    int index = std::stoi(terms[3]);
+                    for (auto symbol : symbol_groups[index])
+                    {
+                        names.push_back(make_shared<Identifier>(Identifier(symbol->name())));
+                    }
+                    get<1>(storage)[identifier] = names;
+                }
+                else
+                {
+                    int index_a = std::stoi(terms[2]);
+                    int index_b = std::stoi(terms[3]);
+                    get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
+                }
             }
         }
         return storage;

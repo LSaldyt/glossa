@@ -12,5 +12,13 @@ namespace syntax
         {
             return "\"" + value + "\"s";
         }
+        string source(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return "\"" + value + "\"s";
+        }
+        string header(Generator& generator, unordered_set<string>& names, string n_space="")
+        {
+            return "\"" + value + "\"s";
+        }
     };
 }
