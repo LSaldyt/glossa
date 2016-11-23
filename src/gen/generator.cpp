@@ -130,7 +130,6 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
     return [terms, this](unordered_set<string>& names, SymbolStorage& storage, bool source){
-        print("Constructing Line");
         string representation = "";
         if (not terms.empty())
         {
@@ -223,8 +222,8 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
                 {
                     assert(contains(get<1>(storage), terms[1]));
                     assert(contains(get<1>(storage), terms[2]));
-                    auto& a_symbols = get<1>(storage)[terms[2]];
-                    auto& b_symbols = get<1>(storage)[terms[1]];
+                    auto& a_symbols = get<1>(storage)[terms[1]];
+                    auto& b_symbols = get<1>(storage)[terms[2]];
                     concat(a_symbols, b_symbols);
                 }
                 else

@@ -1,5 +1,3 @@
-a = 2 + 3
-
 foo(x, y):
     return x * y
 
@@ -8,6 +6,11 @@ class Animal():
         print("Creating Animal")
         self.name  = set_name
         self.sound = set_sound
+
+class Dog(Animal):
+    __init__(set_name, set_type):
+        super().__init__(set_name, "bark")
+        self.type = set_type
 
 # Converts to int main()
 main():

@@ -5,8 +5,10 @@ $supercall = 3
 $constructorbody = 4
 $auxillaryargs = 5
 $members = 5
+$inners = 5
 $body = 6
 concat $auxillaryargs $inheritance
+concat $inners $inheritance
 name
 defines
 header
@@ -16,15 +18,25 @@ sep , $auxillaryargs typename&T_@
 >
 class 
 format $name __@__
+if empty $inheritance
+else
+: 
+sep , $inheritance public&T_@ 
+endif
 {
 public:
 sep ^ $members T_@&@;
 format $name __@__
 (
-sep , $auxillaryargs T_@&@
+sep , $auxillaryargs T_@&set_@
 )
+if empty $inheritance
+else
+: 
+sep , $inheritance T_@(set_@) 
+endif
 {
-sep & $members @=@;
+sep & $members @=set_@;
 }
 
 sep ;^ $body
@@ -38,12 +50,29 @@ auto $name (
 sep , $constructorargs T_@&@
 ){
 sep ^  $constructorbody @; 
+if empty $supercall
+else
+auto 
+sep & $inheritance T_@&=@(
+sep & $supercall
+);
+endif
 return 
 format $name __@__<
 sep , $members decltype(@) source
+if empty $supercall
+else
+,
+sep & $inheritance decltype(T_@)
+endif
 >
 (
 sep , $members @ source
+if empty $supercall
+else
+,
+sep & $inheritance T_@
+endif
 );
 }
 

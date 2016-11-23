@@ -1,0 +1,7 @@
+$args = 0
+name
+defines
+header
+sep , $args
+source
+sep , $args
