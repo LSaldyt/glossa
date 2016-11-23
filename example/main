@@ -10,7 +10,6 @@ class Animal():
 class Dog(Animal):
     __init__(set_name, set_type):
         super().__init__(set_name, "bark")
-        self.type = set_type
 
 # Converts to int main()
 main():

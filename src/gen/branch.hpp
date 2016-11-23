@@ -26,15 +26,15 @@ using MultiSymbolTable = unordered_map<string, vector<shared_ptr<Symbol>>>;
 using SymbolStorage    = tuple<SymbolTable, MultiSymbolTable>;
 using SymbolStorageGenerator = function<SymbolStorage(vector<vector<shared_ptr<Symbol>>>&)>;
 
-using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&)>;
+using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&, const vector<string>&)>;
 using LineConstructor    = function<string(unordered_set<string>&, SymbolStorage&, bool)>;
 
-const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&){return true;};
+const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
 {
-    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage)
+    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
     {
-        auto condition = c(names, symbol_storage);
+        auto condition = c(names, symbol_storage, generated);
         return not condition;
     };
 };

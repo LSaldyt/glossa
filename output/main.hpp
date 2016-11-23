@@ -42,7 +42,7 @@ set_name     ,set_sound
 ); 
 } 
 template < 
-typename T_type  ,typename T_Animal
+typename T_Animal
 > 
 class 
 __Dog__ 
@@ -50,15 +50,15 @@ __Dog__
 public T_Animal
 { 
 public: 
-T_type   type  ;
+
 __Dog__ 
 ( 
-T_type   set_type  ,T_Animal set_Animal
+T_Animal set_Animal
 ) 
 : 
 T_Animal(set_Animal)
 { 
-type  =set_type  ;
+
 } 
 
 }; 
@@ -75,13 +75,11 @@ set_name   ,"bark"s
 ); 
 return 
 __Dog__< 
-decltype(set_type     )
-, 
+
 decltype(T_Animal)
 > 
 ( 
-set_type     
-, 
+
 T_Animal
 ); 
 } 

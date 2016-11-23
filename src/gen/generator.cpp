@@ -264,7 +264,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     {
         assert(terms.size() == 2);
         auto identifier = terms[1];
-        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             string to_define = get<0>(symbol_storage)[identifier]->name();
             print("Checking if " + to_define + " is defined");
@@ -275,7 +275,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     else if (keyword == "equalTo")
     {
         assert(terms.size() == 3);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             assert(contains(get<0>(symbol_storage), terms[1]));
             auto name = get<0>(symbol_storage)[terms[1]]->name();
@@ -285,10 +285,33 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     else if (keyword == "empty")
     {
         assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             assert(contains(get<1>(symbol_storage), terms[1]));
             return get<1>(symbol_storage)[terms[1]].empty();
+        };
+    }
+    else if (keyword == "nonempty")
+    {
+        assert(terms.size() == 2);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        {
+            assert(contains(get<1>(symbol_storage), terms[1]));
+            return not get<1>(symbol_storage)[terms[1]].empty();
+        };
+    }
+    else if (keyword == "both")
+    {
+        assert(contains(terms, "and"s));
+        auto split = std::find(terms.begin(), terms.end(), "and");
+        vector<string> first(terms.begin() + 1, split);
+        vector<string> second(split + 1, terms.end());
+        return [this, first, second](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+        {
+            auto a = generateConditionEvaluator(first);
+            auto b = generateConditionEvaluator(second);
+
+            return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
         };
     }
     else

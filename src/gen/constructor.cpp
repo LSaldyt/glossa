@@ -29,7 +29,7 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
 
     print("Definitions finished");
 
-    if (branch.condition_evaluator(names, symbol_storage))
+    if (branch.condition_evaluator(names, symbol_storage, generated))
     {
         print("Condition evaluation passed");
         for (auto line_constructor : branch.line_constructors)
