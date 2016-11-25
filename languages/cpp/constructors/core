@@ -8,3 +8,8 @@ statement
 functioncall
 memberinit
 supercall
+conditional
+boolexpression
+forloop
+whileloop
+import

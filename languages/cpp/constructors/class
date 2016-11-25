@@ -18,10 +18,10 @@ sep , $auxillaryargs typename&T_@
 >
 class 
 format $name __@__
-if nonempty $inheritance
+branch nonempty $inheritance
 : 
 sep , $inheritance public&T_@ 
-endif
+end
 {
 public:
 sep ^ $members T_@&@;
@@ -29,10 +29,10 @@ format $name __@__
 (
 sep , $auxillaryargs T_@&set_@
 )
-if nonempty $inheritance
+branch nonempty $inheritance
 : 
 sep , $inheritance T_@(set_@) 
-endif
+end
 {
 sep & $members @=set_@;
 }
@@ -48,30 +48,30 @@ auto $name (
 sep , $constructorargs T_@&@
 ){
 sep ^  $constructorbody @; 
-if nonempty $supercall
+branch nonempty $supercall
 auto 
 sep & $inheritance T_@&=@(
 sep & $supercall
 );
-endif
+end
 return 
 format $name __@__<
 sep , $members decltype(@) source
-if both nonempty $supercall and nonempty $members
+branch both nonempty $supercall and nonempty $members
 ,
-endif
-if nonempty $supercall
+end
+branch nonempty $supercall
 sep & $inheritance decltype(T_@)
-endif
+end
 >
 (
 sep , $members @ source
-if both nonempty $supercall and nonempty $members
+branch both nonempty $supercall and nonempty $members
 ,
-endif
-if nonempty $supercall
+end
+branch nonempty $supercall
 sep & $inheritance T_@
-endif
+end
 );
 }
 

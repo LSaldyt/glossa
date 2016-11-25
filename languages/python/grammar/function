@@ -1,3 +1,4 @@
+keyword def
 identifier wildcard
 punctuator (
 optional identifier wildcard 
@@ -6,4 +7,4 @@ punctuator )
 punctuator :
 many link statement
 keyword end
-0 sep 2 3 sep 6 
+1 sep 3 4 sep 7 

@@ -78,7 +78,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
         if (not terms.empty())
         {
             auto keyword = terms[0];
-            if (keyword == "if")
+            if (keyword == "branch")
             {
                 if (default_body != it)
                 {
@@ -89,13 +89,13 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
                 if_body_start = it;
                 in_conditional = true;
             }
-            else if (keyword == "else")
+            else if (keyword == "elsebranch")
             {
                 if_body_end     = it;
                 else_body_start = it;
                 has_else = true;
             }
-            else if (keyword == "endif")
+            else if (keyword == "end")
             {
                 if (not has_else)
                 {

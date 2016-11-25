@@ -1,9 +1,0 @@
-keyword __init__ 
-punctuator (
-optional identifier wildcard
-many inOrder !punctuator , identifier wildcard
-punctuator )
-punctuator :
-many anyOf link statement link memberinit
-keyword end
-2 3 sep 6

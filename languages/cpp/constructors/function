@@ -1,28 +1,28 @@
-$identifier = 0 0
+$identbranchier = 0 0
 $args = 1
 $body = 2
 name
 defines
 header
-if equalTo $identifier main
+branch equalTo $identbranchier main
 // No main definition required
-else
+elsebranch
 template <
 sep , $args typename&T_@
 >
-auto $identifier (
+auto $identbranchier (
 sep , $args T_@&@
 )
 {
 sep ^; $body
 }
-endif
+end
 source
-if equalTo $identifier main
+branch equalTo $identbranchier main
 int main(int argc, char ** argv)
 {
 sep ^; $body
 }
-else
+elsebranch
 // No source for non-main functions 
-endif
+end
