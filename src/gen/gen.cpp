@@ -3,58 +3,27 @@
 
 namespace gen
 {
-    vector<string> generate(vector<shared_ptr<Symbol>>& symbols, unordered_set<string> outer_names)
+    string format(const string& inner, const string& formatter)
     {
-        vector<string> output;
-        output.reserve(symbols.size());
-
-        unordered_set<string> names(outer_names);
-
-        for (auto s : symbols)
-        {
-            print("Generated:");
-            print(s->source(names) + ";");
-            output.push_back(s->source(names) + ";\n");
-            auto name = s->name();
-            if (name != "none")
-            { 
-                if (name[0] == '*')
-                {
-                    name = sliceString(name, 1);
-                    print("Added name to scope: " + name);
-                    names.insert(name);
-                    print(names.size());
-                }
-                else
-                {
-                    checkName(name, names);
-                }
-            }
-        }
-        return output;
+        string representation(formatter);
+        replaceAll(representation, "@", inner);
+        return representation;
     }
 
-    void checkName(string name, const unordered_set<string>& names)
+    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string filetype, string sep, string formatter)
     {
-        if (name != "none")
-        {
-            auto got = names.find(name);
-            if ( got == names.end() )
+        string line = "";
+        for (int i = 0; i < symbols.size(); i++)
+        { 
+            string inner_representation = symbols[i]->representation(generator, names, filetype);
+
+            line += format(inner_representation, formatter);
+
+            if (i+1 != symbols.size()) //If not on last iteration
             {
-                for (auto n : names)
-                {
-                    print("Scope contained: " + n);
-                }
-                throw named_exception(name + " is not defined");
-            }
-            else
-            {
-                print("Using defined name " + name);
+                line += sep;
             }
         }
-        else
-        {
-            print("no name defined");
-        }
+        return line;
     }
 }

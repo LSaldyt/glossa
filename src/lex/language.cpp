@@ -52,7 +52,7 @@ namespace lex
             auto result = lexer.match(terms);
             if(result.result)
             {
-                print("Term identified as " + lexer.name);
+                //print("Term identified as " + lexer.name);
                 return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
             }
         }

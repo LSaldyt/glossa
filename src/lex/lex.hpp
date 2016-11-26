@@ -6,4 +6,6 @@
 namespace lex
 {
     Tokens lexWith(const string& sentence, const Language& language);
+
+    string removeComments(const string& line);
 }

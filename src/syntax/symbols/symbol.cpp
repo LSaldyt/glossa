@@ -1,8 +1,10 @@
 #include "symbol.hpp"
 namespace syntax
 {
-string Symbol::representation(){ return ""; }
-string Symbol::source(unordered_set<string>& generated){return "symbol";}
+string Symbol::representation(Generator& generator, unordered_set<string>& generated, string filetype)
+{
+    return "/*No Representation*/";
+}
 string Symbol::name(){return "none";}
 Symbol::Symbol(){}
 }

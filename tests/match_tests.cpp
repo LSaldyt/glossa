@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "../src/Match/Match.hpp"
+#include "../src/match/match.hpp"
 
 TEST_CASE( "Basic matching works")
 {
-    using namespace Match;
+    using namespace match;
     Terms expected;
 
     auto hello = just<std::string>("hello");
@@ -33,12 +33,6 @@ TEST_CASE( "Basic matching works")
 
         assertEqual(allOf<std::string>({hello, wildcard<std::string>()})({"hello"}).result         , true);
         assertEqual(allOf<std::string>({hello, just<std::string>("nothello")})({"hello"}).result , false);
-    }
-
-    SECTION ("sepBy")
-    {
-        expected = {"a", ",", "b"};
-        assertEqual(sepBy<std::string>(just<std::string>(","), alphas)(expected).consumed , expected); // Wont discard the comma, but will recognize it as valid
     }
 
     SECTION("digits")

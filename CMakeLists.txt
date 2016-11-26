@@ -16,5 +16,5 @@ file (GLOB_RECURSE TEST_SOURCES
 add_library(progtranlib SHARED "${LIB_SOURCES}")
 add_executable(progtran "${PROG_SOURCES}")
 target_link_libraries(progtran progtranlib)
-#add_executable(progtrantest "${TEST_SOURCES}")
-#target_link_libraries(progtrantest progtranlib)
+add_executable(progtrantest "${TEST_SOURCES}")
+target_link_libraries(progtrantest progtranlib)

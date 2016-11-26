@@ -12,11 +12,10 @@ namespace syntax
         {
             value = set_value; 
         }
-        virtual string source(unordered_set<string>& names)
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return std::to_string(value);
         }
-
     };
 
     struct StringLiteral : public Symbol
@@ -25,7 +24,7 @@ namespace syntax
         StringLiteral(string set_value) : value(set_value)
         {
         }
-        virtual string source(unordered_set<string>& names)
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return value;
         }

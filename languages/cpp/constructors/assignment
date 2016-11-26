@@ -1,0 +1,11 @@
+$identbranchier = 0 0
+$value = 1 0
+name
+defines
+header
+source
+branch defined $identbranchier
+$identbranchier = $value ;
+elsebranch
+auto $identbranchier = $value ;
+end

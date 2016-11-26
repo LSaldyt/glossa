@@ -1,9 +1,0 @@
-
-class Animal():
-    sound():
-        return "none" 
-end
-
-main():
-    print("Hello World")
-    return 0
