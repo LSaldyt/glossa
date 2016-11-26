@@ -29,10 +29,10 @@ languageargs = []
 
 # Build the list of input files
 if len(sys.argv) == 1:
-    directory = 'example/'
+    directory = 'python_example/'
     languageargs = ['python', 'cpp']
 else:
-    assert len(sys.argv) == 3
+    assert len(sys.argv) == 4
     directory = sys.argv[1]
     languageargs = sys.argv[2:]
 
