@@ -390,7 +390,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         } 
         auto constructed = constructor(names, symbol_groups, type);
         concat(default_content, constructed);
-        files.push_back(make_tuple(type, extension, default_content));
+        files.push_back(make_tuple(type, filename + extension, default_content));
     }
     return files;
 }

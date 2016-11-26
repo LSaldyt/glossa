@@ -5,41 +5,27 @@ int main(int argc, char* argv[])
 {
     using namespace compiler;
 
-    auto grammar_files = readFile("languages/python/grammar/core");
-    auto grammar = Grammar(grammar_files, "languages/python/grammar/");
-
-    auto constructor_files = readFile("languages/cpp/constructors/core");
-    auto generator = Generator(constructor_files, "languages/cpp/constructors/");
-
-    auto operators        = readFile("languages/python/grammar/operators");
-    auto logicaloperators = readFile("languages/python/grammar/logicaloperators"); 
-    auto punctuators      = readFile("languages/python/grammar/punctuators");
-
-    LanguageTermSets term_sets;
-    term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
-    term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
-    term_sets.push_back(make_tuple(operators, "operator"));
-    term_sets.push_back(make_tuple(punctuators, "punctuator"));
-
-    LanguageLexers lexer_set = {
-        LanguageLexer(digits, "int", "literal", 3),
-        LanguageLexer(startswith("\""), "string", "literal", 1),
-        LanguageLexer(identifiers, "identifier", "identifier", 3)};
-
-    Language test_language(term_sets, lexer_set);
-    grammar.language = test_language;
-
-    vector<string> files;
-    string input_directory  = "";
-    string output_directory = "";
-
+    vector<string> args;
     if (argc > 1)
     {
         for (int i = 1; i < argc; i++)
         {
-            files.push_back(argv[i]);
+            args.push_back(argv[i]);
         }
     }
+
+    assert(args.size() > 2);
+
+    string from = args[0];
+    string to   = args[1];
+
+    auto grammar   = loadGrammar(from);
+    auto generator = loadGenerator(to);
+
+    vector<string> files = slice(args, 2);
+    string input_directory  = "";
+    string output_directory = "";
+
     for (auto& file : files)
     {
         compile(file, grammar, generator, "input", "output");
@@ -49,6 +35,38 @@ int main(int argc, char* argv[])
 
 namespace compiler
 {
+    Grammar loadGrammar(string language)
+    {
+        auto grammar_files = readFile("languages/" + language + "/grammar/core");
+        auto grammar = Grammar(grammar_files, "languages/" + language + "/grammar/");
+
+
+        auto operators        = readFile("languages/" + language + "/grammar/operators");
+        auto logicaloperators = readFile("languages/" + language + "/grammar/logicaloperators"); 
+        auto punctuators      = readFile("languages/" + language + "/grammar/punctuators");
+
+        LanguageTermSets term_sets;
+        term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
+        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
+        term_sets.push_back(make_tuple(operators, "operator"));
+        term_sets.push_back(make_tuple(punctuators, "punctuator"));
+
+        LanguageLexers lexer_set = {
+            LanguageLexer(digits, "int", "literal", 3),
+            LanguageLexer(startswith("\""), "string", "literal", 1),
+            LanguageLexer(identifiers, "identifier", "identifier", 3)};
+
+        Language test_language(term_sets, lexer_set);
+        grammar.language = test_language;
+        return grammar;
+    }
+
+    Generator loadGenerator(string language)
+    {
+        auto constructor_files = readFile("languages/" + language + "/constructors/core");
+        return Generator(constructor_files, "languages/" + language + "/constructors/");
+    }
+
     void compile(string filename, Grammar& grammar, Generator& generator, string input_directory, string output_directory)
     {
         print("Reading File");
@@ -66,8 +84,6 @@ namespace compiler
         }
 
         print("Constructing from grammar:");
-        vector<string> header;
-        vector<string> source;
         unordered_set<string> names;
 
         auto identified_groups = grammar.identifyGroups(joined_tokens);
@@ -75,23 +91,19 @@ namespace compiler
         {
             print(get<0>(identified_group));
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), filename);
-            concat(header, get<2>(generated[0]));
-            concat(source, get<2>(generated[1]));
+            for (auto fileinfo : generated)
+            {
+                string type         = get<0>(fileinfo);
+                string path         = get<1>(fileinfo);
+                vector<string> body = get<2>(fileinfo);
+                print("Created " + type + " file:");
+                for (auto line : body)
+                {
+                    print("    " + line);
+                }
+                writeFile(body, output_directory + "/" + path);
+            }
         }
-
-        print("Header:");
-        for (auto line : header)
-        {
-            print(line);
-        }
-        print("Source:");
-        for (auto line : source)
-        {
-            print(line);
-        }
-
-        writeFile(source, output_directory + "/" + filename + ".cpp");
-        writeFile(header, output_directory + "/" + filename + ".hpp");
     }
 
     std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)

@@ -25,11 +25,16 @@ run(['make'])
 os.chdir('..')
 run(['./build/progtrantest'])
 
+languageargs = []
+
 # Build the list of input files
 if len(sys.argv) == 1:
     directory = 'example/'
+    languageargs = ['python', 'cpp']
 else:
+    assert len(sys.argv) == 3
     directory = sys.argv[1]
+    languageargs = sys.argv[2:]
 
 inputfiles = []
 
@@ -44,7 +49,7 @@ for dirpath, dnames, filenames in os.walk(directory):
         run(['./annotate.py', inputfile])
 
 print('Running files: %s' % '\n'.join(inputfiles))
-run(['./build/progtran'] + inputfiles)
+run(['./build/progtran'] + languageargs + inputfiles)
 
 # Compile output c++ code
 os.chdir('output')
