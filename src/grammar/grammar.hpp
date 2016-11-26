@@ -29,12 +29,9 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
 
 class Grammar
 {
-    const static unordered_map<string, StatementConstructor> construction_map;
-
 public:
     Grammar(vector<string> grammar_files, string directory);
 
-    vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(SymbolicTokens& tokens);
 
     vector<string> keywords;
@@ -43,12 +40,8 @@ public:
 private:
     GrammarMap grammar_map; 
 
-    shared_ptr<Symbol> build(string name, vector<vector<shared_ptr<Symbol>>> symbols);
-
     tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     vector<vector<shared_ptr<Symbol>>> toGroup(string name, vector<Result<SymbolicToken>> results);
-
-    shared_ptr<Symbol> construct(string name, vector<Result<SymbolicToken>> results);
 
     tuple<SymbolicTokenParsers, vector<int>> read(string filename);
     tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(SymbolicTokenParsers parsers, SymbolicTokens& tokens);

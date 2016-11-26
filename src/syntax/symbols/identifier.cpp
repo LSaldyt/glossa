@@ -10,13 +10,5 @@ string Identifier::representation(Generator& generator, unordered_set<string>& g
 {
     return value;
 }
-string Identifier::source(Generator& generator, unordered_set<string>& generated, string n_space)
-{
-    return value;
-}
-string Identifier::header(Generator& generator, unordered_set<string>& generated, string n_space)
-{
-    return value;
-}
 
 }

@@ -29,27 +29,4 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
     }
     return representation;
 }
-
-string MultiSymbol::source(Generator& generator, unordered_set<string>& names, string n_space)
-{
-    string representation = "";
-    auto files = generator(names, groups, tag);
-    for (auto line : get<1>(files[1]))
-    {
-        representation += line + " ";
-    } 
-    return representation;
-}
-
-string MultiSymbol::header(Generator& generator, unordered_set<string>& names, string n_space)
-{
-    string representation = "";
-    auto files = generator(names, groups, tag);
-    for (auto line : get<1>(files[0]))
-    {
-        representation += line + " ";
-    } 
-    return representation;
-}
-
 }

@@ -11,6 +11,43 @@ Generator::Generator(vector<string> filenames, string directory)
         print("Reading constructor file: " + filename);
         construction_map[filename] = read(directory + filename);
     }
+    readStructureFile(directory + "file");
+}
+
+void Generator::readStructureFile(string filename)
+{
+    auto content = readFile(filename);
+    string last_type = "none";
+    string last_extension = "none";
+    vector<string> default_content;
+
+    for (auto line : content)
+    {
+        auto terms = lex::seperate(line, {make_tuple(" ", false)});
+        if (not terms.empty())
+        {
+            if (terms[0] == "file")
+            {
+                if (last_type != "none")
+                {
+                    file_constructors.push_back(make_tuple(last_type, FileConstructor(last_extension, default_content)));
+                    default_content.clear();
+                }
+                assert(terms.size() == 3);
+                last_type      = terms[1];
+                last_extension = terms[2];
+            }
+            else
+            {
+                default_content.push_back(line);
+            }
+        }
+    }
+    if (last_type != "none")
+    {
+        file_constructors.push_back(make_tuple(last_type, FileConstructor(last_extension, default_content)));
+        default_content.clear();
+    }
 }
 
 tuple<Constructor, Constructor> Generator::read(string filename)
