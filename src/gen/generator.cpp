@@ -6,12 +6,12 @@ namespace gen
 
 Generator::Generator(vector<string> filenames, string directory)
 {
+    readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
         print("Reading constructor file: " + filename);
-        construction_map[filename] = read(directory + filename);
+        construction_map[filename] = readConstructor(directory + filename);
     }
-    readStructureFile(directory + "file");
 }
 
 void Generator::readStructureFile(string filename)
@@ -50,32 +50,56 @@ void Generator::readStructureFile(string filename)
     }
 }
 
-tuple<Constructor, Constructor> Generator::read(string filename)
+vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 {
+    print("Reading Constructor: " + filename);
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
     assert(contains(content, "name"s));
     assert(contains(content, "defines"s));
-    assert(contains(content, "header"s));
-    assert(contains(content, "source"s));
     auto name_i    = std::find(content.begin(), content.end(), "name");
     auto defines_i = std::find(content.begin(), content.end(), "defines");
-    auto header_i  = std::find(content.begin(), content.end(), "header");
-    auto source_i  = std::find(content.begin(), content.end(), "source");
-
     auto declarations = vector<string>(content.begin(), name_i);
     auto name         = vector<string>(name_i    + 1, defines_i);
-    auto definitions  = vector<string>(defines_i + 1, header_i);
-    auto header       = vector<string>(header_i  + 1, source_i);
-    auto source       = vector<string>(source_i  + 1, content.end());
 
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
+    vector<string> definitions;
 
-    auto header_constructor = Constructor(symbol_storage_generator, generateBranch(header, symbol_storage_generator), definitions, name);
-    auto source_constructor = Constructor(symbol_storage_generator, generateBranch(source, symbol_storage_generator), definitions, name);
+    string type = "definitions";
+    string tag;
+    bool first = true;
+    auto last_it = content.begin();
+    auto it = content.begin();
 
-    return make_tuple(header_constructor, source_constructor);
+    // Iterate over file types for each constructor file
+    vector<tuple<string, Constructor>> constructors;
+    for (auto file_constructor : file_constructors)
+    {
+        tag = get<0>(file_constructor);
+        assert(contains(content, tag));
+        it = std::find(content.begin(), content.end(), tag);
+
+        if (first)
+        {
+            definitions  = vector<string>(defines_i + 1, it);
+            last_it = it;
+            first = false;
+        }
+        else
+        {
+            auto body = vector<string>(last_it + 1, it);
+            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+            constructors.push_back(make_tuple(type, constructor));
+            last_it = it;
+        }
+        type = tag;
+    }
+    auto body = vector<string>(last_it + 1, content.end());
+    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+    constructors.push_back(make_tuple(type, constructor));
+
+    return constructors;
 }
 
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
@@ -193,10 +217,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
             }
             else
             {
-                print("No keyword found");
                 for (auto t : terms)
                 {
-                    print(t);
                     if (t[0] == '$')
                     {
                         auto symbol = get<0>(storage)[t];
@@ -285,7 +307,6 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             string to_define = get<0>(symbol_storage)[identifier]->name();
-            print("Checking if " + to_define + " is defined");
             return contains(names, to_define) or
                    contains(names, to_define); 
         };
@@ -338,18 +359,39 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     }
 }
 
-vector<tuple<string, vector<string>>> Generator::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
+vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
+                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
+                                                                    string                              symbol_type, 
+                                                                    string                              filename)
 {
-    vector<tuple<string, vector<string>>> files;
+    vector<tuple<string, string, vector<string>>> files;
+    auto constructors = construction_map[symbol_type];
+    for (auto t : constructors)
+    {
+        auto type        = get<0>(t);
+        auto constructor = get<1>(t);
 
-    print(symbol_type);
-    assert(contains(construction_map, symbol_type));
-    auto constructors = construction_map[symbol_type]; 
-    auto header = get<0>(constructors);
-    auto source = get<1>(constructors);
-
-    files.push_back(make_tuple("header", header(names, symbol_groups, "header")));
-    files.push_back(make_tuple("source", source(names, symbol_groups, "source")));
+        string extension;
+        vector<string> default_content;
+        for (auto fc : file_constructors)
+        {
+            if (get<0>(fc) == type)
+            {
+                if (filename != "none")
+                {
+                    for (auto line : get<1>(fc).default_content)
+                    {
+                        default_content.push_back(format(filename, line));
+                    }
+                }
+                extension = get<1>(fc).extension;
+                break;
+            }
+        } 
+        auto constructed = constructor(names, symbol_groups, type);
+        concat(default_content, constructed);
+        files.push_back(make_tuple(type, extension, default_content));
+    }
     return files;
 }
 

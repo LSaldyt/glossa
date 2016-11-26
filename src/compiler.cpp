@@ -70,16 +70,13 @@ namespace compiler
         vector<string> source;
         unordered_set<string> names;
 
-        header.push_back("#include \"../std/std.hpp\"");
-        source.push_back("#include \"" + filename + ".hpp\"");
-
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
             print(get<0>(identified_group));
-            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group));
-            concat(header, get<1>(generated[0]));
-            concat(source, get<1>(generated[1]));
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), filename);
+            concat(header, get<2>(generated[0]));
+            concat(source, get<2>(generated[1]));
         }
 
         print("Header:");

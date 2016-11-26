@@ -21,7 +21,7 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
         auto type = get<0>(file);
         if (type == filetype)
         {
-            for (auto line : get<1>(file))
+            for (auto line : get<2>(file))
             {
                 representation += line + " ";
             } 

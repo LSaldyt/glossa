@@ -18,20 +18,14 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
 {
     vector<string> generated;
 
-    print("Evaluating branch");
-
     for (auto definition : definitions)
     {
         auto new_name = get<0>(symbol_storage)[definition]->name();
         print("Defined: " + new_name);
         names.insert(new_name);
     }
-
-    print("Definitions finished");
-
     if (branch.condition_evaluator(names, symbol_storage, generated))
     {
-        print("Condition evaluation passed");
         for (auto line_constructor : branch.line_constructors)
         {
             generated.push_back(line_constructor(names, symbol_storage, filetype));
@@ -40,10 +34,6 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         {
             concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype));
         }
-    }
-    else
-    {
-        print("Condition evaluation failed");
     }
     return generated;
 }
