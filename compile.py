@@ -15,6 +15,9 @@ def cleardir(dirname):
         if os.path.isfile(filepath):
             os.unlink(filepath)
 
+# Remove old compiled files
+cleardir('output')
+
 # Build the compiler and test it
 os.chdir('build')
 run(['cmake', '..'])
@@ -50,6 +53,6 @@ run(['./a.out'])
 os.chdir('..')
 
 # Cleanup
-#cleardir('output')
 cleardir('input')
+subprocess.run('touch input/.placeholder', shell=True)
 
