@@ -4,6 +4,7 @@
 #include "string.hpp"
 #include "operator.hpp"
 #include "logicaloperator.hpp"
+#include "multisymbol.hpp"
 
 namespace syntax
 {

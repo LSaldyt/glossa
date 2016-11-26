@@ -23,11 +23,12 @@ optional link supercall
 
 # Constructor body
 
-many anyOf link statement link memberinit
+many link statement 
+many link memberinit
 keyword end
 
 # Class methods
 
 many link function                              
 keyword end
-1 sep 3 sep 8 9 sep 12 sep 13 sep 15
+1 sep 3 sep 8 9 sep 12 sep 13 sep 14 sep 16

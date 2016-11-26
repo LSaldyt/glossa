@@ -1,53 +1,32 @@
 #pragma once
-
-// Avoid a circular include
-namespace syntax
-{
-class Symbol;
-}
-
-#include "../tools/tools.hpp"
-#include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
-#include "../parse/tokenparsers.hpp"
+#include "constructor.hpp"
+#include "fileconstructor.hpp"
 
 namespace gen 
 {
 
-using namespace syntax;
-using namespace parse;
-using namespace lex;
-using namespace match;
-using namespace tools;
-
-using Constructor = function<vector<string>(vector<vector<shared_ptr<Symbol>>>)>;
-
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
-
 
 class Generator 
 {
-    const static unordered_map<string, Constructor> construction_map;
 
 public:
+
     Generator(vector<string> grammar_files, string directory);
-/*
-    vector<shared_ptr<Symbol>> constructFrom(SymbolicTokens& tokens);
+    vector<tuple<string, string, vector<string>>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type, string filename="none");
 
 private:
-    
-    shared_ptr<Symbol> build(string name, vector<vector<shared_ptr<Symbol>>> symbols);
+    vector<tuple<string, FileConstructor>> file_constructors;
+    unordered_map<string, vector<tuple<string, Constructor>>> construction_map;
 
-    tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
-    shared_ptr<Symbol> construct(string name, vector<Result<SymbolicToken>> results);
+    vector<tuple<string, Constructor>> readConstructor(string filename);
+    void readStructureFile(string filename);
 
-    tuple<SymbolicTokenParsers, vector<int>> read(string filename);
-    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
-
-    SymbolicTokenParsers readGrammarPairs(vector<string>& terms);
-    SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
-    SymbolicTokenParser  retrieveGrammar(string filename); 
-    */
+    Constructor            generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    Branch                 generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    LineConstructor        generateLineConstructor(vector<string> terms);
+    SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content);
+    ConditionEvaluator     generateConditionEvaluator(vector<string> terms);
 
 };
 

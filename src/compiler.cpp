@@ -8,6 +8,9 @@ int main(int argc, char* argv[])
     auto grammar_files = readFile("languages/python/grammar/core");
     auto grammar = Grammar(grammar_files, "languages/python/grammar/");
 
+    auto constructor_files = readFile("languages/cpp/constructors/core");
+    auto generator = Generator(constructor_files, "languages/cpp/constructors/");
+
     auto operators        = readFile("languages/python/grammar/operators");
     auto logicaloperators = readFile("languages/python/grammar/logicaloperators"); 
     auto punctuators      = readFile("languages/python/grammar/punctuators");
@@ -39,14 +42,14 @@ int main(int argc, char* argv[])
     }
     for (auto& file : files)
     {
-        compile(file, grammar, "input", "output");
+        compile(file, grammar, generator, "input", "output");
     }
     print("Compilation finished");
 }
 
 namespace compiler
 {
-    void compile(string filename, Grammar& grammar, string input_directory, string output_directory)
+    void compile(string filename, Grammar& grammar, Generator& generator, string input_directory, string output_directory)
     {
         print("Reading File");
         auto content         = readFile     (input_directory + "/" + filename);
@@ -63,15 +66,32 @@ namespace compiler
         }
 
         print("Constructing from grammar:");
-        auto symbols = grammar.constructFrom(joined_tokens);
+        vector<string> header;
+        vector<string> source;
+        unordered_set<string> names;
 
-        print("Generating code..");
-        auto files = generateFiles(filename, symbols);
-        auto source = get<0>(files);
-        auto header = get<1>(files);
+        auto identified_groups = grammar.identifyGroups(joined_tokens);
+        for (auto identified_group : identified_groups)
+        {
+            print(get<0>(identified_group));
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), filename);
+            concat(header, get<2>(generated[0]));
+            concat(source, get<2>(generated[1]));
+        }
+
+        print("Header:");
+        for (auto line : header)
+        {
+            print(line);
+        }
+        print("Source:");
+        for (auto line : source)
+        {
+            print(line);
+        }
+
         writeFile(source, output_directory + "/" + filename + ".cpp");
         writeFile(header, output_directory + "/" + filename + ".hpp");
-
     }
 
     std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)

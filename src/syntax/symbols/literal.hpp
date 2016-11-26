@@ -12,15 +12,10 @@ namespace syntax
         {
             value = set_value; 
         }
-        virtual string source(unordered_set<string>& names, string n_space="")
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return std::to_string(value);
         }
-        virtual string header(unordered_set<string>& names, string n_space="")
-        {
-            return std::to_string(value);
-        }
-
     };
 
     struct StringLiteral : public Symbol
@@ -29,11 +24,7 @@ namespace syntax
         StringLiteral(string set_value) : value(set_value)
         {
         }
-        virtual string source(unordered_set<string>& names, string n_space="")
-        {
-            return value;
-        }
-        virtual string header(unordered_set<string>& names, string n_space="")
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return value;
         }

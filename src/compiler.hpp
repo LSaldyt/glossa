@@ -7,6 +7,7 @@
 #include "types/symbolize.hpp"
 #include "grammar/grammar.hpp"
 #include "gen/gen.hpp"
+#include "gen/generator.hpp"
 
 namespace compiler
 {
@@ -17,7 +18,7 @@ namespace compiler
     using namespace gen;
     using namespace tools;
 
-    void compile(string filename, Grammar& grammar, string input_directory="", string output_directory="");
+    void compile(string filename, Grammar& grammar, Generator& generator, string input_directory="", string output_directory="");
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, const Language&);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);

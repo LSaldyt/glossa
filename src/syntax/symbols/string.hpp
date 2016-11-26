@@ -4,11 +4,7 @@ namespace syntax
     struct String : public StringLiteral 
     {
         String(string set_value) : StringLiteral(set_value){}
-        string representation()
-        {
-            return "String: \"" + value + "\"";
-        }
-        string source(unordered_set<string>& names, string n_space="")
+        string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return "\"" + value + "\"s";
         }

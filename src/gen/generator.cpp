@@ -1,383 +1,398 @@
 #include "generator.hpp"
+#include "../syntax/symbols/export.hpp"
 
 namespace gen 
 {
 
-const unordered_map<string, Constructor> Generator::construction_map = {};
-
 Generator::Generator(vector<string> filenames, string directory)
 {
-    /*
+    readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        grammar_map[filename] = read(directory + filename);
+        print("Reading constructor file: " + filename);
+        construction_map[filename] = readConstructor(directory + filename);
     }
-    */
 }
 
-/*
-
-// Standard grammar constructor (From list of files)
-
-// Master function for converting from lexed tokens to AST (List of symbols)
-vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
+void Generator::readStructureFile(string filename)
 {
-    vector<shared_ptr<Symbol>> annotated_symbols;
-
-    try 
-    {
-        // Consumed all tokens
-        while (tokens.size() > 0)
-        {
-            // Tag groups of tokens as certain language constructs
-            auto result = identify(tokens);
-            //print("Identified tokens as: " + get<0>(result));
-            // Build the language construct
-            auto constructed = construct(get<0>(result), get<1>(result)); 
-            annotated_symbols.push_back(constructed);
-        }
-    } 
-    catch (named_exception &failure) 
-    {
-        unordered_set<string> names;
-        print("Generated:");
-        for (auto& s : annotated_symbols)
-        {
-            print(s->source(names));
-        }
-        throw; 
-    }
-
-    return annotated_symbols;
-}
-
-
-// Helper function for reading in grammar files
-// (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
-SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
-{
-    SymbolicTokenParsers parsers;
-
-    if (terms.size() % 2 != 0)
-    {
-        throw named_exception("Could not read type pairs"); // Need an even number of terms
-    }
-    for (int i = 0; i < (terms.size() / 2); i++)
-    {
-        int x = i * 2;
-        vector<string> pair(terms.begin() + x, terms.begin() + x + 2);
-        parsers.push_back(readGrammarTerms(pair));
-    }
-
-    return parsers;
-}
-
-// Convert a seperated line from a grammar file to a parser
-SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
-{
-    SymbolicTokenParser parser;
-
-    if (terms.size() == 2)
-    {
-        auto first = terms[0];
-        bool keep  = true;
-        // If first of pair starts with !, discard its parse result
-        if (first[0] == '!')
-        {
-            first = string(first.begin() + 1, first.end());
-            keep = false;
-        }
-        // Allow linking to other grammar files
-        if (first == "link")
-        {
-            parser = retrieveGrammar(terms[1]);
-        }
-        // Parse by type only
-        else if (terms[1] == "wildcard")
-        {
-            parser = typeParser(first);
-        }
-        // Parse by a specific subtype (ex "keyword return")
-        else
-        {
-            if (first == "keyword")
-            {
-                keywords.push_back(terms[1]);
-            }
-            parser = dualTypeParser(first, terms[1]);
-        }
-
-        // Take care of a "!" if it was found early - make the parser discard its result
-        if (not keep)
-        {
-            parser = discard(parser);
-        }
-    }
-    else if (terms.size() > 2)
-    {
-        const auto keyword = terms[0];
-        terms = vector<string>(terms.begin() + 1, terms.end());
-
-        // Repeatedly parse a parser!
-        if (keyword == "many")
-        {
-            parser = manySeperated(readGrammarTerms(terms)); 
-        }
-        // Optionally parse a parser
-        else if (keyword == "optional")
-        {
-            parser = optional<SymbolicToken>(readGrammarTerms(terms));
-        }
-        // Run several parsers in order, failing if any of them fail
-        else if (keyword == "inOrder")
-        {
-            parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
-        }
-        // Choose from several parsers
-        else if (keyword == "anyOf")
-        {
-            parser = anyOf<SymbolicToken>(readGrammarPairs(terms));
-        }
-        else
-        {
-            throw named_exception("Expected keyword, got: " + keyword);
-        }
-    }
-    else
-    {
-        throw named_exception("Grammar file incorrectly formatted");
-    }
-
-    return parser;
-}
-
-// Master function for reading a grammar file
-tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
-{
-    SymbolicTokenParsers parsers;
     auto content = readFile(filename);
-    auto construct_line = content.back();
-    content = slice(content, 0, -1);
-    
-    // Convert each line to a parser
+    string last_type = "none";
+    string last_extension = "none";
+    vector<string> default_content;
+
     for (auto line : content)
     {
-        if (line[0] != '#')
+        auto terms = lex::seperate(line, {make_tuple(" ", false)});
+        if (not terms.empty())
         {
-            auto terms = lex::seperate(line, {make_tuple(" ", false)});
-            if (not terms.empty())
+            if (terms[0] == "file")
+            {
+                if (last_type != "none")
+                {
+                    file_constructors.push_back(make_tuple(last_type, FileConstructor(last_extension, default_content)));
+                    default_content.clear();
+                }
+                assert(terms.size() == 3);
+                last_type      = terms[1];
+                last_extension = terms[2];
+            }
+            else
+            {
+                default_content.push_back(line);
+            }
+        }
+    }
+    if (last_type != "none")
+    {
+        file_constructors.push_back(make_tuple(last_type, FileConstructor(last_extension, default_content)));
+        default_content.clear();
+    }
+}
+
+vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
+{
+    print("Reading Constructor: " + filename);
+    auto content = readFile(filename);
+    
+    // Seperate constructor into header and source constructors
+    assert(contains(content, "name"s));
+    assert(contains(content, "defines"s));
+    auto name_i    = std::find(content.begin(), content.end(), "name");
+    auto defines_i = std::find(content.begin(), content.end(), "defines");
+    auto declarations = vector<string>(content.begin(), name_i);
+    auto name         = vector<string>(name_i    + 1, defines_i);
+
+    auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
+    vector<string> definitions;
+
+    string type = "definitions";
+    string tag;
+    bool first = true;
+    auto last_it = content.begin();
+    auto it = content.begin();
+
+    // Iterate over file types for each constructor file
+    vector<tuple<string, Constructor>> constructors;
+    for (auto file_constructor : file_constructors)
+    {
+        tag = get<0>(file_constructor);
+        assert(contains(content, tag));
+        it = std::find(content.begin(), content.end(), tag);
+
+        if (first)
+        {
+            definitions  = vector<string>(defines_i + 1, it);
+            last_it = it;
+            first = false;
+        }
+        else
+        {
+            auto body = vector<string>(last_it + 1, it);
+            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+            constructors.push_back(make_tuple(type, constructor));
+            last_it = it;
+        }
+        type = tag;
+    }
+    auto body = vector<string>(last_it + 1, content.end());
+    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+    constructors.push_back(make_tuple(type, constructor));
+
+    return constructors;
+}
+
+Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
+{
+    vector<LineConstructor> line_constructors;
+    vector<Branch>          nested_branches;
+    
+    auto default_body    = content.begin();
+    auto if_body_start   = content.begin();
+    auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
+    auto if_body_end     = content.begin();
+    auto else_body_end   = content.begin();
+
+    bool in_conditional = false;
+    bool has_else = false;
+
+    const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
+    {
+        vector<string> body(start, end);
+        auto nested_branch                = generateBranch(body, symbol_storage_generator);
+        auto original_condition_terms     = lex::seperate(*conditionline, {make_tuple(" ", false)});
+        if (inverse)
+        {
+            nested_branch.condition_evaluator = inverseBranch(generateConditionEvaluator(slice(original_condition_terms, 1)));
+        }
+        else
+        {
+            nested_branch.condition_evaluator = generateConditionEvaluator(slice(original_condition_terms, 1));
+        }
+        nested_branches.push_back(nested_branch);
+    };
+
+    auto it = content.begin();
+    while (it != content.end())
+    {
+        auto terms = lex::seperate(*it, {make_tuple(" ", false)});
+        if (not terms.empty())
+        {
+            auto keyword = terms[0];
+            if (keyword == "branch")
+            {
+                if (default_body != it)
+                {
+                    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+                    line_constructors.clear();
+                    default_body = it;
+                }
+                if_body_start = it;
+                in_conditional = true;
+            }
+            else if (keyword == "elsebranch")
+            {
+                if_body_end     = it;
+                else_body_start = it;
+                has_else = true;
+            }
+            else if (keyword == "end")
+            {
+                if (not has_else)
+                {
+                    if_body_end = it;
+                }
+                addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
+
+                if (has_else)
+                {
+                    else_body_end = it;
+                    addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                }
+                in_conditional = false;
+                default_body = it;
+            }
+            else if (not in_conditional)
+            {
+                line_constructors.push_back(generateLineConstructor(terms));
+            }
+        }
+        it++;
+    }
+    if (default_body != content.end())
+    {
+        nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+        line_constructors.clear();
+    }
+
+    return Branch(defaultBranch, line_constructors, nested_branches);
+}
+
+LineConstructor Generator::generateLineConstructor(vector<string> terms)
+{
+    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype){
+        string representation = "";
+        if (not terms.empty())
+        {
+            auto keyword = terms[0];
+            if (keyword == "sep")
+            {
+                assert(terms.size() == 3 or terms.size() == 4 or terms.size() == 5);
+                assert(contains(get<1>(storage), terms[2]));
+                auto symbols = get<1>(storage)[terms[2]];
+                string formatter = "@";
+                if (terms.size() > 3)
+                {
+                    formatter = terms[3];
+                }
+                representation += sepWith(*this, symbols, names, filetype, terms[1], formatter);
+            }
+            else if (keyword == "format")
+            {
+                assert(terms.size() == 3);
+                assert(contains(get<0>(storage), terms[1]));
+                auto symbol    = get<0>(storage)[terms[1]];
+                auto formatter = terms[2];
+                representation += format(symbol->representation(*this, names, filetype), formatter) + " ";
+            }
+            else
             {
                 for (auto t : terms)
                 {
-                    print(t);
+                    if (t[0] == '$')
+                    {
+                        auto symbol = get<0>(storage)[t];
+                        representation += symbol->representation(*this, names, filetype) + " ";
+                    }
+                    else
+                    {
+                        representation += t + " ";
+                    }
                 }
-                parsers.push_back(readGrammarTerms(terms));
             }
         }
-    }
-
-    // The last line of a grammar file describes how to construct the syntax element
-    vector<int> construct_indices;
-    auto construct_terms = lex::seperate(construct_line, {make_tuple(" ", false)});
-    for (auto t : construct_terms)
-    {
-        // Allow end user to specify how to group tokens
-        if (t == "sep")
-        {
-            construct_indices.push_back(-1); // Signal for seperator
-        }
-        else
-        {
-            construct_indices.push_back(stoi(t));
-        }
-    }
-
-    return make_tuple(parsers, construct_indices);
-}
-
-// Lazily evaluate links between grammar files
-SymbolicTokenParser Grammar::retrieveGrammar(string filename)
-{
-    return [filename, this](SymbolicTokens tokens)
-    {
-        std::vector<SymbolicTokenParser> parsers;
-
-        // Retrieve a list of parsers from the grammar map
-        auto search = grammar_map.find(filename);
-        if (search != grammar_map.end())
-        {
-            parsers = std::get<0>(search->second);
-        }
-        else
-        {
-            throw named_exception(filename + " is not an element of the grammar map");
-        }
-
-        // Evaluate the parsers, preserving the tokens on failure
-        SymbolicTokens tokens_copy(tokens);
-        auto result = evaluateGrammar(parsers, tokens_copy);
-
-        if (get<0>(result))
-        {
-            // Build linked constructs immediately, meaning that information can be discarded (and further, higher-level constructions will be simpler)
-            auto constructed = construct(filename, std::get<1>(result));
-            //print("Built link to " + filename);
-            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
-            return Result<SymbolicToken>(true, consumed, tokens_copy); 
-        }
-        else
-        {
-            return Result<SymbolicToken>(false, {}, tokens);
-        }
+        replaceAll(representation, "&", " ");
+        replaceAll(representation, "^", "\n");
+        return representation;
     };
 }
 
-// Identify a group of tokens from a larger set
-tuple<string, vector<Result<SymbolicToken>>> 
-Grammar::identify
-(SymbolicTokens& tokens)
+SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
-    SymbolicTokens tokens_copy(tokens);
-
-    vector<string> keys;
-    keys.reserve(grammar_map.size());
-    for (auto kv : grammar_map)
-    {
-        //print("Adding grammar element to keys: " + kv.first);
-        keys.push_back(kv.first);
-    }
-
-    // Sort keys by the lengths of the parsers they refer to
-    // (Longer parsers should be tried first)
-    sortBy(keys, [this] (auto a, auto b) 
-                 {
-                     auto a_len = get<0>(grammar_map[a]).size();
-                     auto b_len = get<0>(grammar_map[b]).size();
-                     return a_len > b_len; 
-                 });
-
-    vector<string> failures;
-
-    for (auto key : keys)
-    {
-        //print("Attempting to identify as: " + key);
-
-        auto value   = grammar_map[key]; // We are certain that key is defined in the grammar_map, so this will not throw
-        auto parsers = get<0>(value);
-        auto result  = evaluateGrammar(parsers, tokens_copy);
-
-        if (get<0>(result))
+    return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
+        SymbolStorage storage;
+        for (auto line : content)
         {
-            print("Identified " + key);
-            tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
-            return make_tuple(key, get<1>(result));
-        }
-        else
-        {
-            // If an identification attempt fails, revert tokens to their previous state
-            failures.push_back(key);
-            tokens_copy = tokens;
-        }
-    }
-
-    throw named_exception("Could not identify tokens");
-}
-
-// Evaluate a list of parsers stored in the grammar_map
-tuple<bool, vector<Result<SymbolicToken>>> 
-Grammar::evaluateGrammar
-(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
-{
-    vector<Result<SymbolicToken>> results;
-
-    int i = 0;
-    for (auto parser : parsers)
-    {
-        auto result = parser(tokens);
-        if (result.result)
-        {
-            tokens = result.remaining;
-            results.push_back(result);
-        }
-        else // Fail early if possible
-        {
-            return make_tuple(false, results);
-        }
-    }
-
-    return make_tuple(true, results);
-};
-
-
-// Discard type information from SymbolicTokens
-vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
-{
-    vector<shared_ptr<Symbol>> symbols;
-    symbols.reserve(tokens.size());
-
-    for (auto t : tokens)
-    {
-        symbols.push_back(t.value); // t.type and t.sub_type are discarded
-    }
-
-    return symbols;
-}
-
-// Construct a shared_ptr<Symbol> from a symbol grouping
-shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>> symbol_groups)
-{
-    StatementConstructor constructor;
-    auto it = Grammar::construction_map.find(name);
-    if (it != Grammar::construction_map.end())
-    {
-        constructor = it->second;
-    }
-    else
-    {
-        throw named_exception(name + " is not an element of the construction map");
-    }
-
-    auto constructed = constructor(symbol_groups);
-    return constructed;
-}
-
-// Higher-level function for constructing a symbol
-shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>> results)
-{
-    //print("Constructing " + name);
-    auto construction_indices = get<1>(grammar_map[name]);
-
-    vector<shared_ptr<Symbol>> result_symbols;
-
-    vector<vector<shared_ptr<Symbol>>> groups;
-    groups.push_back(vector<shared_ptr<Symbol>>());
-
-    for (auto i : construction_indices)
-    {
-        // Account for the end-user's grouping instructions (grammar files)
-        if (i == -1)
-        {
-            groups.push_back(vector<shared_ptr<Symbol>>());
-        }
-        else
-        {
-            auto result = results[i];
-            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
-
-            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
-            for (auto group : grouped_tokens)
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            assert(terms.size() == 3 or 
+                   terms.size() == 4);
+            auto identifier = terms[0];
+            if (terms.size() == 3)
             {
-                for (auto t : group)
+                auto keyword = terms[0];
+                if (keyword == "append")
                 {
-                    groups.back().push_back(t.value);
+                    assert(contains(get<1>(storage), terms[2]));
+                    assert(contains(get<0>(storage), terms[1]));
+                    auto& symbols = get<1>(storage)[terms[2]];
+                    auto& symbol  = get<0>(storage)[terms[1]];
+                    symbols.push_back(symbol);
+                }
+                else if (keyword == "concat")
+                {
+                    assert(contains(get<1>(storage), terms[1]));
+                    assert(contains(get<1>(storage), terms[2]));
+                    auto& a_symbols = get<1>(storage)[terms[1]];
+                    auto& b_symbols = get<1>(storage)[terms[2]];
+                    concat(a_symbols, b_symbols);
+                }
+                else
+                {
+                    int index = std::stoi(terms[2]);
+                    get<1>(storage)[identifier] = symbol_groups[index]; 
+                }
+            }
+            else if (terms.size() == 4)
+            {
+                if (terms[2] == "names")
+                {
+                    vector<shared_ptr<Symbol>> names;
+                    int index = std::stoi(terms[3]);
+                    for (auto symbol : symbol_groups[index])
+                    {
+                        names.push_back(make_shared<Identifier>(Identifier(symbol->name())));
+                    }
+                    get<1>(storage)[identifier] = names;
+                }
+                else
+                {
+                    int index_a = std::stoi(terms[2]);
+                    int index_b = std::stoi(terms[3]);
+                    get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
                 }
             }
         }
-    }
-
-    auto constructed = build(name, groups);
-    return constructed; 
+        return storage;
+    };
 }
-*/
+
+ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
+{
+    assert(not terms.empty());
+    auto keyword = terms[0];
+    if (keyword == "defined")
+    {
+        assert(terms.size() == 2);
+        auto identifier = terms[1];
+        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        {
+            string to_define = get<0>(symbol_storage)[identifier]->name();
+            return contains(names, to_define) or
+                   contains(names, to_define); 
+        };
+    }
+    else if (keyword == "equalTo")
+    {
+        assert(terms.size() == 3);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        {
+            assert(contains(get<0>(symbol_storage), terms[1]));
+            auto name = get<0>(symbol_storage)[terms[1]]->name();
+            return name == terms[2]; 
+        };
+    }
+    else if (keyword == "empty")
+    {
+        assert(terms.size() == 2);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        {
+            assert(contains(get<1>(symbol_storage), terms[1]));
+            return get<1>(symbol_storage)[terms[1]].empty();
+        };
+    }
+    else if (keyword == "nonempty")
+    {
+        assert(terms.size() == 2);
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        {
+            assert(contains(get<1>(symbol_storage), terms[1]));
+            return not get<1>(symbol_storage)[terms[1]].empty();
+        };
+    }
+    else if (keyword == "both")
+    {
+        assert(contains(terms, "and"s));
+        auto split = std::find(terms.begin(), terms.end(), "and");
+        vector<string> first(terms.begin() + 1, split);
+        vector<string> second(split + 1, terms.end());
+        return [this, first, second](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+        {
+            auto a = generateConditionEvaluator(first);
+            auto b = generateConditionEvaluator(second);
+
+            return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
+        };
+    }
+    else
+    {
+        throw named_exception("Constructor keyword " + keyword + " is not defined");
+    }
+}
+
+vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
+                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
+                                                                    string                              symbol_type, 
+                                                                    string                              filename)
+{
+    vector<tuple<string, string, vector<string>>> files;
+    auto constructors = construction_map[symbol_type];
+    for (auto t : constructors)
+    {
+        auto type        = get<0>(t);
+        auto constructor = get<1>(t);
+
+        string extension;
+        vector<string> default_content;
+        for (auto fc : file_constructors)
+        {
+            if (get<0>(fc) == type)
+            {
+                if (filename != "none")
+                {
+                    for (auto line : get<1>(fc).default_content)
+                    {
+                        default_content.push_back(format(filename, line));
+                    }
+                }
+                extension = get<1>(fc).extension;
+                break;
+            }
+        } 
+        auto constructed = constructor(names, symbol_groups, type);
+        concat(default_content, constructed);
+        files.push_back(make_tuple(type, extension, default_content));
+    }
+    return files;
+}
 
 }

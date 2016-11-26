@@ -8,154 +8,6 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
     return s;
 }
 
-// The remaining hardcoded rules for building AST types
-const unordered_map<string, StatementConstructor> Grammar::construction_map = {
-        {"expression", 
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Expression(symbol_groups), "expression"); 
-            }
-        },
-        {"assignment",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Assignment(symbol_groups), "assignment");
-            }
-        },
-        {"functioncall",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(FunctionCall(symbol_groups), "functioncall");
-            }
-        },
-        {"value",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                auto symbols = symbol_groups[0];
-                if (symbols.size() == 1)
-                {
-                    if (symbols[0]->annotation == "symbol")
-                    {
-                        annotateSymbol(symbols[0], "value");
-                    }
-                    return symbols[0];
-                }
-                else
-                {
-                    throw named_exception("Token lambda constructor was provided multiple tokens (illegal)");
-                }
-            }
-        },
-        {"function",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Function(symbol_groups), "function");
-            }
-        },
-        {"conditional",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Conditional(symbol_groups), "conditional");
-            }
-        },
-        {"boolexpression",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Expression(symbol_groups), "boolexpression");
-            }
-        },
-        {"statement",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                auto symbols = symbol_groups[0];
-                if (symbols.size() == 1)
-                {
-                    if (symbols[0]->annotation == "symbol")
-                    {
-                        annotateSymbol(symbols[0], "statement");
-                    }
-                    return symbols[0];
-                }
-                else
-                {
-                    throw named_exception("Statement lambda constructor was provided multiple tokens (illegal)");
-                }
-            }
-        },
-        {"forloop",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(ForLoop(symbol_groups), "forloop");
-            }
-        },
-        {"memberaccess",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(MemberAccess(symbol_groups), "memberaccess");
-            }
-        },
-        {"whileloop",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(WhileLoop(symbol_groups), "whileloop");
-            }
-        },
-        {"vector",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Vector(symbol_groups), "forloop");
-            }
-        },
-        {"tuple",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Vector(symbol_groups), "forloop");
-            }
-        },
-        {"dictionary",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Dictionary(symbol_groups), "dictionary");
-            }
-        },
-        {"class",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Class(symbol_groups), "class");
-            }
-        },
-        {"import",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Import(symbol_groups), "import");
-            }
-        },
-        {"memberinit",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(MemberInit(symbol_groups), "memberinit");
-            }
-        },
-        {"supercall",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(SuperCall(symbol_groups), "supercall");
-            }
-        },
-        {"return",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return createSymbol(Return(symbol_groups), "return");
-            }
-        },
-        {"classmemberaccess",
-            [](vector<vector<shared_ptr<Symbol>>> symbol_groups)
-            {
-                return symbol_groups[0][0];
-            }
-        }
-   };
-
 // Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory)
 {
@@ -165,40 +17,55 @@ Grammar::Grammar(vector<string> filenames, string directory)
     }
 }
 
-// Master function for converting from lexed tokens to AST (List of symbols)
-vector<shared_ptr<Symbol>> Grammar::constructFrom(SymbolicTokens& tokens)
+vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
 {
-    vector<shared_ptr<Symbol>> annotated_symbols;
-
-    try 
+    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
+    // Consume all tokens
+    while (tokens.size() > 0)
     {
-        // Consumed all tokens
-        while (tokens.size() > 0)
-        {
-            // Tag groups of tokens as certain language constructs
-            auto result = identify(tokens);
-            //print("Identified tokens as: " + get<0>(result));
-            // Build the language construct
-            auto constructed = construct(get<0>(result), get<1>(result)); 
-            annotated_symbols.push_back(constructed);
-        }
-    } 
-    catch (named_exception &failure) 
-    {
-        unordered_set<string> names;
-        print("Generated:");
-        for (auto& s : annotated_symbols)
-        {
-            print(s->source(names));
-        }
-        throw; 
+        // Tag groups of tokens as certain language constructs
+        auto result = identify(tokens);
+        auto group  = toGroup(get<0>(result), get<1>(result));
+        identified_groups.push_back(make_tuple(get<0>(result), group));
     }
 
-    return annotated_symbols;
+    return identified_groups;
 }
 
+vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
+{
+    auto construction_indices = get<1>(grammar_map[name]);
+
+    vector<vector<shared_ptr<Symbol>>> groups;
+    groups.push_back(vector<shared_ptr<Symbol>>());
+
+    for (auto i : construction_indices)
+    {
+        // Account for the end-user's grouping instructions (grammar files)
+        if (i == -1)
+        {
+            groups.push_back(vector<shared_ptr<Symbol>>());
+        }
+        else
+        {
+            auto result = results[i];
+            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
+
+            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
+            for (auto group : grouped_tokens)
+            {
+                for (auto t : group)
+                {
+                    groups.back().push_back(t.value);
+                }
+            }
+        }
+    }
+    return groups;
+}
 
 // Helper function for reading in grammar files
+//
 // (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
 SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
 {
@@ -313,10 +180,6 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             if (not terms.empty())
             {
-                for (auto t : terms)
-                {
-                    print(t);
-                }
                 parsers.push_back(readGrammarTerms(terms));
             }
         }
@@ -365,10 +228,9 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 
         if (get<0>(result))
         {
-            // Build linked constructs immediately, meaning that information can be discarded (and further, higher-level constructions will be simpler)
-            auto constructed = construct(filename, std::get<1>(result));
-            //print("Built link to " + filename);
-            auto consumed = std::vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
+            auto group       = toGroup(filename, get<1>(result));
+            auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, group));
+            auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
             return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }
         else
@@ -473,62 +335,6 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     }
 
     return symbols;
-}
-
-// Construct a shared_ptr<Symbol> from a symbol grouping
-shared_ptr<Symbol> Grammar::build(string name, vector<vector<shared_ptr<Symbol>>> symbol_groups)
-{
-    StatementConstructor constructor;
-    auto it = Grammar::construction_map.find(name);
-    if (it != Grammar::construction_map.end())
-    {
-        constructor = it->second;
-    }
-    else
-    {
-        throw named_exception(name + " is not an element of the construction map");
-    }
-
-    auto constructed = constructor(symbol_groups);
-    return constructed;
-}
-
-// Higher-level function for constructing a symbol
-shared_ptr<Symbol> Grammar::construct(string name, vector<Result<SymbolicToken>> results)
-{
-    //print("Constructing " + name);
-    auto construction_indices = get<1>(grammar_map[name]);
-
-    vector<shared_ptr<Symbol>> result_symbols;
-
-    vector<vector<shared_ptr<Symbol>>> groups;
-    groups.push_back(vector<shared_ptr<Symbol>>());
-
-    for (auto i : construction_indices)
-    {
-        // Account for the end-user's grouping instructions (grammar files)
-        if (i == -1)
-        {
-            groups.push_back(vector<shared_ptr<Symbol>>());
-        }
-        else
-        {
-            auto result = results[i];
-            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
-
-            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
-            for (auto group : grouped_tokens)
-            {
-                for (auto t : group)
-                {
-                    groups.back().push_back(t.value);
-                }
-            }
-        }
-    }
-
-    auto constructed = build(name, groups);
-    return constructed; 
 }
 
 }

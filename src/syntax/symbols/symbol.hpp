@@ -6,9 +6,7 @@ namespace syntax
     using namespace tools;
     struct Symbol
     {
-        virtual string representation();
-        virtual string source(unordered_set<string>& generated, string n_space="");
-        virtual string header(unordered_set<string>& generated, string n_space="");
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype);
         virtual string name();
 
         string annotation = "symbol";

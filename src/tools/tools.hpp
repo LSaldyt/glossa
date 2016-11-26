@@ -13,6 +13,10 @@
 #include <sstream>
 #include <fstream>
 
+#include <assert.h>
+
+using namespace std::string_literals;
+
 namespace tools
 {
 
@@ -81,4 +85,24 @@ void sortBy(vector<T>& data, auto predicate)
     std::sort(data.begin(), data.end(), predicate);
 }
 
+template <typename T>
+bool contains(const unordered_map<string, T>& data_structure, const string& key)
+{
+    return data_structure.find(key) != data_structure.end();
+}
+
+
+template <typename T>
+bool contains(const vector<T>& vec, const T& val)
+{
+    return std::find(vec.begin(), vec.end(), val) != vec.end();
+}
+
+template <typename T>
+bool contains(const unordered_set<T>& data_structure, const T& key)
+{
+    return data_structure.find(key) != data_structure.end();
+}
+
+void replaceAll( string &s, const string &search, const string &replace );
 }
