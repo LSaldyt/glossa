@@ -162,20 +162,12 @@ namespace gen
         return representation;
     }
 
-    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, bool source, string sep, string formatter)
+    string sepWith(Generator& generator, const vector<shared_ptr<Symbol>>& symbols, unordered_set<string>& names, string filetype, string sep, string formatter)
     {
         string line = "";
         for (int i = 0; i < symbols.size(); i++)
         { 
-            string inner_representation;
-            if (source)
-            {
-                inner_representation = symbols[i]->source(generator, names);
-            }
-            else
-            {
-                inner_representation = symbols[i]->header(generator, names);
-            }
+            string inner_representation = symbols[i]->representation(generator, names, filetype);
 
             line += format(inner_representation, formatter);
 

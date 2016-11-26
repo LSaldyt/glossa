@@ -129,7 +129,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, bool source){
+    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype){
         string representation = "";
         if (not terms.empty())
         {
@@ -144,12 +144,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 {
                     formatter = terms[3];
                 }
-                bool use_source = source;
-                if (terms.size() == 5)
-                {
-                    use_source = terms[4] == "source";
-                }
-                representation += sepWith(*this, symbols, names, use_source, terms[1], formatter);
+                representation += sepWith(*this, symbols, names, filetype, terms[1], formatter);
             }
             else if (keyword == "format")
             {
@@ -157,14 +152,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 assert(contains(get<0>(storage), terms[1]));
                 auto symbol    = get<0>(storage)[terms[1]];
                 auto formatter = terms[2];
-                if (source)
-                {
-                    representation += format(symbol->source(*this, names), formatter) + " ";
-                }
-                else 
-                {
-                    representation += format(symbol->header(*this, names), formatter) + " ";
-                }
+                representation += format(symbol->representation(*this, names, filetype), formatter) + " ";
             }
             else
             {
@@ -175,14 +163,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                     if (t[0] == '$')
                     {
                         auto symbol = get<0>(storage)[t];
-                        if (source)
-                        {
-                            representation += symbol->source(*this, names) + " ";
-                        }
-                        else 
-                        {
-                            representation += symbol->header(*this, names) + " ";
-                        }
+                        representation += symbol->representation(*this, names, filetype) + " ";
                     }
                     else
                     {
@@ -320,15 +301,19 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     }
 }
 
-tuple<vector<string>, vector<string>> Generator::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
+vector<tuple<string, vector<string>>> Generator::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string symbol_type)
 {
+    vector<tuple<string, vector<string>>> files;
+
     print(symbol_type);
     assert(contains(construction_map, symbol_type));
     auto constructors = construction_map[symbol_type]; 
     auto header = get<0>(constructors);
     auto source = get<1>(constructors);
 
-    return make_tuple(header(names, symbol_groups, false), source(names, symbol_groups, true));
+    files.push_back(make_tuple("header", header(names, symbol_groups, "header")));
+    files.push_back(make_tuple("source", source(names, symbol_groups, "source")));
+    return files;
 }
 
 }

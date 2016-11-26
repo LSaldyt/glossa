@@ -6,6 +6,8 @@ namespace gen
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
+using File = vector<string>;
+
 
 class Generator 
 {
@@ -13,7 +15,7 @@ class Generator
 public:
 
     Generator(vector<string> grammar_files, string directory);
-    tuple<vector<string>, vector<string>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type);
+    vector<tuple<string, vector<string>>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type);
 
 private:
 

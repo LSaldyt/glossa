@@ -78,8 +78,8 @@ namespace compiler
         {
             print(get<0>(identified_group));
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group));
-            concat(header, get<0>(generated));
-            concat(source, get<1>(generated));
+            concat(header, get<1>(generated[0]));
+            concat(source, get<1>(generated[1]));
         }
 
         print("Header:");
