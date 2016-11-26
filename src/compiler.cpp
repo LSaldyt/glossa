@@ -85,24 +85,47 @@ namespace compiler
 
         print("Constructing from grammar:");
         unordered_set<string> names;
+        unordered_map<string, tuple<vector<string>, string>> files;
 
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
             print(get<0>(identified_group));
-            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), filename);
+            string gen_with = "none";
+            if (files.empty())
+            {
+                gen_with = filename;
+            }
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
             for (auto fileinfo : generated)
             {
                 string type         = get<0>(fileinfo);
                 string path         = get<1>(fileinfo);
                 vector<string> body = get<2>(fileinfo);
-                print("Created " + type + " file:");
-                for (auto line : body)
+
+                if (contains(files, type))
                 {
-                    print("    " + line);
+                    print("Adding to " + type + " file");
+                    concat(get<0>(files[type]), body);
                 }
-                writeFile(body, output_directory + "/" + path);
+                else
+                {
+                    print("Creating initial " + type + " file");
+                    files[type] = make_tuple(body, path);
+                }
             }
+        }
+
+        for (auto kv : files)
+        {
+            print("Generated " + kv.first + " file:");
+            auto body = get<0>(kv.second);
+            auto path = get<1>(kv.second);
+            for (auto line : body)
+            {
+                print(line);
+            }
+            writeFile(body, output_directory + "/" + path);
         }
     }
 
