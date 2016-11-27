@@ -52,7 +52,6 @@ void Generator::readStructureFile(string filename)
 
 vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 {
-    print("Reading Constructor: " + filename);
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
@@ -77,6 +76,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     for (auto file_constructor : file_constructors)
     {
         tag = get<0>(file_constructor);
+        print(tag);
         assert(contains(content, tag));
         it = std::find(content.begin(), content.end(), tag);
 
@@ -89,11 +89,13 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         else
         {
             auto body = vector<string>(last_it + 1, it);
+            print("Created body");
             auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
         type = tag;
+        print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
     auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
@@ -104,16 +106,15 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
+    print("Generating branch");
     vector<LineConstructor> line_constructors;
     vector<Branch>          nested_branches;
-    
-    auto default_body    = content.begin();
+
     auto if_body_start   = content.begin();
     auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
     auto if_body_end     = content.begin();
     auto else_body_end   = content.begin();
 
-    bool in_conditional = false;
     bool has_else = false;
 
     const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
@@ -132,6 +133,9 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
         nested_branches.push_back(nested_branch);
     };
 
+
+    int nest_count = 0;
+
     auto it = content.begin();
     while (it != content.end())
     {
@@ -141,49 +145,51 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             auto keyword = terms[0];
             if (keyword == "branch")
             {
-                if (default_body != it)
+                if (nest_count == 0)
                 {
+                    if_body_start = it;
                     nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
                     line_constructors.clear();
-                    default_body = it;
                 }
-                if_body_start = it;
-                in_conditional = true;
+                nest_count++;
             }
             else if (keyword == "elsebranch")
             {
-                if_body_end     = it;
-                else_body_start = it;
-                has_else = true;
+                if (nest_count == 1)
+                {
+                    if_body_end     = it;
+                    else_body_start = it;
+                    has_else = true;
+                }
             }
             else if (keyword == "end")
             {
-                if (not has_else)
+                if (nest_count == 1)
                 {
-                    if_body_end = it;
-                }
-                addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
+                    if (not has_else)
+                    {
+                        if_body_end = it;
+                    }
+                    addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
 
-                if (has_else)
-                {
-                    else_body_end = it;
-                    addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                    if (has_else)
+                    {
+                        else_body_end = it;
+                        addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                    }
                 }
-                in_conditional = false;
-                default_body = it;
-            }
-            else if (not in_conditional)
+                nest_count--;
+            }   
+            else if (nest_count == 0)
             {
                 line_constructors.push_back(generateLineConstructor(terms));
             }
         }
         it++;
     }
-    if (default_body != content.end())
-    {
-        nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
-        line_constructors.clear();
-    }
+    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+    line_constructors.clear();
+    assert(nest_count == 0);
 
     return Branch(defaultBranch, line_constructors, nested_branches);
 }
@@ -231,7 +237,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
             }
         }
-        replaceAll(representation, "&", " ");
+        replaceAll(representation, "-", " ");
         replaceAll(representation, "^", "\n");
         return representation;
     };
@@ -368,6 +374,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
+        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
         auto constructor = get<1>(t);
 
@@ -388,7 +395,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(names, symbol_groups, type);
+        auto constructed = constructor(local_names, symbol_groups, type);
         concat(default_content, constructed);
         files.push_back(make_tuple(type, filename + extension, default_content));
     }

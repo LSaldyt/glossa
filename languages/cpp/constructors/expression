@@ -2,6 +2,6 @@ $body = 0
 name
 defines
 header
-sep & $body
+sep - $body
 source
-sep & $body
+sep - $body

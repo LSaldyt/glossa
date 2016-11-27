@@ -84,18 +84,17 @@ namespace compiler
         }
 
         print("Constructing from grammar:");
-        unordered_set<string> names;
         unordered_map<string, tuple<vector<string>, string>> files;
 
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
-            print(get<0>(identified_group));
             string gen_with = "none";
             if (files.empty())
             {
                 gen_with = filename;
             }
+            unordered_set<string> names;
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
             for (auto fileinfo : generated)
             {

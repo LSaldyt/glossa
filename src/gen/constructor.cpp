@@ -6,7 +6,10 @@ namespace gen
 Constructor::Constructor()
 {
 }
-Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator, Branch set_main_branch, vector<string> set_definitions, vector<string> set_name_indices) : 
+Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator, 
+                         Branch set_main_branch, 
+                         vector<string> set_definitions, 
+                         vector<string> set_name_indices) : 
     symbol_storage_generator(set_symbol_storage_generator), 
     main_branch(set_main_branch),
     definitions(set_definitions),
@@ -18,12 +21,6 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
 {
     vector<string> generated;
 
-    for (auto definition : definitions)
-    {
-        auto new_name = get<0>(symbol_storage)[definition]->name();
-        print("Defined: " + new_name);
-        names.insert(new_name);
-    }
     if (branch.condition_evaluator(names, symbol_storage, generated))
     {
         for (auto line_constructor : branch.line_constructors)
@@ -35,6 +32,17 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
             concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype));
         }
     }
+
+    for (auto definition : definitions)
+    {
+        assert(contains(get<0>(symbol_storage), definition));
+        auto new_name = get<0>(symbol_storage)[definition]->name();
+        if (not contains(names, new_name))
+        {
+            names.insert(new_name);
+        }
+    }
+
     return generated;
 }
 
@@ -43,24 +51,5 @@ vector<string> Constructor::operator()(unordered_set<string>& names, vector<vect
     auto symbol_storage = symbol_storage_generator(symbol_groups);
     return evaluateBranch(main_branch, names, symbol_storage, filetype);
 }
-
-string Constructor::name()
-{
-    /*
-    auto symbol_storage = symbol_storage_generator(symbol_groups);
-    if (name.size() == 2)
-    {
-        int index_a = std::stoi(name[0]);
-        int index_b = std::stoi(name[1]);
-        return symbol_storage[index_a][index_b]->name();
-    }
-    else
-    {
-        return "none";
-    }
-    */
-    return "none";
-}
-
 }
 
