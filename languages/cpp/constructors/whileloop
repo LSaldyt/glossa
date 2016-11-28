@@ -1,6 +1,5 @@
 $boolexpr = 0 0
 $loopbody = 1
-name
 defines
 header
 while ( $boolexpr )

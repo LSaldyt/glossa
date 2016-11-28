@@ -9,7 +9,6 @@ $inners = 5
 $body = 6
 concat $auxillaryargs $inheritance
 concat $inners $inheritance
-name
 defines
 header
 

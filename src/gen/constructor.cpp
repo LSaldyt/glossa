@@ -8,12 +8,10 @@ Constructor::Constructor()
 }
 Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator, 
                          Branch set_main_branch, 
-                         vector<string> set_definitions, 
-                         vector<string> set_name_indices) : 
+                         vector<string> set_definitions) : 
     symbol_storage_generator(set_symbol_storage_generator), 
     main_branch(set_main_branch),
-    definitions(set_definitions),
-    name_indices(set_name_indices)
+    definitions(set_definitions)
 {
 }
 
@@ -39,6 +37,12 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         auto new_name = get<0>(symbol_storage)[definition]->name();
         if (not contains(names, new_name))
         {
+            print("Namespace:");
+            for (auto name : names)
+            {
+                print(name);
+            }
+            print("Adding name: " + new_name);
             names.insert(new_name);
         }
     }

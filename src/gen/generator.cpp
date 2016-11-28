@@ -55,12 +55,9 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
-    assert(contains(content, "name"s));
     assert(contains(content, "defines"s));
-    auto name_i    = std::find(content.begin(), content.end(), "name");
     auto defines_i = std::find(content.begin(), content.end(), "defines");
-    auto declarations = vector<string>(content.begin(), name_i);
-    auto name         = vector<string>(name_i    + 1, defines_i);
+    auto declarations = vector<string>(content.begin(), defines_i);
 
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
     vector<string> definitions;
@@ -90,7 +87,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         {
             auto body = vector<string>(last_it + 1, it);
             print("Created body");
-            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
@@ -98,7 +95,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
-    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
     constructors.push_back(make_tuple(type, constructor));
 
     return constructors;
@@ -313,8 +310,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             string to_define = get<0>(symbol_storage)[identifier]->name();
-            return contains(names, to_define) or
-                   contains(names, to_define); 
+            return contains(names, to_define); 
         };
     }
     else if (keyword == "equalTo")

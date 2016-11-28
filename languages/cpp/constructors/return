@@ -1,5 +1,4 @@
 $expression = 0 0
-name
 defines
 header
 return $expression ;

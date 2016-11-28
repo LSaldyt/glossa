@@ -1,7 +1,6 @@
 $identifier = 0 0
 $args = 1
 $body = 2
-name
 defines
 header
     branch equalTo $identifier main
