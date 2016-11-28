@@ -29,4 +29,18 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
     }
     return representation;
 }
+
+string MultiSymbol::abstract(int indent)
+{
+    string representation = repeatString("    ", indent) + "MultiSymbol (" + tag + ")\n";
+    for (auto group : groups)
+    {
+        for (auto symbol : group)
+        {
+            representation += symbol->abstract(indent + 1) + "\n";
+        }
+    }
+    return representation;
+}
+
 }

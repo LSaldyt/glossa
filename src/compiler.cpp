@@ -95,6 +95,15 @@ namespace compiler
                 gen_with = filename;
             }
             unordered_set<string> names;
+            auto groups = get<1>(identified_group);
+            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
+            for (auto group : groups)
+            {
+                for (auto symbol : group)
+                {
+                    print(symbol->abstract());
+                }
+            }
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
             for (auto fileinfo : generated)
             {

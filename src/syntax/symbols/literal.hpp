@@ -16,6 +16,10 @@ namespace syntax
         {
             return std::to_string(value);
         }
+        virtual string abstract(int indent=0)
+        {
+            return repeatString("    ", indent) + "(" + std::to_string(value) + ")";
+        }
     };
 
     struct StringLiteral : public Symbol
@@ -27,6 +31,10 @@ namespace syntax
         virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return value;
+        }
+        virtual string abstract(int indent=0)
+        {
+            return repeatString("    ", indent) + "(" + value + ")";
         }
         virtual string name()
         {

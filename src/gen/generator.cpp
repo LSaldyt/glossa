@@ -226,6 +226,13 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                     {
                         auto symbol = get<0>(storage)[t];
                         representation += symbol->representation(*this, names, filetype) + " ";
+                        assert(contains(get<0>(storage), t));
+                        auto new_name = get<0>(storage)[t]->name();
+                        if (new_name != "none" and not contains(names, new_name))
+                        {
+                            print("Adding name: " + new_name);
+                            names.insert(new_name);
+                        }
                     }
                     else
                     {
@@ -347,11 +354,10 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         auto split = std::find(terms.begin(), terms.end(), "and");
         vector<string> first(terms.begin() + 1, split);
         vector<string> second(split + 1, terms.end());
-        return [this, first, second](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+        auto a = generateConditionEvaluator(first);
+        auto b = generateConditionEvaluator(second);
+        return [this, a, b](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
         {
-            auto a = generateConditionEvaluator(first);
-            auto b = generateConditionEvaluator(second);
-
             return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
         };
     }
@@ -366,11 +372,11 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              symbol_type, 
                                                                     string                              filename)
 {
+
     vector<tuple<string, string, vector<string>>> files;
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
-        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
         auto constructor = get<1>(t);
 
@@ -391,7 +397,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(local_names, symbol_groups, type);
+        auto constructed = constructor(names, symbol_groups, type);
         concat(default_content, constructed);
         files.push_back(make_tuple(type, filename + extension, default_content));
     }

@@ -7,6 +7,7 @@ namespace syntax
     struct Symbol
     {
         virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype);
+        virtual string abstract(int indent=0);
         virtual string name();
 
         string annotation = "symbol";

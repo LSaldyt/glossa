@@ -31,6 +31,15 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         }
     }
 
+
+    return generated;
+}
+
+vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype)
+{
+    auto symbol_storage = symbol_storage_generator(symbol_groups);
+    auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype);
+    /*
     for (auto definition : definitions)
     {
         assert(contains(get<0>(symbol_storage), definition));
@@ -46,14 +55,8 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
             names.insert(new_name);
         }
     }
-
+    */
     return generated;
-}
-
-vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype)
-{
-    auto symbol_storage = symbol_storage_generator(symbol_groups);
-    return evaluateBranch(main_branch, names, symbol_storage, filetype);
 }
 }
 
