@@ -248,8 +248,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
             }
         }
-        replaceAll(representation, "#", " ");
-        replaceAll(representation, "^", "\n");
+        replaceAll(representation, "space", " ");
+        replaceAll(representation, "newline", "\n");
         return representation;
     };
 }

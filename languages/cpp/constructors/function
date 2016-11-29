@@ -16,14 +16,14 @@ header
         sep , $args T_@-@
         )
         {
-        sep ^; $body
+        sep newline; $body
         }
     end
 source
     branch equalTo $identifier main
         int main(int argc, char ** argv)
         {
-        sep ^; $body
+        sep newline; $body
         }
     elsebranch
         // No source for non-main functions 

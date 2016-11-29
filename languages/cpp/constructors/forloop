@@ -5,10 +5,10 @@ defines
 header
 for (auto $loopvar : $loopexpr )
 {
-sep ^ $loopbody @;
+sep newline $loopbody @;
 }
 source
 for (auto $loopvar : $loopexpr )
 {
-sep ^ $loopbody @;
+sep newline $loopbody @;
 }

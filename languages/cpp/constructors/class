@@ -25,7 +25,7 @@ header
 
     {
     public:
-    sep ^ $members T_@-@;
+    sep newline $members T_@-@;
     format $name __@__
     (
     sep , $auxillaryargs T_@-set_@
@@ -37,7 +37,7 @@ header
     end
 
     {
-    sep # $members @=set_@;
+    sep space $members @=set_@;
     }
     sep ;^ $body
     };
@@ -47,12 +47,12 @@ header
     auto $name (
     sep , $constructorargs T_@-@
     ){
-    sep ^  $constructorbody @; 
+    sep newline  $constructorbody @; 
 
     branch nonempty $supercall
         auto 
-        sep # $inheritance T_@-=@(
-        sep # $supercall
+        sep space $inheritance T_@-=@(
+        sep space $supercall
         );
     end
 
@@ -65,7 +65,7 @@ header
     end
 
     branch nonempty $supercall
-        sep # $inheritance decltype(T_@)
+        sep space $inheritance decltype(T_@)
     end
 
     >
@@ -76,7 +76,7 @@ header
         ,
     end
     branch nonempty $supercall
-        sep # $inheritance T_@
+        sep space $inheritance T_@
     end
     );
     }
