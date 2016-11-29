@@ -37,7 +37,7 @@ header
     end
 
     {
-    sep - $members @=set_@;
+    sep # $members @=set_@;
     }
     sep ;^ $body
     };
@@ -51,8 +51,8 @@ header
 
     branch nonempty $supercall
         auto 
-        sep - $inheritance T_@-=@(
-        sep - $supercall
+        sep # $inheritance T_@-=@(
+        sep # $supercall
         );
     end
 
@@ -65,7 +65,7 @@ header
     end
 
     branch nonempty $supercall
-        sep - $inheritance decltype(T_@)
+        sep # $inheritance decltype(T_@)
     end
 
     >
@@ -76,7 +76,7 @@ header
         ,
     end
     branch nonempty $supercall
-        sep - $inheritance T_@
+        sep # $inheritance T_@
     end
     );
     }

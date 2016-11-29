@@ -193,7 +193,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype){
+    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions){
         string representation = "";
         if (not terms.empty())
         {
@@ -226,12 +226,19 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                     {
                         auto symbol = get<0>(storage)[t];
                         representation += symbol->representation(*this, names, filetype) + " ";
-                        assert(contains(get<0>(storage), t));
-                        auto new_name = get<0>(storage)[t]->name();
-                        if (new_name != "none" and not contains(names, new_name))
+                        auto new_name = symbol->name();
+                        if (new_name != "none"            and 
+                            contains(definitions, t)) 
                         {
-                            print("Adding name: " + new_name);
-                            names.insert(new_name);
+                            if (contains(names, new_name))
+                            {
+                                print("Name " + new_name + " is already defined");
+                            }
+                            else
+                            {
+                                print("Adding name: " + new_name);
+                                names.insert(new_name);
+                            }
                         }
                     }
                     else
@@ -241,7 +248,7 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
             }
         }
-        replaceAll(representation, "-", " ");
+        replaceAll(representation, "#", " ");
         replaceAll(representation, "^", "\n");
         return representation;
     };
@@ -374,10 +381,16 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
 {
 
     vector<tuple<string, string, vector<string>>> files;
+    unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
+        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
+        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
+        {
+            print("Generating filetype " + type + " for symboltype " + symbol_type);
+        }
         auto constructor = get<1>(t);
 
         string extension;
@@ -397,10 +410,19 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(names, symbol_groups, type);
+        auto constructed = constructor(local_names, symbol_groups, type);
         concat(default_content, constructed);
+        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
+        {
+            for (auto line : default_content)
+            {
+                print("    " + line);
+            }
+        }
+        added_names.insert(local_names.begin(), local_names.end());
         files.push_back(make_tuple(type, filename + extension, default_content));
     }
+    names.insert(added_names.begin(), added_names.end());
     return files;
 }
 

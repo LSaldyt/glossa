@@ -23,7 +23,7 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
         {
             for (auto line : get<2>(file))
             {
-                representation += line + " ";
+                representation += line;
             } 
         }
     }
@@ -37,8 +37,9 @@ string MultiSymbol::abstract(int indent)
     {
         for (auto symbol : group)
         {
-            representation += symbol->abstract(indent + 1) + "\n";
+            representation += symbol->abstract(indent + 1);
         }
+        representation += "\n";
     }
     return representation;
 }
