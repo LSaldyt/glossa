@@ -1,0 +1,11 @@
+$values = 0
+$firstval = 0 0
+defines
+header
+std::vector<decltype( $firstval )>({
+sep , $values
+})
+source
+std::vector<decltype( $firstval )>({
+sep , $values
+})

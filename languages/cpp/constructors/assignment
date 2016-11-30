@@ -4,13 +4,13 @@ defines
 $identifier
 header
     branch defined $identifier
-        $identifier = $value ;
+        $identifier = $value 
     elsebranch
-        auto $identifier = $value ;
+        auto $identifier = $value 
     end
 source
     branch defined $identifier
-        $identifier = $value ;
+        $identifier = $value 
     elsebranch
-        auto $identifier = $value ;
+        auto $identifier = $value 
     end

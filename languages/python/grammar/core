@@ -18,3 +18,4 @@ statement
 supercall
 return
 classmemberaccess
+elementaccess

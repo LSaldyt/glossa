@@ -79,7 +79,7 @@ header
         sep space $inheritance T_@
     end
     );
-    }
+    };
 
 source
     // No source for template class definitions

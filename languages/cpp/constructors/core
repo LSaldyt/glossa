@@ -13,3 +13,5 @@ boolexpression
 forloop
 whileloop
 import
+vector
+elementaccess
