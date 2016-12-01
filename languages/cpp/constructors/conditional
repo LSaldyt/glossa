@@ -6,12 +6,12 @@ header
 
 if ( $condition )
 {
-sep newline $ifbody @;
+sep NEWLINE $ifbody @;
 }
 branch nonempty $elsebranchbody
 else
 {
-sep newline $elsebranchbody @;
+sep NEWLINE $elsebranchbody @;
 }
 end
 
@@ -19,11 +19,11 @@ source
 
 if ( $condition )
 {
-sep newline $ifbody @;
+sep NEWLINE $ifbody @;
 }
 branch nonempty $elsebranchbody
 else
 {
-sep newline $elsebranchbody @;
+sep NEWLINE $elsebranchbody @;
 }
 end

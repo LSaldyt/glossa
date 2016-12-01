@@ -4,10 +4,10 @@ defines
 header
 while ( $boolexpr )
 {
-sep newline $loopbody @;
+sep NEWLINE $loopbody @;
 }
 source
 while ( $boolexpr )
 {
-sep newline $loopbody @;
+sep NEWLINE $loopbody @;
 }

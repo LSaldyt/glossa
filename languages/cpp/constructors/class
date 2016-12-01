@@ -13,22 +13,22 @@ defines
 header
 
     template <
-    sep , $auxillaryargs typename-T_@
+    sep , $auxillaryargs typenameSPACET_@
     >
     class 
     format $name __@__
 
     branch nonempty $inheritance
         : 
-        sep , $inheritance public-T_@ 
+        sep , $inheritance publicSPACET_@ 
     end
 
     {
     public:
-    sep newline $members T_@-@;
+    sep NEWLINE $members T_@SPACE@;
     format $name __@__
     (
-    sep , $auxillaryargs T_@-set_@
+    sep , $auxillaryargs T_@SPACEset_@
     )
 
     branch nonempty $inheritance
@@ -37,22 +37,22 @@ header
     end
 
     {
-    sep space $members @=set_@;
+    sep SPACE $members @=set_@;
     }
     sep ;^ $body
     };
     template <
-    sep , $constructorargs typename-T_@
+    sep , $constructorargs typenameSPACET_@
     >
     auto $name (
-    sep , $constructorargs T_@-@
+    sep , $constructorargs T_@SPACE@
     ){
-    sep newline  $constructorbody @; 
+    sep NEWLINE  $constructorbody @; 
 
     branch nonempty $supercall
         auto 
-        sep space $inheritance T_@-=@(
-        sep space $supercall
+        sep SPACE $inheritance T_@SPACE=@(
+        sep SPACE $supercall
         );
     end
 
@@ -65,7 +65,7 @@ header
     end
 
     branch nonempty $supercall
-        sep space $inheritance decltype(T_@)
+        sep SPACE $inheritance decltype(T_@)
     end
 
     >
@@ -76,7 +76,7 @@ header
         ,
     end
     branch nonempty $supercall
-        sep space $inheritance T_@
+        sep SPACE $inheritance T_@
     end
     );
     };

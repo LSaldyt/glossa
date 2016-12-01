@@ -6,7 +6,6 @@ conditional
 boolexpression
 function
 vector
-dictionary
 tuple
 forloop
 whileloop

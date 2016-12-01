@@ -15,3 +15,5 @@ whileloop
 import
 vector
 elementaccess
+list
+constantdeclaration

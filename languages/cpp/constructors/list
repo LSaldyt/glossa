@@ -1,0 +1,11 @@
+$firstval = 0 0
+$vals     = 0
+defines
+header
+std::list<decltype( $firstval )>({
+sep , $vals
+})
+source
+std::list<decltype( $firstval )>({
+sep , $vals
+})

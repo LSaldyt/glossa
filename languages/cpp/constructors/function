@@ -8,22 +8,22 @@ header
     elsebranch
         branch nonempty $args
             template <
-            sep , $args typename-T_@
+            sep , $args typenameSPACET_@
             >
         end
 
         auto $identifier (
-        sep , $args T_@-@
+        sep , $args T_@SPACE@
         )
         {
-        sep newline; $body
+        sep NEWLINE $body @;
         }
     end
 source
     branch equalTo $identifier main
         int main(int argc, char ** argv)
         {
-        sep newline; $body
+        sep NEWLINE $body @;
         }
     elsebranch
         // No source for non-main functions 
