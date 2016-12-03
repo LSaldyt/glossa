@@ -18,3 +18,5 @@ supercall
 return
 classmemberaccess
 elementaccess
+dictionary
+kvpair
