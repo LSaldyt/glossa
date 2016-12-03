@@ -2,6 +2,8 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <unordered_set>
+#include <functional>
 
 // http://stackoverflow.com/questions/18856824/ad-hoc-polymorphism-and-heterogeneous-containers-with-value-semantics
 
@@ -28,6 +30,8 @@ public:
     virtual std::unique_ptr<ObjectInterface> __sub__(const std::unique_ptr<ObjectInterface>& other) const = 0;
     virtual std::unique_ptr<ObjectInterface> __div__(const std::unique_ptr<ObjectInterface>& other) const = 0;
     virtual std::unique_ptr<ObjectInterface> __mul__(const std::unique_ptr<ObjectInterface>& other) const = 0;
+
+    virtual std::size_t __hash__() const = 0;
 };
 
 template <typename T> class ObjectImpl: public ObjectInterface 
@@ -76,6 +80,11 @@ public:
     {
         auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
         return std::make_unique<ObjectImpl<T>>(t * other_impl->t); 
+    }
+
+    virtual std::size_t __hash__() const override
+    {
+        return std::hash<T>()(t);
     }
 
     T t;
@@ -128,6 +137,32 @@ public:
         Object o(*this);
         o.p = p->__mul__(other.p); 
         return o;
+    }
+
+    Object& operator+= (const Object& other) 
+    {
+        p = p->__add__(other.p); 
+        return *this;
+    }
+    Object& operator-= (const Object& other) 
+    {
+        p = p->__sub__(other.p); 
+        return *this;
+    }
+    Object& operator/= (const Object& other) 
+    {
+        p = p->__div__(other.p); 
+        return *this;
+    }
+    Object& operator*= (const Object& other)
+    {
+        p = p->__mul__(other.p); 
+        return *this;
+    }
+
+    std::size_t __hash__() const
+    {
+        return p->__hash__();
     }
 
     template <typename T>
@@ -193,3 +228,15 @@ Object operator*(Object lhs, const Object& rhs)
     return lhs.__mul__(rhs);
 }
 
+namespace std 
+{
+template <>
+struct hash<Object>
+{
+    std::size_t operator()(Object const& o) const
+    {
+        return o.__hash__();
+    }
+};
+
+}

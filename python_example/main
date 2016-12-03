@@ -3,6 +3,9 @@ def main():
     l = []
     l = [3, 15, 1, 7, 2, 4, 5, 3, 12]
 
+    d = {}
+    d = { 1 : 2, 3 : 4}
+
     print("Running Main")
     if true:
         print("Beginning while loop")

@@ -17,3 +17,5 @@ vector
 elementaccess
 list
 constantdeclaration
+dictionary
+kvpair
