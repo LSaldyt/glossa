@@ -136,12 +136,12 @@ public:
         try
         {
             auto impl = dynamic_cast<ObjectImpl<T>*>(p.get());
+            return impl->t;
         }
         catch(const std::exception& e)
         {
             std::cout << "Could not convert object" << std::endl;
         }
-        return impl->t;
     }
 
 private:
