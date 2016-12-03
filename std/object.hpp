@@ -39,6 +39,7 @@ template <typename T> class ObjectImpl: public ObjectInterface
 public:
     template <typename ...Ts> ObjectImpl( Ts&&...ts ) 
         : t( std::forward<Ts>(ts)... ) {}
+
     virtual std::string __str__() override { return str(t); }
 
     virtual std::unique_ptr<ObjectInterface> clone() const override
@@ -113,28 +114,28 @@ public:
 
     Object __add__ (const Object& other) const
     {
-        Object o(*this);
+        Object o = *this;
         o.p = p->__add__(other.p); 
         return o;
     }
 
     Object __sub__ (const Object& other) const
     {
-        Object o(*this);
+        Object o = *this;
         o.p = p->__sub__(other.p); 
         return o;
     }
 
     Object __div__ (const Object& other) const
     {
-        Object o(*this);
+        Object o = *this;
         o.p = p->__div__(other.p); 
         return o;
     }
 
     Object __mul__ (const Object& other) const
     {
-        Object o(*this);
+        Object o = *this;
         o.p = p->__mul__(other.p); 
         return o;
     }
@@ -166,7 +167,7 @@ public:
     }
 
     template <typename T>
-    operator T() const 
+    explicit operator T() const 
     { 
         try
         {
