@@ -1,7 +1,6 @@
 $statement = 0 0
-name
 defines
 header
-$statement ;
+$statement 
 source
-$statement ;
+$statement 

@@ -10,5 +10,9 @@ string Identifier::representation(Generator& generator, unordered_set<string>& g
 {
     return value;
 }
+string Identifier::abstract(int indent)
+{
+    return repeatString("    ", indent) + "Identifier (" + value + ")";
+}
 
 }

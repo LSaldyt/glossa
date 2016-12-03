@@ -59,4 +59,14 @@ namespace tools
             s.insert( pos, replace );
         }
     }
+
+    string repeatString(const string&s, int n)
+    {
+        string repr = "";
+        for (int i = 0; i < n; i++)
+        {
+            repr += s;
+        }
+        return repr;
+    }
 }

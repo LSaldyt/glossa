@@ -15,8 +15,8 @@ public:
     Generator(vector<string> grammar_files, string directory);
     vector<tuple<string, string, vector<string>>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type, string filename="none");
 
-private:
     vector<tuple<string, FileConstructor>> file_constructors;
+private:
     unordered_map<string, vector<tuple<string, Constructor>>> construction_map;
 
     vector<tuple<string, Constructor>> readConstructor(string filename);

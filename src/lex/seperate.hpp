@@ -10,6 +10,7 @@ namespace lex
 
     const Seperators whitespace =
     {
+        //make_tuple("    ", true),
         make_tuple(" ",  false),
         make_tuple("\t", false),
         make_tuple("\n", false)

@@ -3,3 +3,4 @@ build/*
 progtran
 progtrantest
 output/a.out
+heterotest/a.out

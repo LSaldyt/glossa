@@ -1,28 +1,30 @@
-$identbranchier = 0 0
+$identifier = 0 0
 $args = 1
 $body = 2
-name
 defines
 header
-branch equalTo $identbranchier main
-// No main definition required
-elsebranch
-template <
-sep , $args typename&T_@
->
-auto $identbranchier (
-sep , $args T_@&@
-)
-{
-sep ^; $body
-}
-end
+    branch equalTo $identifier main
+        // No main definition required
+    elsebranch
+        branch nonempty $args
+            template <
+            sep , $args typenameSPACET_@
+            >
+        end
+
+        auto $identifier (
+        sep , $args T_@SPACE@
+        )
+        {
+        sep NEWLINE $body @;
+        }
+    end
 source
-branch equalTo $identbranchier main
-int main(int argc, char ** argv)
-{
-sep ^; $body
-}
-elsebranch
-// No source for non-main functions 
-end
+    branch equalTo $identifier main
+        int main(int argc, char ** argv)
+        {
+        sep NEWLINE $body @;
+        }
+    elsebranch
+        // No source for non-main functions 
+    end

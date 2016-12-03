@@ -52,16 +52,12 @@ void Generator::readStructureFile(string filename)
 
 vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 {
-    print("Reading Constructor: " + filename);
     auto content = readFile(filename);
     
     // Seperate constructor into header and source constructors
-    assert(contains(content, "name"s));
     assert(contains(content, "defines"s));
-    auto name_i    = std::find(content.begin(), content.end(), "name");
     auto defines_i = std::find(content.begin(), content.end(), "defines");
-    auto declarations = vector<string>(content.begin(), name_i);
-    auto name         = vector<string>(name_i    + 1, defines_i);
+    auto declarations = vector<string>(content.begin(), defines_i);
 
     auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
     vector<string> definitions;
@@ -77,6 +73,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     for (auto file_constructor : file_constructors)
     {
         tag = get<0>(file_constructor);
+        print(tag);
         assert(contains(content, tag));
         it = std::find(content.begin(), content.end(), tag);
 
@@ -89,14 +86,16 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         else
         {
             auto body = vector<string>(last_it + 1, it);
-            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+            print("Created body");
+            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
         type = tag;
+        print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
-    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions, name);
+    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
     constructors.push_back(make_tuple(type, constructor));
 
     return constructors;
@@ -104,16 +103,15 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
+    print("Generating branch");
     vector<LineConstructor> line_constructors;
     vector<Branch>          nested_branches;
-    
-    auto default_body    = content.begin();
+
     auto if_body_start   = content.begin();
     auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
     auto if_body_end     = content.begin();
     auto else_body_end   = content.begin();
 
-    bool in_conditional = false;
     bool has_else = false;
 
     const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
@@ -132,6 +130,9 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
         nested_branches.push_back(nested_branch);
     };
 
+
+    int nest_count = 0;
+
     auto it = content.begin();
     while (it != content.end())
     {
@@ -141,56 +142,58 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             auto keyword = terms[0];
             if (keyword == "branch")
             {
-                if (default_body != it)
+                if (nest_count == 0)
                 {
+                    if_body_start = it;
                     nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
                     line_constructors.clear();
-                    default_body = it;
                 }
-                if_body_start = it;
-                in_conditional = true;
+                nest_count++;
             }
             else if (keyword == "elsebranch")
             {
-                if_body_end     = it;
-                else_body_start = it;
-                has_else = true;
+                if (nest_count == 1)
+                {
+                    if_body_end     = it;
+                    else_body_start = it;
+                    has_else = true;
+                }
             }
             else if (keyword == "end")
             {
-                if (not has_else)
+                if (nest_count == 1)
                 {
-                    if_body_end = it;
-                }
-                addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
+                    if (not has_else)
+                    {
+                        if_body_end = it;
+                    }
+                    addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
 
-                if (has_else)
-                {
-                    else_body_end = it;
-                    addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                    if (has_else)
+                    {
+                        else_body_end = it;
+                        addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                    }
                 }
-                in_conditional = false;
-                default_body = it;
-            }
-            else if (not in_conditional)
+                nest_count--;
+            }   
+            else if (nest_count == 0)
             {
                 line_constructors.push_back(generateLineConstructor(terms));
             }
         }
         it++;
     }
-    if (default_body != content.end())
-    {
-        nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
-        line_constructors.clear();
-    }
+    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+    line_constructors.clear();
+    assert(nest_count == 0);
 
     return Branch(defaultBranch, line_constructors, nested_branches);
 }
 
 LineConstructor Generator::generateLineConstructor(vector<string> terms)
 {
-    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype){
+    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions){
         string representation = "";
         if (not terms.empty())
         {
@@ -223,6 +226,20 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                     {
                         auto symbol = get<0>(storage)[t];
                         representation += symbol->representation(*this, names, filetype) + " ";
+                        auto new_name = symbol->name();
+                        if (new_name != "none"            and 
+                            contains(definitions, t)) 
+                        {
+                            if (contains(names, new_name))
+                            {
+                                print("Name " + new_name + " is already defined");
+                            }
+                            else
+                            {
+                                print("Adding name: " + new_name);
+                                names.insert(new_name);
+                            }
+                        }
                     }
                     else
                     {
@@ -231,8 +248,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                 }
             }
         }
-        replaceAll(representation, "&", " ");
-        replaceAll(representation, "^", "\n");
+        replaceAll(representation, "SPACE", " ");
+        replaceAll(representation, "NEWLINE", "\n");
         return representation;
     };
 }
@@ -307,8 +324,7 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
         {
             string to_define = get<0>(symbol_storage)[identifier]->name();
-            return contains(names, to_define) or
-                   contains(names, to_define); 
+            return contains(names, to_define); 
         };
     }
     else if (keyword == "equalTo")
@@ -345,11 +361,10 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
         auto split = std::find(terms.begin(), terms.end(), "and");
         vector<string> first(terms.begin() + 1, split);
         vector<string> second(split + 1, terms.end());
-        return [this, first, second](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+        auto a = generateConditionEvaluator(first);
+        auto b = generateConditionEvaluator(second);
+        return [this, a, b](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
         {
-            auto a = generateConditionEvaluator(first);
-            auto b = generateConditionEvaluator(second);
-
             return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
         };
     }
@@ -364,11 +379,18 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              symbol_type, 
                                                                     string                              filename)
 {
+
     vector<tuple<string, string, vector<string>>> files;
+    unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
+        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
+        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
+        {
+            print("Generating filetype " + type + " for symboltype " + symbol_type);
+        }
         auto constructor = get<1>(t);
 
         string extension;
@@ -388,10 +410,19 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(names, symbol_groups, type);
+        auto constructed = constructor(local_names, symbol_groups, type);
         concat(default_content, constructed);
-        files.push_back(make_tuple(type, extension, default_content));
+        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
+        {
+            for (auto line : default_content)
+            {
+                print("    " + line);
+            }
+        }
+        added_names.insert(local_names.begin(), local_names.end());
+        files.push_back(make_tuple(type, filename + extension, default_content));
     }
+    names.insert(added_names.begin(), added_names.end());
     return files;
 }
 

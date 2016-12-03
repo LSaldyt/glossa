@@ -1,15 +1,14 @@
 $loopvar  = 0 0
 $loopexpr = 1 0
 $loopbody = 2
-name
 defines
 header
 for (auto $loopvar : $loopexpr )
 {
-sep ^ $loopbody @;
+sep NEWLINE $loopbody @;
 }
 source
 for (auto $loopvar : $loopexpr )
 {
-sep ^ $loopbody @;
+sep NEWLINE $loopbody @;
 }

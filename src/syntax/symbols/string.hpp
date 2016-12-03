@@ -4,9 +4,13 @@ namespace syntax
     struct String : public StringLiteral 
     {
         String(string set_value) : StringLiteral(set_value){}
-        string representation(Generator& generator, unordered_set<string>& generated, string filetype)
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
         {
             return "\"" + value + "\"s";
+        }
+        virtual string abstract(int indent=0)
+        {
+            return repeatString("    ", indent) + "String(\"" + value + "\")";
         }
     };
 }

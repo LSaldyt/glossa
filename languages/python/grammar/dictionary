@@ -1,5 +1,5 @@
 punctuator {
-optional inOrder link expression !punctuator : link expression
-many inOrder !punctuator , link expression !punctuator : link expression
+optional link kvpair 
+many inOrder !punctuator , link kvpair 
 punctuator }
-1 2 
+1 2

@@ -1,18 +1,17 @@
 $condition = 0 0
 $ifbody = 1
 $elsebranchbody = 2
-name
 defines
 header
 
 if ( $condition )
 {
-sep ^ $ifbody @;
+sep NEWLINE $ifbody @;
 }
 branch nonempty $elsebranchbody
 else
 {
-sep ^ $elsebranchbody @;
+sep NEWLINE $elsebranchbody @;
 }
 end
 
@@ -20,11 +19,11 @@ source
 
 if ( $condition )
 {
-sep ^ $ifbody @;
+sep NEWLINE $ifbody @;
 }
 branch nonempty $elsebranchbody
 else
 {
-sep ^ $elsebranchbody @;
+sep NEWLINE $elsebranchbody @;
 }
 end
