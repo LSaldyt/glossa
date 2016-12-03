@@ -23,6 +23,11 @@ public:
     virtual std::unique_ptr<ObjectInterface> clone() const = 0;
     
     virtual bool __lt__(const std::unique_ptr<ObjectInterface>& other) const = 0;
+    virtual bool __eq__(const std::unique_ptr<ObjectInterface>& other) const = 0; 
+    virtual std::unique_ptr<ObjectInterface> __add__(const std::unique_ptr<ObjectInterface>& other) const = 0;
+    virtual std::unique_ptr<ObjectInterface> __sub__(const std::unique_ptr<ObjectInterface>& other) const = 0;
+    virtual std::unique_ptr<ObjectInterface> __div__(const std::unique_ptr<ObjectInterface>& other) const = 0;
+    virtual std::unique_ptr<ObjectInterface> __mul__(const std::unique_ptr<ObjectInterface>& other) const = 0;
 };
 
 template <typename T> class ObjectImpl: public ObjectInterface 
@@ -31,18 +36,49 @@ public:
     template <typename ...Ts> ObjectImpl( Ts&&...ts ) 
         : t( std::forward<Ts>(ts)... ) {}
     virtual std::string __str__() override { return str(t); }
+
     virtual std::unique_ptr<ObjectInterface> clone() const override
     {
         return std::make_unique<ObjectImpl<T>>( t ); // This is C++14
     }
+
     virtual bool __lt__(const std::unique_ptr<ObjectInterface>& other) const override
     {
         auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
         return t < other_impl->t;
     }
 
-private:
-T t;
+    virtual bool __eq__(const std::unique_ptr<ObjectInterface>& other) const override
+    {
+        auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
+        return t == other_impl->t;
+    }
+
+    virtual std::unique_ptr<ObjectInterface> __add__(const std::unique_ptr<ObjectInterface>& other) const override
+    {
+        auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
+        return std::make_unique<ObjectImpl<T>>(t + other_impl->t); 
+    }
+
+    virtual std::unique_ptr<ObjectInterface> __sub__(const std::unique_ptr<ObjectInterface>& other) const override
+    {
+        auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
+        return std::make_unique<ObjectImpl<T>>(t - other_impl->t); 
+    }
+
+    virtual std::unique_ptr<ObjectInterface> __div__(const std::unique_ptr<ObjectInterface>& other) const override
+    {
+        auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
+        return std::make_unique<ObjectImpl<T>>(t / other_impl->t); 
+    }
+
+    virtual std::unique_ptr<ObjectInterface> __mul__(const std::unique_ptr<ObjectInterface>& other) const override
+    {
+        auto other_impl = dynamic_cast<ObjectImpl<T>*>(other.get());
+        return std::make_unique<ObjectImpl<T>>(t * other_impl->t); 
+    }
+
+    T t;
 };
 
 
@@ -63,6 +99,51 @@ public:
         { return p->__str__(); }
     bool __lt__ (const Object& other) const
         { return p->__lt__(other.p); }
+    bool __eq__ (const Object& other) const
+        { return p->__eq__(other.p); }
+
+    Object __add__ (const Object& other) const
+    {
+        Object o(*this);
+        o.p = p->__add__(other.p); 
+        return o;
+    }
+
+    Object __sub__ (const Object& other) const
+    {
+        Object o(*this);
+        o.p = p->__sub__(other.p); 
+        return o;
+    }
+
+    Object __div__ (const Object& other) const
+    {
+        Object o(*this);
+        o.p = p->__div__(other.p); 
+        return o;
+    }
+
+    Object __mul__ (const Object& other) const
+    {
+        Object o(*this);
+        o.p = p->__mul__(other.p); 
+        return o;
+    }
+
+    template <typename T>
+    operator T() const 
+    { 
+        try
+        {
+            auto impl = dynamic_cast<ObjectImpl<T>*>(p.get());
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "Could not convert object" << std::endl;
+        }
+        return impl->t;
+    }
+
 private:
     std::unique_ptr<ObjectInterface> p;
 };
@@ -85,7 +166,30 @@ std::ostream& operator<<(std::ostream& os, Object& obj)
 }
 
 inline bool operator< (const Object& lhs, const Object& rhs){ return lhs.__lt__(rhs); }
-inline bool operator< (const Object& lhs, const auto& rhs)  { return lhs.__lt__(Object(rhs)); }
-inline bool operator> (const Object& lhs, const auto& rhs)  { return rhs < lhs; }
-inline bool operator<=(const Object& lhs, const auto& rhs)  { return !(lhs > rhs); }
-inline bool operator>=(const Object& lhs, const auto& rhs)  { return !(lhs < rhs); }
+inline bool operator> (const Object& lhs, const Object& rhs){ return rhs < lhs; }
+inline bool operator<=(const Object& lhs, const Object& rhs){ return !(lhs > rhs); }
+inline bool operator>=(const Object& lhs, const Object& rhs){ return !(lhs < rhs); }
+
+inline bool operator==(const Object& lhs, const Object& rhs){ return lhs.__eq__(rhs); }
+inline bool operator!=(const Object& lhs, const Object& rhs){ return !(lhs == rhs); }
+
+Object operator+(Object lhs, const Object& rhs)
+{
+    return lhs.__add__(rhs);
+}
+
+Object operator-(Object lhs, const Object& rhs)
+{
+    return lhs.__sub__(rhs);
+}
+
+Object operator/(Object lhs, const Object& rhs)
+{
+    return lhs.__div__(rhs);
+}
+
+Object operator*(Object lhs, const Object& rhs)
+{
+    return lhs.__mul__(rhs);
+}
+

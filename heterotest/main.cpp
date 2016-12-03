@@ -17,13 +17,16 @@ int main()
 
     for (auto o : objects)
     {
-        print(o);
+        //print(o);
     }
 
     Object a = 1;
     Object b = 2;
+    Object c = 1;
 
-    print(a < b);
-    print(a < 2);
-    print(a > 2);
+    print(a == c);
+    print(b + c);
+    print(b + 1);
+
+    int z = c;
 }
