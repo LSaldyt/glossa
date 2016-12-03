@@ -23,10 +23,25 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
         {
             for (auto line : get<2>(file))
             {
-                representation += line + " ";
+                representation += line;
             } 
         }
     }
     return representation;
 }
+
+string MultiSymbol::abstract(int indent)
+{
+    string representation = repeatString("    ", indent) + "MultiSymbol (" + tag + ")\n";
+    for (auto group : groups)
+    {
+        for (auto symbol : group)
+        {
+            representation += symbol->abstract(indent + 1);
+        }
+        representation += "\n";
+    }
+    return representation;
+}
+
 }

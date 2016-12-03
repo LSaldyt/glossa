@@ -6,7 +6,6 @@ conditional
 boolexpression
 function
 vector
-dictionary
 tuple
 forloop
 whileloop
@@ -18,3 +17,6 @@ statement
 supercall
 return
 classmemberaccess
+elementaccess
+dictionary
+kvpair

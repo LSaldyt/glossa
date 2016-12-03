@@ -13,3 +13,9 @@ boolexpression
 forloop
 whileloop
 import
+vector
+elementaccess
+list
+constantdeclaration
+dictionary
+kvpair

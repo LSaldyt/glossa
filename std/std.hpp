@@ -1,7 +1,12 @@
 #pragma once
-#include "io.hpp"
-#include "dicthelpers.hpp"
-#include "vectorhelpers.hpp"
+
 #include <tuple>
 #include <string>
+#include <list>
+
+#include "vectorhelpers.hpp"
+#include "dicthelpers.hpp"
+#include "object.hpp"
+#include "io.hpp"
+
 using namespace std::string_literals;

@@ -105,4 +105,6 @@ bool contains(const unordered_set<T>& data_structure, const T& key)
 }
 
 void replaceAll( string &s, const string &search, const string &replace );
+
+string repeatString(const string&s, int n);
 }
