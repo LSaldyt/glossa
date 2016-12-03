@@ -10,8 +10,20 @@ int main()
     objects.push_back(1);
     objects.push_back(true);
 
+    const auto print = [](auto v)
+    {
+        std::cout << v << std::endl;
+    };
+
     for (auto o : objects)
     {
-        std::cout << str(o) << std::endl;
+        print(o);
     }
+
+    Object a = 1;
+    Object b = 2;
+
+    print(a < b);
+    print(a < 2);
+    print(a > 2);
 }
