@@ -1,15 +1,12 @@
 #include "main.hpp"
+// No source for non-main functions 
 int main(int argc, char ** argv) 
 { 
-auto l = std::vector<Object>({ })    ;
-l = std::vector<Object>({ 3 ,15 ,1 ,7 ,2 ,4 ,5 ,3 ,12 })    ;
-auto d = std::unordered_map<Object, Object>({ })    ;
-auto strings = std::vector<Object>({ "hello"s ,"world"s })    ;
-d = std::unordered_map<Object, Object>({ { "a"s  , 2  } ,{ "b"s  , 4  } })    ;
-print ( "Running Main"s )  ;
-if ( true  ) { print ( "Beginning while loop"s )  ;
-auto x = 10   ;
-while ( x  > 0  ) { print ( x )  ;
-x = x  - 1   ;}  ;
-return 0   ;} else { return 1   ;}  ;
+print ( "Running main"s )  ;
+auto l = std::vector<Object>({ 3 ,2 ,12 ,9 ,4 ,68 ,17 })    ;
+print ( "Unsorte"s )  ;
+for (auto item : l  ) { print ( item )  ;}  ;
+l = sort ( l )    ;
+print ( "Sorted"s )  ;
+for (auto item : l  ) { print ( item )  ;}  ;
 } 

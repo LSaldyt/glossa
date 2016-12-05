@@ -416,7 +416,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         {
             for (auto line : default_content)
             {
-                print("    " + line);
+                //print("    " + line);
             }
         }
         added_names.insert(local_names.begin(), local_names.end());

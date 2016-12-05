@@ -1,20 +1,29 @@
 
-def main():
-    l = []
-    l = [3, 15, 1, 7, 2, 4, 5, 3, 12]
+def sort(array):
+    less    = []
+    equal   = []
+    greater = []
 
-    d = {}
-
-    strings = ["hello", "world"]
-    d = { "a" : 2, "b" : 4}
-
-    print("Running Main")
-    if true:
-        print("Beginning while loop")
-        x = 10
-        while x > 0:
-            print(x)
-            x = x - 1
-        return 0
+    if len(array) <= 1:
+        return array
     else:
-        return 1
+        pivot = array[0]
+        for x in array:
+            if x < pivot:
+                less.push_back(x)
+            if x == pivot:
+                equal.push_back(x)
+            if x > pivot:
+                greater.push_back(x)
+        return sort(less) + equal + sort(greater)
+
+def main():
+    print("Running main")
+    l = [3, 2, 12, 9, 4, 68, 17]
+    print("Unsorted)
+    for item in l:
+        print(item)
+    l = sort(l)
+    print("Sorted")
+    for item in l:
+        print(item)

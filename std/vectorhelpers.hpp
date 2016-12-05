@@ -1,9 +1,18 @@
 #pragma once
 #include <vector>
-template <typename T>
-void append(std::vector<T>& v, const T& t)
-{
-    v.push_back(t);
-}
 
 std::vector<int> range(int a);
+
+template <typename T>
+std::vector<T> operator+(std::vector<T> lhs, const std::vector<T>& rhs)
+{
+    lhs.insert(lhs.end(), rhs.begin(), rhs.end());
+    return lhs;
+}
+
+template <typename T>
+std::size_t len(const T& t)
+{
+    return t.size();
+}
+
