@@ -19,12 +19,5 @@ def sort(array):
 
 def main():
     print("Running main")
-    l = [3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743]
-    print("Unsorted")
-    for item in l:
-        print(item)
-    l = sort(l)
-    print("Sorted")
-    for item in l:
-        print(item)
-
+    for i in range(100000):
+        l = sort([3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743])
