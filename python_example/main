@@ -10,11 +10,11 @@ def sort(array):
         pivot = array[0]
         for x in array:
             if x < pivot:
-                less.append(x)
+                less.push_back(x)
             if x == pivot:
-                equal.append(x)
+                equal.push_back(x)
             if x > pivot:
-                greater.append(x)
+                greater.push_back(x)
         return sort(less) + equal + sort(greater)
 
 def main():
@@ -28,4 +28,3 @@ def main():
     for item in l:
         print(item)
 
-main()
