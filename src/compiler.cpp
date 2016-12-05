@@ -22,34 +22,49 @@ int main(int argc, char* argv[])
     auto grammar   = loadGrammar(from);
     auto generator = loadGenerator(to);
 
+    auto symbol_table = readSymbolTable("languages/symboltables/" + from + to);
+
     vector<string> files = slice(args, 2);
     string input_directory  = "";
     string output_directory = "";
 
     for (auto& file : files)
     {
-        compile(file, grammar, generator, "input", "output");
+        compile(file, grammar, generator, symbol_table, "input", "output");
     }
     print("Compilation finished");
 }
 
+
 namespace compiler
 {
+
+    unordered_map<string, string> readSymbolTable(string filename)
+    {
+        unordered_map<string, string> symbol_table;
+        for (auto line : readFile(filename))
+        {
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            assert(terms.size() == 3);
+            symbol_table[terms[0]] = terms[2];
+        }
+        return symbol_table;
+    }
+
     Grammar loadGrammar(string language)
     {
         auto grammar_files = readFile("languages/" + language + "/grammar/core");
-        auto grammar = Grammar(grammar_files, "languages/" + language + "/grammar/");
-
+        auto grammar       = Grammar(grammar_files, "languages/" + language + "/grammar/");
 
         auto operators        = readFile("languages/" + language + "/grammar/operators");
         auto logicaloperators = readFile("languages/" + language + "/grammar/logicaloperators"); 
         auto punctuators      = readFile("languages/" + language + "/grammar/punctuators");
 
         LanguageTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
+        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
-        term_sets.push_back(make_tuple(operators, "operator"));
-        term_sets.push_back(make_tuple(punctuators, "punctuator"));
+        term_sets.push_back(make_tuple(operators,        "operator"));
+        term_sets.push_back(make_tuple(punctuators,      "punctuator"));
 
         LanguageLexers lexer_set = {
             LanguageLexer(digits, "int", "literal", 3),
@@ -67,20 +82,20 @@ namespace compiler
         return Generator(constructor_files, "languages/" + language + "/constructors/");
     }
 
-    void compile(string filename, Grammar& grammar, Generator& generator, string input_directory, string output_directory)
+    void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory)
     {
         print("Reading File");
         auto content         = readFile     (input_directory + "/" + filename);
         print("Lexing terms");
-        auto tokens          = tokenPass    (content, grammar.language); 
+        auto tokens          = tokenPass    (content, grammar, symbol_table); 
         print("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
         print("Joining symbolic tokens");
         auto joined_tokens   = join         (symbolic_tokens);
 
-        for(auto jt : joined_tokens)
+        for(auto& jt : joined_tokens)
         {
-            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", " + jt.text);
+            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
         }
 
         print("Constructing from grammar:");
@@ -137,13 +152,26 @@ namespace compiler
         }
     }
 
-    std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table)
     {
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
             print("Lexing: " + line);
-            tokens.push_back(lexWith(line, language));
+            tokens.push_back(lexWith(line, grammar.language));
+        }
+        for (auto& token_group : tokens)
+        {
+            for (auto& token : token_group)
+            {
+                for (auto& value : token.values)
+                {
+                    if (contains(symbol_table, value))
+                    {
+                        value = symbol_table[value];
+                    }
+                }
+            }
         }
         return tokens;
     }

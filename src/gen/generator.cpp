@@ -389,7 +389,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         auto type        = get<0>(t);
         if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
         {
-            print("Generating filetype " + type + " for symboltype " + symbol_type);
+            //print("Generating filetype " + type + " for symboltype " + symbol_type);
         }
         auto constructor = get<1>(t);
 

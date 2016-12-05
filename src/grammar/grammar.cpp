@@ -9,7 +9,7 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 }
 
 // Standard grammar constructor (From list of files)
-Grammar::Grammar(vector<string> filenames, string directory)
+Grammar::Grammar(vector<string> filenames, string directory) 
 {
     for (auto filename : filenames)
     {
@@ -31,6 +31,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
 
     return identified_groups;
 }
+
 
 vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
 {
