@@ -1,0 +1,10 @@
+keyword super 
+punctuator ( 
+punctuator )
+punctuator .
+keyword __init__
+punctuator ( 
+optional link expression
+many inOrder !punctuator , link expression
+optional punctuator )
+6 7

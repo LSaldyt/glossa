@@ -15,49 +15,48 @@ def cleardir(dirname):
         if os.path.isfile(filepath):
             os.unlink(filepath)
 
-# Remove old compiled files
-cleardir('output')
+def main():
+    # Remove old compiled files
+    cleardir('output')
 
-# Build the compiler and test it
-os.chdir('build')
-run(['cmake', '..'])
-run(['make'])
-os.chdir('..')
-run(['./build/progtrantest'])
+    # Build the compiler and test it
+    os.chdir('build')
+    run(['cmake', '..'])
+    run(['make'])
+    os.chdir('..')
+    run(['./build/progtrantest'])
 
-languageargs = []
+    languageargs = []
 
-# Build the list of input files
-if len(sys.argv) == 1:
-    directory = 'python_example/'
-    languageargs = ['python', 'cpp']
-else:
+    # Build the list of input files
     assert len(sys.argv) == 4
     directory = sys.argv[1]
     languageargs = sys.argv[2:]
 
-inputfiles = []
+    inputfiles = []
 
-for dirpath, dnames, filenames in os.walk(directory):
-    for filename in filenames:
-        filepath    = os.path.join(dirpath, filename)
-        filename, _ = os.path.splitext(filename)
-        inputfile   = os.path.join('input/', filename)
+    for dirpath, dnames, filenames in os.walk(directory):
+        for filename in filenames:
+            filepath    = os.path.join(dirpath, filename)
+            filename, _ = os.path.splitext(filename)
+            inputfile   = os.path.join('input/', filename)
 
-        inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
-        shutil.copyfile(filepath, inputfile)
-        run(['./annotate.py', inputfile])
+            inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
+            shutil.copyfile(filepath, inputfile)
+            run(['./annotate.py', inputfile])
 
-print('Running files: %s' % '\n'.join(inputfiles))
-run(['./build/progtran'] + languageargs + inputfiles)
+    print('Running files: %s' % '\n'.join(inputfiles))
+    run(['./build/progtran'] + languageargs + inputfiles)
 
-# Compile output c++ code
-os.chdir('output')
-subprocess.run('g++ -std=c++14 *.cpp ../std/*.cpp', shell=True)
-run(['./a.out'])
-os.chdir('..')
+    # Compile output c++ code
+    os.chdir('output')
+    subprocess.run('g++ -std=c++14 *.cpp -O3 ../std/*.cpp', shell=True)
+    subprocess.run('time ./a.out', shell=True)
+    os.chdir('..')
 
-# Cleanup
-cleardir('input')
-subprocess.run('touch input/.placeholder', shell=True)
+    # Cleanup
+    cleardir('input')
+    subprocess.run('touch input/.placeholder', shell=True)
 
+if __name__ == '__main__':
+    main()

@@ -67,9 +67,11 @@ namespace compiler
         term_sets.push_back(make_tuple(punctuators,      "punctuator"));
 
         LanguageLexers lexer_set = {
-            LanguageLexer(digits, "int", "literal", 3),
-            LanguageLexer(startswith("\""), "string", "literal", 1),
-            LanguageLexer(identifiers, "identifier", "identifier", 3)};
+            LanguageLexer(just("    "s),     "tab",        "tab",        3),
+            LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
+            LanguageLexer(digits,            "int",        "literal",    3),
+            LanguageLexer(startswith("\""s), "string",     "literal",    1),
+            LanguageLexer(identifiers,       "identifier", "identifier", 3)};
 
         Language test_language(term_sets, lexer_set);
         grammar.language = test_language;

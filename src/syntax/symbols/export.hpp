@@ -11,13 +11,15 @@ namespace syntax
     using Punctuator = StringLiteral;
     using Integer    = Literal<int>;
     using Keyword    = StringLiteral;
+    using Tab        = StringLiteral;
 
     const auto stringGenerator = [](string s){
         return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
     };
     const auto keywordGenerator = [](string s){ return make_shared<Keyword>(Keyword(s)); };
     const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
-    const auto puncGenerator    = [](string term){ return make_shared<Punctuator>(Punctuator(term));};
+    const auto puncGenerator    = [](string s){ return make_shared<Punctuator>(Punctuator(s));};
+    const auto tabGenerator     = [](string s){ return make_shared<Tab>(Tab(s));};
 
     const auto literalGenerator = [](string s)
     {
@@ -32,6 +34,7 @@ namespace syntax
         return value;
     };
 
+
     const auto single = [](function<shared_ptr<Symbol>(string)> f){
         return [f](vector<string> values){return f(values[0]); };
     };
@@ -41,6 +44,7 @@ namespace syntax
      {"identifier", single(identifierGenerator)},
      {"keyword",    single(keywordGenerator)},
      {"punctuator", single(puncGenerator)},
-     {"logicaloperator", single(logicalOpGenerator)}
+     {"logicaloperator", single(logicalOpGenerator)},
+     {"tab",             single(tabGenerator)}
     };
 }
