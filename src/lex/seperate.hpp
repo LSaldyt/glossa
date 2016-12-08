@@ -8,12 +8,4 @@ namespace lex
 
     Terms seperate(const string& sentence, const Seperators &seperators);
 
-    const Seperators whitespace =
-    {
-        make_tuple("    ", true),
-        make_tuple("\t", true),
-        //make_tuple("\t", false),
-        make_tuple(" ",  false),
-        make_tuple("\n", false)
-    };
 }

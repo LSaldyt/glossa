@@ -73,7 +73,8 @@ namespace compiler
             LanguageLexer(startswith("\""s), "string",     "literal",    1),
             LanguageLexer(identifiers,       "identifier", "identifier", 3)};
 
-        Language test_language(term_sets, lexer_set);
+        const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
+        Language test_language(term_sets, lexer_set, whitespace);
         grammar.language = test_language;
         return grammar;
     }
@@ -199,5 +200,37 @@ namespace compiler
             }
         }
         return tokens;
+    }
+
+    Seperators readWhitespaceFile(string filename)
+    {
+        Seperators whitespace;
+        auto content = readFile(filename);
+        for (auto line : content)
+        {
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            assert(terms.size() == 2);
+            auto keyword = terms[0];
+            bool keep    = terms[1] == "true";
+            
+            if (keyword == "indent")
+            {
+                whitespace.push_back(make_tuple("\t",   keep));
+                whitespace.push_back(make_tuple("    ", keep));
+            }
+            else if (keyword == "space")
+            {
+                whitespace.push_back(make_tuple(" ", keep));
+            }
+            else if (keyword == "newline")
+            {
+                whitespace.push_back(make_tuple("\n", keep));
+            }
+            else
+            {
+                print("Unrecognized whitespace keyword: " + keyword);
+            }
+        }
+        return whitespace;
     }
 }

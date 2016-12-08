@@ -26,4 +26,6 @@ namespace compiler
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
     SymbolicTokens join(std::vector<SymbolicTokens>);
     unordered_map<string, string> readSymbolTable(string filename);
+
+    Seperators readWhitespaceFile(string filename);
 }

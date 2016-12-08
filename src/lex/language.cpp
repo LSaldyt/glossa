@@ -10,9 +10,9 @@ namespace lex
         precedence = set_precedence;
     }
 
-    Language::Language(const LanguageTermSets& set_term_sets, const LanguageLexers&  set_language_lexers) {
-        language_term_sets = set_term_sets;
-
+    Language::Language(const LanguageTermSets& set_term_sets, const LanguageLexers&  set_language_lexers, Seperators whitespace)
+        : language_term_sets(set_term_sets)
+    {
         // Always seperate by whitespace
         concat(seperators, whitespace);
 
