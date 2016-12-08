@@ -7,5 +7,6 @@ namespace lex
     using Seperators      = vector<Seperator>;
 
     Terms seperate(const string& sentence, const Seperators &seperators);
+    Seperators readWhitespaceFile(string filename);
 
 }

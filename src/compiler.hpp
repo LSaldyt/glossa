@@ -27,5 +27,4 @@ namespace compiler
     SymbolicTokens join(std::vector<SymbolicTokens>);
     unordered_map<string, string> readSymbolTable(string filename);
 
-    Seperators readWhitespaceFile(string filename);
 }

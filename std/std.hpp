@@ -8,5 +8,6 @@
 #include "dicthelpers.hpp"
 #include "object.hpp"
 #include "io.hpp"
+#include "generator.hpp"
 
 using namespace std::string_literals;
