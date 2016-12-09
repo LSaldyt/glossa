@@ -1,57 +1,148 @@
 #include <cstddef>
 #include <iostream>
 #include <limits>
+#include <functional>
 #include <assert.h>
 
-class PairSequence : public std::iterator<std::input_iterator_tag, std::pair<unsigned, unsigned>>
+#include "io.hpp"
+
+template <typename value_type>
+class Sequence 
+    : public std::iterator<std::input_iterator_tag, value_type>
 {
-    // C++03
-    typedef void (PairSequence::*BoolLike)();
-    void non_comparable();
 public:
-    // C++11 (explicit aliases) 
-    using iterator_category = std::input_iterator_tag;
-    using value_type = std::pair<unsigned, unsigned>;
-    using reference = value_type const&;
-    using pointer = value_type const*;
-    using difference_type = ptrdiff_t;
-
-    PairSequence(): done(false) {}
-
-    // C++11
-    explicit operator bool() const { return !done; }
-
-    // C++03
-    // Safe Bool idiom
-    operator BoolLike() const 
+    using transformation = std::function<value_type(value_type)>;
+    Sequence(value_type initial, 
+             value_type set_last, 
+             transformation set_t) 
+        : done  (false),
+          value (initial),
+          last  (set_last),
+          t     (set_t)
     {
-        return done ? 0 : &PairSequence::non_comparable;
     }
 
-    reference operator*()  const { return ij; }
-    pointer   operator->() const { return &ij; }
+    explicit          operator bool() const { return !done;  }
+    value_type const& operator*()     const { return value;  }
+    value_type const* operator->()    const { return &value; }
 
-    PairSequence& operator++() 
+    Sequence& operator++() 
     {
-        static unsigned const Max = std::numeric_limits<unsigned>::max();
-
         assert(!done);
-
-        if (ij.second != Max) { ++ij.second; return *this; }
-        if (ij.first != Max) { ij.second = 0; ++ij.first; return *this; }
-
+        
+        if (value != last)
+        {
+            value = t(value);
+            return *this;
+        }
         done = true;
         return *this;
     }
 
-    PairSequence operator++(int) 
+    Sequence operator++(int) 
     {
-        PairSequence const tmp(*this);
+        Sequence const tmp(*this);
         ++*this;
         return tmp;
     }
 
+    Sequence begin()
+    {
+        return Sequence(value, last, t);
+    }
+
+    Sequence end()
+    {
+        return Sequence(last, last, t);
+    }
+
+    bool operator!=(Sequence other)
+    {
+        return value != other.value;
+    }
+
 private:
-    bool done;
-    value_type ij;
+    bool       done;
+    value_type value;
+    value_type last;
+
+    std::function<value_type(value_type)> t;
 };
+
+template <typename value_type>
+Sequence<value_type> begin(Sequence<value_type>& s)
+{
+    return s.begin();
+}
+
+template <typename value_type>
+Sequence<value_type> end(Sequence<value_type>& s)
+{
+    return s.end();
+}
+
+
+/*
+template <typename value_type>
+class ForSequence 
+    : public std::iterator<std::input_iterator_tag, value_type>
+{
+public:
+    using transformation = std::function<value_type(value_type)>;
+    ForSequence(value_type initial, 
+                transformation set_t) 
+            : value (initial),
+              t     (set_t)
+    {
+    }
+
+    explicit          operator bool() const { return !done;  }
+    value_type const& operator*()     const { return value;  }
+    value_type const* operator->()    const { return &value; }
+
+    ForSequence& operator++() 
+    {
+        value = t(value);
+        return *this;
+    }
+
+    ForSequence operator++(int) 
+    {
+        Sequence const tmp(*this);
+        ++*this;
+        return tmp;
+    }
+private:
+    value_type value;
+    std::function<value_type(value_type)> t;
+};
+
+
+
+
+#include <iostream>
+#include <algorithm>
+
+namespace foo{
+int i=0;
+
+struct A
+{
+A()
+{
+std::generate(&v[0], &v[10], [&i](){  return ++i;} );
+}
+
+int v[10];
+};
+
+int *begin( A &v )
+{
+return &v.v[0];
+}
+int *last( A &v )
+{
+return &v.v[10];
+}
+} // namespace foo
+*/

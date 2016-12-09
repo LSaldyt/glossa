@@ -98,7 +98,7 @@ namespace compiler
 
         for(auto& jt : joined_tokens)
         {
-            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
+            //print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
         }
 
         print("Constructing from grammar:");
@@ -160,7 +160,7 @@ namespace compiler
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            print("Lexing: " + line);
+            //print("Lexing: " + line);
             tokens.push_back(lexWith(line, grammar.language));
         }
         for (auto& token_group : tokens)

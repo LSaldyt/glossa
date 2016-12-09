@@ -36,7 +36,7 @@ namespace parse
             auto result = matcher(terms);
             for (auto& term : result.consumed)
             {
-                print("Discarding token: " + term.type + ", " + term.sub_type);
+                //print("Discarding token: " + term.type + ", " + term.sub_type);
                 term = SymbolicToken(make_shared<Symbol>(Symbol()), "discard", "discard", "");
             }
             return result;
