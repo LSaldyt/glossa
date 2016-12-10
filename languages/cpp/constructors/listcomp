@@ -1,0 +1,25 @@
+$expr      = 0 0
+$name      = 1 0
+$loopexpr  = 2 0
+$condition = 3
+defines
+header
+listComp(
+$loopexpr ,
+std::function<Object(const Object&)>(
+[&](const auto& $name )
+{
+return $expr ;
+}
+)
+);
+source
+listComp(
+$loopexpr ,
+std::function<Object(const Object&)>(
+[&](const auto& $name )
+{
+return $expr ;
+}
+)
+);

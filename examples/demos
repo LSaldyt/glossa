@@ -1,3 +1,4 @@
-python  examples/python_example python cpp
-haskell examples/haskell_example haskell cpp
-test    examples/test whitepython cpp
+python   examples/python_example  python      cpp
+haskell  examples/haskell_example haskell     cpp
+test     examples/test            whitepython cpp
+listcomp examples/listcomp        python      cpp
