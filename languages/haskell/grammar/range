@@ -1,0 +1,9 @@
+punctuator [
+literal wildcard 
+punctuator ,
+literal wildcard 
+punctuator .
+punctuator .
+literal wildcard 
+punctuator ]
+1 sep 3 sep 6

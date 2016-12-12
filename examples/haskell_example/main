@@ -2,6 +2,7 @@ doubleMe x = x + x
 
 doubleSmallNumber x = if x > 100 then x else x*2   
 
-l = [1, 2, 3]
+let l = [1, 2, 3]
+let r = [1,2..10]
 
 main = 0

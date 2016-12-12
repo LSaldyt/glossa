@@ -1,0 +1,500 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/lucas/Projects/ProgTran/build
+[ 73%] Built target progtranlib
+[ 82%] Built target progtran
+[100%] Built target progtrantest
+Language lexers (sorted by precedence): 
+int type (1)
+if keyword (1)
+then keyword (1)
+else keyword (1)
+is keyword (1)
+and keyword (1)
+not keyword (1)
++ operator (1)
+- operator (1)
+/ operator (1)
+* operator (1)
+identifier identifier (5)
+===============================================================================
+All tests passed (21 assertions in 2 test cases)
+
+def sort(array):
+
+indent: 0
+    less    = []
+
+indent: 1
+    equal   = []
+
+indent: 1
+    greater = []
+
+indent: 1
+    if len(array) <= 1:
+
+indent: 1
+        return array
+
+indent: 2
+    else:
+
+indent: 1
+diff: 1
+        pivot = array[0]
+
+indent: 2
+        for x in array:
+
+indent: 2
+            if x < pivot:
+
+indent: 3
+                less.append(x)
+
+indent: 4
+            if x == pivot:
+
+indent: 3
+diff: 1
+                equal.append(x)
+
+indent: 4
+            if x > pivot:
+
+indent: 3
+diff: 1
+                greater.append(x)
+
+indent: 4
+        return sort(less) + equal + sort(greater)
+
+indent: 2
+diff: 2
+def main():
+
+indent: 0
+diff: 2
+    print("Running main")
+
+indent: 1
+    l = sort([3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743])
+
+indent: 1
+Language lexers (sorted by precedence): 
+* operator (1)
+for keyword (1)
+in keyword (1)
+if keyword (1)
+&& logicaloperator (1)
+|| logicaloperator (1)
+== logicaloperator (1)
+!= logicaloperator (1)
+<= logicaloperator (1)
+>= logicaloperator (1)
+> logicaloperator (1)
+< logicaloperator (1)
++ operator (1)
+- operator (1)
+end keyword (1)
+/ operator (1)
+= operator (1)
+% operator (1)
+, punctuator (1)
+( punctuator (1)
+) punctuator (1)
+: punctuator (1)
+[ punctuator (1)
+] punctuator (1)
+{ punctuator (1)
+} punctuator (1)
+. punctuator (1)
+else keyword (1)
+string literal (1)
+true keyword (1)
+false keyword (1)
+if keyword (1)
+end keyword (1)
+def keyword (1)
+end keyword (1)
+for keyword (1)
+in keyword (1)
+end keyword (1)
+while keyword (1)
+end keyword (1)
+class keyword (1)
+__init__ keyword (1)
+end keyword (1)
+end keyword (1)
+self keyword (1)
+import keyword (1)
+super keyword (1)
+__init__ keyword (1)
+return keyword (1)
+self keyword (1)
+identifier identifier (3)
+tab tab (3)
+int literal (3)
+tab tab (3)
+Reading File
+Lexing terms
+Creating symbols
+Joining symbolic tokens
+Constructing from grammar:
+Identified function
+Identified function
+Compiling groups (Identified as function)
+Identifier (sort)
+Identifier (array)
+MultiSymbol (statement)
+    MultiSymbol (assignment)
+        Identifier (less)
+        MultiSymbol (expression)
+            MultiSymbol (value)
+                MultiSymbol (vector)
+
+
+
+
+
+
+MultiSymbol (statement)
+    MultiSymbol (assignment)
+        Identifier (equal)
+        MultiSymbol (expression)
+            MultiSymbol (value)
+                MultiSymbol (vector)
+
+
+
+
+
+
+MultiSymbol (statement)
+    MultiSymbol (assignment)
+        Identifier (greater)
+        MultiSymbol (expression)
+            MultiSymbol (value)
+                MultiSymbol (vector)
+
+
+
+
+
+
+MultiSymbol (statement)
+    MultiSymbol (conditional)
+        MultiSymbol (boolexpression)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (len)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                Identifier (array)
+
+
+
+
+            (<=)            MultiSymbol (expression)
+                MultiSymbol (value)
+                    (1)
+
+
+
+        MultiSymbol (statement)
+            MultiSymbol (return)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        Identifier (array)
+
+
+
+
+        MultiSymbol (elsebranch)
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    Identifier (pivot)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (elementaccess)
+                                Identifier (array)
+                                (0)
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (forloop)
+                    Identifier (x)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            Identifier (array)
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (conditional)
+                            MultiSymbol (boolexpression)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (x)
+
+                                (<)                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (pivot)
+
+
+
+                            MultiSymbol (statement)
+                                MultiSymbol (memberaccess)
+                                    Identifier (less)
+                                    MultiSymbol (functioncall)
+                                        Identifier (push_back)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                Identifier (x)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (conditional)
+                            MultiSymbol (boolexpression)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (x)
+
+                                (==)                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (pivot)
+
+
+
+                            MultiSymbol (statement)
+                                MultiSymbol (memberaccess)
+                                    Identifier (equal)
+                                    MultiSymbol (functioncall)
+                                        Identifier (push_back)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                Identifier (x)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (conditional)
+                            MultiSymbol (boolexpression)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (x)
+
+                                (>)                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (pivot)
+
+
+
+                            MultiSymbol (statement)
+                                MultiSymbol (memberaccess)
+                                    Identifier (greater)
+                                    MultiSymbol (functioncall)
+                                        Identifier (push_back)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                Identifier (x)
+
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (return)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (sort)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (less)
+
+
+
+                        (+)                        MultiSymbol (value)
+                            Identifier (equal)
+                        (+)                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (sort)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (greater)
+
+
+
+
+
+
+
+
+
+
+Creating initial header file
+Creating initial source file
+Compiling groups (Identified as function)
+Identifier (main)
+MultiSymbol (statement)
+    MultiSymbol (functioncall)
+        Identifier (print)
+        MultiSymbol (expression)
+            MultiSymbol (value)
+                String("Running main")
+
+
+
+
+MultiSymbol (statement)
+    MultiSymbol (assignment)
+        Identifier (l)
+        MultiSymbol (expression)
+            MultiSymbol (value)
+                MultiSymbol (functioncall)
+                    Identifier (sort)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (vector)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (3)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (2)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (12)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (9)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (4)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (68)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (17)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (1)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (2)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (3)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (4)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (5)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (6)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (12)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (9)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (8)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (7)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (6)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (5)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (4)
+
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        (743)
+
+
+
+
+
+
+
+
+
+
+Adding to header file
+Adding to source file
+Generated source file:
+#include "main.hpp"
+// No source for non-main functions 
+int main(int argc, char ** argv) 
+{ 
+print ( "Running main"s )  ;
+auto l = sort ( std::vector<Object>({ 3 ,2 ,12 ,9 ,4 ,68 ,17 ,1 ,2 ,3 ,4 ,5 ,6 ,12 ,9 ,8 ,7 ,6 ,5 ,4 ,743 })  )    ;
+} 
+Generated header file:
+#include "../std/std.hpp"
+template < 
+typename T_array
+> 
+auto sort ( 
+T_array array
+) 
+{ 
+auto less = std::vector<Object>({ })    ;
+auto equal = std::vector<Object>({ })    ;
+auto greater = std::vector<Object>({ })    ;
+if ( len ( array )   <= 1  ) { return array   ;} else { auto pivot = array [ 0 ]    ;
+for (auto x : array  ) { if ( x  < pivot  ) { less . push_back ( x )   ;}  ;
+if ( x  == pivot  ) { equal . push_back ( x )   ;}  ;
+if ( x  > pivot  ) { greater . push_back ( x )   ;}  ;}  ;
+return sort ( less )   + equal  + sort ( greater )    ;}  ;
+} 
+// No main definition required 
+Compilation finished
+Running main
+Running files: main

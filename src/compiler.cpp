@@ -98,7 +98,7 @@ namespace compiler
 
         for(auto& jt : joined_tokens)
         {
-            //print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
+            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
         }
 
         print("Constructing from grammar:");

@@ -1,4 +1,5 @@
+keyword let
 identifier wildcard
 operator =
 link expression
-0 sep 2
+1 sep 3
