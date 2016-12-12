@@ -1,9 +1,14 @@
 
 def main():
     print("Hello World")
-    l = [1, 2, 3]
+    l = range(10)
     for i in l:
         print(i)
     d = [2 * i for i in l]
     for i in d:
         print(i)
+
+    e = [i for i in d if i > 10]
+    for i in e:
+        print(i)
+

@@ -4,5 +4,6 @@ punctuator |
 identifier wildcard
 punctuator <-
 link expression
+optional inOrder !punctuator , link boolexpression
 punctuator ]
 1 sep 3 sep 5 sep 6

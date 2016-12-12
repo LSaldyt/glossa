@@ -1,12 +1,13 @@
 #include "vectorhelpers.hpp"
+#include "io.hpp"
 
-vector<Object> range(Object b, Object a, Object step)
+vector<Object> range(int b, int a, int step)
 {
-    vector<Object> indices;
-    //indices.reserve(b);
-    for (Object i = a; i < b; i += step)
+    vector<Object> v;
+    v.reserve(b);
+    for(int i = a; i < b; i += step)
     {
-        indices.push_back(i);
+        v.push_back(Object(i));
     }
-    return indices;
+    return v;
 }
