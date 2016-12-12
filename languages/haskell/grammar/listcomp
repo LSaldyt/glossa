@@ -1,0 +1,8 @@
+punctuator [
+link expression
+punctuator |
+identifier wildcard
+punctuator <-
+link expression
+punctuator ]
+1 sep 3 sep 5 sep 6

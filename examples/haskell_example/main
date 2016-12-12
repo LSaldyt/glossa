@@ -4,5 +4,6 @@ doubleSmallNumber x = if x > 100 then x else x*2
 
 let l = [1, 2, 3]
 let r = [1,2..10]
+let d = [2*x | x <- r]
 
 main = 0

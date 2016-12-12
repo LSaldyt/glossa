@@ -19,16 +19,30 @@ namespace lex
         // Custom language lexers (like int, string, etc..)
         concat(language_lexers, set_language_lexers);
 
+        vector<tuple<string, string>> term_lexers;
+
         // Add term sets (like operators) to a language's seperators
         for (auto term_set : language_term_sets)
         {
             for (auto term : get<0>(term_set))
             {
-                language_lexers.push_back(LanguageLexer(just(term), term, get<1>(term_set), 1));
-                if(get<1>(term_set) != "keyword") //seperating by keywords would make identifiers containing keywords impossible
-                {
-                    seperators.push_back(make_tuple(term, true)); // Keep seperators from term sets (ie operators)
-                }
+                term_lexers.push_back(make_tuple(term, get<1>(term_set))); 
+            }
+        }
+
+        std::sort(term_lexers.begin(), term_lexers.end(), 
+            [](auto a, auto b){
+                return get<0>(a).size() > get<0>(b).size(); 
+            });
+
+        for (auto term_lexer : term_lexers)
+        {
+            auto term = get<0>(term_lexer);
+            auto type = get<1>(term_lexer);
+            language_lexers.push_back(LanguageLexer(just(term), term, type, 1));
+            if (type != "keyword") //seperating by keywords would make identifiers containing keywords impossible
+            {
+                seperators.push_back(make_tuple(term, true)); // Keep seperators from term sets (ie operators)
             }
         }
 

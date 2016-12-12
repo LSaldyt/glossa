@@ -1,10 +1,10 @@
 #include "vectorhelpers.hpp"
 
-std::vector<int> range(int b, int a, int step)
+vector<Object> range(Object b, Object a, Object step)
 {
-    std::vector<int> indices;
-    indices.reserve(b);
-    for (int i = a; i < b; i += step)
+    vector<Object> indices;
+    //indices.reserve(b);
+    for (Object i = a; i < b; i += step)
     {
         indices.push_back(i);
     }

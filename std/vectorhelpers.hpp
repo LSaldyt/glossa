@@ -1,10 +1,11 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include "object.hpp"
 
 using std::vector;
 
-vector<int> range(int b, int a=0, int step=0);
+vector<Object> range(Object b, Object a=0, Object step=0);
 
 template <typename T>
 vector<T> operator+(vector<T> lhs, const vector<T>& rhs)
