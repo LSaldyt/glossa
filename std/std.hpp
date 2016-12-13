@@ -3,6 +3,7 @@
 #include <tuple>
 #include <string>
 #include <list>
+#include <assert.h>
 
 #include "vectorhelpers.hpp"
 #include "dicthelpers.hpp"

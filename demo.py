@@ -14,6 +14,10 @@ def main():
         demos[a] = terms[1:]
 
     if len(sys.argv) > 1:
+        if sys.argv[1] == '--show':
+            for line in content:
+                print(line, end='')
+            sys.exit(0)
         demoname = sys.argv[1]
     else:
         demoname = 'python'

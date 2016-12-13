@@ -43,7 +43,8 @@ def main():
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            run(['./annotate.py', inputfile])
+            if languageargs[0] == 'python':
+                run(['./annotate.py', inputfile])
 
     print('Running files: %s' % '\n'.join(inputfiles))
     run(['./build/progtran'] + languageargs + inputfiles)

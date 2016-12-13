@@ -1,5 +1,0 @@
-punctuator <
-optional link expression
-many inOrder !punctuator , link expression
-punctuator >
-1 2 
