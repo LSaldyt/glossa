@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import subprocess, sys, os
+import subprocess, shutil, sys, os
+from compile import cleardir
 
 def main():
     with open('examples/demos') as demofile:
@@ -16,7 +17,20 @@ def main():
         demoname = sys.argv[1]
     else:
         demoname = 'python'
+
+    if not os.path.exists('output'):
+        os.makedirs('output')
+    if not os.path.exists('input'):
+        os.makedirs('input')
+
     subprocess.run(['./compile.py'] + demos[demoname])
+
+    outputdir = 'examples/' + demoname + '_output'
+
+    if os.path.exists(outputdir):
+        shutil.rmtree(outputdir)
+    shutil.move('output', outputdir)
+    shutil.rmtree('input')
 
 if __name__ == '__main__':
     main()

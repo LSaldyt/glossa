@@ -4,3 +4,5 @@ progtran
 progtrantest
 output/a.out
 heterotest/a.out
+__pycache__
+*.pyc

@@ -61,6 +61,11 @@ public:
         return value != other.value;
     }
 
+    explicit operator vector<value_type>() const
+    {
+        return vector<value_type>(begin(), end());
+    }
+
 private:
     bool       done;
     value_type value;

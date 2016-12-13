@@ -54,6 +54,7 @@ def main():
     subprocess.run('time ./a.out', shell=True)
     os.chdir('..')
 
+
     # Cleanup
     cleardir('input')
     subprocess.run('touch input/.placeholder', shell=True)
