@@ -7,4 +7,6 @@ let b = [1,2..10]
 let c = [2*x | x <- b]
 let d = [ x | x <- c, x > 10]
 
+let t = (1, 2)
+
 main = 0

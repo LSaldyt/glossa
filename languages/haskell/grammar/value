@@ -1,2 +1,2 @@
-anyOf literal wildcard identifier wildcard keyword True keyword False link list link range link listcomp 
+anyOf literal wildcard identifier wildcard keyword True keyword False link list link range link listcomp link tuple 
 0
