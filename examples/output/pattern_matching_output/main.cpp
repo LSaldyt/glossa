@@ -1,5 +1,6 @@
 #include "main.hpp"
-// No source for non-main functions 
+lucky 
+7  = "LUCKY NUMBER SEVEN"s 
 // No source for non-main functions 
 int main(int argc, char ** argv) 
 { 

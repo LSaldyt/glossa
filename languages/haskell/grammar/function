@@ -1,6 +1,6 @@
 identifier wildcard
 optional identifier wildcard 
-many inOrder !punctuator , identifier wildcard 
+many inOrder identifier wildcard 
 operator =
-link statement 
+anyOf link return link conditional 
 0 sep 1 2 sep 4

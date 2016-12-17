@@ -248,52 +248,19 @@ Grammar::identify
 {
     SymbolicTokens tokens_copy(tokens);
 
-    vector<string> keys;
-    keys.reserve(grammar_map.size());
-    for (auto kv : grammar_map)
+    auto statement = grammar_map["statement"]; 
+    auto parsers   = get<0>(statement);
+    auto result    = evaluateGrammar(parsers, tokens_copy);
+
+    if (get<0>(result))
     {
-        //print("Adding grammar element to keys: " + kv.first);
-        keys.push_back(kv.first);
+        tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
+        return make_tuple("statement", get<1>(result));
     }
-
-    // Sort keys by the lengths of the parsers they refer to
-    // (Longer parsers should be tried first)
-    sortBy(keys, [this] (auto a, auto b) 
-                 {
-                     auto a_len = get<0>(grammar_map[a]).size();
-                     auto b_len = get<0>(grammar_map[b]).size();
-                     return a_len > b_len; 
-                 });
-
-    vector<string> failures;
-
-    for (auto key : keys)
+    else
     {
-        //print("Attempting to identify as: " + key);
-
-        auto value   = grammar_map[key]; // We are certain that key is defined in the grammar_map, so this will not throw
-        auto parsers = get<0>(value);
-        auto result  = evaluateGrammar(parsers, tokens_copy);
-
-        if (get<0>(result))
-        {
-            print("Identified " + key);
-            tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
-            return make_tuple(key, get<1>(result));
-        }
-        else
-        {
-            // If an identification attempt fails, revert tokens to their previous state
-            failures.push_back(key);
-            tokens_copy = tokens;
-        }
+        tokens_copy = tokens;
     }
-
-    /*print("Failed for");
-    for (auto f : failures)
-    {
-        print(f);
-    }*/
 
     throw named_exception("Could not identify tokens");
 }

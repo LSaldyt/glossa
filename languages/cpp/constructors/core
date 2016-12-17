@@ -25,3 +25,4 @@ listcomp
 range
 assert
 tuple
+funcpattern

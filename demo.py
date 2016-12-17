@@ -11,7 +11,7 @@ def main():
         terms = line.split() 
         assert len(terms) > 1
         a = terms[0]
-        demos[a] = terms[1:]
+        demos[a] = ['examples/' + a] + terms[1:]
 
     if len(sys.argv) > 1:
         if sys.argv[1] == '--show':
@@ -29,11 +29,12 @@ def main():
 
     subprocess.run(['./compile.py'] + demos[demoname])
 
-    outputdir = 'examples/' + demoname + '_output'
+    outputdir = 'examples/output/' + demoname + '_output'
 
     if os.path.exists(outputdir):
         shutil.rmtree(outputdir)
-    shutil.move('output', outputdir)
+    shutil.copytree('output', outputdir)
+    shutil.rmtree('output')
     shutil.rmtree('input')
 
 if __name__ == '__main__':
