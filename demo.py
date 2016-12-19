@@ -35,7 +35,7 @@ def main():
         shutil.rmtree(outputdir)
     shutil.copytree('output', outputdir)
     shutil.rmtree('output')
-    shutil.rmtree('input')
+    #shutil.rmtree('input')
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,5 @@
 identifier wildcard
-optional identifier wildcard 
-many inOrder identifier wildcard 
+many identifier wildcard 
 operator =
-anyOf link return link conditional 
-0 sep 1 2 sep 4
+anyOf link return link conditional
+0 sep 1 sep 3

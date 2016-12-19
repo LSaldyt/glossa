@@ -24,7 +24,7 @@ namespace compiler
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, Grammar&, unordered_map<string, string>&);
     std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
-    SymbolicTokens join(std::vector<SymbolicTokens>);
+    SymbolicTokens join(std::vector<SymbolicTokens>, bool newline=false);
     unordered_map<string, string> readSymbolTable(string filename);
 
 }

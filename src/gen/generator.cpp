@@ -379,7 +379,6 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              symbol_type, 
                                                                     string                              filename)
 {
-
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];

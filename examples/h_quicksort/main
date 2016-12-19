@@ -1,1 +1,6 @@
 
+empty l = l == []
+
+quicksort l = empty l 
+
+main = 0

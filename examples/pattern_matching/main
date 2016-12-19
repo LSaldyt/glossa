@@ -1,4 +1,3 @@
-lucky 7 = "LUCKY NUMBER SEVEN"
 lucky x = "SORRY NO LUCK TODAY"
 
 main = 0

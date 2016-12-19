@@ -94,7 +94,7 @@ namespace compiler
         print("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
         print("Joining symbolic tokens");
-        auto joined_tokens   = join         (symbolic_tokens);
+        auto joined_tokens   = join         (symbolic_tokens, grammar.language.newline);
 
         for(auto& jt : joined_tokens)
         {
@@ -120,6 +120,7 @@ namespace compiler
                 for (auto symbol : group)
                 {
                     print(symbol->abstract());
+                    print("...");
                 }
             }
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
@@ -189,7 +190,7 @@ namespace compiler
         return symbolic_tokens;
     }
 
-    SymbolicTokens join(std::vector<SymbolicTokens> token_groups)
+    SymbolicTokens join(std::vector<SymbolicTokens> token_groups, bool newline)
     {
         auto tokens = SymbolicTokens();
         for (auto token_group : token_groups)
@@ -197,6 +198,10 @@ namespace compiler
             for (auto t : token_group)
             {
                 tokens.push_back(t);
+            }
+            if (newline)
+            {
+                tokens.push_back(SymbolicToken(make_shared<Symbol>(Symbol()), "newline", "newline", "\n"));
             }
         }
         return tokens;

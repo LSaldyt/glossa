@@ -26,6 +26,7 @@ namespace lex
     struct Language
     {
         Seperators    seperators;
+        bool          newline;
 
         LanguageTermSets language_term_sets;
         LanguageLexers   language_lexers;

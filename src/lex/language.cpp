@@ -15,6 +15,7 @@ namespace lex
     {
         // Always seperate by whitespace
         concat(seperators, whitespace);
+        newline = get<1>(whitespace[3]);
 
         // Custom language lexers (like int, string, etc..)
         concat(language_lexers, set_language_lexers);

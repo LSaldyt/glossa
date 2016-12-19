@@ -1,3 +1,3 @@
 indent  false
 space   false
-newline false
+newline true 
