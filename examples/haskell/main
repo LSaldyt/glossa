@@ -1,5 +1,7 @@
+doubleMe ::
 doubleMe x = x + x
 
+doubleSmallNumber ::
 doubleSmallNumber x = if x > 100 then x else x*2   
 
 let a = [1, 2, 3]
@@ -9,4 +11,5 @@ let d = [ x | x <- c, x > 10]
 
 let t = (1, 2)
 
+main ::
 main = 0
