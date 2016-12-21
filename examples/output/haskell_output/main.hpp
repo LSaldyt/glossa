@@ -1,9 +1,7 @@
 #include "../std/std.hpp"
 template < typename T_x> auto doubleMe ( T_x x) { return x  + x  ;}  
 /*No Representation*/ 
-/*No Representation*/ 
 template < typename T_x> auto doubleSmallNumber ( T_x x) { if ( x  > 100  ) { return x  ;} return x  * 2  ;}  
-/*No Representation*/ 
 /*No Representation*/ 
 const auto a = std::list<Object>({ 1 ,2 ,3 })   ;  
 /*No Representation*/ 
@@ -18,4 +16,3 @@ const auto t = std::make_tuple( 1 ,2 )   ;
 /*No Representation*/ 
 /*No Representation*/ 
 // No main definition required  
-/*No Representation*/ 

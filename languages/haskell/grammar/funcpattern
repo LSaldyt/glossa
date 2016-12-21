@@ -1,5 +1,6 @@
 identifier wildcard
-many literal wildcard
+many1 literal wildcard
 operator =
 anyOf link return link conditional 
+newline newline
 1 sep 3

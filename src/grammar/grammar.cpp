@@ -20,13 +20,38 @@ Grammar::Grammar(vector<string> filenames, string directory)
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
 {
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
-    // Consume all tokens
-    while (tokens.size() > 0)
+    try 
     {
-        // Tag groups of tokens as certain language constructs
-        auto result = identify(tokens);
-        auto group  = toGroup(get<0>(result), get<1>(result));
-        identified_groups.push_back(make_tuple(get<0>(result), group));
+        // Consume all tokens
+        while (tokens.size() > 0)
+        {
+            // Tag groups of tokens as certain language constructs
+            auto result = identify(tokens);
+            auto group  = toGroup(get<0>(result), get<1>(result));
+            identified_groups.push_back(make_tuple(get<0>(result), group));
+        }
+    }
+    catch (named_exception& e) 
+    {
+        print("Successfully identified:");
+        for (auto identified_group : identified_groups)
+        {
+            print("Group identified as " + get<0>(identified_group));
+            auto groups = get<1>(identified_group);
+            for (auto group : groups)
+            {
+                for (auto symbol : group)
+                {
+                    print(symbol->abstract());
+                }
+            }
+        }
+        print("Remaining:");
+        for (auto token : tokens)
+        {
+
+        }
+        throw;
     }
 
     return identified_groups;
@@ -136,6 +161,11 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         if (keyword == "many")
         {
             parser = manySeperated(readGrammarTerms(terms)); 
+        }
+        // Require at least one success
+        else if (keyword == "many1")
+        {
+            parser = manySeperated(readGrammarTerms(terms), true); 
         }
         // Optionally parse a parser
         else if (keyword == "optional")

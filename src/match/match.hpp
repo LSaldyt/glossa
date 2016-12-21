@@ -149,17 +149,19 @@ namespace match
     template <typename T>
     function<Result<T>(vector<T>)>
     many
-    (function<Result<T>(vector<T>)> matcher)
+    (function<Result<T>(vector<T>)> matcher, bool nonempty=false)
     {
-        return [matcher](vector<T> terms)
+        return [matcher, nonempty](vector<T> terms)
         {
             auto consumed = vector<T>(); 
+            bool empty = true;
 
             while(terms.size() > 0)
             {
                 auto result = matcher(terms);
                 if (result.result)
                 {
+                    bool empty = false;
                     concat(consumed, result.consumed);
                     terms = slice(terms, result.consumed.size());
                 }
@@ -169,8 +171,14 @@ namespace match
                 }
             }
 
-            auto result = Result<T>(true, consumed, terms);
-            return result;
+            if (nonempty)
+            {
+                return Result<T>(!empty, consumed, terms);
+            }
+            else
+            {
+                return Result<T>(true, consumed, terms);
+            }
         };
     };
 

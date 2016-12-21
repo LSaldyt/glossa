@@ -1,5 +1,21 @@
+$overloads = 0
+$return    = 1 0
 defines
 header
-// funcpattern
+/*
+if (__pattern_match__(
+sep SPACE $overloads
+))
+{
+return $return
+}
+*/
 source
-// funcpattern
+/*
+if (__pattern_match__(
+sep SPACE $overloads
+))
+{
+return $return
+}
+*/

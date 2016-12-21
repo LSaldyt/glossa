@@ -201,7 +201,7 @@ namespace compiler
             }
             if (newline)
             {
-                tokens.push_back(SymbolicToken(make_shared<Symbol>(Symbol()), "newline", "newline", "\n"));
+                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n"));
             }
         }
         return tokens;

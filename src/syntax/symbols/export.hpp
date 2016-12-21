@@ -12,6 +12,7 @@ namespace syntax
     using Integer    = Literal<int>;
     using Keyword    = StringLiteral;
     using Tab        = StringLiteral;
+    using Newline    = StringLiteral;
 
     const auto stringGenerator = [](string s){
         return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));

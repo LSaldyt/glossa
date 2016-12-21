@@ -1,5 +1,10 @@
 identifier wildcard
-many identifier wildcard 
+punctuator ::
+newline newline
+many link funcpattern
+identifier wildcard
+many identifier wildcard
 operator =
 anyOf link return link conditional
-0 sep 1 sep 3
+newline newline
+4 sep 5 sep 3 7

@@ -62,18 +62,20 @@ namespace parse
     // Version of many for seperating nested multi-token parsers. Unnestable
     function<Result<SymbolicToken>(vector<SymbolicToken>)>
     manySeperated
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher)
+    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher, bool nonempty)
     {
         using syntax::Symbol;
-        return [matcher](vector<SymbolicToken> terms)
+        return [matcher, nonempty](vector<SymbolicToken> terms)
         {
             auto consumed = vector<SymbolicToken>(); 
+            bool empty = true;
 
             while(terms.size() > 0)
             {
                 auto result = matcher(terms);
                 if (result.result)
                 {
+                    empty = false;
                     terms = result.remaining;
                     if (not consumed.empty())
                     {
@@ -87,8 +89,14 @@ namespace parse
                 }
             }
 
-            auto result = Result<SymbolicToken>(true, consumed, terms);
-            return result;
+            if (nonempty)
+            {
+                return Result<SymbolicToken>(!empty, consumed, terms);
+            }
+            else
+            { 
+                return Result<SymbolicToken>(true, consumed, terms);
+            }
         };
     };
 

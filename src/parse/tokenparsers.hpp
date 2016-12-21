@@ -21,7 +21,7 @@ namespace parse
     // Version of many for seperating nested multi-token parsers. Unnestable
     function<Result<SymbolicToken>(vector<SymbolicToken>)>
     manySeperated
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher);
+    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher, bool nonempty=false);
 
     vector<vector<SymbolicToken>>
     reSeperate
