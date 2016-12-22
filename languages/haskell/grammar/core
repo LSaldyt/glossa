@@ -11,3 +11,4 @@ listcomp
 tuple
 haskellfunction
 funcpattern
+functioncall

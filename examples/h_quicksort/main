@@ -1,6 +1,6 @@
+quicksort ::
+quicksort [] = []
+quicksort l  = [] 
 
-empty l = l == []
-
-quicksort l = empty l 
-
+main ::
 main = 0
