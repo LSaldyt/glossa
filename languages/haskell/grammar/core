@@ -1,6 +1,5 @@
 expression
 constantdeclaration
-function
 return
 statement
 value
@@ -10,4 +9,5 @@ list
 range
 listcomp
 tuple
+haskellfunction
 funcpattern

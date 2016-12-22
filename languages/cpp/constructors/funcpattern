@@ -2,20 +2,16 @@ $overloads = 0
 $return    = 1 0
 defines
 header
-/*
-if (__pattern_match__(
-sep SPACE $overloads
-))
+if (__func_args__ == std::vector<Object>({
+sep , $overloads
+}))
 {
-return $return
+$return ;
 }
-*/
 source
-/*
-if (__pattern_match__(
-sep SPACE $overloads
-))
+if (__func_args__ == std::vector<Object>({
+sep , $overloads
+}))
 {
-return $return
+$return ;
 }
-*/

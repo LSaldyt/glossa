@@ -1,5 +1,4 @@
 #include "../std/std.hpp"
-template < typename T_x> auto lucky ( T_x x) { /* if (__pattern_match__( 7)) { return return "TODAY IS LUCKY"s   } */ ;
-return "SORRY NO LUCK TODAY"s  ;}  
+template < typename T_x> auto lucky ( T_x x) { std::vector<Object> __func_args__({ x}); /* Pattern-matched overloads: */ if (__func_args__ == std::vector<Object>({ 7})) { return "TODAY IS LUCKY"s   ; } /* Default body: */ return "SORRY NO LUCK TODAY"s  ;}  
 /*No Representation*/ 
-// No main definition required  
+// No main declaration required  

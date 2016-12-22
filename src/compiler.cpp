@@ -53,6 +53,7 @@ namespace compiler
 
     Grammar loadGrammar(string language)
     {
+        print("Loading grammar for " + language);
         auto grammar_files = readFile("languages/" + language + "/grammar/core");
         auto grammar       = Grammar(grammar_files, "languages/" + language + "/grammar/");
 
@@ -76,13 +77,17 @@ namespace compiler
         const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
         Language test_language(term_sets, lexer_set, whitespace);
         grammar.language = test_language;
+        print("Done");
         return grammar;
     }
 
     Generator loadGenerator(string language)
     {
+        print("Loading constructors for " + language);
         auto constructor_files = readFile("languages/" + language + "/constructors/core");
-        return Generator(constructor_files, "languages/" + language + "/constructors/");
+        auto generator = Generator(constructor_files, "languages/" + language + "/constructors/");
+        print("Done");
+        return generator;
     }
 
     void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory)
