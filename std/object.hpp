@@ -2,6 +2,7 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <list>
 #include <unordered_set>
 #include <functional>
 
@@ -87,7 +88,8 @@ public:
 
     virtual std::size_t __hash__() const override
     {
-        return std::hash<T>()(t);
+        //return std::hash<T>()(t);
+        return 0;
     }
 
     T t;
@@ -214,6 +216,7 @@ Object operator*(Object lhs, const Object& rhs);
 
 namespace std 
 {
+/*
 template <>
 struct hash<Object>
 {
@@ -222,5 +225,6 @@ struct hash<Object>
         return o.__hash__();
     }
 };
+*/
 
 }

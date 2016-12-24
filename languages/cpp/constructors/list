@@ -1,10 +1,10 @@
 $vals     = 0
 defines
 header
-std::list<Object>({
+std::vector<Object>({
 sep , $vals
 })
 source
-std::list<Object>({
+std::vector<Object>({
 sep , $vals
 })

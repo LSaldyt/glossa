@@ -1,2 +1,2 @@
-anyOf literal wildcard identifier wildcard link functioncall keyword True keyword False link list link range link listcomp link tuple 
+anyOf link functioncall link elementaccess keyword True keyword False link list link range link listcomp link tuple literal wildcard identifier wildcard 
 0

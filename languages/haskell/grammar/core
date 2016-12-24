@@ -12,3 +12,4 @@ tuple
 haskellfunction
 funcpattern
 functioncall
+elementaccess
