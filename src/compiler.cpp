@@ -148,6 +148,12 @@ namespace compiler
             }
         }
 
+        print("Initial file");
+        for (auto line : content)
+        {
+            print(line);
+        }
+
         for (auto kv : files)
         {
             print("Generated " + kv.first + " file:");

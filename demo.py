@@ -40,8 +40,19 @@ def build(directory, languageargs):
     print('Running files: %s' % '\n'.join(inputfiles))
     run(['./build/progtran'] + languageargs + inputfiles)
 
-def compare(directory, iterations=1):
-    # Compile output c++ code
+def time_run(language, directory, iterations, filename='main'):
+    with open('languages/' + language + '/run', 'r') as runfile:
+        content = [line.replace('@', filename) for line in runfile]
+    olddir = os.getcwd()
+    os.chdir(directory)
+    for line in content[:1]:
+        subprocess.run(line, shell=True) # Yes, this is unescaped.
+    t = benchmark(subprocess.run, iterations, content[-1], shell=True)
+    os.chdir(olddir)
+    return t[1]
+
+def compare(directory, inputlang, outputlang, iterations=1):
+    # Compile output c++ code (hardcoded for now, since output language is always c++)
     os.chdir('output')
     subprocess.run('g++ -std=c++14 *.cpp -O3 ../std/*.cpp', shell=True)
     output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
@@ -49,15 +60,13 @@ def compare(directory, iterations=1):
     print(output_time[1])
     os.chdir('..')
 
-    olddir = os.getcwd()
-    os.chdir(directory)
-    input_time = benchmark(subprocess.run, iterations, 'python3 main', shell=True)
-    os.chdir(olddir)
+    # Timing of inputlang isn't hardcoded:
+    input_time = time_run(inputlang, directory, iterations)
     print('Input code time:')
-    print(input_time[1])
+    print(input_time)
 
     print('Speedup:')
-    print(input_time[1] / output_time[1])
+    print(input_time / output_time[1])
     
 
 def main():
@@ -99,7 +108,7 @@ def main():
     directory = l[0]
     languageargs = l[1:]
     build(directory, languageargs)
-    compare(directory, iterations=100)
+    compare(directory, languageargs[0], languageargs[1], iterations=100)
 
     # Save demo output, then cleanup
     outputdir = 'examples/output/' + demoname + '_output'
