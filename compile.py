@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import subprocess, shutil, sys, os
+import subprocess, shutil, time, sys, os
 
 def run(commands):
     try:
@@ -14,6 +14,15 @@ def cleardir(dirname):
         filepath = os.path.join(dirname, filename)
         if os.path.isfile(filepath):
             os.unlink(filepath)
+
+def benchmark(f, iterations, *args, **kwargs):
+    begin  = time.time()
+    for i in range(iterations):
+        result = f(*args, **kwargs)
+    end    = time.time()
+    total  = (end - begin) / iterations
+    return result, total
+    
 
 def main():
     # Remove old compiled files
@@ -52,13 +61,21 @@ def main():
     # Compile output c++ code
     os.chdir('output')
     subprocess.run('g++ -std=c++14 *.cpp -O3 ../std/*.cpp', shell=True)
-    subprocess.run('time ./a.out', shell=True)
+    output_time = benchmark(subprocess.run, 1, './a.out', shell=True)
+    print('Output code time:')
+    print(output_time[1])
     os.chdir('..')
 
+    os.chdir(directory)
+    input_time = benchmark(subprocess.run, 1, 'python3 main', shell=True)
+    print('Input code time:')
+    print(input_time[1])
 
+    '''
     # Cleanup
     cleardir('input')
     subprocess.run('touch input/.placeholder', shell=True)
+    '''
 
 if __name__ == '__main__':
     main()

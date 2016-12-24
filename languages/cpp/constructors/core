@@ -27,3 +27,4 @@ assert
 tuple
 funcpattern
 haskellfunction
+main

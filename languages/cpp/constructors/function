@@ -3,28 +3,16 @@ $args = 1
 $body = 2
 defines
 header
-    branch equalTo $identifier main
-        // No main definition required
-    elsebranch
-        branch nonempty $args
-            template <
-            sep , $args typenameSPACET_@
-            >
-        end
+    branch nonempty $args
+        template <
+        sep , $args typenameSPACET_@
+        >
+    end
 
-        auto $identifier (
-        sep , $args T_@SPACE@
-        )
-        {
-        sep NEWLINE $body @;
-        }
-    end
+    auto $identifier (
+    sep , $args T_@SPACE@
+    )
+    {
+    sep NEWLINE $body @;
+    }
 source
-    branch equalTo $identifier main
-        int main(int argc, char ** argv)
-        {
-        sep NEWLINE $body @;
-        }
-    elsebranch
-        // No source for non-main functions 
-    end
