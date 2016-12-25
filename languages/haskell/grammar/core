@@ -13,3 +13,5 @@ haskellfunction
 funcpattern
 functioncall
 elementaccess
+main
+parenexpr

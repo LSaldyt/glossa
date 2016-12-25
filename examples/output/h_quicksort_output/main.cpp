@@ -7,4 +7,5 @@
  
 /*No Representation*/ 
 /*No Representation*/ 
-int main(int argc, char ** argv) { return 0  ;}  
+int main(int argc, char ** argv) { print ( std::make_tuple( quicksort ( std::vector<Object>({ })  )  )  )  ;}  
+/*No Representation*/ 

@@ -1,9 +1,8 @@
-optional inOrder identifier wildcard punctuator ::
-newline newline
+optional inOrder identifier wildcard punctuator :: newline newline
 many link funcpattern
 identifier wildcard
-many identifier wildcard
+many1 identifier wildcard
 operator =
 anyOf link return link conditional
 newline newline
-3 sep 4 sep 2 sep 6
+2 sep 3 sep 1 sep 5

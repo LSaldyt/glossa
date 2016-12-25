@@ -44,11 +44,13 @@ def time_run(language, directory, iterations, filename='main'):
     with open('languages/' + language + '/run', 'r') as runfile:
         content = [line.replace('@', filename) for line in runfile]
     olddir = os.getcwd()
-    os.chdir(directory)
+    shutil.copytree(directory, directory + '_copy')
+    os.chdir(directory + '_copy')
     for line in content[:1]:
         subprocess.run(line, shell=True) # Yes, this is unescaped.
     t = benchmark(subprocess.run, iterations, content[-1], shell=True)
     os.chdir(olddir)
+    shutil.rmtree(directory + '_copy')
     return t[1]
 
 def compare(directory, inputlang, outputlang, iterations=1):

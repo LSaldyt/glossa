@@ -5,3 +5,5 @@ progtrantest
 __pycache__
 *.pyc
 *a.out
+*/a.out
+examples/output/*/a.out

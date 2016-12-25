@@ -1,2 +1,2 @@
-ghc --make @ 
+ghc * -o @ 
 ./@
