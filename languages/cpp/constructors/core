@@ -28,3 +28,6 @@ tuple
 funcpattern
 haskellfunction
 main
+let
+do
+dobody
