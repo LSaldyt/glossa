@@ -3,6 +3,5 @@ $value = 1 0
 defines
 $ident
 header
-const auto $ident = $value
+const auto $ident = $value ;
 source
-const auto $ident = $value

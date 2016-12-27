@@ -40,6 +40,8 @@ public:
 private:
     GrammarMap grammar_map; 
 
+    void readSymbolFile(vector<string> symbol_file);
+
     tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     vector<vector<shared_ptr<Symbol>>> toGroup(string name, vector<Result<SymbolicToken>> results);
 

@@ -22,65 +22,88 @@ int main(int argc, char* argv[])
     auto grammar   = loadGrammar(from);
     auto generator = loadGenerator(to);
 
+    auto symbol_table = readSymbolTable("languages/symboltables/" + from + to);
+
     vector<string> files = slice(args, 2);
     string input_directory  = "";
     string output_directory = "";
 
     for (auto& file : files)
     {
-        compile(file, grammar, generator, "input", "output");
+        compile(file, grammar, generator, symbol_table, "input", "output");
     }
     print("Compilation finished");
 }
 
+
 namespace compiler
 {
+
+    unordered_map<string, string> readSymbolTable(string filename)
+    {
+        unordered_map<string, string> symbol_table;
+        for (auto line : readFile(filename))
+        {
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            assert(terms.size() == 3);
+            symbol_table[terms[0]] = terms[2];
+        }
+        return symbol_table;
+    }
+
     Grammar loadGrammar(string language)
     {
+        print("Loading grammar for " + language);
         auto grammar_files = readFile("languages/" + language + "/grammar/core");
-        auto grammar = Grammar(grammar_files, "languages/" + language + "/grammar/");
-
+        auto grammar       = Grammar(grammar_files, "languages/" + language + "/grammar/");
 
         auto operators        = readFile("languages/" + language + "/grammar/operators");
         auto logicaloperators = readFile("languages/" + language + "/grammar/logicaloperators"); 
         auto punctuators      = readFile("languages/" + language + "/grammar/punctuators");
 
         LanguageTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords,  "keyword"));
+        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
-        term_sets.push_back(make_tuple(operators, "operator"));
-        term_sets.push_back(make_tuple(punctuators, "punctuator"));
+        term_sets.push_back(make_tuple(operators,        "operator"));
+        term_sets.push_back(make_tuple(punctuators,      "punctuator"));
 
         LanguageLexers lexer_set = {
-            LanguageLexer(digits, "int", "literal", 3),
-            LanguageLexer(startswith("\""), "string", "literal", 1),
-            LanguageLexer(identifiers, "identifier", "identifier", 3)};
+            LanguageLexer(just("    "s),     "tab",        "tab",        3),
+            LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
+            LanguageLexer(digits,            "int",        "literal",    3),
+            LanguageLexer(startswith("\""s), "string",     "literal",    1),
+            LanguageLexer(identifiers,       "identifier", "identifier", 3)};
 
-        Language test_language(term_sets, lexer_set);
+        const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
+        Language test_language(term_sets, lexer_set, whitespace);
         grammar.language = test_language;
+        print("Done");
         return grammar;
     }
 
     Generator loadGenerator(string language)
     {
+        print("Loading constructors for " + language);
         auto constructor_files = readFile("languages/" + language + "/constructors/core");
-        return Generator(constructor_files, "languages/" + language + "/constructors/");
+        auto generator = Generator(constructor_files, "languages/" + language + "/constructors/");
+        print("Done");
+        return generator;
     }
 
-    void compile(string filename, Grammar& grammar, Generator& generator, string input_directory, string output_directory)
+    void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory)
     {
         print("Reading File");
         auto content         = readFile     (input_directory + "/" + filename);
         print("Lexing terms");
-        auto tokens          = tokenPass    (content, grammar.language); 
+        auto tokens          = tokenPass    (content, grammar, symbol_table); 
         print("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
         print("Joining symbolic tokens");
-        auto joined_tokens   = join         (symbolic_tokens);
+        auto joined_tokens   = join         (symbolic_tokens, grammar.language.newline);
 
-        for(auto jt : joined_tokens)
+        for(auto& jt : joined_tokens)
         {
-            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", " + jt.text);
+            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
         }
 
         print("Constructing from grammar:");
@@ -102,6 +125,7 @@ namespace compiler
                 for (auto symbol : group)
                 {
                     print(symbol->abstract());
+                    print("...");
                 }
             }
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
@@ -124,6 +148,12 @@ namespace compiler
             }
         }
 
+        print("Initial file");
+        for (auto line : content)
+        {
+            print(line);
+        }
+
         for (auto kv : files)
         {
             print("Generated " + kv.first + " file:");
@@ -137,13 +167,26 @@ namespace compiler
         }
     }
 
-    std::vector<Tokens> tokenPass(std::vector<std::string> content, const Language& language)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table)
     {
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            print("Lexing: " + line);
-            tokens.push_back(lexWith(line, language));
+            //print("Lexing: " + line);
+            tokens.push_back(lexWith(line, grammar.language));
+        }
+        for (auto& token_group : tokens)
+        {
+            for (auto& token : token_group)
+            {
+                for (auto& value : token.values)
+                {
+                    if (contains(symbol_table, value))
+                    {
+                        value = symbol_table[value];
+                    }
+                }
+            }
         }
         return tokens;
     }
@@ -158,7 +201,7 @@ namespace compiler
         return symbolic_tokens;
     }
 
-    SymbolicTokens join(std::vector<SymbolicTokens> token_groups)
+    SymbolicTokens join(std::vector<SymbolicTokens> token_groups, bool newline)
     {
         auto tokens = SymbolicTokens();
         for (auto token_group : token_groups)
@@ -167,7 +210,12 @@ namespace compiler
             {
                 tokens.push_back(t);
             }
+            if (newline)
+            {
+                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n"));
+            }
         }
         return tokens;
     }
+
 }

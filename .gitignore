@@ -2,5 +2,8 @@
 build/*
 progtran
 progtrantest
-output/a.out
-heterotest/a.out
+__pycache__
+*.pyc
+*a.out
+*/a.out
+examples/output/*/a.out

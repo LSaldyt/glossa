@@ -1,29 +1,19 @@
 $condition = 0 0
 $ifbody = 1
-$elsebranchbody = 2
+$else = 2
 defines
 header
 
-if ( $condition )
-{
-sep NEWLINE $ifbody @;
-}
-branch nonempty $elsebranchbody
-else
-{
-sep NEWLINE $elsebranchbody @;
-}
-end
+    if ( $condition )
+    {
+        sep NEWLINE $ifbody @;
+    }
+    sep SPACE $else
 
 source
 
-if ( $condition )
-{
-sep NEWLINE $ifbody @;
-}
-branch nonempty $elsebranchbody
-else
-{
-sep NEWLINE $elsebranchbody @;
-}
-end
+    if ( $condition )
+    {
+        sep NEWLINE $ifbody @;
+    }
+    sep SPACE $else

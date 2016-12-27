@@ -2,15 +2,18 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <list>
 #include <unordered_set>
 #include <functional>
 
 // http://stackoverflow.com/questions/18856824/ad-hoc-polymorphism-and-heterogeneous-containers-with-value-semantics
 
+/*
 std::string str(const std::string& s)
 {
     return s;
 }
+*/
 
 template <typename T>
 std::string str(const T& t);
@@ -85,7 +88,8 @@ public:
 
     virtual std::size_t __hash__() const override
     {
-        return std::hash<T>()(t);
+        //return std::hash<T>()(t);
+        return 0;
     }
 
     T t;
@@ -184,9 +188,9 @@ private:
     std::unique_ptr<ObjectInterface> p;
 };
 
-std::string str(Object& o)
+namespace std
 {
-    return o.__str__();
+    string to_string(Object o);
 }
 
 template <typename T>
@@ -195,11 +199,7 @@ std::string str(const T& t)
     return std::to_string(t);
 }
 
-std::ostream& operator<<(std::ostream& os, Object& obj)
-{
-    std::cout << obj.__str__();
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, Object& obj);
 
 inline bool operator< (const Object& lhs, const Object& rhs){ return lhs.__lt__(rhs); }
 inline bool operator> (const Object& lhs, const Object& rhs){ return rhs < lhs; }
@@ -209,28 +209,14 @@ inline bool operator>=(const Object& lhs, const Object& rhs){ return !(lhs < rhs
 inline bool operator==(const Object& lhs, const Object& rhs){ return lhs.__eq__(rhs); }
 inline bool operator!=(const Object& lhs, const Object& rhs){ return !(lhs == rhs); }
 
-Object operator+(Object lhs, const Object& rhs)
-{
-    return lhs.__add__(rhs);
-}
-
-Object operator-(Object lhs, const Object& rhs)
-{
-    return lhs.__sub__(rhs);
-}
-
-Object operator/(Object lhs, const Object& rhs)
-{
-    return lhs.__div__(rhs);
-}
-
-Object operator*(Object lhs, const Object& rhs)
-{
-    return lhs.__mul__(rhs);
-}
+Object operator+(Object lhs, const Object& rhs);
+Object operator-(Object lhs, const Object& rhs);
+Object operator/(Object lhs, const Object& rhs);
+Object operator*(Object lhs, const Object& rhs);
 
 namespace std 
 {
+/*
 template <>
 struct hash<Object>
 {
@@ -239,5 +225,6 @@ struct hash<Object>
         return o.__hash__();
     }
 };
+*/
 
 }

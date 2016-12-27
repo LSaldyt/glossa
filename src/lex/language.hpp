@@ -26,12 +26,14 @@ namespace lex
     struct Language
     {
         Seperators    seperators;
+        bool          newline;
 
         LanguageTermSets language_term_sets;
         LanguageLexers   language_lexers;
 
         Language(const LanguageTermSets& set_term_sets,
-                 const LanguageLexers&   set_language_lexers);
+                 const LanguageLexers&   set_language_lexers,
+                 Seperators whitespace);
         Language();
 
         tuple<Token, Terms> identify(Terms terms) const;
