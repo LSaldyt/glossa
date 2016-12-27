@@ -18,7 +18,15 @@ TEST_CASE("The lexer and language modules work")
     lexer_set.push_back(LanguageLexer(digits, "int", "type", 1));
     lexer_set.push_back(LanguageLexer(alphas, "identifier", "identifier", 5));
 
-    Language test_language(term_set, lexer_set);
+    const Seperators whitespace =
+    {
+        // make_tuple("    ", true),
+        // make_tuple("\t", true),
+        make_tuple("\t", false),
+        make_tuple(" ",  false),
+        make_tuple("\n", false)
+    };
+    Language test_language(term_set, lexer_set, whitespace);
 
     SECTION("lexing based on keywords, operators and whitespace")
     {

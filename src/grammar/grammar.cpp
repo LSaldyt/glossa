@@ -9,7 +9,7 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 }
 
 // Standard grammar constructor (From list of files)
-Grammar::Grammar(vector<string> filenames, string directory)
+Grammar::Grammar(vector<string> filenames, string directory) 
 {
     for (auto filename : filenames)
     {
@@ -20,17 +20,43 @@ Grammar::Grammar(vector<string> filenames, string directory)
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
 {
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
-    // Consume all tokens
-    while (tokens.size() > 0)
+    try 
     {
-        // Tag groups of tokens as certain language constructs
-        auto result = identify(tokens);
-        auto group  = toGroup(get<0>(result), get<1>(result));
-        identified_groups.push_back(make_tuple(get<0>(result), group));
+        // Consume all tokens
+        while (tokens.size() > 0)
+        {
+            // Tag groups of tokens as certain language constructs
+            auto result = identify(tokens);
+            auto group  = toGroup(get<0>(result), get<1>(result));
+            identified_groups.push_back(make_tuple(get<0>(result), group));
+        }
+    }
+    catch (named_exception& e) 
+    {
+        print("Successfully identified:");
+        for (auto identified_group : identified_groups)
+        {
+            print("Group identified as " + get<0>(identified_group));
+            auto groups = get<1>(identified_group);
+            for (auto group : groups)
+            {
+                for (auto symbol : group)
+                {
+                    print(symbol->abstract());
+                }
+            }
+        }
+        print("Remaining:");
+        for (auto token : tokens)
+        {
+
+        }
+        throw;
     }
 
     return identified_groups;
 }
+
 
 vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
 {
@@ -135,6 +161,11 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         if (keyword == "many")
         {
             parser = manySeperated(readGrammarTerms(terms)); 
+        }
+        // Require at least one success
+        else if (keyword == "many1")
+        {
+            parser = manySeperated(readGrammarTerms(terms), true); 
         }
         // Optionally parse a parser
         else if (keyword == "optional")
@@ -247,52 +278,19 @@ Grammar::identify
 {
     SymbolicTokens tokens_copy(tokens);
 
-    vector<string> keys;
-    keys.reserve(grammar_map.size());
-    for (auto kv : grammar_map)
+    auto statement = grammar_map["statement"]; 
+    auto parsers   = get<0>(statement);
+    auto result    = evaluateGrammar(parsers, tokens_copy);
+
+    if (get<0>(result))
     {
-        //print("Adding grammar element to keys: " + kv.first);
-        keys.push_back(kv.first);
+        tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
+        return make_tuple("statement", get<1>(result));
     }
-
-    // Sort keys by the lengths of the parsers they refer to
-    // (Longer parsers should be tried first)
-    sortBy(keys, [this] (auto a, auto b) 
-                 {
-                     auto a_len = get<0>(grammar_map[a]).size();
-                     auto b_len = get<0>(grammar_map[b]).size();
-                     return a_len > b_len; 
-                 });
-
-    vector<string> failures;
-
-    for (auto key : keys)
+    else
     {
-        //print("Attempting to identify as: " + key);
-
-        auto value   = grammar_map[key]; // We are certain that key is defined in the grammar_map, so this will not throw
-        auto parsers = get<0>(value);
-        auto result  = evaluateGrammar(parsers, tokens_copy);
-
-        if (get<0>(result))
-        {
-            print("Identified " + key);
-            tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
-            return make_tuple(key, get<1>(result));
-        }
-        else
-        {
-            // If an identification attempt fails, revert tokens to their previous state
-            failures.push_back(key);
-            tokens_copy = tokens;
-        }
+        tokens_copy = tokens;
     }
-
-    /*print("Failed for");
-    for (auto f : failures)
-    {
-        print(f);
-    }*/
 
     throw named_exception("Could not identify tokens");
 }

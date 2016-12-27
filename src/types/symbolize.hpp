@@ -17,7 +17,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
             for (auto v : token.values)
             {
                 text += v;
-                text += " ";
+                //text += " ";
             }
             auto symbolic = SymbolicToken(search->second(token.values), token.sub_type, type, text);
             symbolic_tokens.push_back(symbolic);

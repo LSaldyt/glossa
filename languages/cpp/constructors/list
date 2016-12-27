@@ -1,11 +1,10 @@
-$firstval = 0 0
 $vals     = 0
 defines
 header
-std::list<decltype( $firstval )>({
+std::vector<Object>({
 sep , $vals
 })
 source
-std::list<decltype( $firstval )>({
+std::vector<Object>({
 sep , $vals
 })

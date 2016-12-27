@@ -20,3 +20,8 @@ classmemberaccess
 elementaccess
 dictionary
 kvpair
+elsebranch
+listcomp
+assert
+main
+parenexpr

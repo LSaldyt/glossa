@@ -9,7 +9,7 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        print("Reading constructor file: " + filename);
+        //print("Reading constructor file: " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
 }
@@ -73,7 +73,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     for (auto file_constructor : file_constructors)
     {
         tag = get<0>(file_constructor);
-        print(tag);
+        //print(tag);
         assert(contains(content, tag));
         it = std::find(content.begin(), content.end(), tag);
 
@@ -86,13 +86,13 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         else
         {
             auto body = vector<string>(last_it + 1, it);
-            print("Created body");
+            //print("Created body");
             auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
         type = tag;
-        print("Done");
+        //print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
     auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
@@ -103,7 +103,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
-    print("Generating branch");
+    //print("Generating branch");
     vector<LineConstructor> line_constructors;
     vector<Branch>          nested_branches;
 
@@ -232,11 +232,11 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
                         {
                             if (contains(names, new_name))
                             {
-                                print("Name " + new_name + " is already defined");
+                                //print("Name " + new_name + " is already defined");
                             }
                             else
                             {
-                                print("Adding name: " + new_name);
+                                //print("Adding name: " + new_name);
                                 names.insert(new_name);
                             }
                         }
@@ -379,7 +379,6 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              symbol_type, 
                                                                     string                              filename)
 {
-
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
@@ -389,7 +388,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         auto type        = get<0>(t);
         if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
         {
-            print("Generating filetype " + type + " for symboltype " + symbol_type);
+            //print("Generating filetype " + type + " for symboltype " + symbol_type);
         }
         auto constructor = get<1>(t);
 
@@ -416,7 +415,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         {
             for (auto line : default_content)
             {
-                print("    " + line);
+                //print("    " + line);
             }
         }
         added_names.insert(local_names.begin(), local_names.end());

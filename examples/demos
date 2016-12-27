@@ -1,0 +1,7 @@
+p_quicksort      python  cpp
+h_quicksort      haskell cpp
+python           python  cpp
+haskell          haskell cpp
+listcomp         python  cpp
+pattern_matching haskell cpp 
+do               haskell cpp
