@@ -1,23 +1,31 @@
-# Compiler
+# Progtran
 
-A simple compiler:
+Progran is a simple transpiler, based on the principles of formal grammars. The program uses a database of grammar files to convert between several programming languages (Currently Haskell, Python, and C++). 
 
-[Matching](./docs/Match.md)  
-[Parser](./docs/Parser.md)  
-[Lexer](./docs/Lexer.md)  
-[IO](./docs/IO.md)  
+### Demonstrations
 
-(Documentation for code gen and other features will be added as they become more robust)
+To run demonstrations:
+- Download Progtran
+- Navigate to Progtran's home directory
+- Ensure g++/gcc, Python and cmake are installed
+- Install Haskell/ghc if you plan to run the Haskell related demos
+``` python
+# Python -> C++ quicksort demo (default)
+./demo.py
+# View oher available demos:
+./demo.py --show
+p_quicksort      python3 cpp
+h_quicksort      haskell cpp
+python           python3 cpp
+haskell          haskell cpp
+listcomp         python3 cpp
+pattern_matching haskell cpp 
+do               haskell cpp
+# Choose one of the above demos:
+./demo.py h_quicksort
+# Output from Haskell -> C++ quicksort demo
+#...
+```
 
-Currently:
-
-The existing compiler can convert something like:
-
-[Input](./input/input.txt)
-
-Into:
-
-[Output](./output/output.cpp)
-         
-But is very brittle and only supports function definitions, simple expressions, assignment, and function calls.
-
+Input code for each demo is in `examples/demoname` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
+Generated code can be found in `examples/output/demoname_output/` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
