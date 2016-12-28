@@ -18,10 +18,10 @@ def cleardir(dirname):
 def benchmark(f, iterations, *args, **kwargs):
     begin  = time.time()
     for i in range(iterations):
-        result = f(*args, **kwargs)
+        f(*args, **kwargs)
     end    = time.time()
     total  = (end - begin) / iterations
-    return result, total
+    return total
 
 def build(directory, languageargs):
     inputfiles = []
@@ -46,29 +46,43 @@ def time_run(language, directory, iterations, filename='main'):
     olddir = os.getcwd()
     shutil.copytree(directory, directory + '_copy')
     os.chdir(directory + '_copy')
-    for line in content[:1]:
+    for line in content[:-1]:
         subprocess.run(line, shell=True) # Yes, this is unescaped.
-    t = benchmark(subprocess.run, iterations, content[-1], shell=True)
+    t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
     os.chdir(olddir)
     shutil.rmtree(directory + '_copy')
-    return t[1]
+    return t
 
 def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     os.chdir('output')
-    subprocess.run('g++ -std=c++14 *.cpp -O3 ../std/*.cpp', shell=True)
+    subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
     output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
     print('Output code time:')
-    print(output_time[1])
+    print(output_time)
     os.chdir('..')
 
     # Timing of inputlang isn't hardcoded:
     input_time = time_run(inputlang, directory, iterations)
     print('Input code time:')
     print(input_time)
+    print('Transpile speedup:')
+    transpile_speedup = input_time / output_time
+    print(transpile_speedup)
 
-    print('Speedup:')
-    print(input_time / output_time[1])
+    if inputlang == 'python':
+        cython_time = time_run('cython', directory, iterations)
+        print('Cython time:')
+        print(cython_time)
+        print('Cython speedup:')
+        cython_speedup = cython_time / output_time
+        print(cython_speedup)
+        
+        print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
+        print(transpile_speedup / cython_speedup)
+
+        
+
     
 
 def main():
