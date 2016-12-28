@@ -34,7 +34,7 @@ def build(directory, languageargs):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] == 'python':
+            if languageargs[0] in ['python', 'python2', 'python3']:
                 run(['./annotate.py', inputfile])
 
     print('Running files: %s' % '\n'.join(inputfiles))
@@ -70,8 +70,9 @@ def compare(directory, inputlang, outputlang, iterations=1):
     transpile_speedup = input_time / output_time
     print(transpile_speedup)
 
-    if inputlang == 'python':
-        cython_time = time_run('cython', directory, iterations)
+    if inputlang in ['python2', 'python3']:
+        cythonversion = 'cython' + inputlang[-1] # Last digit of python language id
+        cython_time = time_run(cythonversion, directory, iterations)
         print('Cython time:')
         print(cython_time)
         print('Cython speedup:')
@@ -112,7 +113,7 @@ def main():
             sys.exit(0)
         demoname = sys.argv[1]      # Otherwise, use demo provided
     else:
-        demoname = 'python'         # If none provided, show python demo by default
+        demoname = 'python3'         # If none provided, show python demo by default
 
     if not os.path.exists('output'):
         os.makedirs('output')
