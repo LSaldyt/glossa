@@ -27,3 +27,4 @@ main
 string
 print
 fileprint
+exception

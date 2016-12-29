@@ -27,3 +27,4 @@ main
 parenexpr
 string
 print
+exception
