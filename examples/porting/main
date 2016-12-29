@@ -4,7 +4,7 @@ def fileprint():
     print >> sys.stderr, "Hello World"
 
 def exception():
-    raise ValueError, "Weird value"
+    raise ValueError, "Weird value", traceback
 
 if __name__ == "__main__":
     print "Hello World",

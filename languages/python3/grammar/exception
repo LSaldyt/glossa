@@ -3,4 +3,5 @@ identifier wildcard
 punctuator (
 link expression
 punctuator )
-1 sep 3
+optional inOrder !punctuator . keyword with_traceback !punctuator ( !punctuator )
+1 sep 3 sep 5
