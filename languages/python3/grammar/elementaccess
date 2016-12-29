@@ -1,5 +1,5 @@
 identifier wildcard
 punctuator [
-literal wildcard
+anyOf link string literal wildcard
 punctuator ]
 0 sep 2

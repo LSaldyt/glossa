@@ -25,3 +25,8 @@ listcomp
 assert
 main
 parenexpr
+string
+print
+fileprint
+exception
+division

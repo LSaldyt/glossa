@@ -16,8 +16,6 @@ whileloop
 import
 vector
 elementaccess
-list
-constantdeclaration
 dictionary
 kvpair
 elsebranch
@@ -25,11 +23,10 @@ listcomp
 range
 assert
 tuple
-funcpattern
-haskellfunction
 main
-let
-do
-dobody
 string
 print
+fileprint
+exception
+division
+parenexpr

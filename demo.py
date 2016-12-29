@@ -55,12 +55,15 @@ def time_run(language, directory, iterations, filename='main'):
 
 def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
-    os.chdir('output')
-    subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
-    output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
+    if outputlang == 'cpp':
+        os.chdir('output')
+        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
+        output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
+        os.chdir('..')
+    else:
+        output_time = time_run(outputlang, 'output', iterations)
     print('Output code time:')
     print(output_time)
-    os.chdir('..')
 
     # Timing of inputlang isn't hardcoded:
     input_time = time_run(inputlang, directory, iterations)
@@ -70,8 +73,9 @@ def compare(directory, inputlang, outputlang, iterations=1):
     transpile_speedup = input_time / output_time
     print(transpile_speedup)
 
+    '''
     if inputlang in ['python2', 'python3']:
-        cythonversion = 'cython' + inputlang[-1] # Last digit of python language id
+        cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
         cython_time = time_run(cythonversion, directory, iterations)
         print('Cython time:')
         print(cython_time)
@@ -81,6 +85,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
         
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
+    '''
 
         
 

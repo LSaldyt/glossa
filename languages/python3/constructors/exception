@@ -1,0 +1,11 @@
+$type  = 0 0
+$args  = 1
+$trace = 2
+defines
+source
+raise $type ( 
+sep , $args
+)
+branch nonempty $trace
+.with_traceback()
+end
