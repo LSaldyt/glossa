@@ -249,7 +249,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
             }
         }
         replaceAll(representation, "SPACE", " ");
-        replaceAll(representation, "NEWLINE", "\n");
+        replaceall(representation, "NEWLINE", "\n");
+        replaceall(representation, "INDENT", "    ");
         return representation;
     };
 }
