@@ -9,7 +9,7 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        //print("Reading constructor file: " + filename);
+        print("Reading constructor file: " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
 }
@@ -249,8 +249,8 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
             }
         }
         replaceAll(representation, "SPACE", " ");
-        replaceall(representation, "NEWLINE", "\n");
-        replaceall(representation, "INDENT", "    ");
+        replaceAll(representation, "NEWLINE", "\n");
+        replaceAll(representation, "INDENT", "    ");
         return representation;
     };
 }

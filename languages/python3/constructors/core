@@ -16,7 +16,6 @@ whileloop
 import
 vector
 elementaccess
-list
 dictionary
 kvpair
 elsebranch
@@ -25,3 +24,4 @@ range
 assert
 tuple
 main
+string
