@@ -6,5 +6,8 @@ def fileprint():
 def exception():
     raise ValueError, "Weird value", traceback
 
+def division():
+    assert 2 / (1 + 2) == 0
+
 if __name__ == "__main__":
     print "Hello World",
