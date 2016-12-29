@@ -1,6 +1,6 @@
-$args = 0
+args = 0
 defines
 header
-sep , $args
+`sep , args`
 source
-sep , $args
+`sep , args`

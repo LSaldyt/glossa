@@ -1,7 +1,7 @@
-$k = 0 0
-$v = 1 0
+k = 0 0
+v = 1 0
 defines
 header
-{ $k , $v }
+{$k$, $v$}
 source
-{ $k , $v }
+{$k$, $v$}

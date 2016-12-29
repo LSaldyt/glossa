@@ -1,6 +1,6 @@
-$val = 0 0
+val = 0 0
 defines
 header
-format $val @s
+`format val @s`
 source
-format $val @s
+`format val @s`

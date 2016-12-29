@@ -1,25 +1,25 @@
-$expr      = 0 0
-$name      = 1 0
-$loopexpr  = 2 0
-$condition = 3
+expr      = 0 0
+name      = 1 0
+loopexpr  = 2 0
+condition = 3
 defines
 header
     listComp(
-        $loopexpr ,
+        $loopexpr$ ,
         std::function<Object(const Object&)>(
-            [&](const auto& $name )
+            [&](const auto& $name$ )
             {
-            return $expr ;
+            return $expr$ ;
             }
         )
 
-        branch nonempty $condition
+        branch nonempty condition
             ,
             std::function<bool(const Object&)>(
-                [&](const auto& $name )
+                [&](const auto& $name$ )
                 {
                 return 
-                sep SPACE $condition
+                `sep SPACE $condition`
                 ;
                 }
             )
@@ -28,21 +28,21 @@ header
     )
 source
     listComp(
-        $loopexpr ,
+        $loopexpr$ ,
         std::function<Object(const Object&)>(
-            [&](const auto& $name )
+            [&](const auto& $name$)
             {
-            return $expr ;
+            return $expr$ ;
             }
         )
 
-        branch nonempty $condition
+        branch nonempty condition
             ,
             std::function<bool(const Object&)>(
-                [&](const auto& $name )
+                [&](const auto& $name$)
                 {
                 return 
-                sep SPACE $condition
+                `sep SPACE $condition`
                 ;
                 }
             )

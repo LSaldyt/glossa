@@ -1,18 +1,18 @@
-$identifier = 0 0
-$args = 1
-$body = 2
+identifier = 0 0
+args = 1
+body = 2
 defines
 header
-    branch nonempty $args
+    branch nonempty args
         template <
-        sep , $args typenameSPACET_@
+        `sep , args typenameSPACET_@`
         >
     end
 
-    auto $identifier (
-    sep , $args T_@SPACE@
+    auto $identifier$ (
+    `sep , args T_@SPACE@`
     )
     {
-    sep NEWLINE $body @;
+    `sep NEWLINE body @;`
     }
 source

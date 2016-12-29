@@ -1,16 +1,16 @@
-$identifier = 0 0
-$value = 1 0
+identifier = 0 0
+value = 1 0
 defines
-$identifier
+identifier
 header
-    branch defined $identifier
-        $identifier = $value 
+    branch defined identifier
+        $identifier$ = $value$ 
     elsebranch
-        auto $identifier = $value 
+        auto $identifier$ = $value$ 
     end
 source
-    branch defined $identifier
-        $identifier = $value 
+    branch defined identifier
+        $identifier$ = $value$ 
     elsebranch
-        auto $identifier = $value 
+        auto $identifier$ = $value$ 
     end

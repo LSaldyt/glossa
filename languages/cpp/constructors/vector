@@ -1,10 +1,10 @@
-$values = 0
+values = 0
 defines
 header
 std::vector<Object>({
-sep , $values
+`sep , values`
 })
 source
 std::vector<Object>({
-sep , $values
+`sep , values`
 })

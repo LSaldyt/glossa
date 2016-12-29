@@ -1,7 +1,7 @@
-$access = 0 0
-$member = 1 0
+access = 0 0
+member = 1 0
 defines
 header
-$access . $member
+$access$.$member$
 source
-$access . $member
+$access$.$member$

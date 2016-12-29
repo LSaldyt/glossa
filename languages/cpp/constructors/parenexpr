@@ -1,6 +1,6 @@
-$expr = 0 0
+expr = 0 0
 defines
 header
-( $expr )
+($expr$)
 source
-( $expr )
+($expr$)
