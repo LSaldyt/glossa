@@ -1,6 +1,6 @@
-$val = 0 0
+val = 0 0
 defines
 header
-$val
+$val$
 source
-$val
+$val$

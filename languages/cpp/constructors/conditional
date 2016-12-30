@@ -1,19 +1,19 @@
-$condition = 0 0
-$ifbody = 1
-$else = 2
+condition = 0 0
+ifbody = 1
+else = 2
 defines
 header
 
-    if ( $condition )
+    if ($condition$)
     {
-        sep NEWLINE $ifbody @;
+        `sep NEWLINE ifbody @;`
     }
-    sep SPACE $else
+    `sep SPACE else`
 
 source
 
-    if ( $condition )
+    if ($condition$)
     {
-        sep NEWLINE $ifbody @;
+        `sep NEWLINE ifbody @;`
     }
-    sep SPACE $else
+    `sep SPACE else`

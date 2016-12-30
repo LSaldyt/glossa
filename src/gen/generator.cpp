@@ -179,7 +179,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             }   
             else if (nest_count == 0)
             {
-                line_constructors.push_back(generateLineConstructor(terms));
+                line_constructors.push_back(generateLineConstructor(*it));
             }
         }
         it++;
@@ -191,9 +191,89 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
     return Branch(defaultBranch, line_constructors, nested_branches);
 }
 
-LineConstructor Generator::generateLineConstructor(vector<string> terms)
+string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
 {
-    return [terms, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions){
+    assert(contains(get<0>(storage), s));
+    auto symbol         = get<0>(storage)[s];         
+    auto representation = symbol->representation(*this, names, filetype);
+    auto new_name       = symbol->name();
+    if (new_name != "none" and contains(definitions, s)) 
+    {
+        if (contains(names, new_name))
+        {
+            //print("Name " + new_name + " is already defined");
+        }
+        else
+        {
+            //print("Adding name: " + new_name);
+            names.insert(new_name);
+        }
+    }
+    return representation;
+}
+
+LineConstructor Generator::generateLineConstructor(string line)
+{
+    auto terms = lex::seperate(line, {make_tuple("`", true)});
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+    {
+        string representation;
+        if (terms.size() == 1)
+        {
+            auto to_format = lex::seperate(line, {make_tuple("$", true)}); // Symbols to be replaced are surrounded in "$"
+            bool formatting_symbol = false;
+            for (auto t : to_format)
+            {
+                if (t == "$")
+                {
+                    formatting_symbol = !formatting_symbol;
+                }
+                else
+                {
+                    if (formatting_symbol)
+                    {
+                        representation += formatSymbol(t, names, storage, filetype, definitions);
+                    }
+                    else
+                    {
+                        representation += t; // Evenly numbered terms do not need to be formatted
+                    }
+                }
+            }
+        }
+        else
+        {
+            bool special_formatting = false;
+            for (auto t : terms)
+            {
+                if (t == "`")
+                {
+                    special_formatting = !special_formatting;
+                }
+                else if (special_formatting)
+                {
+                    auto slc = generateSpecialLineConstructor(t);
+                    representation += slc(names, storage, filetype, definitions);
+                }
+                else
+                {
+                    auto lc = generateLineConstructor(t);
+                    representation += lc(names, storage, filetype, definitions);
+                }
+            }
+        }
+        replaceAll(representation, "SPACE",   " ");
+        replaceAll(representation, "NEWLINE", "\n");
+        replaceAll(representation, "INDENT",  "    ");
+        return representation;
+    };
+}
+
+LineConstructor Generator::generateSpecialLineConstructor(string line)
+{
+    auto terms = lex::seperate(line, {make_tuple(" ", false)});
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+    {
         string representation = "";
         if (not terms.empty())
         {
@@ -220,37 +300,9 @@ LineConstructor Generator::generateLineConstructor(vector<string> terms)
             }
             else
             {
-                for (auto t : terms)
-                {
-                    if (t[0] == '$')
-                    {
-                        auto symbol = get<0>(storage)[t];
-                        representation += symbol->representation(*this, names, filetype) + " ";
-                        auto new_name = symbol->name();
-                        if (new_name != "none"            and 
-                            contains(definitions, t)) 
-                        {
-                            if (contains(names, new_name))
-                            {
-                                //print("Name " + new_name + " is already defined");
-                            }
-                            else
-                            {
-                                //print("Adding name: " + new_name);
-                                names.insert(new_name);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        representation += t + " ";
-                    }
-                }
+                throw named_exception("Unknown special line constructor: " + line);
             }
         }
-        replaceAll(representation, "SPACE", " ");
-        replaceAll(representation, "NEWLINE", "\n");
-        replaceAll(representation, "INDENT", "    ");
         return representation;
     };
 }

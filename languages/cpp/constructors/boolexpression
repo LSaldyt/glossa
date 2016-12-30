@@ -1,6 +1,6 @@
-$expressionvals = 0 
+expressionvals = 0 
 defines
 header
-sep SPACE $expressionvals
+`sep SPACE expressionvals`
 source
-sep SPACE $expressionvals
+`sep SPACE expressionvals`

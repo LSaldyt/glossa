@@ -1,16 +1,16 @@
-$body = 0
+body = 0
 defines
 header
 else
 {
-branch nonempty $body
-sep NEWLINE $body @;
+branch nonempty body
+`sep NEWLINE body @;`
 end
 }
 source
 else
 {
-branch nonempty $body
-sep NEWLINE $body @;
+branch nonempty body
+`sep NEWLINE body @;`
 end
 }
