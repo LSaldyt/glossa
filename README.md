@@ -1,23 +1,11 @@
 # Compiler
 
-A simple compiler:
+### Documentation
 
-[Matching](./docs/Match.md)  
-[Parser](./docs/Parser.md)  
-[Lexer](./docs/Lexer.md)  
-[IO](./docs/IO.md)  
+To generate documentation, run `doxygen Doxyfile` in the home directory of Progtran
 
-(Documentation for code gen and other features will be added as they become more robust)
+Then, navigate to `docs/doxygen`:
 
-Currently:
+Use `firefox index.html` to open documentation in your browser
 
-The existing compiler can convert something like:
-
-[Input](./input/input.txt)
-
-Into:
-
-[Output](./output/output.cpp)
-         
-But is very brittle and only supports function definitions, simple expressions, assignment, and function calls.
-
+If doxygen is not installed, it can be by the command `sudo apt-get install doxygen`
