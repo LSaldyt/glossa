@@ -1,4 +1,4 @@
-$args = 0
+args = 0
 defines
 source
-sep , $args
+`sep , args`

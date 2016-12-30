@@ -1,5 +1,5 @@
-$body = 0
+body = 0
 defines
 source
-else NEWLINE
-sep NEWLINE $body INDENT@
+else: 
+    `sep NEWLINE body @`

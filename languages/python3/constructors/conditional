@@ -1,8 +1,8 @@
-$condition = 0 0
-$ifbody = 1
-$else = 2
+condition = 0 0
+ifbody = 1
+else = 2
 defines
 source
-    if ( $condition ): NEWLINE
-        sep NEWLINE $ifbody INDENT@
-    sep SPACE $else
+if ($condition$): 
+    `sep NEWLINE ifbody @`
+`sep SPACE else`

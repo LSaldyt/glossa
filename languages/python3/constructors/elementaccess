@@ -1,5 +1,5 @@
-$val = 0 0
-$access = 1 0
+val = 0 0
+access = 1 0
 defines
 source
-$val [ $access ]
+$val$[$access$]

@@ -1,5 +1,5 @@
-$body = 0
+body = 0
 defines
 source
-if __name__ == "__main__":NEWLINE
-    sep NEWLINE $body INDENT@
+if __name__ == "__main__":
+`sep NEWLINE body INDENT@`

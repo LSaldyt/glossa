@@ -1,11 +1,10 @@
-$type  = 0 0
-$args  = 1
-$trace = 2
+type  = 0 0
+args  = 1
+trace = 2
 defines
 source
-raise $type ( 
-sep , $args
-)
-branch nonempty $trace
-.with_traceback()
+branch nonempty trace
+raise $type$(`sep , args`).with_traceback()
+elsebranch
+raise $type$(`sep , args`)
 end

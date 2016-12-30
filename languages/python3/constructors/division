@@ -1,5 +1,5 @@
-$a = 0 0
-$b = 1 0
+a = 0 0
+b = 1 0
 defines
 source
-old_div( $a , $b )
+old_div($a$, $b$)

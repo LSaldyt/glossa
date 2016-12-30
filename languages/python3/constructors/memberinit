@@ -1,5 +1,5 @@
-$name  = 0 0
-$value = 1 0
+name  = 0 0
+value = 1 0
 defines
 source
-$value
+$value$

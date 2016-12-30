@@ -1,5 +1,5 @@
-$access = 0 0
-$member = 1 0
+access = 0 0
+member = 1 0
 defines
 source
-$access . $member
+$access$.$member$

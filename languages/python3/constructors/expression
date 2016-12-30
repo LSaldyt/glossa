@@ -1,4 +1,4 @@
-$body = 0
+body = 0
 defines
 source
-sep SPACE $body
+`sep SPACE body`
