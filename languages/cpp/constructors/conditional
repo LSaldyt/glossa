@@ -4,7 +4,7 @@ else = 2
 defines
 header
 
-    if ( $condition$ )
+    if ($condition$)
     {
         `sep NEWLINE ifbody @;`
     }
@@ -12,7 +12,7 @@ header
 
 source
 
-    if ( $condition$ )
+    if ($condition$)
     {
         `sep NEWLINE ifbody @;`
     }
