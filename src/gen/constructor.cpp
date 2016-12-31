@@ -21,23 +21,18 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
 
     if (branch.condition_evaluator(names, symbol_storage, generated))
     {
-        for (int i = 0; i < branch.line_constructors.size(); i++)
+        for (auto it = branch.line_constructors.begin(); it != branch.line_constructors.end(); it++)
         {
-            auto line_constructor = branch.line_constructors[i];
+            auto line_constructor = *it;
             generated.push_back(line_constructor(names, symbol_storage, filetype, definitions));
-            if (i + 1 != branch.line_constructors.size())
+            if (it + 1 != branch.line_constructors.end())
             {
                 generated.push_back("\n");
             }
         }
-        for (int i = 0; i < branch.nested_branches.size(); i++)
+        for (auto nested_branch : branch.nested_branches)
         {
-            auto nested_branch = branch.nested_branches[i];
             concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype));
-            if (i + 1 != branch.nested_branches.size())
-            {
-                generated.push_back("\n");
-            }
         }  
     }
 
