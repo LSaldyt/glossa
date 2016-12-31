@@ -3,14 +3,14 @@ value = 1 0
 defines
 identifier
 header
-    branch defined identifier
-        $identifier$ = $value$ 
-    elsebranch
-        auto $identifier$ = $value$ 
-    end
+branch defined identifier
+$identifier$ = $value$ 
+elsebranch
+auto $identifier$ = $value$ 
+end
 source
-    branch defined identifier
-        $identifier$ = $value$ 
-    elsebranch
-        auto $identifier$ = $value$ 
-    end
+branch defined identifier
+$identifier$ = $value$ 
+elsebranch
+auto $identifier$ = $value$ 
+end

@@ -16,7 +16,6 @@ namespace gen
         for (int i = 0; i < symbols.size(); i++)
         { 
             string inner_representation = symbols[i]->representation(generator, names, filetype);
-
             line += format(inner_representation, formatter);
 
             if (i+1 != symbols.size()) //If not on last iteration

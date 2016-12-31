@@ -8,6 +8,6 @@ template <`sep , args typenameSPACET_@`>
 end
 auto $identifier$ (`sep , args T_@SPACE@`)
 {
-    `sep NEWLINE body @;`
+`sep NEWLINE body INDENT@;`
 }
 source

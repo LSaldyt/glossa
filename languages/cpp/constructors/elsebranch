@@ -4,13 +4,13 @@ header
 else
 {
 branch nonempty body
-`sep NEWLINE body @;`
+`sep NEWLINE body INDENT@;`
 end
 }
 source
 else
 {
 branch nonempty body
-`sep NEWLINE body @;`
+`sep NEWLINE body INDENT@;`
 end
 }

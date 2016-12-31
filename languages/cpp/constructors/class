@@ -1,5 +1,5 @@
 name = 0 0
-inheritance = 1    
+inheritance = 1
 constructorargs = 2
 supercall = 3
 constructorbody = 4
@@ -12,74 +12,74 @@ concat inners inheritance
 defines
 header
 
-    template <
-    sep , auxillaryargs typenameSPACET_@
-    >
-    class 
-    format $name$ __@__
+template <
+sep , auxillaryargs typenameSPACET_@
+>
+class 
+format $name$ __@__
 
-    branch nonempty inheritance
-        : 
-        sep , inheritance publicSPACET_@ 
-    end
+branch nonempty inheritance
+: 
+sep , inheritance publicSPACET_@ 
+end
 
-    {
-    public:
-    sep NEWLINE members T_@SPACE@;
-    format name __@__
-    (
-    sep , auxillaryargs T_@SPACEset_@
-    )
+{
+public:
+sep NEWLINE members T_@SPACE@;
+format name __@__
+(
+sep , auxillaryargs T_@SPACEset_@
+)
 
-    branch nonempty inheritance
-        : 
-        sep , inheritance T_@(set_@) 
-    end
+branch nonempty inheritance
+: 
+sep , inheritance T_@(set_@) 
+end
 
-    {
-    sep SPACE members @=set_@;
-    }
-    sep ;^ body
-    };
-    template <
-    sep , constructorargs typenameSPACET_@
-    >
-    auto $name$ (
-    sep , constructorargs T_@SPACE@
-    ){
-    sep NEWLINE constructorbody @; 
+{
+sep SPACE members @=set_@;
+}
+sep ;^ body
+};
+template <
+sep , constructorargs typenameSPACET_@
+>
+auto $name$ (
+sep , constructorargs T_@SPACE@
+){
+sep NEWLINE constructorbody @; 
 
-    branch nonempty supercall
-        auto 
-        sep SPACE inheritance T_@SPACE=@(
-        sep SPACE supercall
-        );
-    end
+branch nonempty supercall
+auto 
+sep SPACE inheritance T_@SPACE=@(
+sep SPACE supercall
+);
+end
 
-    return 
-    format name __@__<
-    sep , members decltype(@) source
+return 
+format name __@__<
+sep , members decltype(@) source
 
-    branch both nonempty supercall and nonempty members
-        ,
-    end
+branch both nonempty supercall and nonempty members
+,
+end
 
-    branch nonempty supercall
-        sep SPACE inheritance decltype(T_@)
-    end
+branch nonempty supercall
+sep SPACE inheritance decltype(T_@)
+end
 
-    >
-    (
-    sep , members @ source
+>
+(
+sep , members @ source
 
-    branch both nonempty supercall and nonempty members
-        ,
-    end
-    branch nonempty supercall
-        sep SPACE inheritance T_@
-    end
-    );
-    };
+branch both nonempty supercall and nonempty members
+,
+end
+branch nonempty supercall
+sep SPACE inheritance T_@
+end
+);
+};
 
 source
-    // No source for template class definitions
+// No source for template class definitions
