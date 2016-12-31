@@ -103,7 +103,6 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
-    //print("Generating branch");
     vector<LineConstructor> line_constructors;
     vector<Branch>          nested_branches;
 
@@ -214,13 +213,13 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
 
 LineConstructor Generator::generateLineConstructor(string line)
 {
-    auto terms = lex::seperate(line, {make_tuple("`", true)});
+    auto terms = lex::seperate(line, {make_tuple("`", true)}, false);
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
     {
         string representation;
         if (terms.size() == 1)
         {
-            auto to_format = lex::seperate(line, {make_tuple("$", true)}); // Symbols to be replaced are surrounded in "$"
+            auto to_format = lex::seperate(line, {make_tuple("$", true)}, false); // Symbols to be replaced are surrounded in "$"
             bool formatting_symbol = false;
             for (auto t : to_format)
             {

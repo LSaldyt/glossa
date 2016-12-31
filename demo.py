@@ -127,20 +127,22 @@ def main():
     if not os.path.exists('input'):
         os.makedirs('input')
 
-    # Build/compare input/output languages
-    l = demos[demoname]
-    directory = l[0]
-    languageargs = l[1:]
-    build(directory, languageargs)
-    compare(directory, languageargs[0], languageargs[1], iterations=100)
+    try:
+        # Build/compare input/output languages
+        l = demos[demoname]
+        directory = l[0]
+        languageargs = l[1:]
+        build(directory, languageargs)
+        compare(directory, languageargs[0], languageargs[1], iterations=100)
 
-    # Save demo output, then cleanup
-    outputdir = 'examples/output/' + demoname + '_output'
-    if os.path.exists(outputdir):
-        shutil.rmtree(outputdir)
-    shutil.copytree('output', outputdir)
-    shutil.rmtree('output')
-    shutil.rmtree('input')
+        # Save demo output, then cleanup
+        outputdir = 'examples/output/' + demoname + '_output'
+        if os.path.exists(outputdir):
+            shutil.rmtree(outputdir)
+        shutil.copytree('output', outputdir)
+    finally:
+        shutil.rmtree('output')
+        shutil.rmtree('input')
 
 if __name__ == '__main__':
     main()
