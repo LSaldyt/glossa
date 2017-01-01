@@ -12,7 +12,7 @@ namespace syntax
         {
             value = set_value; 
         }
-        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype, int nesting=0)
         {
             return std::to_string(value);
         }
@@ -28,7 +28,7 @@ namespace syntax
         StringLiteral(string set_value) : value(set_value)
         {
         }
-        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype)
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype, int nesting=0)
         {
             return value;
         }

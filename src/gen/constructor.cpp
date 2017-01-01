@@ -15,29 +15,34 @@ Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator,
 {
 }
 
-vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype)
+vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype, int nesting)
 {
     vector<string> generated;
 
     if (branch.condition_evaluator(names, symbol_storage, generated))
     {
-        for (auto line_constructor : branch.line_constructors)
+        for (auto it = branch.line_constructors.begin(); it != branch.line_constructors.end(); it++)
         {
-            generated.push_back(line_constructor(names, symbol_storage, filetype, definitions));
+            auto line_constructor = *it;
+            generated.push_back(line_constructor(names, symbol_storage, filetype, definitions, nesting));
+            if (it + 1 != branch.line_constructors.end())
+            {
+                generated.push_back("\n");
+            }
         }
         for (auto nested_branch : branch.nested_branches)
         {
-            concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype));
-        }
+            concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype, nesting));
+        }  
     }
 
     return generated;
 }
 
-vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype)
+vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype, int nesting)
 {
     auto symbol_storage = symbol_storage_generator(symbol_groups);
-    auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype);
+    auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype, nesting);
     return generated;
 }
 }

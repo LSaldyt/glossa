@@ -7,3 +7,4 @@ __pycache__
 *a.out
 */a.out
 examples/output/*/a.out
+docs/doxygen/*

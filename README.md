@@ -29,3 +29,13 @@ do               haskell cpp
 
 Input code for each demo is in `examples/demoname` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
 Generated code can be found in `examples/output/demoname_output/` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
+
+### Documentation
+
+To generate documentation, run `doxygen Doxyfile` in the home directory of Progtran
+
+Then, navigate to `docs/doxygen`:
+
+Use `firefox index.html` to open documentation in your browser
+
+If doxygen is not installed, it can be by the command `sudo apt-get install doxygen`

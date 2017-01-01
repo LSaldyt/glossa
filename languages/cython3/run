@@ -1,0 +1,3 @@
+cython3 --embed -o @.c @ 
+gcc -Os -I /usr/include/python3.5m -o @.out @.c -lpython3.5m -lpthread -lm -lutil -ldl 
+./@.out

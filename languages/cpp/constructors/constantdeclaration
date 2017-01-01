@@ -1,7 +1,7 @@
-$ident = 0 0
-$value = 1 0
+ident = 0 0
+value = 1 0
 defines
-$ident
+ident
 header
-const auto $ident = $value ;
+const auto $ident$ = $value$ ;
 source

@@ -1,17 +1,13 @@
-$overloads = 0
-$return    = 1 0
+overloads = 0
+return= 1 0
 defines
 header
-if (__func_args__ == std::vector<Object>({
-sep , $overloads
-}))
+if (__func_args__ == std::vector<Object>({`sep , overloads`}))
 {
-$return ;
+$return$;
 }
 source
-if (__func_args__ == std::vector<Object>({
-sep , $overloads
-}))
+if (__func_args__ == std::vector<Object>({`sep , overloads`}))
 {
-$return ;
+$return$;
 }

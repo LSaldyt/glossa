@@ -31,3 +31,5 @@ main
 let
 do
 dobody
+string
+print

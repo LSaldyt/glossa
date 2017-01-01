@@ -1,6 +1,6 @@
-$importfile = 0 0
+importfile = 0 0
 defines
 header
-format $importfile #includeSPACE"@"
+`format importfile #includeSPACE"@"`
 source
-format $importfile #includeSPACE"@"
+`format importfile #includeSPACE"@"`

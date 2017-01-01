@@ -10,7 +10,7 @@ struct MultiSymbol : public Symbol
     MultiSymbol();
     MultiSymbol(string set_tag, vector<vector<shared_ptr<Symbol>>> set_groups);
 
-    virtual string representation(Generator& generator, unordered_set<string>& names, string filetype);
+    virtual string representation(Generator& generator, unordered_set<string>& names, string filetype, int nesting=0);
     virtual string abstract(int indent=0);
 };
 
