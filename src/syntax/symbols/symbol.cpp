@@ -1,7 +1,7 @@
 #include "symbol.hpp"
 namespace syntax
 {
-string Symbol::representation(Generator& generator, unordered_set<string>& generated, string filetype)
+string Symbol::representation(Generator& generator, unordered_set<string>& generated, string filetype, int nesting)
 {
     return "/*No Representation*/";
 }

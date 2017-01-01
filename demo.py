@@ -34,7 +34,7 @@ def build(directory, languageargs):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] == 'python':
+            if languageargs[0] in ['python', 'python2', 'python3']:
                 run(['./annotate.py', inputfile])
 
     print('Running files: %s' % '\n'.join(inputfiles))
@@ -46,21 +46,26 @@ def time_run(language, directory, iterations, filename='main'):
     olddir = os.getcwd()
     shutil.copytree(directory, directory + '_copy')
     os.chdir(directory + '_copy')
-    for line in content[:-1]:
-        subprocess.run(line, shell=True) # Yes, this is unescaped.
-    t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
-    os.chdir(olddir)
-    shutil.rmtree(directory + '_copy')
+    try:
+        for line in content[:-1]:
+            subprocess.run(line, shell=True) # Yes, this is unescaped.
+        t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
+    finally:
+        os.chdir(olddir)
+        shutil.rmtree(directory + '_copy')
     return t
 
 def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
-    os.chdir('output')
-    subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
-    output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
+    if outputlang == 'cpp':
+        os.chdir('output')
+        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
+        output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
+        os.chdir('..')
+    else:
+        output_time = time_run(outputlang, 'output', iterations)
     print('Output code time:')
     print(output_time)
-    os.chdir('..')
 
     # Timing of inputlang isn't hardcoded:
     input_time = time_run(inputlang, directory, iterations)
@@ -70,8 +75,10 @@ def compare(directory, inputlang, outputlang, iterations=1):
     transpile_speedup = input_time / output_time
     print(transpile_speedup)
 
-    if inputlang == 'python':
-        cython_time = time_run('cython', directory, iterations)
+    '''
+    if inputlang in ['python2', 'python3']:
+        cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
+        cython_time = time_run(cythonversion, directory, iterations)
         print('Cython time:')
         print(cython_time)
         print('Cython speedup:')
@@ -80,6 +87,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
         
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
+    '''
 
         
 
@@ -112,27 +120,29 @@ def main():
             sys.exit(0)
         demoname = sys.argv[1]      # Otherwise, use demo provided
     else:
-        demoname = 'python'         # If none provided, show python demo by default
+        demoname = 'python3'         # If none provided, show python demo by default
 
     if not os.path.exists('output'):
         os.makedirs('output')
     if not os.path.exists('input'):
         os.makedirs('input')
 
-    # Build/compare input/output languages
-    l = demos[demoname]
-    directory = l[0]
-    languageargs = l[1:]
-    build(directory, languageargs)
-    compare(directory, languageargs[0], languageargs[1], iterations=100)
+    try:
+        # Build/compare input/output languages
+        l = demos[demoname]
+        directory = l[0]
+        languageargs = l[1:]
+        build(directory, languageargs)
+        compare(directory, languageargs[0], languageargs[1], iterations=100)
 
-    # Save demo output, then cleanup
-    outputdir = 'examples/output/' + demoname + '_output'
-    if os.path.exists(outputdir):
-        shutil.rmtree(outputdir)
-    shutil.copytree('output', outputdir)
-    shutil.rmtree('output')
-    shutil.rmtree('input')
+        # Save demo output, then cleanup
+        outputdir = 'examples/output/' + demoname + '_output'
+        if os.path.exists(outputdir):
+            shutil.rmtree(outputdir)
+        shutil.copytree('output', outputdir)
+    finally:
+        shutil.rmtree('output')
+        shutil.rmtree('input')
 
 if __name__ == '__main__':
     main()

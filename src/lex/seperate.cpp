@@ -36,7 +36,7 @@ namespace lex
         return found;
     }
 
-    Terms seperate(const string& sentence, const Seperators &seperators)
+    Terms seperate(const string& sentence, const Seperators &seperators, bool strings)
     {
         auto terms   = Terms();
         auto current = sentence.begin();
@@ -51,19 +51,22 @@ namespace lex
         // (Seperate a sentence into terms in <O(n^2)? time)
         for(auto it = sentence.begin(); it < sentence.end(); ++it)
         {
-            // Special case for strings (save some work)
-            if (*it == '"')
+            if (strings)
             {
-                // remove the string between two quotemarks and push into terms
-                string remaining(it + 1, sentence.end());
-                size_t found = remaining.find("\"");
-                if (found!=string::npos) // IF there actually is a second quotation mark
+                // Special case for strings (save some work)
+                if (*it == '"')
                 {
-                    found += 2; //Account for " characters surrounding the string
-                    string content(it, it + found);
-                    terms.push_back(content);
-                    current = it + found;
-                    it      = it + found;
+                    // remove the string between two quotemarks and push into terms
+                    string remaining(it + 1, sentence.end());
+                    size_t found = remaining.find("\"");
+                    if (found!=string::npos) // IF there actually is a second quotation mark
+                    {
+                        found += 2; //Account for " characters surrounding the string
+                        string content(it, it + found);
+                        terms.push_back(content);
+                        current = it + found;
+                        it      = it + found;
+                    }
                 }
             }
             // Normal seperation
@@ -95,6 +98,7 @@ namespace lex
                 terms.push_back(remaining);
             }
         }
+
         return terms;
     }
 
