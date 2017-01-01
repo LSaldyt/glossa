@@ -214,7 +214,7 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
 LineConstructor Generator::generateLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, false);
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting)
     {
         string representation;
         if (terms.size() == 1)
@@ -252,18 +252,19 @@ LineConstructor Generator::generateLineConstructor(string line)
                 else if (special_formatting)
                 {
                     auto slc = generateSpecialLineConstructor(t);
-                    representation += slc(names, storage, filetype, definitions);
+                    representation += slc(names, storage, filetype, definitions, nesting);
                 }
                 else
                 {
                     auto lc = generateLineConstructor(t);
-                    representation += lc(names, storage, filetype, definitions);
+                    representation += lc(names, storage, filetype, definitions, nesting);
                 }
             }
         }
+        replaceAll(representation, "EMPTY",   "");
         replaceAll(representation, "SPACE",   " ");
         replaceAll(representation, "NEWLINE", "\n");
-        replaceAll(representation, "INDENT",  "    ");
+        replaceAll(representation, "INDENT",  repeatString("    ", nesting));
         return representation;
     };
 }
@@ -271,7 +272,7 @@ LineConstructor Generator::generateLineConstructor(string line)
 LineConstructor Generator::generateSpecialLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting)
     {
         string representation = "";
         if (not terms.empty())
@@ -287,7 +288,7 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
                 {
                     formatter = terms[3];
                 }
-                representation += sepWith(*this, symbols, names, filetype, terms[1], formatter);
+                representation += sepWith(*this, symbols, names, filetype, terms[1], formatter, nesting);
             }
             else if (keyword == "format")
             {
@@ -295,7 +296,32 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
                 assert(contains(get<0>(storage), terms[1]));
                 auto symbol    = get<0>(storage)[terms[1]];
                 auto formatter = terms[2];
-                representation += format(symbol->representation(*this, names, filetype), formatter) + " ";
+                representation += format(symbol->representation(*this, names, filetype, nesting), formatter);
+            }
+            else if (keyword == "block") // e.g. block body @;
+            {
+                assert(terms.size() == 2 or terms.size() == 3);
+                assert(contains(get<1>(storage), terms[1]));
+                auto symbols = get<1>(storage)[terms[1]];
+                string formatter = "@";
+                if (terms.size() > 2)
+                {
+                    formatter = terms[2];
+                }
+                auto block = sepWith(*this, symbols, names, filetype, "\n", formatter, nesting + 1); // The only place where nesting increases
+                auto block_terms = lex::seperate(block, {make_tuple("\n", true)}, false);
+                representation += repeatString("    ", nesting);
+                for (auto term : block_terms)
+                {
+                    if (term == "\n")
+                    {
+                        representation += term + repeatString("    ", nesting);
+                    }
+                    else
+                    {
+                        representation += term;
+                    }
+                }
             }
             else
             {
@@ -429,7 +455,8 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
 vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
                                                                     vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
                                                                     string                              symbol_type, 
-                                                                    string                              filename)
+                                                                    string                              filename,
+                                                                    int                                 nesting)
 {
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
@@ -461,7 +488,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(local_names, symbol_groups, type);
+        auto constructed = constructor(local_names, symbol_groups, type, nesting);
         concat(default_content, constructed);
         if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
         {

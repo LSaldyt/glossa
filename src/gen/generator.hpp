@@ -13,7 +13,7 @@ class Generator
 public:
 
     Generator(vector<string> grammar_files, string directory);
-    vector<tuple<string, string, vector<string>>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type, string filename="none");
+    vector<tuple<string, string, vector<string>>> operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>&, string symbol_type, string filename="none", int nesting=1);
 
     vector<tuple<string, FileConstructor>> file_constructors;
 private:

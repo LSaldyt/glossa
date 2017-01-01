@@ -3,14 +3,10 @@ defines
 header
 else
 {
-branch nonempty body
-`sep NEWLINE body INDENT@;`
-end
+`block body @;`
 }
 source
 else
 {
-branch nonempty body
-`sep NEWLINE body INDENT@;`
-end
+`block body @;`
 }

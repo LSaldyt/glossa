@@ -4,10 +4,10 @@ body = 2
 defines
 header
 branch nonempty args
-template <`sep , args typenameSPACET_@`>
+template <`sep , args typenameSPACET_@`>NEWLINE
 end
 auto $identifier$ (`sep , args T_@SPACE@`)
 {
-`sep NEWLINE body INDENT@;`
+`block body @;`
 }
 source

@@ -3,4 +3,4 @@ loopbody = 1
 defines
 source
 while $boolexpr$: 
-    `sep NEWLINE loopbody`
+`block loopbody`

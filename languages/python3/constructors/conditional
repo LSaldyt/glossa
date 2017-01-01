@@ -4,5 +4,5 @@ else = 2
 defines
 source
 if ($condition$): 
-    `sep NEWLINE ifbody @`
-`sep SPACE else`
+`block ifbody`
+`sep EMPTY else`

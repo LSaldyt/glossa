@@ -12,7 +12,7 @@ MultiSymbol::MultiSymbol(string set_tag, vector<vector<shared_ptr<Symbol>>> set_
     annotation = "multisymbol";
 }
 
-string MultiSymbol::representation(Generator& generator, unordered_set<string>& names, string filetype)
+string MultiSymbol::representation(Generator& generator, unordered_set<string>& names, string filetype, int nesting)
 {
     string representation = "";
     auto files = generator(names, groups, tag);

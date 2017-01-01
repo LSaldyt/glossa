@@ -6,7 +6,7 @@ namespace syntax
     {
         Identifier(string set_value);
         virtual string name();
-        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype);
+        virtual string representation(Generator& generator, unordered_set<string>& generated, string filetype, int nesting=0);
         virtual string abstract(int indent=0);
     };
     const auto identifierGenerator = [](string s){ return make_shared<Identifier>(Identifier(s)); };

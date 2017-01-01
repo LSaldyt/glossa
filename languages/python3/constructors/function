@@ -4,4 +4,4 @@ body = 2
 defines
 source
 def $identifier$ (`sep , args`): 
-`sep NEWLINE body INDENT@`
+`block body @`

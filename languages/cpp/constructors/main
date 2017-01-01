@@ -4,5 +4,5 @@ header
 source
 int main(int argc, char ** argv)
 {
-`sep NEWLINE body INDENT@;`
+`block body @;`
 }

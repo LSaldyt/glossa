@@ -4,4 +4,4 @@ loopbody = 2
 defines
 source
 for $loopvar$ in $loopexpr$: 
-    `sep NEWLINE loopbody`
+`block loopbody`
