@@ -296,7 +296,19 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
                 assert(contains(get<0>(storage), terms[1]));
                 auto symbol    = get<0>(storage)[terms[1]];
                 auto formatter = terms[2];
-                representation += format(symbol->representation(*this, names, filetype), formatter) + " ";
+                representation += format(symbol->representation(*this, names, filetype), formatter);
+            }
+            else if (keyword == "block") // e.g. block body @;
+            {
+                assert(terms.size() == 2 or terms.size() == 3);
+                assert(contains(get<1>(storage), terms[1]));
+                auto symbols = get<1>(storage)[terms[1]];
+                string formatter = "@";
+                if (terms.size() > 2)
+                {
+                    formatter = terms[2];
+                }
+                representation += sepWith(*this, symbols, names, filetype, "NEWLINE", formatter);
             }
             else
             {
