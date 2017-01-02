@@ -72,6 +72,7 @@ namespace compiler
             LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
             LanguageLexer(digits,            "int",        "literal",    3),
             LanguageLexer(startswith("\""s), "string",     "literal",    1),
+            LanguageLexer(startswith("#"s),  "comment",    "comment",    3),
             LanguageLexer(identifiers,       "identifier", "identifier", 3)};
 
         const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
