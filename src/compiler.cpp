@@ -173,7 +173,7 @@ namespace compiler
         std::vector<Tokens> tokens;
         for (auto line : content)
         {
-            //print("Lexing: " + line);
+            print("Lexing: " + line);
             tokens.push_back(lexWith(line, grammar.language));
         }
         for (auto& token_group : tokens)
@@ -182,6 +182,7 @@ namespace compiler
             {
                 for (auto& value : token.values)
                 {
+                    print("Token Value: " + value);
                     if (contains(symbol_table, value))
                     {
                         value = symbol_table[value];
