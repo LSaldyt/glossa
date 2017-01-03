@@ -5,4 +5,4 @@ def f(x):
 
 if __name__ == "__main__":
     print "Hello World",
-    f(3)
+    f(3) # Prints 3..
