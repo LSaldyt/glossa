@@ -171,11 +171,29 @@ namespace compiler
     std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table)
     {
         std::vector<Tokens> tokens;
+        string unseperated_content;
         for (auto line : content)
         {
-            print("Lexing: " + line);
-            tokens.push_back(lexWith(line, grammar.language));
+            unseperated_content += line + "\n";
         }
+        bool in_multiline_string = false;
+        auto groups = lex::seperate(unseperated_content, {make_tuple("\"\"\"", true)}, {});
+        for (auto line : groups)
+        {
+            if (line == "\"\"\"")
+            {
+                in_multiline_string = !in_multiline_string;
+            }
+            else if (in_multiline_string)
+            {
+                tokens.push_back(Tokens(1, Token(vector<string>(1, line), "comment", "comment")));
+            }
+            else
+            {
+                tokens.push_back(lexWith(line, grammar.language));
+            }
+        }
+
         for (auto& token_group : tokens)
         {
             for (auto& token : token_group)

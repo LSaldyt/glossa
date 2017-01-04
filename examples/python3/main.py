@@ -1,5 +1,8 @@
 
 def sort(array):
+    """
+    Sorts an array of comparable values
+    """
     less    = []
     equal   = []
     greater = []
