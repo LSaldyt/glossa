@@ -71,9 +71,19 @@ namespace compiler
             LanguageLexer(just("    "s),     "tab",        "tab",        3),
             LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
             LanguageLexer(digits,            "int",        "literal",    3),
-            LanguageLexer(startswith("\""s), "string",     "literal",    1),
-            LanguageLexer(startswith("#"s),  "comment",    "comment",    3),
             LanguageLexer(identifiers,       "identifier", "identifier", 3)};
+
+        for (auto comment_delimiter : grammar.comment_delimiters)
+        {
+            if (get<1>(comment_delimiter) == "inline")
+            {
+                lexer_set.push_back(LanguageLexer(startswith(get<0>(comment_delimiter)), "comment", "comment", 3));
+            }
+        }
+        for (auto literal_delimiter : grammar.literal_delimiters)
+        {
+            lexer_set.push_back(LanguageLexer(startswith(get<0>(literal_delimiter)), get<1>(literal_delimiter), "literal", 1));
+        }
 
         const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
         Language test_language(term_sets, lexer_set, whitespace);

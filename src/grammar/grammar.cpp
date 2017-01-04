@@ -15,6 +15,7 @@ Grammar::Grammar(vector<string> filenames, string directory)
     {
         grammar_map[filename] = read(directory + filename);
     }
+    readDelimiters(directory);
 }
 
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
@@ -333,6 +334,32 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     }
 
     return symbols;
+}
+
+void Grammar::readDelimiters(string directory)
+{
+    auto literal_delimiter_file = readFile(directory + "literal_delimiters");
+    for (auto line : literal_delimiter_file)
+    {
+        auto terms = lex::seperate(line, {make_tuple(" ", false)}, {});
+        for (auto t : terms)
+        {
+            replaceAll(t, "HASH", "#");
+        }
+        assert(terms.size() == 2);
+        literal_delimiters.push_back(make_tuple(terms[0], terms[1]));
+    }
+    auto comment_delimiter_file = readFile(directory + "comment_delimiters");
+    for (auto line : comment_delimiter_file)
+    {
+        auto terms = lex::seperate(line, {make_tuple(" ", false)}, {});
+        for (auto t : terms)
+        {
+            replaceAll(t, "HASH", "#");
+        }
+        assert(terms.size() == 2);
+        comment_delimiters.push_back(make_tuple(terms[0], terms[1]));
+    }
 }
 
 }
