@@ -1,4 +1,5 @@
 statement = 0 0
+comment   = 1
 defines
 source
-$statement$ 
+$statement$ `sep EMPTY comment` 

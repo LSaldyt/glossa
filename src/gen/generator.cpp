@@ -213,13 +213,13 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
 
 LineConstructor Generator::generateLineConstructor(string line)
 {
-    auto terms = lex::seperate(line, {make_tuple("`", true)}, false);
+    auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting)
     {
         string representation;
         if (terms.size() == 1)
         {
-            auto to_format = lex::seperate(line, {make_tuple("$", true)}, false); // Symbols to be replaced are surrounded in "$"
+            auto to_format = lex::seperate(line, {make_tuple("$", true)}, {}); // Symbols to be replaced are surrounded in "$"
             bool formatting_symbol = false;
             for (auto t : to_format)
             {
@@ -309,7 +309,7 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
                     formatter = terms[2];
                 }
                 auto block = sepWith(*this, symbols, names, filetype, "\n", formatter, nesting + 1); // The only place where nesting increases
-                auto block_terms = lex::seperate(block, {make_tuple("\n", true)}, false);
+                auto block_terms = lex::seperate(block, {make_tuple("\n", true)}, {});
                 representation += repeatString("    ", nesting);
                 for (auto term : block_terms)
                 {
