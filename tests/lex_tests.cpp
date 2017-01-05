@@ -31,7 +31,7 @@ TEST_CASE("The lexer and language modules work")
     SECTION("lexing based on keywords, operators and whitespace")
     {
         auto test_sentence = "if 2 + 2 is 4 then 4 - 2 is 2";
-        auto tokens        = lexWith(test_sentence, test_language);
+        auto tokens        = lexWith(test_sentence, test_language, {'"'}, "#");
         REQUIRE(tokens[0].type     == "keyword");
         REQUIRE(tokens[0].values   == Terms{"if"});
         REQUIRE(tokens[1].sub_type == "int");

@@ -1,7 +1,7 @@
 from past.utils import old_div
-from sys import * 
+from sys import *  
 def f (x): 
-    print((x))  
+    print((x))    
 if __name__ == "__main__":
-    print("Hello World", end='') 
-    f(3)  
+    print("Hello World", end='')  
+    f(3) # Prints 3..   

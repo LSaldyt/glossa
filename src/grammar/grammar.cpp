@@ -15,6 +15,7 @@ Grammar::Grammar(vector<string> filenames, string directory)
     {
         grammar_map[filename] = read(directory + filename);
     }
+    readDelimiters(directory);
 }
 
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
@@ -334,5 +335,22 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
 
     return symbols;
 }
+
+void Grammar::readDelimiters(string directory)
+{
+    auto string_delimiters_file  = readFile(directory + "string_delimiters");
+    auto comment_delimiters_file = readFile(directory + "comment_delimiters");
+
+    for (auto string_delimiter : string_delimiters_file)
+    {
+        assert(string_delimiter.size() == 1);
+        string_delimiters.push_back(string_delimiter[0]);
+    }
+
+    assert(comment_delimiters_file.size() == 2);
+    comment_delimiter           = comment_delimiters_file[0];
+    multiline_comment_delimiter = comment_delimiters_file[1];
+}
+
 
 }

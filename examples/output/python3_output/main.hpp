@@ -2,6 +2,10 @@
 template <typename T_array>
 auto sort (T_array array)
 {
+    /*
+        Sorts an array of comparable values
+    
+        */;
     auto less = std::vector<Object>({});
     auto equal = std::vector<Object>({});
     auto greater = std::vector<Object>({});

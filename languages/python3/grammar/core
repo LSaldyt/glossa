@@ -28,3 +28,4 @@ parenexpr
 string
 print
 exception
+comment

@@ -13,6 +13,7 @@ namespace syntax
     using Keyword    = StringLiteral;
     using Tab        = StringLiteral;
     using Newline    = StringLiteral;
+    using Comment    = StringLiteral;
 
     const auto stringGenerator = [](string s){
         return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
@@ -21,6 +22,7 @@ namespace syntax
     const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
     const auto puncGenerator    = [](string s){ return make_shared<Punctuator>(Punctuator(s));};
     const auto tabGenerator     = [](string s){ return make_shared<Tab>(Tab(s));};
+    const auto commentGenerator = [](string s){ return make_shared<Comment>(Comment(string(s.begin() + 1, s.end()))); };
 
     const auto literalGenerator = [](string s)
     {
@@ -46,6 +48,7 @@ namespace syntax
      {"keyword",    single(keywordGenerator)},
      {"punctuator", single(puncGenerator)},
      {"logicaloperator", single(logicalOpGenerator)},
-     {"tab",             single(tabGenerator)}
+     {"tab",             single(tabGenerator)},
+     {"comment", single(commentGenerator)}
     };
 }

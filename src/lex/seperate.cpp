@@ -36,7 +36,7 @@ namespace lex
         return found;
     }
 
-    Terms seperate(const string& sentence, const Seperators &seperators, bool strings)
+    Terms seperate(const string& sentence, const Seperators &seperators, vector<char> strings, string inline_comment)
     {
         auto terms   = Terms();
         auto current = sentence.begin();
@@ -49,17 +49,34 @@ namespace lex
         // push the seperator into terms if it should be kept (bool second tuple field)
         // repeat until no sentence is left, push remaining sentence into terms
         // (Seperate a sentence into terms in <O(n^2)? time)
+        
+        // Special case for inline comments 
+        if (not inline_comment.empty())
+        {
+            size_t found = sentence.find(inline_comment);
+            if (found != string::npos)
+            {
+                auto comment_start = sentence.begin() + found;
+                auto comment = string(comment_start, sentence.end());
+                auto begin   = string(sentence.begin(), comment_start);
+                terms = seperate(begin, seperators, strings, inline_comment);
+                terms.push_back(comment);
+                return terms; // Exit early, since the work has been done in the above recursive call 
+            }
+        }
+
+        // Iterate over sentence, looking for seperators
         for(auto it = sentence.begin(); it < sentence.end(); ++it)
         {
-            if (strings)
+            for (auto string_char : strings)
             {
                 // Special case for strings (save some work)
-                if (*it == '"')
+                if (*it == string_char)
                 {
                     // remove the string between two quotemarks and push into terms
                     string remaining(it + 1, sentence.end());
-                    size_t found = remaining.find("\"");
-                    if (found!=string::npos) // IF there actually is a second quotation mark
+                    size_t found = remaining.find(string(1, string_char));
+                    if (found != string::npos) // IF there actually is a second quotation mark
                     {
                         found += 2; //Account for " characters surrounding the string
                         string content(it, it + found);
