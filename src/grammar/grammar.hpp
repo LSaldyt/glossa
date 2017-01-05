@@ -37,10 +37,10 @@ public:
     vector<string> keywords;
     Language language;
 
-    vector<char> string_delimiters = {'\"', '\''};
+    vector<char> string_delimiters;
 
-    string multiline_comment_delimiter = "\"\"\"";
-    string comment_delimiter            = "#";
+    string multiline_comment_delimiter;
+    string comment_delimiter;
 
 private:
     GrammarMap grammar_map; 
@@ -57,6 +57,7 @@ private:
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
     SymbolicTokenParser  retrieveGrammar(string filename); 
 
+    void readDelimiters(string directory);
 };
 
 }

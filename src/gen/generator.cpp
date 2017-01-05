@@ -265,7 +265,6 @@ LineConstructor Generator::generateLineConstructor(string line)
         replaceAll(representation, "SPACE",   " ");
         replaceAll(representation, "NEWLINE", "\n");
         replaceAll(representation, "INDENT",  repeatString("    ", nesting));
-        replaceAll(representation, "HASH",   "#");
         return representation;
     };
 }
