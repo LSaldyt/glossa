@@ -54,15 +54,16 @@ namespace compiler
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
-        auto grammar_files = readFile("languages/" + language + "/grammar/core");
-        auto grammar       = Grammar(grammar_files, "languages/" + language + "/grammar/");
+        string directory = "languages/" + language + "/grammar/";
+        auto grammar_files = readFile(directory + "core");
+        auto grammar       = Grammar(grammar_files, directory);
 
-        auto operators        = readFile("languages/" + language + "/grammar/operators");
-        auto logicaloperators = readFile("languages/" + language + "/grammar/logicaloperators"); 
-        auto punctuators      = readFile("languages/" + language + "/grammar/punctuators");
+        auto operators        = readFile(directory + "operators");
+        auto logicaloperators = readFile(directory + "logicaloperators"); 
+        auto punctuators      = readFile(directory + "punctuators");
 
         LanguageTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));
+        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
         term_sets.push_back(make_tuple(operators,        "operator"));
         term_sets.push_back(make_tuple(punctuators,      "punctuator"));
@@ -71,11 +72,15 @@ namespace compiler
             LanguageLexer(just("    "s),     "tab",        "tab",        3),
             LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
             LanguageLexer(digits,            "int",        "literal",    3),
-            LanguageLexer(startswith("\""s), "string",     "literal",    1),
-            LanguageLexer(startswith("#"s),  "comment",    "comment",    3),
             LanguageLexer(identifiers,       "identifier", "identifier", 3)};
 
-        const Seperators whitespace = readWhitespaceFile("languages/" + language + "/grammar/whitespace");
+        lexer_set.push_back(LanguageLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
+        for (auto delimiter : grammar.string_delimiters)
+        {
+            lexer_set.push_back(LanguageLexer(startswith(string(1, delimiter)), "string", "literal", 1));
+        }
+
+        const Seperators whitespace = readWhitespaceFile(directory + "whitespace");
         Language test_language(term_sets, lexer_set, whitespace);
         grammar.language = test_language;
         print("Done");
@@ -126,7 +131,6 @@ namespace compiler
                 for (auto symbol : group)
                 {
                     print(symbol->abstract());
-                    print("...");
                 }
             }
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
@@ -177,20 +181,24 @@ namespace compiler
             unseperated_content += line + "\n";
         }
         bool in_multiline_string = false;
-        auto groups = lex::seperate(unseperated_content, {make_tuple("\"\"\"", true)}, {});
-        for (auto line : groups)
+        auto groups = lex::seperate(unseperated_content, {make_tuple(grammar.multiline_comment_delimiter, true)}, {}, "");
+        for (auto group : groups)
         {
-            if (line == "\"\"\"")
+            if (group == grammar.multiline_comment_delimiter)
             {
                 in_multiline_string = !in_multiline_string;
             }
             else if (in_multiline_string)
             {
-                tokens.push_back(Tokens(1, Token(vector<string>(1, line), "comment", "comment")));
+                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment")));
             }
             else
             {
-                tokens.push_back(lexWith(line, grammar.language));
+                auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
+                for (auto line : lines)
+                {
+                    tokens.push_back(lexWith(line, grammar.language, grammar.string_delimiters, grammar.comment_delimiter));
+                }
             }
         }
 

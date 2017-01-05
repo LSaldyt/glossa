@@ -51,15 +51,18 @@ namespace lex
         // (Seperate a sentence into terms in <O(n^2)? time)
         
         // Special case for inline comments 
-        size_t found = sentence.find(inline_comment);
-        if (found != string::npos)
+        if (not inline_comment.empty())
         {
-            auto comment_start = sentence.begin() + found;
-            auto comment = string(comment_start, sentence.end());
-            auto begin   = string(sentence.begin(), comment_start);
-            terms = seperate(begin, seperators, strings, inline_comment);
-            terms.push_back(comment);
-            return terms; // Exit early, since the work has been done in the above recursive call 
+            size_t found = sentence.find(inline_comment);
+            if (found != string::npos)
+            {
+                auto comment_start = sentence.begin() + found;
+                auto comment = string(comment_start, sentence.end());
+                auto begin   = string(sentence.begin(), comment_start);
+                terms = seperate(begin, seperators, strings, inline_comment);
+                terms.push_back(comment);
+                return terms; // Exit early, since the work has been done in the above recursive call 
+            }
         }
 
         // Iterate over sentence, looking for seperators
@@ -72,7 +75,7 @@ namespace lex
                 {
                     // remove the string between two quotemarks and push into terms
                     string remaining(it + 1, sentence.end());
-                    size_t found = remaining.find("\"");
+                    size_t found = remaining.find(string(1, string_char));
                     if (found != string::npos) // IF there actually is a second quotation mark
                     {
                         found += 2; //Account for " characters surrounding the string

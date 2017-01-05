@@ -3,12 +3,12 @@
 namespace lex
 {
     // Convert a sentence to a vector of tokens based off of a defined language
-    Tokens lexWith(const string& sentence, const Language& language)
+    Tokens lexWith(const string& sentence, const Language& language, vector<char> string_delimiters, string comment_delimiter)
     {
         //const string& cleanline = removeComments(sentence);
         //print("Seperating sentence");
         // Seperate sentence..
-        auto terms  = seperate(sentence, language.seperators);
+        auto terms  = seperate(sentence, language.seperators, string_delimiters, comment_delimiter);
 
         //print("Seperated terms:");
         for (auto t : terms)
@@ -28,22 +28,5 @@ namespace lex
         }
 
         return tokens;
-    }
-
-    string removeComments(const string& sentence)
-    {
-        string cleanline;
-        for (auto c : sentence)
-        {
-            if (c == '#')
-            {
-                break;
-            }
-            else
-            {
-                cleanline.append(1, c);
-            }
-        }
-        return cleanline;
     }
 }

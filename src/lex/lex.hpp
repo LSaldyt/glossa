@@ -5,7 +5,5 @@
 
 namespace lex
 {
-    Tokens lexWith(const string& sentence, const Language& language);
-
-    string removeComments(const string& line);
+    Tokens lexWith(const string& sentence, const Language& language, vector<char> string_delimiters, string comment_delimiter);
 }
