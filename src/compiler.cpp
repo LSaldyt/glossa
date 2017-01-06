@@ -80,7 +80,7 @@ namespace compiler
             lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
         }
 
-        const Seperators whitespace = readWhitespaceFile(directory + "whitespace");
+        const vector<Seperator> whitespace = readWhitespaceFile(directory + "whitespace");
         LexMap test_language(term_sets, lexer_set, whitespace);
         grammar.lexmap = test_language;
         print("Done");

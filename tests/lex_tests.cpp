@@ -18,7 +18,7 @@ TEST_CASE("The lexer and language modules work")
     lexer_set.push_back(LexMapLexer(digits, "int", "type", 1));
     lexer_set.push_back(LexMapLexer(alphas, "identifier", "identifier", 5));
 
-    const Seperators whitespace =
+    const vector<Seperator> whitespace =
     {
         // make_tuple("    ", true),
         // make_tuple("\t", true),

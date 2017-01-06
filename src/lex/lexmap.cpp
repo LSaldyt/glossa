@@ -10,7 +10,7 @@ namespace lex
         precedence = set_precedence;
     }
 
-    LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, Seperators whitespace)
+    LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, vector<Seperator> whitespace)
         : language_term_sets(set_term_sets)
     {
         // Always seperate by whitespace

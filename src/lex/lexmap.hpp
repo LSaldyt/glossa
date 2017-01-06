@@ -7,7 +7,9 @@ namespace lex
     using LexMapTermSet  = tuple<vector<string>, string>;
     using LexMapTermSets = vector<LexMapTermSet>;
 
-    // A single definition for lexing a language element (ie int, operator)
+    /** 
+     * A single definition for lexing a language element (ie int, operator)
+     */
     struct LexMapLexer
     {
         Matcher<string> match;
@@ -20,10 +22,12 @@ namespace lex
                       int set_precedence);
     };
 
-    // A collection of lexers/term sets that can Identify terms
+    /**
+     * A collection of lexers/term sets that can Identify terms
+     */
     struct LexMap
     {
-        Seperators    seperators;
+        vector<Seperator>    seperators;
         bool          newline;
 
         LexMapTermSets language_term_sets;
@@ -31,7 +35,7 @@ namespace lex
 
         LexMap(const LexMapTermSets& set_term_sets,
                  const vector<LexMapLexer>&   set_language_lexers,
-                 Seperators whitespace);
+                 vector<Seperator> whitespace);
         LexMap();
 
         tuple<Token, vector<string>> identify(vector<string> terms) const;

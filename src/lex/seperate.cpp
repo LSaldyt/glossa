@@ -2,9 +2,11 @@
 
 namespace lex
 {
-    // Given a remaining string, find the first seperator present in the beginning section
-    // Return (success, keep_seperator, len_seperator)
-    tuple<bool, bool, int> find_seperator(string s, const Seperators &seperators)
+    /** 
+     * Given a remaining string, find the first seperator present in the beginning section
+     * Return (success, keep_seperator, len_seperator)
+     */
+    tuple<bool, bool, int> find_seperator(string s, const vector<Seperator> &seperators)
     {
         // Default value (failure)
         auto found = make_tuple(false, false, 0);
@@ -36,20 +38,26 @@ namespace lex
         return found;
     }
 
-    vector<string> seperate(const string& sentence, const Seperators &seperators, vector<char> strings, string inline_comment)
+    /**
+     * Seperates a line of source code into tokens for later lexing
+     * @param sentence line to be seperated
+     * @param seperators seperators to seperate the line with
+     * @param strings string delimiter characters for specialized string seperation
+     * @param inline_comment string delimiting inline comments, which also undergo special rules
+     * A more complicated algorithm:
+     * retains two iterators along the sentence (current, it)
+     * advance the it iterator until a seperator is found,
+     * then push from current to it into terms
+     * set current to it
+     * push the seperator into terms if it should be kept (bool second tuple field)
+     * repeat until no sentence is left, push remaining sentence into terms
+     * (Seperate a sentence into terms in <O(n^2)? time)
+     */
+    vector<string> seperate(const string& sentence, const vector<Seperator> &seperators, vector<char> strings, string inline_comment)
     {
         auto terms   = vector<string>();
         auto current = sentence.begin();
 
-        // A more complicated algorithm:
-        // retains two iterators along the sentence (current, it)
-        // advance the it iterator until a seperator is found,
-        // then push from current to it into terms
-        // set current to it
-        // push the seperator into terms if it should be kept (bool second tuple field)
-        // repeat until no sentence is left, push remaining sentence into terms
-        // (Seperate a sentence into terms in <O(n^2)? time)
-        
         // Special case for inline comments 
         if (not inline_comment.empty())
         {
@@ -119,9 +127,12 @@ namespace lex
         return terms;
     }
 
-    Seperators readWhitespaceFile(string filename)
+    /**
+     * Read in whitespace seperators from a file
+     */
+    vector<Seperator> readWhitespaceFile(string filename)
     {
-        Seperators whitespace;
+        vector<Seperator> whitespace;
         auto content = readFile(filename);
         for (auto line : content)
         {
