@@ -75,7 +75,6 @@ def compare(directory, inputlang, outputlang, iterations=1):
     transpile_speedup = input_time / output_time
     print(transpile_speedup)
 
-    '''
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
         cython_time = time_run(cythonversion, directory, iterations)
@@ -87,9 +86,6 @@ def compare(directory, inputlang, outputlang, iterations=1):
         
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
-    '''
-
-        
 
     
 
