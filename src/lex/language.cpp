@@ -2,7 +2,7 @@
 
 namespace lex
 {
-    LanguageLexer::LanguageLexer(function<Result<string>(vector<string>)> set_match_function, string set_name, string set_type, int set_precedence)
+    LanguageLexer::LanguageLexer(function<Result<vector<string>>(vector<vector<string>>)> set_match_function, vector<string> set_name, vector<string> set_type, int set_precedence)
     {
         match      = set_match_function;
         name       = set_name;
@@ -17,10 +17,10 @@ namespace lex
         concat(seperators, whitespace);
         newline = get<1>(whitespace[3]);
 
-        // Custom language lexers (like int, string, etc..)
+        // Custom language lexers (like int, vector<string>, etc..)
         concat(language_lexers, set_language_lexers);
 
-        vector<tuple<string, string>> term_lexers;
+        vector<tuple<vector<string>, vector<string>>> term_lexers;
 
         // Add term sets (like operators) to a language's seperators
         for (auto term_set : language_term_sets)
@@ -54,12 +54,12 @@ namespace lex
         print("Language lexers (sorted by precedence): ");
         for (auto lexer : language_lexers)
         {
-            print(lexer.name + " " + lexer.type + " (" + std::to_string(lexer.precedence) + ")");
+            print(lexer.name + " " + lexer.type + " (" + std::to_vector<string>(lexer.precedence) + ")");
         }
     }
     Language::Language(){}
 
-    tuple<Token, Terms> Language::identify(Terms terms) const
+    tuple<Token, vector<string>> Language::identify(vector<string> terms) const
     {
         // Return result of first lexer to match against remaining terms
         for (auto lexer : language_lexers)
@@ -67,7 +67,7 @@ namespace lex
             auto result = lexer.match(terms);
             if(result.result)
             {
-                //print("Term identified as " + lexer.name);
+                //print("vector<string> identified as " + lexer.name);
                 return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
             }
         }
@@ -78,6 +78,6 @@ namespace lex
         {
             print("\"" + t + "\"");
         }
-        return make_tuple(Token({}, "unidentified", "failure"), Terms());
+        return make_tuple(Token({}, "unidentified", "failure"), vector<string>());
     }
 }

@@ -2,12 +2,25 @@
 #include "import.hpp"
 #include "matchresult.hpp"
 
+/**
+ * Series of template functions for producing Matcher functions from lower-level functions
+ *
+ */
+
 namespace match 
 {
+    // Return a match result object from a parse attempt of a vector of any type T
+    using Matcher  = function<Result<T>(vector<T>>;
+    // Return a consumption result object from a parse attempt of a vector of any type T
+    using Consumer = function<Consumed<T>(vector<T>)>;
+    /**
+     * Meta-function for producing a matcher from a consumer
+     * Tracks consumed terms, remaining terms, and match result
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     matchTemplate 
-    (function<Consumed<T>(vector<T>)> consumer)
+    (Consumer consumer)
     {
         return [consumer](vector<T> terms)
             {
@@ -17,6 +30,7 @@ namespace match
                 if (consumer_result.result)
                 {
                     vector<T> consumed = consumer_result.consumed;
+                    // Build set of remaining terms, which wasn't available in the consumption result
                     vector<T> remaining (terms.begin() + consumed.size(), terms.end());
                     result = Result<T>(true, consumed, remaining);
                 }
@@ -24,18 +38,21 @@ namespace match
             };
     }
 
-    //using Comparator = function<bool(const string&)>;
+    /**
+     * Creates a Matcher object that compares a single type T against a predicate
+     * If the predicate passes, the first type T in the vector will be matched against and consumed
+     */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     singleTemplate 
     (function<bool(T)> comparator)
     {
-        function<Consumed<T>(vector<T>)> consumer = [comparator](vector<T> terms)
+        Consumer consumer = [comparator](vector<T> terms)
         {
             Consumed<T> consumed(false, vector<T>()); //An empty list of terms, as nothing was yet consumed
             if (terms.size() > 0)
             {
-                auto result = comparator(terms[0]);
+                auto result = comparator(terms[0]); // Test predicate
                 if (result)
                 {
                     consumed = Consumed<T>(result, vector<T>(terms.begin(), terms.begin() + 1));
@@ -43,15 +60,19 @@ namespace match
             }
             return consumed;
         };
-        return matchTemplate<T>(consumer);
+        return matchTemplate<T>(consumer); // Convert Consumer to Matcher
     }
 
+    /**
+     * Builds a Matcher that repeatedly runs a consumer against a vector of terms until the consumer fails 
+     *   or there are no more terms to match against.
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     multiTemplate
-    (function<Consumed<T>(vector<T>)> consumer)
+    (Consumer consumer)
     {
-        return matchTemplate<T>([consumer](vector<T> terms)
+        return matchTemplate<T>([consumer](vector<T> terms) // Convert a Consumer to a Matcher
         {
             string annotation = "none";
             auto consumed = vector<T>(); 

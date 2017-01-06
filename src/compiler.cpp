@@ -62,7 +62,7 @@ namespace compiler
         auto logicaloperators = readFile(directory + "logicaloperators"); 
         auto punctuators      = readFile(directory + "punctuators");
 
-        LanguageTermSets term_sets;
+        LanguagestringSets term_sets;
         term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
         term_sets.push_back(make_tuple(operators,        "operator"));

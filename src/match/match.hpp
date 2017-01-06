@@ -3,12 +3,27 @@
 #include "base/templates.hpp"
 #include "../types/result.hpp"
 
+/**
+ * Collection of common high-level functions used in parsing
+ * Many of these mimic the parser-combinators in Haskell's Parsec library
+ * These parsers are usually constructed ISOMORPHICALLY from grammar files provided by the user
+ * For example parsing of function arguments might look like:
+ *   optional link expression
+ *   many inOrder !punctuator , link expression
+ * Where "optional", "many" and "inOrder" are isomorphic to the high-level functions defined in this file
+ * */
+
 namespace match 
 {
+    /**
+     * Run a list of Matchers sequentially, passing only if all of them pass.
+     * Combines the result of all Matchers
+     * Implicitly used in grammar files to run each line in order 
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)> 
+    Matcher 
     inOrder 
-    (vector<function<Result<T>(vector<T>)>> matchers)
+    (vector<Matcher> matchers)
     {
         return [matchers](const vector<T>& original_terms)
         {
@@ -33,8 +48,12 @@ namespace match
     }
 
     
+    /**
+     * Shorthand for matching by equality
+     * just("x")({"x", "y"}) = Result(true, {"x"}, {"y"})
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     just
     (T value)
     {
@@ -42,9 +61,13 @@ namespace match
         return singleTemplate<T>(comparator);
     };
 
+    /**
+     * Specialized matcher for string matching
+     * Used in lexing to identify strings and comments
+     */
     const auto startswith = [](string value)
     {
-        auto comparator = [value](Term term){ 
+        auto comparator = [value](string term){ 
             if (term.size() >= value.size())
             {
                 return string(term.begin(), term.begin() + value.size()) == value; 
@@ -54,13 +77,17 @@ namespace match
                 return false;
             }
         };
-        return singleTemplate<Term>(comparator);
+        return singleTemplate<string>(comparator);
     };
 
+    /**
+     * Optionally match a matcher. Never fails.
+     * Example usage: beginning of function arguments (Multiple arguments aren't necessarily required)
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     optional
-    (function<Result<T>(vector<T>)> matcher)
+    (Matcher matcher)
     {
         return [matcher](vector<T> terms)
         {
@@ -73,10 +100,14 @@ namespace match
         };
     }
 
+    /**
+     * Pass only if a matcher fails
+     * Equivalent to logical not operator
+     * */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     inverse
-    (function<Result<T>(vector<T>)> matcher)
+    (Matcher matcher)
     {
         return [matcher](vector<T> terms)
         {
@@ -87,11 +118,16 @@ namespace match
     }
 
 
-    // Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
+    /** 
+     * Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
+     * Useful for when multiple types are valid, i.e.:
+     *   # value.grm
+     *   anyOf link functioncall literal wildcard
+     */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     anyOf 
-    (vector<function<Result<T>(vector<T>)>> matchers)
+    (vector<Matcher> matchers)
     {
         return [matchers](vector<T> terms)
         {
@@ -110,11 +146,14 @@ namespace match
     };
 
 
-    //Parse all matchers from a list of matchers, passing only if all of them pass
+    /**
+     * Parse all matchers from a list of matchers, passing only if all of them pass
+     * Consumes terms that the last matcher in the provided matchers would consume
+     */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     allOf
-    (vector<function<Result<T>(vector<T>)>> matchers)
+    (vector<Matcher> matchers)
     {
         return [matchers](vector<T> terms)
         {
@@ -136,20 +175,23 @@ namespace match
         };
     };
 
-    // Parse any term
+    /// Parse any term
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     wildcard
     ()
     {
         return singleTemplate<T>([](T t){return true;});
     }
 
-    // Takes a matcher and parses it repeatedly, never fails
+    /**
+     * Takes a matcher and parses it repeatedly, never fails
+     * The nonempty option requires that the matcher be successful at least once
+     */
     template <typename T>
-    function<Result<T>(vector<T>)>
+    Matcher
     many
-    (function<Result<T>(vector<T>)> matcher, bool nonempty=false)
+    (Matcher matcher, bool nonempty=false)
     {
         return [matcher, nonempty](vector<T> terms)
         {
@@ -182,11 +224,16 @@ namespace match
         };
     };
 
-    //All of these are pretty self explanatory, they check a Term to see if it is a particular group of characters
+    /// Parse a single string against digits
     const auto digits = singleTemplate<string>(is_digits);
+    /// Parse a single string against the alphabet 
     const auto alphas = singleTemplate<string>(is_alphas);
+    /// Parse a single string against punctuator 
     const auto puncts = singleTemplate<string>(is_puncts);
+    /// Parse a single string against uppercase letters 
     const auto uppers = singleTemplate<string>(is_uppers);
+    /// Parse a single string against lowercase letters 
     const auto lowers = singleTemplate<string>(is_lowers);
+    /// Parse a single string against valid identifier characters 
     const auto identifiers = singleTemplate<string>(is_identifiers);
 }

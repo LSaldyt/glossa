@@ -4,19 +4,19 @@
 
 namespace lex
 {
-    using LanguageTermSet  = tuple<Terms, string>;
+    using LanguageTermSet  = tuple<vector<string>, vector<string>>;
     using LanguageTermSets = vector<LanguageTermSet>;
 
     // A single definition for lexing a language element (ie int, operator)
     struct LanguageLexer
     {
-        function<Result<string>(vector<string>)> match;
-        string name;
-        string type;
+        function<Result<vector<string>>(vector<vector<string>>)> match;
+        vector<string> name;
+        vector<string> type;
         int precedence;
-        LanguageLexer(function<Result<string>(vector<string>)> set_match_function, 
-                      string set_name, 
-                      string set_type, 
+        LanguageLexer(function<Result<vector<string>>(vector<vector<string>>)> set_match_function, 
+                      vector<string> set_name, 
+                      vector<string> set_type, 
                       int set_precedence);
     };
 
@@ -36,6 +36,6 @@ namespace lex
                  Seperators whitespace);
         Language();
 
-        tuple<Token, Terms> identify(Terms terms) const;
+        tuple<Token, vector<string>> identify(vector<string> terms) const;
     };
 }
