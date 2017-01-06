@@ -16,14 +16,14 @@
 namespace match 
 {
     /**
-     * Run a list of Matchers sequentially, passing only if all of them pass.
-     * Combines the result of all Matchers
+     * Run a list of Matcher<T>s sequentially, passing only if all of them pass.
+     * Combines the result of all Matcher<T>s
      * Implicitly used in grammar files to run each line in order 
      * */
     template <typename T>
-    Matcher 
+    Matcher<T> 
     inOrder 
-    (vector<Matcher> matchers)
+    (vector<Matcher<T>> matchers)
     {
         return [matchers](const vector<T>& original_terms)
         {
@@ -53,7 +53,7 @@ namespace match
      * just("x")({"x", "y"}) = Result(true, {"x"}, {"y"})
      * */
     template <typename T>
-    Matcher
+    Matcher<T>
     just
     (T value)
     {
@@ -85,9 +85,9 @@ namespace match
      * Example usage: beginning of function arguments (Multiple arguments aren't necessarily required)
      * */
     template <typename T>
-    Matcher
+    Matcher<T>
     optional
-    (Matcher matcher)
+    (Matcher<T> matcher)
     {
         return [matcher](vector<T> terms)
         {
@@ -105,9 +105,9 @@ namespace match
      * Equivalent to logical not operator
      * */
     template <typename T>
-    Matcher
+    Matcher<T>
     inverse
-    (Matcher matcher)
+    (Matcher<T> matcher)
     {
         return [matcher](vector<T> terms)
         {
@@ -125,9 +125,9 @@ namespace match
      *   anyOf link functioncall literal wildcard
      */
     template <typename T>
-    Matcher
+    Matcher<T>
     anyOf 
-    (vector<Matcher> matchers)
+    (vector<Matcher<T>> matchers)
     {
         return [matchers](vector<T> terms)
         {
@@ -151,9 +151,9 @@ namespace match
      * Consumes terms that the last matcher in the provided matchers would consume
      */
     template <typename T>
-    Matcher
+    Matcher<T>
     allOf
-    (vector<Matcher> matchers)
+    (vector<Matcher<T>> matchers)
     {
         return [matchers](vector<T> terms)
         {
@@ -177,7 +177,7 @@ namespace match
 
     /// Parse any term
     template <typename T>
-    Matcher
+    Matcher<T>
     wildcard
     ()
     {
@@ -189,9 +189,9 @@ namespace match
      * The nonempty option requires that the matcher be successful at least once
      */
     template <typename T>
-    Matcher
+    Matcher<T>
     many
-    (Matcher matcher, bool nonempty=false)
+    (Matcher<T> matcher, bool nonempty=false)
     {
         return [matcher, nonempty](vector<T> terms)
         {

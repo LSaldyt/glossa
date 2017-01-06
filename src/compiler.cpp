@@ -62,26 +62,26 @@ namespace compiler
         auto logicaloperators = readFile(directory + "logicaloperators"); 
         auto punctuators      = readFile(directory + "punctuators");
 
-        LanguagestringSets term_sets;
+        LexMapstringSets term_sets;
         term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
         term_sets.push_back(make_tuple(operators,        "operator"));
         term_sets.push_back(make_tuple(punctuators,      "punctuator"));
 
-        LanguageLexers lexer_set = {
-            LanguageLexer(just("    "s),     "tab",        "tab",        3),
-            LanguageLexer(startswith("\t"s), "tab",        "tab",        3),
-            LanguageLexer(digits,            "int",        "literal",    3),
-            LanguageLexer(identifiers,       "identifier", "identifier", 3)};
+        LexMapLexers lexer_set = {
+            LexMapLexer(just("    "s),     "tab",        "tab",        3),
+            LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
+            LexMapLexer(digits,            "int",        "literal",    3),
+            LexMapLexer(identifiers,       "identifier", "identifier", 3)};
 
-        lexer_set.push_back(LanguageLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
+        lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
         for (auto delimiter : grammar.string_delimiters)
         {
-            lexer_set.push_back(LanguageLexer(startswith(string(1, delimiter)), "string", "literal", 1));
+            lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
         }
 
         const Seperators whitespace = readWhitespaceFile(directory + "whitespace");
-        Language test_language(term_sets, lexer_set, whitespace);
+        LexMap test_language(term_sets, lexer_set, whitespace);
         grammar.language = test_language;
         print("Done");
         return grammar;
@@ -105,7 +105,7 @@ namespace compiler
         print("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
         print("Joining symbolic tokens");
-        auto joined_tokens   = join         (symbolic_tokens, grammar.language.newline);
+        auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
 
         for(auto& jt : joined_tokens)
         {

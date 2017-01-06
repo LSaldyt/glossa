@@ -3,7 +3,7 @@
 #include "syntax/syntax.hpp"
 #include "lex/lex.hpp"
 #include "lex/seperate.hpp"
-#include "lex/language.hpp"
+#include "lex/lexmap.hpp"
 #include "types/symbolize.hpp"
 #include "grammar/grammar.hpp"
 #include "gen/gen.hpp"

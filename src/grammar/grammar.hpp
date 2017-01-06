@@ -1,6 +1,6 @@
 #pragma once
 #include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
+#include "../lex/lexmap.hpp"
 #include "../syntax/syntax.hpp"
 #include "../parse/tokenparsers.hpp"
 #include "../tools/tools.hpp"
@@ -35,7 +35,7 @@ public:
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(SymbolicTokens& tokens);
 
     vector<string> keywords;
-    Language language;
+    LexMap language;
 
     vector<char> string_delimiters;
 

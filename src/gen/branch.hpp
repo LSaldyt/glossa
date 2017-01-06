@@ -8,7 +8,7 @@ class Symbol;
 
 #include "../tools/tools.hpp"
 #include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
+#include "../lex/lexmap.hpp"
 #include "../parse/tokenparsers.hpp"
 
 
