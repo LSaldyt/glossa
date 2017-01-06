@@ -2,22 +2,22 @@
 
 namespace lex
 {
-    // Given a remaining vector<string>, find the first seperator present in the beginning section
+    // Given a remaining string, find the first seperator present in the beginning section
     // Return (success, keep_seperator, len_seperator)
-    tuple<bool, bool, int> find_seperator(vector<string> s, const Seperators &seperators)
+    tuple<bool, bool, int> find_seperator(string s, const Seperators &seperators)
     {
         // Default value (failure)
         auto found = make_tuple(false, false, 0);
         for (auto seperator : seperators)
         {
-            auto seperator_vector<string> = get<0>(seperator);
+            auto seperator_string = get<0>(seperator);
             // Match two vector<string>s, character by character
-            if (seperator_vector<string>.size() <= s.size())
+            if (seperator_string.size() <= s.size())
             {
                 bool exited_early = false;
-                for (unsigned i = 0; i < seperator_vector<string>.size(); i++)
+                for (unsigned i = 0; i < seperator_string.size(); i++)
                 {
-                    if (seperator_vector<string>[i] != s[i])
+                    if (seperator_string[i] != s[i])
                     {
                         // Either try the next seperator or (if none are left) exit failure
                         exited_early = true;
@@ -28,7 +28,7 @@ namespace lex
                 // If we matched an entire seperator, return success
                 if (!exited_early)
                 {
-                    found = make_tuple(true, get<1>(seperator), seperator_vector<string>.size());
+                    found = make_tuple(true, get<1>(seperator), seperator_string.size());
                     break;
                 }
             }
@@ -36,7 +36,7 @@ namespace lex
         return found;
     }
 
-    vector<string> seperate(const vector<string>& sentence, const Seperators &seperators, vector<char> vector<string>, vector<string> inline_comment)
+    vector<string> seperate(const string& sentence, const Seperators &seperators, vector<char> strings, string inline_comment)
     {
         auto terms   = vector<string>();
         auto current = sentence.begin();
@@ -54,12 +54,12 @@ namespace lex
         if (not inline_comment.empty())
         {
             size_t found = sentence.find(inline_comment);
-            if (found != vector<string>::npos)
+            if (found != string::npos)
             {
                 auto comment_start = sentence.begin() + found;
-                auto comment = vector<string>(comment_start, sentence.end());
-                auto begin   = vector<string>(sentence.begin(), comment_start);
-                terms = seperate(begin, seperators, vector<string>, inline_comment);
+                auto comment = string(comment_start, sentence.end());
+                auto begin   = string(sentence.begin(), comment_start);
+                terms = seperate(begin, seperators, strings, inline_comment);
                 terms.push_back(comment);
                 return terms; // Exit early, since the work has been done in the above recursive call 
             }
@@ -68,18 +68,18 @@ namespace lex
         // Iterate over sentence, looking for seperators
         for(auto it = sentence.begin(); it < sentence.end(); ++it)
         {
-            for (auto vector<string>_char : vector<string>)
+            for (auto string_char : strings)
             {
                 // Special case for vector<string>s (save some work)
-                if (*it == vector<string>_char)
+                if (*it == string_char)
                 {
                     // remove the vector<string> between two quotemarks and push into terms
-                    vector<string> remaining(it + 1, sentence.end());
-                    size_t found = remaining.find(vector<string>(1, vector<string>_char));
-                    if (found != vector<string>::npos) // IF there actually is a second quotation mark
+                    string remaining(it + 1, sentence.end());
+                    size_t found = remaining.find(string(1, string_char));
+                    if (found != string::npos) // IF there actually is a second quotation mark
                     {
                         found += 2; //Account for " characters surrounding the vector<string>
-                        vector<string> content(it, it + found);
+                        string content(it, it + found);
                         terms.push_back(content);
                         current = it + found;
                         it      = it + found;
@@ -87,19 +87,19 @@ namespace lex
                 }
             }
             // Normal seperation
-            vector<string> remaining(it, sentence.end());
+            string remaining(it, sentence.end());
             auto found = find_seperator(remaining, seperators);
             if(get<0>(found)) // Beginning of the remaining sentence is a seperator
             {
                 // If there is a term we have seperated, add it to terms
                 if (current != it)
                 {
-                    terms.push_back(vector<string>(current, it));
+                    terms.push_back(string(current, it));
                 }
                 // Keep the seperator, if applicable
                 if(get<1>(found))
                 {
-                    terms.push_back(vector<string>(it, it+get<2>(found)));
+                    terms.push_back(string(it, it+get<2>(found)));
                 }
                 // Update current to be it + len(seperator)
                 current = it + get<2>(found);
@@ -111,7 +111,7 @@ namespace lex
             // If there is no sentence left to seperate, push it to terms
             else if(it + 1 == sentence.end())
             {
-                vector<string> remaining(current, it + 1);
+                string remaining(current, it + 1);
                 terms.push_back(remaining);
             }
         }
@@ -119,7 +119,7 @@ namespace lex
         return terms;
     }
 
-    Seperators readWhitespaceFile(vector<string> filename)
+    Seperators readWhitespaceFile(string filename)
     {
         Seperators whitespace;
         auto content = readFile(filename);

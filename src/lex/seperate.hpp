@@ -3,10 +3,10 @@
 
 namespace lex
 {
-    using Seperator       = tuple<vector<string>, bool>;
+    using Seperator       = tuple<string, bool>;
     using Seperators      = vector<Seperator>;
 
-    vector<string> seperate(const vector<string>& sentence, const Seperators &seperators, vector<char> vector<string>={}, vector<string> inline_comment="");
-    Seperators readWhitespaceFile(vector<string> filename);
+    vector<string> seperate(const string& sentence, const Seperators &seperators, vector<char> strings={}, string inline_comment="");
+    Seperators readWhitespaceFile(string filename);
 
 }

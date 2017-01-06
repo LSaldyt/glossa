@@ -62,13 +62,13 @@ namespace compiler
         auto logicaloperators = readFile(directory + "logicaloperators"); 
         auto punctuators      = readFile(directory + "punctuators");
 
-        LexMapstringSets term_sets;
+        LexMapTermSets term_sets;
         term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
         term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
         term_sets.push_back(make_tuple(operators,        "operator"));
         term_sets.push_back(make_tuple(punctuators,      "punctuator"));
 
-        LexMapLexers lexer_set = {
+        vector<LexMapLexer> lexer_set = {
             LexMapLexer(just("    "s),     "tab",        "tab",        3),
             LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
             LexMapLexer(digits,            "int",        "literal",    3),
@@ -82,7 +82,7 @@ namespace compiler
 
         const Seperators whitespace = readWhitespaceFile(directory + "whitespace");
         LexMap test_language(term_sets, lexer_set, whitespace);
-        grammar.language = test_language;
+        grammar.lexmap = test_language;
         print("Done");
         return grammar;
     }
@@ -197,7 +197,7 @@ namespace compiler
                 auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
                 for (auto line : lines)
                 {
-                    tokens.push_back(lexWith(line, grammar.language, grammar.string_delimiters, grammar.comment_delimiter));
+                    tokens.push_back(lexWith(line, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter));
                 }
             }
         }

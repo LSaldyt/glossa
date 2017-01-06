@@ -1,9 +1,9 @@
 #pragma once
 #include "import.hpp"
 #include "seperate.hpp"
-#include "language.hpp"
+#include "lexmap.hpp"
 
 namespace lex
 {
-    Tokens lexWith(const vector<string>& sentence, const Language& language, vector<char> vector<string>_delimiters, vector<string> comment_delimiter);
+    Tokens lexWith(const string& sentence, const LexMap& language, vector<char> string_delimiters, string comment_delimiter);
 }

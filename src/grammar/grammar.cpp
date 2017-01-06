@@ -26,7 +26,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         // Consume all tokens
         while (tokens.size() > 0)
         {
-            // Tag groups of tokens as certain language constructs
+            // Tag groups of tokens as certain lexmap constructs
             auto result = identify(tokens);
             auto group  = toGroup(get<0>(result), get<1>(result));
             identified_groups.push_back(make_tuple(get<0>(result), group));

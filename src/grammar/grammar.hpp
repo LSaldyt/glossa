@@ -35,7 +35,7 @@ public:
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(SymbolicTokens& tokens);
 
     vector<string> keywords;
-    LexMap language;
+    LexMap lexmap;
 
     vector<char> string_delimiters;
 
