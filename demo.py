@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess, shutil, time, sys, os
+from pprint import pprint
 
 def run(commands):
     try:
@@ -41,7 +42,7 @@ def build(directory, languageargs):
     t = benchmark(run, 1, ['./build/progtran'] + languageargs + inputfiles)
     print('Compilation took roughly: %ss' % t)
 
-def time_run(language, directory, iterations, filename='main'):
+def time_run(language, directory, iterations, filename):
     with open('languages/' + language + '/run', 'r') as runfile:
         content = [line.replace('@', filename) for line in runfile]
     olddir = os.getcwd()
@@ -64,7 +65,7 @@ def run_language(directory, inputlang, outputlang):
         subprocess.run('./a.out', shell=True)
         os.chdir('..')
     else:
-        time_run(outputlang, 'output', 1)
+        time_run(outputlang, 'output', 1, 'main')
 
 def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
@@ -79,7 +80,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
     print(output_time)
 
     # Timing of inputlang isn't hardcoded:
-    input_time = time_run(inputlang, directory, iterations)
+    input_time = time_run(inputlang, directory, iterations, 'main')
     print('Input code time:')
     print(input_time)
     print('Transpile speedup:')
@@ -88,7 +89,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
 
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
-        cython_time = time_run(cythonversion, directory, iterations)
+        cython_time = time_run(cythonversion, directory, iterations, 'main')
         print('Cython time:')
         print(cython_time)
         print('Cython speedup:')
@@ -150,8 +151,7 @@ def main():
     # Determine which demo to use
     if len(sys.argv) > 1:
         if sys.argv[1] == '--show': # Display which demos are available if --show flag given
-            for line in content:
-                print(line, end='')
+            pprint(demos)
             sys.exit(0)
         if sys.argv[1] == '--test': # Test each demo
             for demo in demos:
