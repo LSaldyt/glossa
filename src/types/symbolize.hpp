@@ -3,6 +3,10 @@
 #include "../syntax/symbols/export.hpp"
 #include "../tools/tools.hpp"
 
+/**
+ * Constructs low-level (AST leaf) symbolic tokens from a vector of tokens
+ * Requires relevant construction functions
+ */
 const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerator> generatorMap, Tokens tokens)
 {
     SymbolicTokens symbolic_tokens;
@@ -17,7 +21,6 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
             for (auto v : token.values)
             {
                 text += v;
-                //text += " ";
             }
             auto symbolic = SymbolicToken(search->second(token.values), token.sub_type, type, text);
             symbolic_tokens.push_back(symbolic);

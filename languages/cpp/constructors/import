@@ -1,6 +1,6 @@
 importfile = 0 0
 defines
 header
-`format importfile #includeSPACE"@"`
+#include "$importfile$"
 source
-`format importfile #includeSPACE"@"`
+#include "$importfile$"

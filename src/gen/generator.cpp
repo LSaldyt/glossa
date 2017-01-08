@@ -290,14 +290,6 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
                 }
                 representation += sepWith(*this, symbols, names, filetype, terms[1], formatter, nesting);
             }
-            else if (keyword == "format")
-            {
-                assert(terms.size() == 3);
-                assert(contains(get<0>(storage), terms[1]));
-                auto symbol    = get<0>(storage)[terms[1]];
-                auto formatter = terms[2];
-                representation += format(symbol->representation(*this, names, filetype, nesting), formatter);
-            }
             else if (keyword == "block") // e.g. block body @;
             {
                 assert(terms.size() == 2 or terms.size() == 3);

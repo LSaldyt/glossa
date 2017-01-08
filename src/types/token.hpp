@@ -1,6 +1,10 @@
 #pragma once
 #include "import.hpp"
 
+/**
+ * Precursor to abstract syntax elements
+ * Represents an annotated term, i.e. literal int 2
+ */
 struct Token
 {
     tools::vector<tools::string> values;

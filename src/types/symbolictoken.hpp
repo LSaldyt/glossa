@@ -6,6 +6,10 @@ namespace syntax
 class Symbol;
 }
 
+/**
+ * Higher level representation of syntactic elements. 
+ * Contains type annotations, original text, and an abstract Symbol construction representing the syntax element
+ */
 struct SymbolicToken
 {
     std::shared_ptr<syntax::Symbol> value;

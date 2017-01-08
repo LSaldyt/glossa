@@ -12,7 +12,7 @@ To run demonstrations:
 ``` python
 # Python -> C++ quicksort demo (default)
 ./demo.py
-# View oher available demos:
+# View other available demos:
 ./demo.py --show
 p_quicksort      python3 cpp
 h_quicksort      haskell cpp
