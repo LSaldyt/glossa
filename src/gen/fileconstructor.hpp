@@ -3,6 +3,9 @@
 namespace gen
 {
 
+/**
+ * Construction methods for filetypes
+ */
 struct FileConstructor
 {
     string extension;

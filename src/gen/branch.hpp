@@ -39,6 +39,10 @@ const auto inverseBranch = [](ConditionEvaluator c)
     };
 };
 
+/**
+ * Optionally constructs pieces of source code if certain conditions are met
+ * Allows user-defined code construction by enforcing meta-rules
+ */
 struct Branch
 {
     ConditionEvaluator condition_evaluator;

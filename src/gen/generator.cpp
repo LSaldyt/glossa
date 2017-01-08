@@ -4,6 +4,11 @@
 namespace gen 
 {
 
+/**
+ * Constructs a generator
+ * @param filenames Construction files
+ * @param directory Directory that construction files reside in
+ */
 Generator::Generator(vector<string> filenames, string directory)
 {
     readStructureFile(directory + "file");
@@ -14,6 +19,10 @@ Generator::Generator(vector<string> filenames, string directory)
     }
 }
 
+/**
+ * Function for creating a file template
+ * @param filename File containing the file template description
+ */
 void Generator::readStructureFile(string filename)
 {
     auto content = readFile(filename);
@@ -50,6 +59,11 @@ void Generator::readStructureFile(string filename)
     }
 }
 
+/**
+ * Builds a constructor for a particular syntax element
+ * @param filename File containing the constructor description
+ * @return vector of annotated file constructors (i.e. {("header", Constructor), ("source", Constructor)}
+ */
 vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
 {
     auto content = readFile(filename);
@@ -101,6 +115,12 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     return constructors;
 }
 
+/**
+ * Create a branch from lines in a constructor file
+ * @param content Lines of constructor file
+ * @param symbol_storage_generator Function for creating symbol storage
+ * @return Branch which will follow user-defined logic to build a syntax element
+ */
 Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
     vector<LineConstructor> line_constructors;
@@ -190,6 +210,15 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
     return Branch(defaultBranch, line_constructors, nested_branches);
 }
 
+/**
+ * Function for retrieving/building a symbol from storage
+ * @param s The user-defined name for the symbol
+ * @param names Namespace
+ * @param storage Dual dictionaries containing symbol types
+ * @param filetype The target filetype to generate for
+ * @param definitions Defined names
+ * @return Formatted string representing a stored symbol
+ */
 string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
 {
     assert(contains(get<0>(storage), s));
@@ -211,6 +240,11 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
     return representation;
 }
 
+/**
+ * Builds a line constructor from a line in a constructor file
+ * @param line Line in constructor file
+ * @return LineConstructor, see TypeDef
+ */
 LineConstructor Generator::generateLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
@@ -269,6 +303,11 @@ LineConstructor Generator::generateLineConstructor(string line)
     };
 }
 
+/**
+ * Builds a backtick seperated line constructor
+ * @param line content inside of backticks
+ * @return LineConstructor, see typedef
+ */
 LineConstructor Generator::generateSpecialLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
@@ -324,6 +363,12 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
     };
 }
 
+/**
+ * Builds a symbol storage from file description
+ * Allows user to refer to symbols by name instead of array index
+ * @param content Definition lines of constructor file
+ * @return SymbolStorageGenerator function for building a symbol storage (tuple of dictionaries) from 2d array of symbols
+ */
 SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
@@ -383,6 +428,11 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
     };
 }
 
+/**
+ * Builds a function for evaluation conditions
+ * @param terms whitespace seperated terms of a condition line
+ * @return Predicate function used in branch creation
+ */
 ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
 {
     assert(not terms.empty());
@@ -444,6 +494,15 @@ ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
     }
 }
 
+/**
+ * High level function for generating source code for a particular langauge
+ * @param names Namespace
+ * @param symbol_groups 2D array of symbols
+ * @param symbol_type High level symbol name to be created
+ * @param filename Name of file to be created
+ * @param nesting Indentation level
+ * @return Vector of files 
+ */
 vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
                                                                     vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
                                                                     string                              symbol_type, 
