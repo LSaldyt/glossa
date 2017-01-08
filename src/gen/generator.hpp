@@ -7,6 +7,9 @@ namespace gen
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
+/**
+ * Class for generating source code from AST in a particular language
+ */
 class Generator 
 {
 

@@ -4,6 +4,9 @@
 namespace gen 
 {
 
+/**
+ * Constructs source code for a single syntax element
+ */
 class Constructor
 {
     SymbolStorageGenerator symbol_storage_generator;

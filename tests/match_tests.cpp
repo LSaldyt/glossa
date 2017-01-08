@@ -4,7 +4,7 @@
 TEST_CASE( "Basic matching works")
 {
     using namespace match;
-    Terms expected;
+    vector<string> expected;
 
     auto hello = just<std::string>("hello");
 

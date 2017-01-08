@@ -1,6 +1,9 @@
 #pragma once
 #include "import.hpp"
 
+/**
+ * Generic class representing the result of a parse/match attempt
+ */
 template <typename T>
 struct Result
 {

@@ -8,7 +8,7 @@ class Symbol;
 
 #include "../tools/tools.hpp"
 #include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
+#include "../lex/lexmap.hpp"
 #include "../parse/tokenparsers.hpp"
 
 
@@ -39,6 +39,10 @@ const auto inverseBranch = [](ConditionEvaluator c)
     };
 };
 
+/**
+ * Optionally constructs pieces of source code if certain conditions are met
+ * Allows user-defined code construction by enforcing meta-rules
+ */
 struct Branch
 {
     ConditionEvaluator condition_evaluator;

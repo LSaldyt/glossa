@@ -2,26 +2,30 @@
 #include "../match/match.hpp"
 #include "../types/symbolictoken.hpp"
 
+/**
+ * Collection of parsing tools for SymbolicToken types
+ * Allows parsing of type, subtype, or both of a particular token
+ */
 namespace parse
 {
     using namespace match;
-    using SymbolicTokenParser  = function<Result<SymbolicToken>(SymbolicTokens)>;
-    using SymbolicTokenParsers = vector<SymbolicTokenParser>;
+    /// Overload for match result object
+    using SymbolicTokenParser  = function<Result<SymbolicToken> (vector<SymbolicToken>)>;
 
     //Convert a standard parseFunction to one that parses Tokens
     SymbolicTokenParser subTypeParser  (string sub_type);
     SymbolicTokenParser typeParser     (string type);
     SymbolicTokenParser dualTypeParser (string type, string sub_type);
 
-    function<Result<SymbolicToken>(vector<SymbolicToken>)>
+    SymbolicTokenParser
     discard
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher);
+    (SymbolicTokenParser matcher);
 
     vector<SymbolicToken> clean(const vector<SymbolicToken>& tokens);
     // Version of many for seperating nested multi-token parsers. Unnestable
-    function<Result<SymbolicToken>(vector<SymbolicToken>)>
+    SymbolicTokenParser
     manySeperated
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher, bool nonempty=false);
+    (SymbolicTokenParser matcher, bool nonempty=false);
 
     vector<vector<SymbolicToken>>
     reSeperate

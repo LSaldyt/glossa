@@ -177,7 +177,7 @@ SHORT_NAMES            = NO
 # description.)
 # The default value is: NO.
 
-JAVADOC_AUTOBRIEF      = NO
+JAVADOC_AUTOBRIEF      = YES 
 
 # If the QT_AUTOBRIEF tag is set to YES then doxygen will interpret the first
 # line (until the first dot) of a Qt-style comment as the brief description. If
@@ -2425,3 +2425,10 @@ GENERATE_LEGEND        = YES
 # This tag requires that the tag HAVE_DOT is set to YES.
 
 DOT_CLEANUP            = YES
+
+INPUT += README.md
+USE_MDFILE_AS_MAINPAGE = README.md
+
+HTML_COLORSTYLE_HUE = 189 
+HTML_COLORSTYLE_SAT = 255
+HTML_EXTRA_STYLESHEET = doxystyle.css

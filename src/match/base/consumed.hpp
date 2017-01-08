@@ -1,9 +1,11 @@
 #pragma once
-#include "types.hpp"
 #include "import.hpp"
 
 namespace match 
 {
+    /**
+     * Structure for holding consumed tokens of any type T
+     */
     template <typename T>
     struct Consumed
     {

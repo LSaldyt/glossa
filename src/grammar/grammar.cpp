@@ -8,7 +8,7 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
     return s;
 }
 
-// Standard grammar constructor (From list of files)
+/// Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory) 
 {
     for (auto filename : filenames)
@@ -18,7 +18,12 @@ Grammar::Grammar(vector<string> filenames, string directory)
     readDelimiters(directory);
 }
 
-vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
+/**
+ * High level function for identifying many syntatic constructs at once
+ * @param tokens Vector of tokens to be identified
+ * @return vector of annotated matrices, each representing a high level symbolic type (statement)
+ */
+vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(vector<SymbolicToken>& tokens)
 {
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
     try 
@@ -26,7 +31,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         // Consume all tokens
         while (tokens.size() > 0)
         {
-            // Tag groups of tokens as certain language constructs
+            // Tag groups of tokens as certain lexmap constructs
             auto result = identify(tokens);
             auto group  = toGroup(get<0>(result), get<1>(result));
             identified_groups.push_back(make_tuple(get<0>(result), group));
@@ -50,7 +55,6 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         print("Remaining:");
         for (auto token : tokens)
         {
-
         }
         throw;
     }
@@ -59,6 +63,12 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
 }
 
 
+/**
+ * Discards unwanted tokens marked by the user
+ * @param name    Annotation for higher level syntactic construct (statement)
+ * @param results Results of matching against a given statement
+ * @return        2D matrix of Symbols
+ */
 vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
 {
     auto construction_indices = get<1>(grammar_map[name]);
@@ -91,12 +101,15 @@ vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<S
     return groups;
 }
 
-// Helper function for reading in grammar files
-//
-// (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
-SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
+/**
+ * Helper function for reading in grammar files
+ * (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
+ * @param terms The terms of a line in a grammar file
+ * @return Vector of symbolictokenparsers to be used by a higher-level parsing function
+ */
+vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
 {
-    SymbolicTokenParsers parsers;
+    vector<SymbolicTokenParser> parsers;
 
     if (terms.size() % 2 != 0)
     {
@@ -112,7 +125,12 @@ SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
     return parsers;
 }
 
-// Convert a seperated line from a grammar file to a parser
+/**
+ * Converts a seperated line from a grammar file to a parser
+ * Uses isomorphic functions to those in the match module (i.e. many, inOrder)
+ * @param terms Whitespace seperated terms from a line in a grammar file
+ * @return A parser that matches against the line described in the grammar file
+ */
 SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 {
     SymbolicTokenParser parser;
@@ -196,10 +214,15 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
     return parser;
 }
 
-// Master function for reading a grammar file
-tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
+/**
+ * High level function for reading a grammar file
+ * @param filename File to be read in
+ * @return list of in order parsers, and a vector of construction indices
+ * Construction indices indicate which parsed symbols are of significance
+ */
+tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
 {
-    SymbolicTokenParsers parsers;
+    vector<SymbolicTokenParser> parsers;
     auto content = readFile(filename);
     auto construct_line = content.back();
     content = slice(content, 0, -1);
@@ -236,10 +259,16 @@ tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
     return make_tuple(parsers, construct_indices);
 }
 
-// Lazily evaluate links between grammar files
+/**
+ * Lazily evaluate links between grammar files
+ * ex link expression allows grammar files to reference one another.
+ * Because of laziness, circular references are allowed (as long as they terminate eventually)
+ * @param filename File to be retrieved
+ * @return Parser representing the syntax element that was retrieved
+ */
 SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
-    return [filename, this](SymbolicTokens tokens)
+    return [filename, this](vector<SymbolicToken> tokens)
     {
         std::vector<SymbolicTokenParser> parsers;
 
@@ -255,7 +284,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         }
 
         // Evaluate the parsers, preserving the tokens on failure
-        SymbolicTokens tokens_copy(tokens);
+        vector<SymbolicToken> tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
 
         if (get<0>(result))
@@ -272,12 +301,17 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
     };
 }
 
-// Identify a group of tokens from a larger set
+/**
+ * Identify a group of tokens from a larger set
+ * Used repeatedly in the higher-level function identifyGroups
+ * @param tokens Tokens to be identified
+ * @return Tuple of the form (annotation, results) where results are the collective match attempts against a particular (successful) syntax element
+ */
 tuple<string, vector<Result<SymbolicToken>>> 
 Grammar::identify
-(SymbolicTokens& tokens)
+(vector<SymbolicToken>& tokens)
 {
-    SymbolicTokens tokens_copy(tokens);
+    vector<SymbolicToken> tokens_copy(tokens);
 
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
@@ -296,10 +330,15 @@ Grammar::identify
     throw named_exception("Could not identify tokens");
 }
 
-// Evaluate a list of parsers stored in the grammar_map
+/**
+ * Evaluate a list of parsers stored in the grammar_map
+ * @param parsers List of parsers from grammar_map
+ * @param tokens List of tokens to be evaluated against
+ * @return Tuple of the form (result, results) where result is boolean, and results are Result<T> classes
+ */
 tuple<bool, vector<Result<SymbolicToken>>> 
 Grammar::evaluateGrammar
-(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
+(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens)
 {
     vector<Result<SymbolicToken>> results;
 
@@ -322,7 +361,9 @@ Grammar::evaluateGrammar
 };
 
 
-// Discard type information from SymbolicTokens
+/**
+ * Discard type information from vector<SymbolicToken>
+ */
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
 {
     vector<shared_ptr<Symbol>> symbols;
@@ -336,6 +377,9 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     return symbols;
 }
 
+/**
+ * Function for reading in user-defined string and comment delimiters for a programming language
+ */
 void Grammar::readDelimiters(string directory)
 {
     auto string_delimiters_file  = readFile(directory + "string_delimiters");

@@ -6,6 +6,13 @@ namespace gen
 Constructor::Constructor()
 {
 }
+
+/**
+ * Builds a constructor
+ * @param set_symbol_storage_generator Function for generating a symbol storage from token groups
+ * @param set_main_branch The main branch of the constructor
+ * @param set_definitions Defined names
+ */
 Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator, 
                          Branch set_main_branch, 
                          vector<string> set_definitions) : 
@@ -15,6 +22,14 @@ Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator,
 {
 }
 
+/**
+ * Evaluates a branch within a constructor
+ * @param names Namespace
+ * @param symbol_storage Dictionary of stored symbols, user defined
+ * @param filetype Target filetype (i.e. header or source if in c-like languages)
+ * @param nesting Level of indentation
+ * @return Lines of source code
+ */
 vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype, int nesting)
 {
     vector<string> generated;
@@ -39,6 +54,14 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
     return generated;
 }
 
+/**
+ * Constructs a syntax element from symbol_groups
+ * @param names Namespace
+ * @param symbol_groups 2D array of shared_ptr<Symbol>s
+ * @param filetype String description of filetype
+ * @param nesting Indentation level
+ * @return Lines of source code representing the given syntax element
+ */
 vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype, int nesting)
 {
     auto symbol_storage = symbol_storage_generator(symbol_groups);
