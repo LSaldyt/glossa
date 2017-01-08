@@ -1,6 +1,8 @@
 #include "compiler.hpp"
 
-
+/**
+ * Demonstration of very high-level compiler usage
+ */
 int main(int argc, char* argv[])
 {
     using namespace compiler;
@@ -18,27 +20,24 @@ int main(int argc, char* argv[])
 
     string from = args[0];
     string to   = args[1];
-
-    auto grammar   = loadGrammar(from);
-    auto generator = loadGenerator(to);
-
-    auto symbol_table = readSymbolTable("languages/symboltables/" + from + to);
-
     vector<string> files = slice(args, 2);
-    string input_directory  = "";
-    string output_directory = "";
 
-    for (auto& file : files)
-    {
-        compile(file, grammar, generator, symbol_table, "input", "output");
-    }
+    compileFiles(files, "input", from, "output", to);
     print("Compilation finished");
 }
 
-
+/**
+ * Collection of high level functions for compilation
+ */
 namespace compiler
 {
 
+    /**
+     * Read in simple symbol conversions from a file
+     * i.e. append -> push_back 
+     * @param filename File defining symbol conversions
+     * @return Dictionary defining symbol conversions
+     */
     unordered_map<string, string> readSymbolTable(string filename)
     {
         unordered_map<string, string> symbol_table;
@@ -51,6 +50,11 @@ namespace compiler
         return symbol_table;
     }
 
+    /**
+     * High level function for creating a Grammar object from a set of grammar files
+     * @param language Language to load
+     * @return Grammar for parsing the given language
+     */
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
@@ -87,6 +91,11 @@ namespace compiler
         return grammar;
     }
 
+    /**
+     * High level function for loading a code generator for a language
+     * @param language Language for code generator to be loaded for
+     * @return Generator which can construct source code for the given language
+     */
     Generator loadGenerator(string language)
     {
         print("Loading constructors for " + language);
@@ -96,6 +105,37 @@ namespace compiler
         return generator;
     }
 
+    /**
+     * High level function for transpilation
+     * Converts source files of one language to source files of another, copying them into a new directory
+     * @param filenames   List of files to transpile
+     * @param input_dir   Input directory containing files in input language
+     * @param input_lang  String name of input langauge
+     * @param output_dir  Output directory that will contain files in output language
+     * @param output_lang String name of output language
+     */ 
+    void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang)
+    {
+        auto grammar   = loadGrammar(input_lang);
+        auto generator = loadGenerator(output_lang);
+
+        auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
+
+        for (auto& file : filenames)
+        {
+            compile(file, grammar, generator, symbol_table, input_dir, output_dir);
+        }
+    }
+
+    /**
+     * Function for compilation of an individual file given a grammar, generator, symbol_table, input directory, and output directory
+     * @param filename         File to be compiled
+     * @param grammar          Grammar of input language
+     * @param generator        Generator for output language
+     * @param symbol_table     Dictionary of symbol conversions
+     * @param input_directory  String of input directory
+     * @param output_directory String name of output directory
+     */
     void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory)
     {
         print("Reading File");
@@ -172,6 +212,13 @@ namespace compiler
         }
     }
 
+    /**
+     * Converts lines of source code to a list of tokens, provided a grammar
+     * @param content Lines of source
+     * @param grammar Grammar of input language
+     * @param symbol_table Dictionary of symbol conversions
+     * @return Vector of unsymbolized tokens (annotated terms)
+     */
     std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table)
     {
         std::vector<Tokens> tokens;
@@ -219,9 +266,14 @@ namespace compiler
         return tokens;
     }
 
-    std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens)
+    /**
+     * Converts a vector of non-symbolic tokens to symbolic ones
+     * @param tokens Non symbolized tokens
+     * @return 2D array of Symbolized tokens
+     */
+    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens)
     {
-        std::vector<SymbolicTokens> symbolic_tokens;
+        std::vector<vector<SymbolicToken>> symbolic_tokens;
         for (auto token_group : tokens)
         {
             symbolic_tokens.push_back(toSymbolic(generatorMap, token_group));
@@ -229,9 +281,15 @@ namespace compiler
         return symbolic_tokens;
     }
 
-    SymbolicTokens join(std::vector<SymbolicTokens> token_groups, bool newline)
+    /**
+     * Converts a 2D matrix of tokens to a vector
+     * @param token_groups 2D matrix of tokens
+     * @param newline option to insert newlines between groups of tokens
+     * @return Vector of symbolic tokens
+     */
+    vector<SymbolicToken> join(std::vector<vector<SymbolicToken>> token_groups, bool newline)
     {
-        auto tokens = SymbolicTokens();
+        auto tokens = vector<SymbolicToken>();
         for (auto token_group : token_groups)
         {
             for (auto t : token_group)

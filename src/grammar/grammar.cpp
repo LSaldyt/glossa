@@ -23,7 +23,7 @@ Grammar::Grammar(vector<string> filenames, string directory)
  * @param tokens Vector of tokens to be identified
  * @return vector of annotated matrices, each representing a high level symbolic type (statement)
  */
-vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(SymbolicTokens& tokens)
+vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(vector<SymbolicToken>& tokens)
 {
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
     try 
@@ -268,7 +268,7 @@ tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
  */
 SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
-    return [filename, this](SymbolicTokens tokens)
+    return [filename, this](vector<SymbolicToken> tokens)
     {
         std::vector<SymbolicTokenParser> parsers;
 
@@ -284,7 +284,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         }
 
         // Evaluate the parsers, preserving the tokens on failure
-        SymbolicTokens tokens_copy(tokens);
+        vector<SymbolicToken> tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
 
         if (get<0>(result))
@@ -309,9 +309,9 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
  */
 tuple<string, vector<Result<SymbolicToken>>> 
 Grammar::identify
-(SymbolicTokens& tokens)
+(vector<SymbolicToken>& tokens)
 {
-    SymbolicTokens tokens_copy(tokens);
+    vector<SymbolicToken> tokens_copy(tokens);
 
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
@@ -338,7 +338,7 @@ Grammar::identify
  */
 tuple<bool, vector<Result<SymbolicToken>>> 
 Grammar::evaluateGrammar
-(vector<SymbolicTokenParser> parsers, SymbolicTokens& tokens)
+(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens)
 {
     vector<Result<SymbolicToken>> results;
 
@@ -362,7 +362,7 @@ Grammar::evaluateGrammar
 
 
 /**
- * Discard type information from SymbolicTokens
+ * Discard type information from vector<SymbolicToken>
  */
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
 {

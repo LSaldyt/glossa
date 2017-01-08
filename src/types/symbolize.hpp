@@ -9,7 +9,7 @@
  */
 const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerator> generatorMap, Tokens tokens)
 {
-    SymbolicTokens symbolic_tokens;
+    std::vector<SymbolicToken> symbolic_tokens;
     symbolic_tokens.reserve(tokens.size());
     for (auto token : tokens)
     {

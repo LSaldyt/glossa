@@ -39,7 +39,7 @@ class Grammar
 public:
     Grammar(vector<string> grammar_files, string directory);
 
-    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(SymbolicTokens& tokens);
+    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(vector<SymbolicToken>& tokens);
 
     vector<string> keywords;
     LexMap lexmap;
@@ -54,11 +54,11 @@ private:
 
     void readSymbolFile(vector<string> symbol_file);
 
-    tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
+    tuple<string, vector<Result<SymbolicToken>>> identify (vector<SymbolicToken>& tokens);
     vector<vector<shared_ptr<Symbol>>> toGroup(string name, vector<Result<SymbolicToken>> results);
 
     tuple<vector<SymbolicTokenParser>, vector<int>> read(string filename);
-    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, SymbolicTokens& tokens);
+    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens);
 
     vector<SymbolicTokenParser> readGrammarPairs(vector<string>& terms);
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
