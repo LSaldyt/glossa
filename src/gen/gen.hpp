@@ -9,6 +9,9 @@ class Symbol;
 #include "../tools/tools.hpp"
 #include "generator.hpp"
 
+/**
+ * Definitions for user defined code generation in any given programming language
+ */
 namespace gen
 {
 using namespace syntax;

@@ -48,7 +48,7 @@ def time_run(language, directory, iterations, filename='main'):
     os.chdir(directory + '_copy')
     try:
         for line in content[:-1]:
-            subprocess.run(line, shell=True) # Yes, this is unescaped.
+            subprocess.check_output(line, shell=True) # Yes, this is unescaped.
         t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
     finally:
         os.chdir(olddir)
@@ -60,7 +60,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
     if outputlang == 'cpp':
         os.chdir('output')
         subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
-        output_time = benchmark(subprocess.run, iterations, './a.out', shell=True)
+        output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
         output_time = time_run(outputlang, 'output', iterations)
@@ -75,7 +75,6 @@ def compare(directory, inputlang, outputlang, iterations=1):
     transpile_speedup = input_time / output_time
     print(transpile_speedup)
 
-    '''
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
         cython_time = time_run(cythonversion, directory, iterations)
@@ -87,9 +86,6 @@ def compare(directory, inputlang, outputlang, iterations=1):
         
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
-    '''
-
-        
 
     
 

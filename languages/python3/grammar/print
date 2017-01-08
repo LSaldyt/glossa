@@ -1,5 +1,5 @@
 keyword print
-operator (
+punctuator (
 link expression
-operator )
+punctuator )
 2

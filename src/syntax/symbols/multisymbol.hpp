@@ -3,6 +3,13 @@
 namespace syntax
 {
 
+/**
+ * Represents a user-defined type composed of several low-level syntax elements
+ * i.e. Assignment: (Identifier, Expression)
+ *                               Expression: (sep Operator Value)
+ *                                                         Value: Literal, FunctionCall
+ *                                                         ...
+ */
 struct MultiSymbol : public Symbol
 {
     vector<vector<shared_ptr<Symbol>>> groups;

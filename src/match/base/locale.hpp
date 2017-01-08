@@ -2,6 +2,10 @@
 #include "import.hpp"
 #include <algorithm>
 
+/**
+ * Set of parsers used when lexing/annotating inputs
+ */
+
 bool is_digits(const std::string &str);
 bool is_alphas(const std::string &str);
 bool is_puncts(const std::string &str);

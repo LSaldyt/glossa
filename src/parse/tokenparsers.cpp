@@ -3,6 +3,10 @@
 
 namespace parse
 {
+    /**
+     * Parses a symbolictoken by its sub type
+     * i.e. wildcard int 
+     */
     SymbolicTokenParser subTypeParser(string sub_type)
     {
         const auto comparator = [sub_type](SymbolicToken token)
@@ -12,6 +16,10 @@ namespace parse
         return singleTemplate<SymbolicToken>(comparator);
     }
 
+    /**
+     * Parses a symbolictoken by its type
+     * i.e. operator wildcard 
+     */
     SymbolicTokenParser typeParser(string type)
     {
         const auto comparator = [type](SymbolicToken token)
@@ -21,14 +29,21 @@ namespace parse
         return singleTemplate<SymbolicToken>(comparator);
     }
 
+    /**
+     * Parses a symbolictoken by both its sub type and its type
+     * i.e. operator +
+     */
     SymbolicTokenParser dualTypeParser(string type, string sub_type)
     {
         return allOf<SymbolicToken>({typeParser(type), subTypeParser(sub_type)});
     }
 
-    function<Result<SymbolicToken>(vector<SymbolicToken>)>
+    /**
+     * Annotates all consumed tokens to be eventually discarded
+     */
+    SymbolicTokenParser
     discard
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher)
+    (SymbolicTokenParser matcher)
     {
         using syntax::Symbol;
         return [matcher](vector<SymbolicToken> terms)
@@ -43,6 +58,9 @@ namespace parse
         };
     }
 
+    /**
+     * Removes discard-annotated tokens from vector of tokens
+     */
     vector<SymbolicToken>
     clean
     (const vector<SymbolicToken>& tokens)
@@ -59,10 +77,13 @@ namespace parse
         return clean_tokens;
     }
 
-    // Version of many for seperating nested multi-token parsers. Unnestable
-    function<Result<SymbolicToken>(vector<SymbolicToken>)>
+    /**
+     * Version of many for seperating nested multi-token parsers. Unnestable
+     * Uses annotation to mark points between groups of consumed tokens
+     */
+    SymbolicTokenParser
     manySeperated
-    (function<Result<SymbolicToken>(vector<SymbolicToken>)> matcher, bool nonempty)
+    (SymbolicTokenParser matcher, bool nonempty)
     {
         using syntax::Symbol;
         return [matcher, nonempty](vector<SymbolicToken> terms)
@@ -100,6 +121,9 @@ namespace parse
         };
     };
 
+    /**
+     * Turns annotated tokens into a 2D matrix of tokens
+     */
     vector<vector<SymbolicToken>>
     reSeperate
     (const vector<SymbolicToken>& tokens)

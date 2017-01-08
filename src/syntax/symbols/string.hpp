@@ -1,6 +1,8 @@
 #include "symbol.hpp"
 namespace syntax
 {
+    using String = StringLiteral;
+    /*
     struct String : public StringLiteral 
     {
         String(string set_value) : StringLiteral(set_value){}
@@ -13,4 +15,5 @@ namespace syntax
             return repeatString("    ", indent) + "String(\"" + value + "\")";
         }
     };
+    */
 }
