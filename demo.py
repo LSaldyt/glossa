@@ -38,7 +38,8 @@ def build(directory, languageargs):
                 run(['./annotate.py', inputfile])
 
     print('Running files: %s' % '\n'.join(inputfiles))
-    run(['./build/progtran'] + languageargs + inputfiles)
+    t = benchmark(run, 1, ['./build/progtran'] + languageargs + inputfiles)
+    print('Compilation took roughly: %ss' % t)
 
 def time_run(language, directory, iterations, filename='main'):
     with open('languages/' + language + '/run', 'r') as runfile:
@@ -54,6 +55,16 @@ def time_run(language, directory, iterations, filename='main'):
         os.chdir(olddir)
         shutil.rmtree(directory + '_copy')
     return t
+
+def run_language(directory, inputlang, outputlang):
+    # Compile output c++ code (hardcoded for now, since output language is always c++)
+    if outputlang == 'cpp':
+        os.chdir('output')
+        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
+        subprocess.run('./a.out', shell=True)
+        os.chdir('..')
+    else:
+        time_run(outputlang, 'output', 1)
 
 def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
@@ -87,16 +98,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
 
-    
-
-def main():
-    # Build the compiler and test it
-    os.chdir('build')
-    run(['cmake', '..'])
-    run(['make'])
-    os.chdir('..')
-    run(['./build/progtrantest'])
-
+def load_demos():
     # Build list of demonstrations
     with open('examples/demos') as demofile:
         content = [line for line in demofile]
@@ -107,17 +109,9 @@ def main():
         assert len(terms) > 1
         a = terms[0]
         demos[a] = ['examples/' + a] + terms[1:]
+    return demos
 
-    # Determine which demo to use
-    if len(sys.argv) > 1:
-        if sys.argv[1] == '--show': # Display which demos are available if --show flag given
-            for line in content:
-                print(line, end='')
-            sys.exit(0)
-        demoname = sys.argv[1]      # Otherwise, use demo provided
-    else:
-        demoname = 'python3'         # If none provided, show python demo by default
-
+def transpile(demoname, demos, run_compare=False):
     if not os.path.exists('output'):
         os.makedirs('output')
     if not os.path.exists('input'):
@@ -129,7 +123,10 @@ def main():
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs)
-        compare(directory, languageargs[0], languageargs[1], iterations=100)
+        if run_compare:
+            compare(directory, languageargs[0], languageargs[1], iterations=100)
+        else:
+            run_language(directory, languageargs[0], languageargs[1])
 
         # Save demo output, then cleanup
         outputdir = 'examples/output/' + demoname + '_output'
@@ -139,6 +136,36 @@ def main():
     finally:
         shutil.rmtree('output')
         shutil.rmtree('input')
+
+def main():
+    # Build the compiler and test it
+    os.chdir('build')
+    run(['cmake', '..'])
+    run(['make'])
+    os.chdir('..')
+    run(['./build/progtrantest'])
+
+    demos = load_demos()
+
+    # Determine which demo to use
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--show': # Display which demos are available if --show flag given
+            for line in content:
+                print(line, end='')
+            sys.exit(0)
+        if sys.argv[1] == '--test': # Test each demo
+            for demo in demos:
+                try:
+                    transpile(demo, demos) # Test that each demo works
+                except Exception as e:
+                    print('Transpile test for demo %s failed' % demo)
+                    raise e
+        demoname = sys.argv[1]      # Otherwise, use demo provided
+    else:
+        demoname = 'python3'         # If none provided, show python demo by default
+
+    transpile(demoname, demos, True)
+
 
 if __name__ == '__main__':
     main()
