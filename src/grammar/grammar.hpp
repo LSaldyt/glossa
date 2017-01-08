@@ -5,6 +5,9 @@
 #include "../parse/tokenparsers.hpp"
 #include "../tools/tools.hpp"
 
+/**
+ * Module that defines meta-rules for user-defined parsing of programming languages
+ */
 namespace grammar
 {
 
@@ -27,6 +30,10 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
     return annotateSymbol(make_shared<T>(t), annotation);
 }
 
+/**
+ * Class that allows parsing of a particular programming language
+ * Constructed from a set of grammar files
+ */
 class Grammar
 {
 public:
