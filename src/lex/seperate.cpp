@@ -39,12 +39,7 @@ namespace lex
     }
 
     /**
-     * Seperates a line of source code into tokens for later lexing
-     * @param sentence line to be seperated
-     * @param seperators seperators to seperate the line with
-     * @param strings string delimiter characters for specialized string seperation
-     * @param inline_comment string delimiting inline comments, which also undergo special rules
-     * A more complicated algorithm:
+     * Seperates a line of source code into terms for later lexing
      * retains two iterators along the sentence (current, it)
      * advance the it iterator until a seperator is found,
      * then push from current to it into terms
@@ -52,6 +47,11 @@ namespace lex
      * push the seperator into terms if it should be kept (bool second tuple field)
      * repeat until no sentence is left, push remaining sentence into terms
      * (Seperate a sentence into terms in <O(n^2)? time)
+     * @param sentence Line to be seperated
+     * @param seperators Seperators to seperate the line with
+     * @param strings String delimiter characters for specialized string seperation
+     * @param inline_comment String delimiting inline comments, which also undergo special rules
+     * @return seperated tokens
      */
     vector<string> seperate(const string& sentence, const vector<Seperator> &seperators, vector<char> strings, string inline_comment)
     {

@@ -10,6 +10,10 @@ namespace lex
         precedence = set_precedence;
     }
 
+    /**
+     * Construct a LexMap from term sets, language lexers, and whitespace seperators
+     * Term sets are sets of language lexers corresponding to a particular type of term, i.e. operators
+     */
     LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, vector<Seperator> whitespace)
         : language_term_sets(set_term_sets)
     {
@@ -59,6 +63,9 @@ namespace lex
     }
     LexMap::LexMap(){}
 
+    /**
+     * Identify a vector of terms using the internal contents of a LexMap
+     */
     tuple<Token, vector<string>> LexMap::identify(vector<string> terms) const
     {
         // Return result of first lexer to match against remaining terms

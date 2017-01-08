@@ -9,6 +9,7 @@ namespace lex
 
     /** 
      * A single definition for lexing a language element (ie int, operator)
+     * Uses a matcher against a term to identify the given language element
      */
     struct LexMapLexer
     {
@@ -24,6 +25,8 @@ namespace lex
 
     /**
      * A collection of lexers/term sets that can Identify terms
+     * The set of single language element lexers is iterated over until a match is made
+     * Otherwise, the last term remains unidentified and an error is thrown. 
      */
     struct LexMap
     {
