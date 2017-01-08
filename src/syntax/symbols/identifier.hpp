@@ -2,6 +2,9 @@
 #include "literal.hpp"
 namespace syntax
 {
+    /**
+     * Abstract representation of an identifier
+     */
     struct Identifier : public StringLiteral
     {
         Identifier(string set_value);

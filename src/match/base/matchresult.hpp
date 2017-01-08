@@ -5,5 +5,6 @@
 
 namespace match 
 {
-    using MatchResult = Result<Term>; 
+    /// Single specialization of Result type (string)
+    using MatchResult = Result<string>; 
 }

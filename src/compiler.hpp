@@ -3,7 +3,7 @@
 #include "syntax/syntax.hpp"
 #include "lex/lex.hpp"
 #include "lex/seperate.hpp"
-#include "lex/language.hpp"
+#include "lex/lexmap.hpp"
 #include "types/symbolize.hpp"
 #include "grammar/grammar.hpp"
 #include "gen/gen.hpp"
@@ -18,13 +18,13 @@ namespace compiler
     using namespace gen;
     using namespace tools;
 
+    void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang);
     void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory="", string output_directory="");
     Grammar loadGrammar(string language);
     Generator loadGenerator(string language);
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, Grammar&, unordered_map<string, string>&);
-    std::vector<SymbolicTokens> symbolicPass(std::vector<Tokens> tokens);
-    SymbolicTokens join(std::vector<SymbolicTokens>, bool newline=false);
+    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens);
+    vector<SymbolicToken> join(std::vector<vector<SymbolicToken>>, bool newline=false);
     unordered_map<string, string> readSymbolTable(string filename);
-
 }

@@ -1,10 +1,13 @@
 #pragma once
 #include "../lex/seperate.hpp"
-#include "../lex/language.hpp"
+#include "../lex/lexmap.hpp"
 #include "../syntax/syntax.hpp"
 #include "../parse/tokenparsers.hpp"
 #include "../tools/tools.hpp"
 
+/**
+ * Module that defines meta-rules for user-defined parsing of programming languages
+ */
 namespace grammar
 {
 
@@ -15,7 +18,7 @@ using namespace syntax;
 using namespace tools;
 
 using StatementConstructor = function<shared_ptr<Symbol>(vector<vector<shared_ptr<Symbol>>>)>;
-using GrammarMap = unordered_map<string, tuple<SymbolicTokenParsers, vector<int>>>; 
+using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<int>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
@@ -27,15 +30,19 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
     return annotateSymbol(make_shared<T>(t), annotation);
 }
 
+/**
+ * Class that allows parsing of a particular programming language
+ * Constructed from a set of grammar files
+ */
 class Grammar
 {
 public:
     Grammar(vector<string> grammar_files, string directory);
 
-    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(SymbolicTokens& tokens);
+    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(vector<SymbolicToken>& tokens);
 
     vector<string> keywords;
-    Language language;
+    LexMap lexmap;
 
     vector<char> string_delimiters;
 
@@ -47,13 +54,13 @@ private:
 
     void readSymbolFile(vector<string> symbol_file);
 
-    tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
+    tuple<string, vector<Result<SymbolicToken>>> identify (vector<SymbolicToken>& tokens);
     vector<vector<shared_ptr<Symbol>>> toGroup(string name, vector<Result<SymbolicToken>> results);
 
-    tuple<SymbolicTokenParsers, vector<int>> read(string filename);
-    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
+    tuple<vector<SymbolicTokenParser>, vector<int>> read(string filename);
+    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens);
 
-    SymbolicTokenParsers readGrammarPairs(vector<string>& terms);
+    vector<SymbolicTokenParser> readGrammarPairs(vector<string>& terms);
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
     SymbolicTokenParser  retrieveGrammar(string filename); 
 

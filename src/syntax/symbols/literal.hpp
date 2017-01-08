@@ -4,6 +4,9 @@
 
 namespace syntax
 {
+    /**
+     * Abstract representation of a literal
+     */
     template < typename T>
     struct Literal : public Symbol
     {
@@ -22,6 +25,9 @@ namespace syntax
         }
     };
 
+    /**
+     * Abstract representation of a string literal
+     */
     struct StringLiteral : public Symbol
     {
         string value;

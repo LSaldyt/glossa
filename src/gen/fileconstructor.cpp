@@ -9,6 +9,9 @@ FileConstructor::FileConstructor(string set_extension, vector<string> set_defaul
 
 }
 
+/**
+ * Create a file from a file template
+ */
 tuple<string, vector<string>> FileConstructor::operator()(vector<string> constructed, string filename)
 {
     vector<string> file_content(default_content);

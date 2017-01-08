@@ -16,7 +16,7 @@ template <
 sep , auxillaryargs typenameSPACET_@
 >
 class 
-format $name$ __@__
+__$name$__
 
 branch nonempty inheritance
 : 
@@ -26,7 +26,7 @@ end
 {
 public:
 sep NEWLINE members T_@SPACE@;
-format name __@__
+__$name$__
 (
 sep , auxillaryargs T_@SPACEset_@
 )
@@ -57,7 +57,7 @@ sep SPACE supercall
 end
 
 return 
-format name __@__<
+__$name$__<
 sep , members decltype(@) source
 
 branch both nonempty supercall and nonempty members

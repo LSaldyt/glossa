@@ -1,8 +1,8 @@
-#include "language.hpp"
+#include "lexmap.hpp"
 
 namespace lex
 {
-    LanguageLexer::LanguageLexer(function<Result<string>(vector<string>)> set_match_function, string set_name, string set_type, int set_precedence)
+    LexMapLexer::LexMapLexer(Matcher<string> set_match_function, string set_name, string set_type, int set_precedence)
     {
         match      = set_match_function;
         name       = set_name;
@@ -10,14 +10,18 @@ namespace lex
         precedence = set_precedence;
     }
 
-    Language::Language(const LanguageTermSets& set_term_sets, const LanguageLexers&  set_language_lexers, Seperators whitespace)
+    /**
+     * Construct a LexMap from term sets, language lexers, and whitespace seperators
+     * Term sets are sets of language lexers corresponding to a particular type of term, i.e. operators
+     */
+    LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, vector<Seperator> whitespace)
         : language_term_sets(set_term_sets)
     {
         // Always seperate by whitespace
         concat(seperators, whitespace);
         newline = get<1>(whitespace[3]);
 
-        // Custom language lexers (like int, string, etc..)
+        // Custom language lexers (like int, vector<string>, etc..)
         concat(language_lexers, set_language_lexers);
 
         vector<tuple<string, string>> term_lexers;
@@ -40,7 +44,7 @@ namespace lex
         {
             auto term = get<0>(term_lexer);
             auto type = get<1>(term_lexer);
-            language_lexers.push_back(LanguageLexer(just(term), term, type, 1));
+            language_lexers.push_back(LexMapLexer(just(term), term, type, 1));
             if (type != "keyword") //seperating by keywords would make identifiers containing keywords impossible
             {
                 seperators.push_back(make_tuple(term, true)); // Keep seperators from term sets (ie operators)
@@ -51,15 +55,18 @@ namespace lex
         sortBy(language_lexers, [](auto &left, auto &right) {
                     return left.precedence < right.precedence;
                     });
-        print("Language lexers (sorted by precedence): ");
+        print("LexMap lexers (sorted by precedence): ");
         for (auto lexer : language_lexers)
         {
             print(lexer.name + " " + lexer.type + " (" + std::to_string(lexer.precedence) + ")");
         }
     }
-    Language::Language(){}
+    LexMap::LexMap(){}
 
-    tuple<Token, Terms> Language::identify(Terms terms) const
+    /**
+     * Identify a vector of terms using the internal contents of a LexMap
+     */
+    tuple<Token, vector<string>> LexMap::identify(vector<string> terms) const
     {
         // Return result of first lexer to match against remaining terms
         for (auto lexer : language_lexers)
@@ -67,7 +74,7 @@ namespace lex
             auto result = lexer.match(terms);
             if(result.result)
             {
-                //print("Term identified as " + lexer.name);
+                //print("vector<string> identified as " + lexer.name);
                 return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
             }
         }
@@ -78,6 +85,6 @@ namespace lex
         {
             print("\"" + t + "\"");
         }
-        return make_tuple(Token({}, "unidentified", "failure"), Terms());
+        return make_tuple(Token({}, "unidentified", "failure"), vector<string>());
     }
 }

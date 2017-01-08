@@ -12,7 +12,7 @@ To run demonstrations:
 ``` python
 # Python -> C++ quicksort demo (default)
 ./demo.py
-# View oher available demos:
+# View other available demos:
 ./demo.py --show
 p_quicksort      python3 cpp
 h_quicksort      haskell cpp
@@ -29,6 +29,88 @@ do               haskell cpp
 
 Input code for each demo is in `examples/demoname` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
 Generated code can be found in `examples/output/demoname_output/` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
+
+### Python -> Cpp example
+
+Here are the sources from the main demo (python to cpp conversion)
+
+``` python
+def sort(array):
+    less    = []
+    equal   = []
+    greater = []
+
+    if len(array) <= 1:
+        return array
+    else:
+        pivot = array[0]
+        for x in array:
+            if x < pivot:
+                less.append(x)
+            if x == pivot:
+                equal.append(x)
+            if x > pivot:
+                greater.append(x)
+        return sort(less) + equal + sort(greater)
+
+def main():
+    l = sort([3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743])
+
+if __name__ == "__main__":
+    main()
+```
+
+``` cpp
+// main.hpp
+
+#include "../std/std.hpp"
+template <typename T_array>
+auto sort (T_array array)
+{
+    auto less = std::vector<Object>({});
+    auto equal = std::vector<Object>({});
+    auto greater = std::vector<Object>({});
+    if (len(array) <= 1)
+    {
+        return array;
+    }
+    else
+    {
+        auto pivot = array[0];
+        for (auto x : array)
+        {
+            if (x < pivot)
+            {
+                less.push_back(x);
+            }
+            ;
+            if (x == pivot)
+            {
+                equal.push_back(x);
+            }
+            ;
+            if (x > pivot)
+            {
+                greater.push_back(x);
+            }
+            ;
+        };
+        return sort(less) + equal + sort(greater);
+    };
+}
+auto __py_main__ ()
+{
+    auto l = sort(std::vector<Object>({3,2,12,9,4,68,17,1,2,3,4,5,6,12,9,8,7,6,5,4,743}));
+}
+
+// main.cpp
+#include "main.hpp"
+
+int main(int argc, char ** argv)
+{
+    __py_main__();
+}
+```
 
 ### Documentation
 
