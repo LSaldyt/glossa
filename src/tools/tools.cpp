@@ -41,11 +41,8 @@ namespace tools
     string sliceString(string original, int begin_offset, int end_offset)
     {
         auto size = original.size();
-        if (begin_offset > size or abs(end_offset) > size)
-        {
-            print("Could not slice vector of size ", size);
-            throw exception();
-        }
+        assert(not (begin_offset > size));
+        assert(not (abs(end_offset) > size));
         return string(original.begin() + begin_offset, original.end() + end_offset);
     }
 

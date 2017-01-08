@@ -15,7 +15,7 @@ using namespace syntax;
 using namespace tools;
 
 using StatementConstructor = function<shared_ptr<Symbol>(vector<vector<shared_ptr<Symbol>>>)>;
-using GrammarMap = unordered_map<string, tuple<SymbolicTokenParsers, vector<int>>>; 
+using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<int>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
@@ -50,10 +50,10 @@ private:
     tuple<string, vector<Result<SymbolicToken>>> identify (SymbolicTokens& tokens);
     vector<vector<shared_ptr<Symbol>>> toGroup(string name, vector<Result<SymbolicToken>> results);
 
-    tuple<SymbolicTokenParsers, vector<int>> read(string filename);
-    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(SymbolicTokenParsers parsers, SymbolicTokens& tokens);
+    tuple<vector<SymbolicTokenParser>, vector<int>> read(string filename);
+    tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, SymbolicTokens& tokens);
 
-    SymbolicTokenParsers readGrammarPairs(vector<string>& terms);
+    vector<SymbolicTokenParser> readGrammarPairs(vector<string>& terms);
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
     SymbolicTokenParser  retrieveGrammar(string filename); 
 

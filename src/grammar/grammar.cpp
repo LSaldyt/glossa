@@ -94,9 +94,9 @@ vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<S
 // Helper function for reading in grammar files
 //
 // (Used after a keyword like anyOf or inOrder, which takes MULTIPLE parsers
-SymbolicTokenParsers Grammar::readGrammarPairs(vector<string>& terms)
+vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
 {
-    SymbolicTokenParsers parsers;
+    vector<SymbolicTokenParser> parsers;
 
     if (terms.size() % 2 != 0)
     {
@@ -197,9 +197,9 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 }
 
 // Master function for reading a grammar file
-tuple<SymbolicTokenParsers, vector<int>> Grammar::read(string filename)
+tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
 {
-    SymbolicTokenParsers parsers;
+    vector<SymbolicTokenParser> parsers;
     auto content = readFile(filename);
     auto construct_line = content.back();
     content = slice(content, 0, -1);
@@ -299,7 +299,7 @@ Grammar::identify
 // Evaluate a list of parsers stored in the grammar_map
 tuple<bool, vector<Result<SymbolicToken>>> 
 Grammar::evaluateGrammar
-(SymbolicTokenParsers parsers, SymbolicTokens& tokens)
+(vector<SymbolicTokenParser> parsers, SymbolicTokens& tokens)
 {
     vector<Result<SymbolicToken>> results;
 
