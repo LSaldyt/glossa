@@ -75,7 +75,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
         output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
-        output_time = time_run(outputlang, 'output', iterations)
+        output_time = time_run(outputlang, 'output', iterations, 'main')
     print('Output code time:')
     print(output_time)
 

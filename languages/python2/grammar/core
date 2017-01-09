@@ -31,3 +31,5 @@ fileprint
 exception
 division
 comment
+trycatch
+iterkeys

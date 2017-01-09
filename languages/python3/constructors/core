@@ -31,3 +31,5 @@ exception
 division
 parenexpr
 comment
+trycatch
+iterkeys

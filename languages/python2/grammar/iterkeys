@@ -1,0 +1,6 @@
+anyOf identifier wildcard link functioncall link elementaccess
+punctuator .
+keyword iterkeys
+punctuator (
+punctuator )
+0
