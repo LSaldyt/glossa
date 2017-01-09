@@ -158,6 +158,7 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
+            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
             {
@@ -165,7 +166,6 @@ namespace compiler
             }
             unordered_set<string> names;
             auto groups = get<1>(identified_group);
-            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             for (auto group : groups)
             {
                 for (auto symbol : group)
