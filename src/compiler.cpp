@@ -173,7 +173,9 @@ namespace compiler
                     print(symbol->abstract());
                 }
             }
+            print("Generating code for " + get<0>(identified_group));
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
+            print("Adding generated code to file content");
             for (auto fileinfo : generated)
             {
                 string type         = get<0>(fileinfo);
