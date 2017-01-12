@@ -1,0 +1,4 @@
+keyword self
+punctuator .
+anyOf link functioncall identifier wildcard
+2

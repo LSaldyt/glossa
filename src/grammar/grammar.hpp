@@ -37,7 +37,7 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
 class Grammar
 {
 public:
-    Grammar(vector<string> grammar_files, string directory);
+    Grammar(vector<string> grammar_files, string directory, string lex_dir);
 
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identifyGroups(vector<SymbolicToken>& tokens);
 

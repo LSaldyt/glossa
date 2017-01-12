@@ -61,7 +61,7 @@ namespace compiler
 	string lex_dir = "languages/" + language + "/lex/";
         string directory = "languages/" + language + "/grammar/";
         auto grammar_files = readFile(directory + "core");
-        auto grammar       = Grammar(grammar_files, directory);
+        auto grammar       = Grammar(grammar_files, directory + ".__core__/", lex_dir);
 
         auto operators        = readFile(lex_dir + "operators");
         auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
