@@ -1,8 +1,8 @@
 keyword def
 identifier wildcard
 punctuator (
-optional identifier wildcard 
-many inOrder !punctuator , identifier wildcard 
+optional link defaultarg 
+many inOrder !punctuator , link defaultarg 
 punctuator )
 punctuator :
 many link statement

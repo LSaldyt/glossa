@@ -3,5 +3,6 @@ link boolexpression
 punctuator :
 many link statement
 keyword end
+many link elifbranch
 optional link elsebranch
-1 sep 3 sep 5
+1 sep 3 sep 5 sep 6

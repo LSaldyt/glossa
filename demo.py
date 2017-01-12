@@ -124,16 +124,19 @@ def transpile(demoname, demos, run_compare=False):
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs)
-        if run_compare:
-            compare(directory, languageargs[0], languageargs[1], iterations=100)
-        else:
-            run_language(directory, languageargs[0], languageargs[1])
-
-        # Save demo output, then cleanup
+	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
             shutil.rmtree(outputdir)
         shutil.copytree('output', outputdir)
+
+        if run_compare:
+            compare(directory, languageargs[0], languageargs[1], iterations=100)
+        else:
+            run_language(directory, languageargs[0], languageargs[1])
+        # Cleanup
+        if os.path.exists(outputdir):
+            shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
         shutil.rmtree('input')
@@ -164,7 +167,8 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    transpile(demoname, demos, True)
+    #transpile(demoname, demos, True)
+    transpile(demoname, demos)
 
 
 if __name__ == '__main__':

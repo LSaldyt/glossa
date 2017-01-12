@@ -2,4 +2,8 @@ statement = 0 0
 comment   = 1
 defines
 source
-$statement$ `sep EMPTY comment` 
+branch nonempty comment
+$statement$NEWLINE`sep EMPTY comment` 
+elsebranch
+$statement$ 
+end
