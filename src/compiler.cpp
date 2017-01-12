@@ -58,13 +58,14 @@ namespace compiler
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
+	string lex_dir = "languages/" + language + "/lex/";
         string directory = "languages/" + language + "/grammar/";
         auto grammar_files = readFile(directory + "core");
         auto grammar       = Grammar(grammar_files, directory);
 
-        auto operators        = readFile(directory + "operators");
-        auto logicaloperators = readFile(directory + "logicaloperators"); 
-        auto punctuators      = readFile(directory + "punctuators");
+        auto operators        = readFile(lex_dir + "operators");
+        auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
+        auto punctuators      = readFile(lex_dir + "punctuators");
 
         LexMapTermSets term_sets;
         term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
@@ -84,7 +85,7 @@ namespace compiler
             lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
         }
 
-        const vector<Seperator> whitespace = readWhitespaceFile(directory + "whitespace");
+        const vector<Seperator> whitespace = readWhitespaceFile(lex_dir + "whitespace");
         LexMap test_language(term_sets, lexer_set, whitespace);
         grammar.lexmap = test_language;
         print("Done");

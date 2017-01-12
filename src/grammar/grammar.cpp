@@ -13,9 +13,10 @@ Grammar::Grammar(vector<string> filenames, string directory)
 {
     for (auto filename : filenames)
     {
+        print(filename);
         grammar_map[filename] = read(directory + filename);
     }
-    readDelimiters(directory);
+    readDelimiters(directory + "../lex/");
 }
 
 /**
