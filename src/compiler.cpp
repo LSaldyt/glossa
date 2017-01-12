@@ -88,7 +88,6 @@ namespace compiler
         const vector<Seperator> whitespace = readWhitespaceFile(lex_dir + "whitespace");
         LexMap test_language(term_sets, lexer_set, whitespace);
         grammar.lexmap = test_language;
-        print("Done");
         return grammar;
     }
 

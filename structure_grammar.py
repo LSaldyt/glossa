@@ -33,10 +33,14 @@ if __name__ == '__main__':
     structure_grammar('python3_grammar_update')
 """
 
-if __name__ == '__main__':
-    directory = 'languages/python3/grammar/'
+def structure_grammar(language):
+    directory = 'languages/' + language + '/grammar/'
     excluded = 'core'
     corefiles = [name for name in filenames(directory) if name not in excluded] 
-    print(corefiles)
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))
+
+if __name__ == '__main__':
+    structure_grammar('python3')
+    structure_grammar('python2')
+    structure_grammar('haskell')
