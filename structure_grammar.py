@@ -16,6 +16,7 @@ def filenames(directory):
         break
     return names
 
+
 def structure_grammar(language):
     directory = 'languages/' + language + '/grammar/'
     coredir = directory + '.__core__/'
@@ -23,7 +24,7 @@ def structure_grammar(language):
         shutil.rmtree(coredir)
     os.makedirs(coredir)
 
-    excluded  = 'core'
+    excluded  = ['core']
     corefiles = [name for name in filenames(directory) if name not in excluded] 
 
     for filename in corefiles:
