@@ -1,9 +1,11 @@
 boolexpression
 statement.bak
+value.auto
 value.bak
 statement
 value
 expression
+statement.auto
 memberaccess
 listcomp
 basevalue
@@ -17,6 +19,7 @@ vector
 tuple
 functioncall
 dictionary
+value
 class
 import
 exception
@@ -35,3 +38,4 @@ forloop
 conditional
 return
 assert
+statement

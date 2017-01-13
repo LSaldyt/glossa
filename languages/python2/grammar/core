@@ -1,9 +1,11 @@
 boolexpression
 statement.bak
+value.auto
 value.bak
 statement
 value
 expression
+statement.auto
 boolseperator
 division
 memberaccess
@@ -19,6 +21,7 @@ tuple
 functioncall
 dictionary
 defaultarg
+value
 class
 import
 global
@@ -42,3 +45,4 @@ assert
 elifbranch
 fileprint
 in
+statement
