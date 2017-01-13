@@ -1,0 +1,6 @@
+identifier wildcard
+many1 anyOf literal wildcard link list 
+operator =
+anyOf link return link conditional 
+newline newline
+1 sep 3

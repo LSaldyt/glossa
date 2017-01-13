@@ -35,7 +35,7 @@ def build(directory, languageargs):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3']:
+            if languageargs[0] in ['python', 'python2', 'python3', 'python3_auto_gen']:
                 run(['./annotate.py', inputfile])
 
     print('Running files: %s' % '\n'.join(inputfiles))

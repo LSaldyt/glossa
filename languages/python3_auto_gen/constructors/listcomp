@@ -1,0 +1,7 @@
+expr      = 0 0
+name      = 1 0
+loopexpr  = 2 0
+condition = 3
+defines
+source
+[$expr$ for $name$ in $loopexpr$ if $condition$]

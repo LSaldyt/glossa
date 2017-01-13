@@ -10,7 +10,7 @@ comments         python3 cpp
 integrate        python3 cpp
 fortran          fortran cpp
 text_prediction  python2 python3
-test             python2 python3
+test             python3_auto_gen cpp
 in               python2 python3
 print            python2 python3
 and              python2 python3
