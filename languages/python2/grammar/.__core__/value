@@ -1,2 +1,2 @@
-anyOf link in link elementaccess link iterkeys link memberaccess link division link functioncall link vector link tuple link classmemberaccess link dictionary link listcomp link parenexpr link tuple link basevalue 
+anyOf link division link memberaccess link iterkeys link listcomp link basevalue link parenexpr link string link kvpair link memberinit link vector link tuple link functioncall link dictionary link defaultarg
 0

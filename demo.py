@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import subprocess, shutil, time, sys, os
 from pprint import pprint
+from scripts import annotate, structure_grammars
 
 def run(commands):
     try:
@@ -36,7 +37,7 @@ def build(directory, languageargs):
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
             if languageargs[0] in ['python', 'python2', 'python3', 'python3_auto_gen']:
-                run(['./annotate.py', inputfile])
+                annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
     t = benchmark(run, 1, ['./build/progtran'] + languageargs + inputfiles)
@@ -142,6 +143,7 @@ def transpile(demoname, demos, run_compare=False):
         shutil.rmtree('input')
 
 def main():
+    structure_grammars()
     # Build the compiler and test it
     os.chdir('build')
     run(['cmake', '..'])
