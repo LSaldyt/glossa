@@ -15,6 +15,10 @@ def filenames(directory):
         break
     return names
 
+def build_anyof(directory):
+    names = filenames(directory)
+    names = ['link %s' % name for name in names]
+    return 'anyOf %s\n0' % ' '.join(names)
 
 def structure_grammar(language):
     directory = 'languages/' + language + '/grammar/'
@@ -29,13 +33,18 @@ def structure_grammar(language):
     for filename in corefiles:
         shutil.copy(directory + filename, coredir)
 
-    types = ['values', 'statements']
+    types = ['value', 'statement']
     for t in types:
-        type_dir = directory + t + '/'
+        type_dir = directory + t + 's/'
         type_files = filenames(type_dir)
         corefiles += type_files
         for filename in type_files:
             shutil.copy(type_dir + filename, coredir)
+        with open(directory + t, 'w') as anyoffile:
+            anyoffile.write(build_anyof(type_dir))
+        shutil.copy(directory + t + '.bak', directory + t)
+        #shutil.copy(directory + t, coredir)
+        #corefiles.append(t)
 
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))
