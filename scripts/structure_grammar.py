@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import subprocess, shutil, time, sys, os
 from pprint import pprint
 
@@ -41,8 +40,7 @@ def structure_grammar(language):
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))
 
-
-if __name__ == '__main__':
+def structure_grammars():
     excluded = ['symboltables', 'cython', 'cython3']
     languages = dirnames('languages/')
     for language in languages:
