@@ -1,4 +1,0 @@
-identifier wildcard
-punctuator .
-anyOf link functioncall identifier wildcard
-0 sep 2
