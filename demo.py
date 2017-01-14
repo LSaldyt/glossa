@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess, shutil, time, sys, os
 from pprint import pprint
-from scripts import annotate, structure_grammars
+from scripts import annotate, structure, analyze
 
 def run(commands):
     try:
@@ -143,7 +143,7 @@ def transpile(demoname, demos, run_compare=False):
         shutil.rmtree('input')
 
 def main():
-    structure_grammars()
+    structure()
     # Build the compiler and test it
     os.chdir('build')
     run(['cmake', '..'])
@@ -165,6 +165,9 @@ def main():
                 except Exception as e:
                     print('Transpile test for demo %s failed' % demo)
                     raise e
+        if sys.argv[1] == '--analyze':
+            analyze()
+            sys.exit(0)
         demoname = sys.argv[1]      # Otherwise, use demo provided
     else:
         demoname = 'python3'         # If none provided, show python demo by default

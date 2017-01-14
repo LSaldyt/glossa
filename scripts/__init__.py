@@ -1,2 +1,3 @@
-from .annotate import annotate
-from .structure_grammar import structure_grammars
+from .annotate  import annotate
+from .structure import structure
+from .analyze   import analyze
