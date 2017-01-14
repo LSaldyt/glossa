@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import subprocess, shutil, time, sys, os
 from pprint import pprint
+from scripts import annotate, structure, analyze
 
 def run(commands):
     try:
@@ -35,8 +36,8 @@ def build(directory, languageargs):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3']:
-                run(['./annotate.py', inputfile])
+            if languageargs[0] in ['python', 'python2', 'python3', 'python3_auto_gen']:
+                annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
     t = benchmark(run, 1, ['./build/progtran'] + languageargs + inputfiles)
@@ -124,21 +125,25 @@ def transpile(demoname, demos, run_compare=False):
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs)
-        if run_compare:
-            compare(directory, languageargs[0], languageargs[1], iterations=100)
-        else:
-            run_language(directory, languageargs[0], languageargs[1])
-
-        # Save demo output, then cleanup
+	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
             shutil.rmtree(outputdir)
         shutil.copytree('output', outputdir)
+
+        if run_compare:
+            compare(directory, languageargs[0], languageargs[1], iterations=100)
+        else:
+            run_language(directory, languageargs[0], languageargs[1])
+        # Cleanup
+        if os.path.exists(outputdir):
+            shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
         shutil.rmtree('input')
 
 def main():
+    structure()
     # Build the compiler and test it
     os.chdir('build')
     run(['cmake', '..'])
@@ -160,11 +165,15 @@ def main():
                 except Exception as e:
                     print('Transpile test for demo %s failed' % demo)
                     raise e
+        if sys.argv[1] == '--analyze':
+            analyze()
+            sys.exit(0)
         demoname = sys.argv[1]      # Otherwise, use demo provided
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    transpile(demoname, demos, True)
+    #transpile(demoname, demos, True)
+    transpile(demoname, demos)
 
 
 if __name__ == '__main__':
