@@ -1,0 +1,10 @@
+tryblock    = 0
+exception   = 1 0
+identifier  = 2 0
+exceptblock = 3
+defines
+source
+try:
+`block tryblock`
+except $exception$ as $identifier$:
+`block exceptblock`

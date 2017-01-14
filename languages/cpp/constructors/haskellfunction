@@ -7,7 +7,7 @@ header
 branch equalTo identifier main
 // No main declaration required
 elsebranch
-branch nonempty $args
+branch nonempty args
 template <
 `sep , args typenameSPACET_@`
 >

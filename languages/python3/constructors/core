@@ -31,3 +31,8 @@ exception
 division
 parenexpr
 comment
+trycatch
+iterkeys
+defaultarg
+in
+basevalue

@@ -37,9 +37,8 @@ string MultiSymbol::abstract(int indent)
     {
         for (auto symbol : group)
         {
-            representation += symbol->abstract(indent + 1);
+            representation += symbol->abstract(indent + 1) + "\n";
         }
-        representation += "\n";
     }
     return representation;
 }

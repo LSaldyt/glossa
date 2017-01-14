@@ -58,13 +58,14 @@ namespace compiler
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
+	string lex_dir = "languages/" + language + "/lex/";
         string directory = "languages/" + language + "/grammar/";
         auto grammar_files = readFile(directory + "core");
-        auto grammar       = Grammar(grammar_files, directory);
+        auto grammar       = Grammar(grammar_files, directory + ".__core__/", lex_dir);
 
-        auto operators        = readFile(directory + "operators");
-        auto logicaloperators = readFile(directory + "logicaloperators"); 
-        auto punctuators      = readFile(directory + "punctuators");
+        auto operators        = readFile(lex_dir + "operators");
+        auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
+        auto punctuators      = readFile(lex_dir + "punctuators");
 
         LexMapTermSets term_sets;
         term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
@@ -84,10 +85,9 @@ namespace compiler
             lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
         }
 
-        const vector<Seperator> whitespace = readWhitespaceFile(directory + "whitespace");
+        const vector<Seperator> whitespace = readWhitespaceFile(lex_dir + "whitespace");
         LexMap test_language(term_sets, lexer_set, whitespace);
         grammar.lexmap = test_language;
-        print("Done");
         return grammar;
     }
 
@@ -155,9 +155,12 @@ namespace compiler
         print("Constructing from grammar:");
         unordered_map<string, tuple<vector<string>, string>> files;
 
+        vector<vector<string>> asts;
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
+            vector<string> ast;
+            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
             {
@@ -165,15 +168,18 @@ namespace compiler
             }
             unordered_set<string> names;
             auto groups = get<1>(identified_group);
-            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             for (auto group : groups)
             {
                 for (auto symbol : group)
                 {
-                    print(symbol->abstract());
+                    auto abstract = symbol->abstract();
+                    print(abstract);
+                    ast.push_back(abstract);
                 }
             }
+            print("Generating code for " + get<0>(identified_group));
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
+            print("Adding generated code to file content");
             for (auto fileinfo : generated)
             {
                 string type         = get<0>(fileinfo);
@@ -191,6 +197,7 @@ namespace compiler
                     files[type] = make_tuple(body, path);
                 }
             }
+            asts.push_back(ast);
         }
 
         print("Initial file");
@@ -210,6 +217,13 @@ namespace compiler
             }
             writeFile(body, output_directory + "/" + path);
         }
+
+        vector<string> global_ast;
+        for (auto ast : asts)
+        {
+            concat(global_ast, ast);
+        } 
+        writeFile(global_ast, "examples/asts/" + filename + ".ast");
     }
 
     /**

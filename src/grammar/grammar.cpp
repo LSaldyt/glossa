@@ -9,13 +9,14 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 }
 
 /// Standard grammar constructor (From list of files)
-Grammar::Grammar(vector<string> filenames, string directory) 
+Grammar::Grammar(vector<string> filenames, string directory, string lex_dir) 
 {
     for (auto filename : filenames)
     {
+        print(filename);
         grammar_map[filename] = read(directory + filename);
     }
-    readDelimiters(directory);
+    readDelimiters(lex_dir);
 }
 
 /**

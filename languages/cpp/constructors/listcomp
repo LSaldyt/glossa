@@ -19,7 +19,7 @@ std::function<bool(const Object&)>(
 [&](const auto& $name$ )
 {
 return 
-`sep SPACE $condition`
+`sep SPACE condition`
 ;
 }
 )
@@ -32,7 +32,7 @@ $loopexpr$ ,
 std::function<Object(const Object&)>(
 [&](const auto& $name$)
 {
-return $expr$ ;
+return $expr$;
 }
 )
 
@@ -42,7 +42,7 @@ std::function<bool(const Object&)>(
 [&](const auto& $name$)
 {
 return 
-`sep SPACE $condition`
+`sep SPACE condition`
 ;
 }
 )

@@ -1,0 +1,2 @@
+gfortran @.f90
+./a.out

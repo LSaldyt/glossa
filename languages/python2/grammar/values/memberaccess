@@ -1,0 +1,4 @@
+identifier wildcard
+punctuator .
+anyOf link memberaccess link functioncall identifier wildcard 
+0 sep 2
