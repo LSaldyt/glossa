@@ -155,9 +155,11 @@ namespace compiler
         print("Constructing from grammar:");
         unordered_map<string, tuple<vector<string>, string>> files;
 
+        vector<vector<string>> asts;
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
+            vector<string> ast;
             print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
@@ -170,7 +172,9 @@ namespace compiler
             {
                 for (auto symbol : group)
                 {
-                    print(symbol->abstract());
+                    auto abstract = symbol->abstract();
+                    print(abstract);
+                    ast.push_back(abstract);
                 }
             }
             print("Generating code for " + get<0>(identified_group));
@@ -193,6 +197,7 @@ namespace compiler
                     files[type] = make_tuple(body, path);
                 }
             }
+            asts.push_back(ast);
         }
 
         print("Initial file");
@@ -212,6 +217,13 @@ namespace compiler
             }
             writeFile(body, output_directory + "/" + path);
         }
+
+        vector<string> global_ast;
+        for (auto ast : asts)
+        {
+            concat(global_ast, ast);
+        } 
+        writeFile(global_ast, "examples/asts/" + filename + ".ast");
     }
 
     /**
