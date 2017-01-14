@@ -66,4 +66,11 @@ namespace tools
         }
         return repr;
     }
+
+    unsigned long long getTime()
+    {
+        struct timeval now;
+        gettimeofday (&now, NULL);
+        return now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+    }
 }

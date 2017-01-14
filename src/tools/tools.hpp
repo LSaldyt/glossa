@@ -14,6 +14,8 @@
 #include <fstream>
 
 #include <assert.h>
+#include <sys/time.h> // To keep constant frametime
+#include <unistd.h>
 
 using namespace std::string_literals;
 
@@ -136,4 +138,5 @@ void replaceAll( string &s, const string &search, const string &replace );
  * Common string manipulation, useful in code generation
  */
 string repeatString(const string&s, int n);
+unsigned long long getTime();
 }
