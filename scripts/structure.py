@@ -52,8 +52,11 @@ def structure_constructor(language):
         shutil.rmtree(coredir)
     os.makedirs(coredir)
 
-    excluded  = ['core']
+    excluded  = ['core', 'file']
     corefiles = [name for name in filenames(directory) if name not in excluded] 
+
+    with open(directory + 'core', 'w') as corefile:
+        corefile.write('\n'.join(corefiles))
 
 def structure():
     excluded = ['symboltables', 'cython', 'cython3']

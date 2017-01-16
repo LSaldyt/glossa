@@ -172,8 +172,8 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    #transpile(demoname, demos, True)
-    transpile(demoname, demos)
+    transpile(demoname, demos, True)
+    #transpile(demoname, demos)
 
 
 if __name__ == '__main__':
