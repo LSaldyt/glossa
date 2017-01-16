@@ -50,6 +50,8 @@ private:
     std::string name;
 };
 
+void exception_assert(bool b);
+
 /// Abstract IO
 std::vector<std::string> readFile(string filename);
 /// Abstract IO
@@ -139,4 +141,5 @@ void replaceAll( string &s, const string &search, const string &replace );
  */
 string repeatString(const string&s, int n);
 unsigned long long getTime();
+
 }

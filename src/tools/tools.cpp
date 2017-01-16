@@ -73,4 +73,12 @@ namespace tools
         gettimeofday (&now, NULL);
         return now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
     }
+
+    void exception_assert(bool b)
+    {
+        if (not b)
+        {
+            throw named_exception("Assertion failed");
+        }
+    }
 }
