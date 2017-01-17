@@ -26,6 +26,7 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
  */
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(vector<SymbolicToken>& tokens)
 {
+    print("Identifying groups with grammar");
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
     try 
     {
@@ -33,12 +34,15 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         while (tokens.size() > 0)
         {
             // Tag groups of tokens as certain lexmap constructs
+            print("Attempting identification of remaining " + std::to_string(tokens.size()) + " tokens");
             auto result = identify(tokens);
+            print("Identified group as " + get<0>(result) + ", grouping..");
             auto group  = toGroup(get<0>(result), get<1>(result));
             identified_groups.push_back(make_tuple(get<0>(result), group));
+            print("Group creation finished. " + std::to_string(tokens.size()) + " tokens remaining");
         }
     }
-    catch (named_exception& e) 
+    catch (...) 
     {
         print("Successfully identified:");
         for (auto identified_group : identified_groups)
@@ -59,6 +63,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         }
         throw;
     }
+    print("Group identification finished. " + std::to_string(identified_groups.size()) + " groups created");
 
     return identified_groups;
 }
