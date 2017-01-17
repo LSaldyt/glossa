@@ -27,7 +27,12 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
         }
         else
         {
-            tools::print("Failed to generate type ", token.type);
+            std::string representation;
+            for (auto v : token.values)
+            {
+                representation += v + ",";
+            }
+            tools::print("Failed to generate type from \"" + representation + "\", (type: " + token.type + "), (subtype: " + token.sub_type + ")" );
         }
     }
 

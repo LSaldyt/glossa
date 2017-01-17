@@ -277,6 +277,10 @@ namespace compiler
                     {
                         value = symbol_table[value];
                     }
+                    if (value == "")
+                    {
+                        throw named_exception("Empty token");
+                    }
                 }
             }
         }

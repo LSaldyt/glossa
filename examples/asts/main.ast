@@ -1,357 +1,173 @@
-MultiSymbol (function)
-    Identifier (sort)
-    Identifier (array)
-    MultiSymbol (statement)
-        MultiSymbol (comment)
-            (
-    Sorts an array of comparable values
-
-    )
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (less)
+MultiSymbol (haskellfunction)
+    Identifier (doubleSmallNumber)
+    Identifier (x)
+    MultiSymbol (conditional)
+        MultiSymbol (boolexpression)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (vector)
+                    Identifier (x)
 
 
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (equal)
+            (>)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (vector)
+                    (100)
 
 
 
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (greater)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (vector)
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (conditional)
+        MultiSymbol (return)
             MultiSymbol (boolexpression)
                 MultiSymbol (expression)
                     MultiSymbol (value)
-                        MultiSymbol (functioncall)
-                            Identifier (len)
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    Identifier (array)
+                        Identifier (x)
+
+
+
+
+        MultiSymbol (return)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        Identifier (x)
+
+                    (*)
+                    MultiSymbol (value)
+                        (2)
 
 
 
 
 
-                (<=)
+
+MultiSymbol (constantdeclaration)
+    Identifier (a)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (list)
                 MultiSymbol (expression)
                     MultiSymbol (value)
                         (1)
 
 
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (2)
 
-            MultiSymbol (statement)
-                MultiSymbol (return)
+
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (3)
+
+
+
+
+
+
+Symbol
+MultiSymbol (constantdeclaration)
+    Identifier (b)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (range)
+                (1)
+                (2)
+                (10)
+
+
+
+
+Symbol
+MultiSymbol (constantdeclaration)
+    Identifier (c)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (listcomp)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (2)
+
+                    (*)
+                    MultiSymbol (value)
+                        Identifier (x)
+
+
+                Identifier (x)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        Identifier (b)
+
+
+
+
+
+
+Symbol
+MultiSymbol (constantdeclaration)
+    Identifier (d)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (listcomp)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        Identifier (x)
+
+
+                Identifier (x)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        Identifier (c)
+
+
+                MultiSymbol (boolexpression)
                     MultiSymbol (expression)
                         MultiSymbol (value)
-                            Identifier (array)
+                            Identifier (x)
 
 
+                    (>)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            (10)
 
 
-            MultiSymbol (elsebranch)
-                MultiSymbol (statement)
-                    MultiSymbol (assignment)
-                        Identifier (pivot)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                MultiSymbol (elementaccess)
-                                    Identifier (array)
-                                    (0)
 
 
 
 
 
-                MultiSymbol (statement)
-                    MultiSymbol (forloop)
-                        Identifier (x)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                Identifier (array)
+Symbol
+MultiSymbol (constantdeclaration)
+    Identifier (t)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (tuple)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (1)
 
 
-                        MultiSymbol (statement)
-                            MultiSymbol (conditional)
-                                MultiSymbol (boolexpression)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (x)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (2)
 
 
-                                    (<)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (pivot)
 
 
 
-                                MultiSymbol (statement)
-                                    MultiSymbol (memberaccess)
-                                        Identifier (less)
-                                        MultiSymbol (functioncall)
-                                            Identifier (push_back)
-                                            MultiSymbol (expression)
-                                                MultiSymbol (value)
-                                                    Identifier (x)
 
-
-
-
-
-
-
-                        MultiSymbol (statement)
-                            MultiSymbol (conditional)
-                                MultiSymbol (boolexpression)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (x)
-
-
-                                    (==)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (pivot)
-
-
-
-                                MultiSymbol (statement)
-                                    MultiSymbol (memberaccess)
-                                        Identifier (equal)
-                                        MultiSymbol (functioncall)
-                                            Identifier (push_back)
-                                            MultiSymbol (expression)
-                                                MultiSymbol (value)
-                                                    Identifier (x)
-
-
-
-
-
-
-
-                        MultiSymbol (statement)
-                            MultiSymbol (conditional)
-                                MultiSymbol (boolexpression)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (x)
-
-
-                                    (>)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (pivot)
-
-
-
-                                MultiSymbol (statement)
-                                    MultiSymbol (memberaccess)
-                                        Identifier (greater)
-                                        MultiSymbol (functioncall)
-                                            Identifier (push_back)
-                                            MultiSymbol (expression)
-                                                MultiSymbol (value)
-                                                    Identifier (x)
-
-
-
-
-
-
-
-
-
-                MultiSymbol (statement)
-                    MultiSymbol (return)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                MultiSymbol (functioncall)
-                                    Identifier (sort)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (less)
-
-
-
-
-                            (+)
-                            MultiSymbol (value)
-                                Identifier (equal)
-
-                            (+)
-                            MultiSymbol (value)
-                                MultiSymbol (functioncall)
-                                    Identifier (sort)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            Identifier (greater)
-
-
-
-
-
-
-
-
-
-
-
-MultiSymbol (function)
-    Identifier (__py_main__)
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (l)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (functioncall)
-                        Identifier (sort)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                MultiSymbol (vector)
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (3)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (2)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (12)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (9)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (4)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (68)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (17)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (1)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (2)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (3)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (4)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (5)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (6)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (12)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (9)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (8)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (7)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (6)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (5)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (4)
-
-
-                                    MultiSymbol (expression)
-                                        MultiSymbol (value)
-                                            (743)
-
-
-
-
-
-
-
-
-
-
-
+Symbol
 MultiSymbol (main)
-    MultiSymbol (statement)
-        MultiSymbol (functioncall)
-            Identifier (__py_main__)
+    MultiSymbol (expression)
+        MultiSymbol (value)
+            MultiSymbol (functioncall)
+                Identifier (print)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (0)
 
 
 
+
+
+
+Symbol
