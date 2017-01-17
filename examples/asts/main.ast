@@ -1,173 +1,63 @@
-MultiSymbol (haskellfunction)
-    Identifier (doubleSmallNumber)
-    Identifier (x)
-    MultiSymbol (conditional)
-        MultiSymbol (boolexpression)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    Identifier (x)
+MultiSymbol (comment)
+    (Run with)
 
+MultiSymbol (comment)
+    (python main.py -files testFile.txt)
 
-            (>)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    (100)
+MultiSymbol (comment)
+    (for example)
 
+MultiSymbol (comment)
+    (Or for a more complicated run with:)
 
+MultiSymbol (comment)
+    (python main.py -files testFile.txt ~/Desktop/org.org -folders ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/ -extensions .org .txt)
 
-        MultiSymbol (return)
-            MultiSymbol (boolexpression)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        Identifier (x)
+MultiSymbol (comment)
+    (This is a fun one too:)
 
+MultiSymbol (comment)
+    (python main.py -files ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/spaceopera.org)
 
+MultiSymbol (comment)
+    (For interactive mode:)
 
+MultiSymbol (comment)
+    (python main.py -files testFile.txt -i 1 -iters 100)
 
-        MultiSymbol (return)
-            MultiSymbol (boolexpression)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        Identifier (x)
+MultiSymbol (comment)
+    (ython script that takes a list of directories and a list of file extensions then it builds up a network of word frequencies and connections between words so that it can generate sentences, like so:
 
-                    (*)
-                    MultiSymbol (value)
-                        (2)
+http://forums.xkcd.com/viewtopic.php?f=7&t=86012
 
+This would be so fun.
 
+pseudo code:
 
+Find all documents of specified type.
 
+For each document, open them up and split on any and all white space.
 
+For each word
 
-MultiSymbol (constantdeclaration)
-    Identifier (a)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (list)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (1)
+check if it ends in a period or a comma. For now, remove the commas.
 
+If there's a period, strip off the period and make "." be the next "word" in the sentence (so that the connection between the current word and "." will be strengthened and the period will connect to the next word.)
 
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (2)
+Then check if the word exists in the dictionary. If so, increment its occurrence. If not, add it.
 
+Then add a connection between the word and the subsequent word in the sentence.
 
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (3)
+Finally, create a list of words with no incoming links (to start sentences), and another list of words with incoming links from periods (to start sentences) and start running through generating random text.
 
+)
 
+MultiSymbol (importall)
+    Identifier (functions)
 
+MultiSymbol (importall)
+    Identifier (framework)
 
+MultiSymbol (import)
+    Identifier (os)
 
-
-Symbol
-MultiSymbol (constantdeclaration)
-    Identifier (b)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (range)
-                (1)
-                (2)
-                (10)
-
-
-
-
-Symbol
-MultiSymbol (constantdeclaration)
-    Identifier (c)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (listcomp)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (2)
-
-                    (*)
-                    MultiSymbol (value)
-                        Identifier (x)
-
-
-                Identifier (x)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        Identifier (b)
-
-
-
-
-
-
-Symbol
-MultiSymbol (constantdeclaration)
-    Identifier (d)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (listcomp)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        Identifier (x)
-
-
-                Identifier (x)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        Identifier (c)
-
-
-                MultiSymbol (boolexpression)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            Identifier (x)
-
-
-                    (>)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            (10)
-
-
-
-
-
-
-
-Symbol
-MultiSymbol (constantdeclaration)
-    Identifier (t)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (tuple)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (1)
-
-
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (2)
-
-
-
-
-
-
-Symbol
-MultiSymbol (main)
-    MultiSymbol (expression)
-        MultiSymbol (value)
-            MultiSymbol (functioncall)
-                Identifier (print)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        (0)
-
-
-
-
-
-
-Symbol

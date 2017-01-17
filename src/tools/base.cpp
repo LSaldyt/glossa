@@ -54,4 +54,5 @@ namespace tools
             throw named_exception("Assertion failed");
         }
     }
+
 }

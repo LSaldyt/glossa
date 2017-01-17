@@ -37,7 +37,7 @@ def structure_grammar(language):
         with open(directory + t + '.auto', 'w') as anyoffile:
             anyoffile.write(anyof)
             #shutil.copy(directory + t + '.auto', directory + t)
-        shutil.copy(directory + t + '.bak', directory + t)
+        #shutil.copy(directory + t + '.bak', directory + t)
         #if t == 'statement':
         #    shutil.copy(directory + t, coredir)
         corefiles.append(t)

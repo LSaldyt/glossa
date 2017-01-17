@@ -60,6 +60,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         print("Remaining:");
         for (auto token : tokens)
         {
+            print("Token (type: " + token.type + "), (subtype: " + token.sub_type + ")");
         }
         throw;
     }
@@ -276,6 +277,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     return [filename, this](vector<SymbolicToken> tokens)
     {
+        print("Running parser for " + filename);
         std::vector<SymbolicTokenParser> parsers;
 
         // Retrieve a list of parsers from the grammar map
@@ -292,6 +294,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         // Evaluate the parsers, preserving the tokens on failure
         vector<SymbolicToken> tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
+        print("Done for " + filename);
 
         if (get<0>(result))
         {
@@ -321,7 +324,9 @@ Grammar::identify
 
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
+    print("Evaluating statement grammar");
     auto result    = evaluateGrammar(parsers, tokens_copy);
+    print("Evaluation finished");
 
     if (get<0>(result))
     {
