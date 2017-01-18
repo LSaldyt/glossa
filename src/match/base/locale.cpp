@@ -31,5 +31,6 @@ bool is_lowers(const std::string &str)
 
 bool is_identifiers(const std::string &str)
 {
-    return all_of(str.begin(), str.end(), [](auto c){return isalpha(c) or isdigit(c) or c == '_';});
+    bool idents = all_of(str.begin(), str.end(), [](auto c){return isalpha(c) or isdigit(c) or c == '_';});
+    return idents and not (is_digits(str));
 }

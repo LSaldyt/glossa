@@ -1,63 +1,357 @@
-MultiSymbol (comment)
-    (Run with)
+MultiSymbol (function)
+    Identifier (sort)
+    Identifier (array)
+    MultiSymbol (statement)
+        MultiSymbol (comment)
+            (
+    Sorts an array of comparable values
 
-MultiSymbol (comment)
-    (python main.py -files testFile.txt)
+    )
 
-MultiSymbol (comment)
-    (for example)
 
-MultiSymbol (comment)
-    (Or for a more complicated run with:)
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (less)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
 
-MultiSymbol (comment)
-    (python main.py -files testFile.txt ~/Desktop/org.org -folders ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/ -extensions .org .txt)
 
-MultiSymbol (comment)
-    (This is a fun one too:)
 
-MultiSymbol (comment)
-    (python main.py -files ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/spaceopera.org)
 
-MultiSymbol (comment)
-    (For interactive mode:)
 
-MultiSymbol (comment)
-    (python main.py -files testFile.txt -i 1 -iters 100)
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (equal)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
 
-MultiSymbol (comment)
-    (ython script that takes a list of directories and a list of file extensions then it builds up a network of word frequencies and connections between words so that it can generate sentences, like so:
 
-http://forums.xkcd.com/viewtopic.php?f=7&t=86012
 
-This would be so fun.
 
-pseudo code:
 
-Find all documents of specified type.
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (greater)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
 
-For each document, open them up and split on any and all white space.
 
-For each word
 
-check if it ends in a period or a comma. For now, remove the commas.
 
-If there's a period, strip off the period and make "." be the next "word" in the sentence (so that the connection between the current word and "." will be strengthened and the period will connect to the next word.)
 
-Then check if the word exists in the dictionary. If so, increment its occurrence. If not, add it.
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (functioncall)
+                            Identifier (len)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    Identifier (array)
 
-Then add a connection between the word and the subsequent word in the sentence.
 
-Finally, create a list of words with no incoming links (to start sentences), and another list of words with incoming links from periods (to start sentences) and start running through generating random text.
 
-)
 
-MultiSymbol (importall)
-    Identifier (functions)
 
-MultiSymbol (importall)
-    Identifier (framework)
+                (<=)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        (1)
 
-MultiSymbol (import)
-    Identifier (os)
+
+
+            MultiSymbol (statement)
+                MultiSymbol (return)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            Identifier (array)
+
+
+
+
+            MultiSymbol (elsebranch)
+                MultiSymbol (statement)
+                    MultiSymbol (assignment)
+                        Identifier (pivot)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (elementaccess)
+                                    Identifier (array)
+                                    (0)
+
+
+
+
+
+                MultiSymbol (statement)
+                    MultiSymbol (forloop)
+                        Identifier (x)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                Identifier (array)
+
+
+                        MultiSymbol (statement)
+                            MultiSymbol (conditional)
+                                MultiSymbol (boolexpression)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (x)
+
+
+                                    (<)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (pivot)
+
+
+
+                                MultiSymbol (statement)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (less)
+                                        MultiSymbol (functioncall)
+                                            Identifier (push_back)
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    Identifier (x)
+
+
+
+
+
+
+
+                        MultiSymbol (statement)
+                            MultiSymbol (conditional)
+                                MultiSymbol (boolexpression)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (x)
+
+
+                                    (==)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (pivot)
+
+
+
+                                MultiSymbol (statement)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (equal)
+                                        MultiSymbol (functioncall)
+                                            Identifier (push_back)
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    Identifier (x)
+
+
+
+
+
+
+
+                        MultiSymbol (statement)
+                            MultiSymbol (conditional)
+                                MultiSymbol (boolexpression)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (x)
+
+
+                                    (>)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (pivot)
+
+
+
+                                MultiSymbol (statement)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (greater)
+                                        MultiSymbol (functioncall)
+                                            Identifier (push_back)
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    Identifier (x)
+
+
+
+
+
+
+
+
+
+                MultiSymbol (statement)
+                    MultiSymbol (return)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (sort)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (less)
+
+
+
+
+                            (+)
+                            MultiSymbol (value)
+                                Identifier (equal)
+
+                            (+)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (sort)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            Identifier (greater)
+
+
+
+
+
+
+
+
+
+
+
+MultiSymbol (function)
+    Identifier (__py_main__)
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (l)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (sort)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (vector)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (3)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (2)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (12)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (9)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (4)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (68)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (17)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (1)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (2)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (3)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (4)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (5)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (6)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (12)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (9)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (8)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (7)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (6)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (5)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (4)
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            (743)
+
+
+
+
+
+
+
+
+
+
+
+MultiSymbol (main)
+    MultiSymbol (statement)
+        MultiSymbol (functioncall)
+            Identifier (__py_main__)
+
+
 
