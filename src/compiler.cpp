@@ -8,21 +8,20 @@ int main(int argc, char* argv[])
     using namespace compiler;
 
     vector<string> args;
-    if (argc > 1)
+    for (int i = 1; i < argc; i++)
     {
-        for (int i = 1; i < argc; i++)
-        {
-            args.push_back(argv[i]);
-        }
+        args.push_back(argv[i]);
     }
 
-    assert(args.size() > 2);
+    assert(args.size() > 3);
 
-    string from = args[0];
-    string to   = args[1];
-    vector<string> files = slice(args, 2);
+    int verbosity = std::stoi(args[0]);
 
-    compileFiles(files, "input", from, "output", to);
+    string from = args[1];
+    string to   = args[2];
+    vector<string> files = slice(args, 3);
+
+    compileFiles(files, "input", from, "output", to, verbosity);
     print("Compilation finished");
 }
 
@@ -114,16 +113,18 @@ namespace compiler
      * @param output_dir  Output directory that will contain files in output language
      * @param output_lang String name of output language
      */ 
-    void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang)
+    void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang, int verbosity)
     {
         auto grammar   = loadGrammar(input_lang);
         auto generator = loadGenerator(output_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
+        OutputManager logger(verbosity);
+
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, symbol_table, input_dir, output_dir);
+            compile(file, grammar, generator, symbol_table, input_dir, output_dir, logger);
         }
     }
 
@@ -136,23 +137,23 @@ namespace compiler
      * @param input_directory  String of input directory
      * @param output_directory String name of output directory
      */
-    void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory)
+    void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory, OutputManager logger)
     {
-        print("Reading File");
+        logger.log("Reading file " + filename);
         auto content         = readFile     (input_directory + "/" + filename);
-        print("Lexing terms");
+        logger.log("Lexing terms");
         auto tokens          = tokenPass    (content, grammar, symbol_table); 
-        print("Creating symbols");
+        logger.log("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
-        print("Joining symbolic tokens");
+        logger.log("Joining symbolic tokens");
         auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
 
         for(auto& jt : joined_tokens)
         {
-            print("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
+            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"", 2);
         }
 
-        print("Constructing from grammar:");
+        logger.log("Constructing from grammar:");
         unordered_map<string, tuple<vector<string>, string>> files;
 
         vector<vector<string>> asts;
@@ -160,7 +161,7 @@ namespace compiler
         for (auto identified_group : identified_groups)
         {
             vector<string> ast;
-            print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
+            logger.log("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
             {
@@ -177,12 +178,12 @@ namespace compiler
                     ast.push_back(abstract);
                 }
             }
-            print("Generating code for " + get<0>(identified_group));
+            logger.log("Generating code for " + get<0>(identified_group));
             auto a = getTime();
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
             auto b = getTime();
-            print("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
-            print("Adding generated code to file content");
+            logger.log("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
+            logger.log("Adding generated code to file content");
             for (auto fileinfo : generated)
             {
                 string type         = get<0>(fileinfo);
@@ -191,32 +192,32 @@ namespace compiler
 
                 if (contains(files, type))
                 {
-                    print("Adding to " + type + " file");
+                    logger.log("Adding to " + type + " file");
                     concat(get<0>(files[type]), body);
                 }
                 else
                 {
-                    print("Creating initial " + type + " file");
+                    logger.log("Creating initial " + type + " file");
                     files[type] = make_tuple(body, path);
                 }
             }
             asts.push_back(ast);
         }
 
-        print("Initial file");
+        logger.log("Initial file");
         for (auto line : content)
         {
-            print(line);
+            logger.log(line);
         }
 
         for (auto kv : files)
         {
-            print("Generated " + kv.first + " file:");
+            logger.log("Generated " + kv.first + " file:");
             auto body = get<0>(kv.second);
             auto path = get<1>(kv.second);
             for (auto line : body)
             {
-                print(line);
+                logger.log(line);
             }
             writeFile(body, output_directory + "/" + path);
         }
