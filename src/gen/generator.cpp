@@ -372,7 +372,7 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
 SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        print("Building symbol storage");
+        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {

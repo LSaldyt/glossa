@@ -14,13 +14,10 @@ listcomp
 basevalue
 parenexpr
 string
-kvpair
-memberinit
 vector
 tuple
 functioncall
 dictionary
-defaultarg
 value
 class
 import
@@ -31,6 +28,7 @@ assignment
 classmemberaccess
 function
 elementaccess
+memberinit
 whileloop
 multistatement
 print
@@ -47,3 +45,5 @@ elifbranch
 fileprint
 in
 statement
+kvpair
+defaultarg

@@ -60,7 +60,7 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         print("Remaining:");
         for (auto token : tokens)
         {
-            print("Token (type: " + token.type + "), (subtype: " + token.sub_type + ")");
+            print("Token (type: " + token.type + "), (subtype: " + token.sub_type + "), (text:" + token.text + ")");
         }
         throw;
     }
@@ -294,8 +294,6 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         // Evaluate the parsers, preserving the tokens on failure
         vector<SymbolicToken> tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
-        print("Done for " + filename);
-
         if (get<0>(result))
         {
             auto group       = toGroup(filename, get<1>(result));

@@ -8,3 +8,5 @@ __pycache__
 */a.out
 examples/output/*/a.out
 docs/doxygen/*
+input/
+output/
