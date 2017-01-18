@@ -112,6 +112,7 @@ namespace compiler
      * @param input_lang  String name of input langauge
      * @param output_dir  Output directory that will contain files in output language
      * @param output_lang String name of output language
+     * @param verbosity   Verbosity level of output
      */ 
     void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang, int verbosity)
     {
@@ -136,13 +137,14 @@ namespace compiler
      * @param symbol_table     Dictionary of symbol conversions
      * @param input_directory  String of input directory
      * @param output_directory String name of output directory
+     * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
     void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory, OutputManager logger)
     {
         logger.log("Reading file " + filename);
         auto content         = readFile     (input_directory + "/" + filename);
         logger.log("Lexing terms");
-        auto tokens          = tokenPass    (content, grammar, symbol_table); 
+        auto tokens          = tokenPass    (content, grammar, symbol_table, logger); 
         logger.log("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens);
         logger.log("Joining symbolic tokens");
@@ -157,7 +159,7 @@ namespace compiler
         unordered_map<string, tuple<vector<string>, string>> files;
 
         vector<vector<string>> asts;
-        auto identified_groups = grammar.identifyGroups(joined_tokens);
+        auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         for (auto identified_group : identified_groups)
         {
             vector<string> ast;
@@ -174,7 +176,7 @@ namespace compiler
                 for (auto symbol : group)
                 {
                     auto abstract = symbol->abstract();
-                    print(abstract);
+                    logger.log(abstract);
                     ast.push_back(abstract);
                 }
             }
@@ -237,7 +239,7 @@ namespace compiler
      * @param symbol_table Dictionary of symbol conversions
      * @return Vector of unsymbolized tokens (annotated terms)
      */
-    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table, OutputManager logger)
     {
         std::vector<Tokens> tokens;
         string unseperated_content;
@@ -282,7 +284,7 @@ namespace compiler
             {
                 for (auto& value : token.values)
                 {
-                    print("Token Value: " + value);
+                    logger.log("Token Value: " + value, 2);
                     if (contains(symbol_table, value))
                     {
                         value = symbol_table[value];
