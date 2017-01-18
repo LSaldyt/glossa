@@ -6,6 +6,7 @@ def f(x):
 
 if __name__ == "__main__":
     print "Hello World",
+
     try:
         f(3) # Prints 3..
     except Exception, e:
@@ -14,9 +15,8 @@ if __name__ == "__main__":
     heights = {'tom' : 6, 'sally' : 5}
     for key in heights.iterkeys():
         print key
-
     for value in heights.itervalues():
         print value
-
     for item in heights.iteritems():
         print item
+

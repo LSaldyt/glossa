@@ -64,7 +64,9 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
  */
 vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype, int nesting)
 {
+    //print("Running constructor for " + filetype + " file");
     auto symbol_storage = symbol_storage_generator(symbol_groups);
+    //print("Symbol storage created successfully, beginning branch evaluation");
     auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype, nesting);
     return generated;
 }

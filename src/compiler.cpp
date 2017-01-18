@@ -259,8 +259,17 @@ namespace compiler
             else
             {
                 auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
-                for (auto line : lines)
+                for (auto it = lines.begin(); it != lines.end(); it++)
                 {
+                    string line = rtrim(*it); // Remove trailing whitespace
+                    if (line.back() == '\\')
+                    {
+                        if (it + 1 != lines.end())
+                        {
+                            it++;
+                            line = string(line.begin(), line.end() - 1) + " " + *it;
+                        }
+                    }
                     tokens.push_back(lexWith(line, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter));
                 }
             }
@@ -276,10 +285,6 @@ namespace compiler
                     if (contains(symbol_table, value))
                     {
                         value = symbol_table[value];
-                    }
-                    if (value == "")
-                    {
-                        throw named_exception("Empty token");
                     }
                 }
             }

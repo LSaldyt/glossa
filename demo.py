@@ -140,7 +140,7 @@ def transpile(demoname, demos, run_compare=False):
             shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
-        shutil.rmtree('input')
+        #shutil.rmtree('input')
 
 def main():
     structure()

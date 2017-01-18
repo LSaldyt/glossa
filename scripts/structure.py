@@ -23,24 +23,25 @@ def structure_grammar(language):
     for filename in corefiles:
         shutil.copy(directory + filename, coredir)
 
-    types = ['value', 'statement']
+    types = ['value', 'statement', 'misc']
     for t in types:
         type_dir = directory + t + 's/'
         type_files = filenames(type_dir)
         corefiles += type_files
         for filename in type_files:
             shutil.copy(type_dir + filename, coredir)
-        if t == 'statement':
-            anyof = build_anyof(type_dir) + '\noptional link comment\n0 sep 1'
-        else:
-            anyof = build_anyof(type_dir) + '\n0'
-        with open(directory + t + '.auto', 'w') as anyoffile:
-            anyoffile.write(anyof)
+        if t != 'misc':
+            if t == 'statement':
+                anyof = build_anyof(type_dir) + '\noptional link comment\n0 sep 1'
+            elif t == 'value':
+                anyof = build_anyof(type_dir) + '\n0'
+            with open(directory + t + '.auto', 'w') as anyoffile:
+                anyoffile.write(anyof)
             #shutil.copy(directory + t + '.auto', directory + t)
-        shutil.copy(directory + t + '.bak', directory + t)
-        #if t == 'statement':
-        #    shutil.copy(directory + t, coredir)
-        corefiles.append(t)
+            #shutil.copy(directory + t + '.bak', directory + t)
+            #if t == 'statement':
+            shutil.copy(directory + t, coredir)
+            corefiles.append(t)
 
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))

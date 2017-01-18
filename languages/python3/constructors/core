@@ -19,6 +19,7 @@ elementaccess
 memberinit
 whileloop
 vector
+multistatement
 print
 supercall
 trycatch

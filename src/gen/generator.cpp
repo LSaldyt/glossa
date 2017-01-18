@@ -372,6 +372,7 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
 SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
+        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {
@@ -424,6 +425,7 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
                 }
             }
         }
+        print("Symbol storage creation finished");
         return storage;
     };
 }
@@ -515,9 +517,9 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
-        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
         auto constructor = get<1>(t);
+        unordered_set<string> local_names(names);
 
         string extension;
         vector<string> default_content;
