@@ -140,7 +140,7 @@ def transpile(demoname, demos, run_compare=False):
             shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
-        shutil.rmtree('input')
+        #shutil.rmtree('input')
 
 def main():
     structure()
@@ -172,8 +172,8 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    #transpile(demoname, demos, True)
-    transpile(demoname, demos)
+    transpile(demoname, demos, True)
+    #transpile(demoname, demos)
 
 
 if __name__ == '__main__':

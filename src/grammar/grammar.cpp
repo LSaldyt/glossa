@@ -26,6 +26,7 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
  */
 vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(vector<SymbolicToken>& tokens)
 {
+    print("Identifying groups with grammar");
     vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
     try 
     {
@@ -33,12 +34,15 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         while (tokens.size() > 0)
         {
             // Tag groups of tokens as certain lexmap constructs
+            print("Attempting identification of remaining " + std::to_string(tokens.size()) + " tokens");
             auto result = identify(tokens);
+            print("Identified group as " + get<0>(result) + ", grouping..");
             auto group  = toGroup(get<0>(result), get<1>(result));
             identified_groups.push_back(make_tuple(get<0>(result), group));
+            print("Group creation finished. " + std::to_string(tokens.size()) + " tokens remaining");
         }
     }
-    catch (named_exception& e) 
+    catch (...) 
     {
         print("Successfully identified:");
         for (auto identified_group : identified_groups)
@@ -56,9 +60,11 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
         print("Remaining:");
         for (auto token : tokens)
         {
+            print("Token (type: " + token.type + "), (subtype: " + token.sub_type + "), (text:" + token.text + ")");
         }
         throw;
     }
+    print("Group identification finished. " + std::to_string(identified_groups.size()) + " groups created");
 
     return identified_groups;
 }
@@ -271,6 +277,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     return [filename, this](vector<SymbolicToken> tokens)
     {
+        print("Running parser for " + filename);
         std::vector<SymbolicTokenParser> parsers;
 
         // Retrieve a list of parsers from the grammar map
@@ -287,7 +294,6 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         // Evaluate the parsers, preserving the tokens on failure
         vector<SymbolicToken> tokens_copy(tokens);
         auto result = evaluateGrammar(parsers, tokens_copy);
-
         if (get<0>(result))
         {
             auto group       = toGroup(filename, get<1>(result));
@@ -316,7 +322,9 @@ Grammar::identify
 
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
+    print("Evaluating statement grammar");
     auto result    = evaluateGrammar(parsers, tokens_copy);
+    print("Evaluation finished");
 
     if (get<0>(result))
     {

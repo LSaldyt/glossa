@@ -1,7 +1,7 @@
 keyword if
 keyword __name__
 logicaloperator ==
-literal string
+link string
 punctuator :
 many link statement
 keyword end

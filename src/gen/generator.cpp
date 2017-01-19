@@ -372,6 +372,7 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
 SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
+        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {
@@ -424,6 +425,7 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
                 }
             }
         }
+        print("Symbol storage creation finished");
         return storage;
     };
 }
@@ -509,18 +511,15 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              filename,
                                                                     int                                 nesting)
 {
+    print("Running generator for " + symbol_type);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
     {
-        unordered_set<string> local_names(names);
         auto type        = get<0>(t);
-        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
-        {
-            //print("Generating filetype " + type + " for symboltype " + symbol_type);
-        }
         auto constructor = get<1>(t);
+        unordered_set<string> local_names(names);
 
         string extension;
         vector<string> default_content;
@@ -541,13 +540,6 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         } 
         auto constructed = constructor(local_names, symbol_groups, type, nesting);
         concat(default_content, constructed);
-        if (symbol_type != "value" and symbol_type != "expression" and symbol_type != "statement")
-        {
-            for (auto line : default_content)
-            {
-                //print("    " + line);
-            }
-        }
         added_names.insert(local_names.begin(), local_names.end());
         files.push_back(make_tuple(type, filename + extension, default_content));
     }

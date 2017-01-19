@@ -171,7 +171,7 @@ public:
     }
 
     template <typename T>
-    explicit operator T() const 
+    operator T() const 
     { 
         try
         {

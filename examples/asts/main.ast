@@ -1,0 +1,219 @@
+MultiSymbol (import)
+    Identifier (sys)
+
+MultiSymbol (function)
+    Identifier (f)
+    MultiSymbol (defaultarg)
+        Identifier (x)
+
+    MultiSymbol (statement)
+        MultiSymbol (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (division)
+                        Identifier (x)
+                        (2)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (exception)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (ValueError)
+
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        MultiSymbol (string)
+                            (dodgy value)
+
+
+
+
+
+
+
+MultiSymbol (main)
+    MultiSymbol (statement)
+        MultiSymbol (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        MultiSymbol (string)
+                            (Hello World)
+
+
+
+
+            (,)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (trycatch)
+            MultiSymbol (statement)
+                MultiSymbol (functioncall)
+                    Identifier (f)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                (3)
+
+
+
+
+                MultiSymbol (comment)
+                    ( Prints 3..)
+
+
+            Identifier (Exception)
+            Identifier (e)
+            MultiSymbol (statement)
+                MultiSymbol (print)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (parenexpr)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (basevalue)
+                                            MultiSymbol (string)
+                                                (Caught an exception)
+
+
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (heights)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (dictionary)
+                        MultiSymbol (kvpair)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        MultiSymbol (string)
+                                            (tom)
+
+
+
+
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        (6)
+
+
+
+
+                        MultiSymbol (kvpair)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        MultiSymbol (string)
+                                            (sally)
+
+
+
+
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        (5)
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (key)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (iterkeys)
+                        Identifier (heights)
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (print)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (key)
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (value)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (memberaccess)
+                        Identifier (heights)
+                        MultiSymbol (functioncall)
+                            Identifier (values)
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (print)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (value)
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (item)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (memberaccess)
+                        Identifier (heights)
+                        MultiSymbol (functioncall)
+                            Identifier (items)
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (print)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (item)
+
+
+
+
+
+
+
+

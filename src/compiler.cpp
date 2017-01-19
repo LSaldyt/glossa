@@ -155,9 +155,11 @@ namespace compiler
         print("Constructing from grammar:");
         unordered_map<string, tuple<vector<string>, string>> files;
 
+        vector<vector<string>> asts;
         auto identified_groups = grammar.identifyGroups(joined_tokens);
         for (auto identified_group : identified_groups)
         {
+            vector<string> ast;
             print("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
@@ -170,11 +172,16 @@ namespace compiler
             {
                 for (auto symbol : group)
                 {
-                    print(symbol->abstract());
+                    auto abstract = symbol->abstract();
+                    print(abstract);
+                    ast.push_back(abstract);
                 }
             }
             print("Generating code for " + get<0>(identified_group));
+            auto a = getTime();
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
+            auto b = getTime();
+            print("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
             print("Adding generated code to file content");
             for (auto fileinfo : generated)
             {
@@ -193,6 +200,7 @@ namespace compiler
                     files[type] = make_tuple(body, path);
                 }
             }
+            asts.push_back(ast);
         }
 
         print("Initial file");
@@ -212,6 +220,13 @@ namespace compiler
             }
             writeFile(body, output_directory + "/" + path);
         }
+
+        vector<string> global_ast;
+        for (auto ast : asts)
+        {
+            concat(global_ast, ast);
+        } 
+        writeFile(global_ast, "examples/asts/" + filename + ".ast");
     }
 
     /**
@@ -244,8 +259,17 @@ namespace compiler
             else
             {
                 auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
-                for (auto line : lines)
+                for (auto it = lines.begin(); it != lines.end(); it++)
                 {
+                    string line = rtrim(*it); // Remove trailing whitespace
+                    if (line.back() == '\\')
+                    {
+                        if (it + 1 != lines.end())
+                        {
+                            it++;
+                            line = string(line.begin(), line.end() - 1) + " " + *it;
+                        }
+                    }
                     tokens.push_back(lexWith(line, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter));
                 }
             }

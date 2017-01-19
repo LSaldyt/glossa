@@ -79,12 +79,11 @@ namespace lex
             }
         }
 
-        // Error handling
-        print("Could not identify terms:");
+        string message = "Could not identify terms: \n";
         for (auto t : terms)
         {
-            print("\"" + t + "\"");
+            message += "\"" + t + "\"\n";
         }
-        return make_tuple(Token({}, "unidentified", "failure"), vector<string>());
+        throw named_exception(message);
     }
 }
