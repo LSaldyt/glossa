@@ -7,3 +7,4 @@ text_prediction  python2 python3
 test             python2 python3
 multiline        python2 python3
 value_test       python2 python3
+mod_assign       python2 python3

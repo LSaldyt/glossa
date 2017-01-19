@@ -1,28 +1,12 @@
 MultiSymbol (main)
     MultiSymbol (statement)
         MultiSymbol (assignment)
-            Identifier (d)
+            Identifier (a)
+            (=)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (dictionary)
-                        MultiSymbol (kvpair)
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        MultiSymbol (string)
-                                            (a)
-
-
-
-
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        (1)
-
-
-
-
+                    MultiSymbol (basevalue)
+                        (2)
 
 
 
@@ -31,13 +15,11 @@ MultiSymbol (main)
     MultiSymbol (statement)
         MultiSymbol (assignment)
             Identifier (a)
+            (+=)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (elementaccess)
-                        Identifier (d)
-                        MultiSymbol (string)
-                            (a)
-
+                    MultiSymbol (basevalue)
+                        (1)
 
 
 
