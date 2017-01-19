@@ -28,6 +28,7 @@ exception
 importall
 assignment
 classmemberaccess
+tuple_unpack
 function
 memberinit
 whileloop

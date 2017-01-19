@@ -12,6 +12,7 @@ assignment
 classmemberaccess
 basevalue
 parenexpr
+tuple_unpack
 string
 function
 kvpair

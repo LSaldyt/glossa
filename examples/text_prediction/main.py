@@ -35,7 +35,6 @@ def main(argv=None):
 
     #Load all the command line and configuration file inputs into a dictionary
     dictionary = parseInput(argv)
-    """
     print '\nFor testing purposes, dictionary: '+str(dictionary)+'\n'
 
     #If any global variables are to be changed from their default values,
@@ -117,17 +116,14 @@ def main(argv=None):
     #Main loop
     for i in xrange(iterations):
         if interactive and moveAhead > 0:
-            moveAhead -= 1
+            moveAhead = moveAhead - 1
         elif interactive:
             print 'Iteration: '+str(i)
-            quit, interactive, moveAhead = checkForInput(quit, \
-                interactive, moveAhead)
+            quit, interactive, moveAhead = checkForInput(quit, interactive, moveAhead)
         if quit:
             print 'Exiting.'
             exit()
-    """
 
 
 if __name__ == "__main__":
-    print("Text prediction")
-    #sys.exit(main())
+    sys.exit(main())
