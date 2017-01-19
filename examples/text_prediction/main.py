@@ -35,6 +35,7 @@ def main(argv=None):
 
     #Load all the command line and configuration file inputs into a dictionary
     dictionary = parseInput(argv)
+    """
     print '\nFor testing purposes, dictionary: '+str(dictionary)+'\n'
 
     #If any global variables are to be changed from their default values,
@@ -124,7 +125,9 @@ def main(argv=None):
         if quit:
             print 'Exiting.'
             exit()
+    """
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    print("Text prediction")
+    #sys.exit(main())

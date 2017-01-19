@@ -1,88 +1,187 @@
+MultiSymbol (comment)
+    (Run with)
+
+MultiSymbol (comment)
+    (python main.py -files testFile.txt)
+
+MultiSymbol (comment)
+    (for example)
+
+MultiSymbol (comment)
+    (Or for a more complicated run with:)
+
+MultiSymbol (comment)
+    (python main.py -files testFile.txt ~/Desktop/org.org -folders ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/ -extensions .org .txt)
+
+MultiSymbol (comment)
+    (This is a fun one too:)
+
+MultiSymbol (comment)
+    (python main.py -files ~/Documents/Main/Writing/PowerOfThePen-Shorts-Beginnings/spaceOpera/spaceopera.org)
+
+MultiSymbol (comment)
+    (For interactive mode:)
+
+MultiSymbol (comment)
+    (python main.py -files testFile.txt -i 1 -iters 100)
+
+MultiSymbol (comment)
+    (ython script that takes a list of directories and a list of file extensions then it builds up a network of word frequencies and connections between words so that it can generate sentences, like so:
+
+http://forums.xkcd.com/viewtopic.php?f=7&t=86012
+
+This would be so fun.
+
+pseudo code:
+
+Find all documents of specified type.
+
+For each document, open them up and split on any and all white space.
+
+For each word
+
+check if it ends in a period or a comma. For now, remove the commas.
+
+If there's a period, strip off the period and make "." be the next "word" in the sentence (so that the connection between the current word and "." will be strengthened and the period will connect to the next word.)
+
+Then check if the word exists in the dictionary. If so, increment its occurrence. If not, add it.
+
+Then add a connection between the word and the subsequent word in the sentence.
+
+Finally, create a list of words with no incoming links (to start sentences), and another list of words with incoming links from periods (to start sentences) and start running through generating random text.
+
+)
+
+MultiSymbol (comment)
+    (from functions import *)
+
+MultiSymbol (comment)
+    (from framework import *)
+
 MultiSymbol (import)
-    Identifier (sys)
+    Identifier (os)
 
 MultiSymbol (function)
-    Identifier (f)
+    Identifier (main)
     MultiSymbol (defaultarg)
-        Identifier (x)
+        Identifier (argv)
+        MultiSymbol (value)
+            MultiSymbol (basevalue)
+                (None)
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (global)
+            Identifier (dictionary)
+            Identifier (iterations)
+            Identifier (interactive)
+            Identifier (moveAhead)
+            Identifier (quit)
+            Identifier (seed)
+            Identifier (wordlist)
+            Identifier (sentenceLengthLimit)
+            Identifier (rejected_words)
+
+        MultiSymbol (comment)
+            (Load all the command line and configuration file inputs into a dictionary)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (dictionary)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (parseInput)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (argv)
+
+
+
+
+
+
+
 
     MultiSymbol (statement)
         MultiSymbol (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (division)
-                        Identifier (x)
-                        (2)
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (exception)
-            MultiSymbol (expression)
-                MultiSymbol (value)
                     MultiSymbol (basevalue)
-                        Identifier (ValueError)
+                        MultiSymbol (string)
+                            (\nFor testing purposes, dictionary: )
 
 
 
-            MultiSymbol (expression)
+                (+)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (str)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (dictionary)
+
+
+
+
+
+                (+)
                 MultiSymbol (value)
                     MultiSymbol (basevalue)
                         MultiSymbol (string)
-                            (dodgy value)
+                            (\n)
 
 
 
 
 
-
-
-MultiSymbol (main)
-    MultiSymbol (statement)
-        MultiSymbol (print)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (basevalue)
-                        MultiSymbol (string)
-                            (Hello World)
-
-
-
-
-            (,)
+        MultiSymbol (comment)
+            (If any global variables are to be changed from their default values,)
 
 
     MultiSymbol (statement)
-        MultiSymbol (trycatch)
+        MultiSymbol (comment)
+            (check for them in the dictionary and set them here.)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-i)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
             MultiSymbol (statement)
-                MultiSymbol (functioncall)
-                    Identifier (f)
+                MultiSymbol (assignment)
+                    Identifier (interactive)
                     MultiSymbol (expression)
                         MultiSymbol (value)
-                            MultiSymbol (basevalue)
-                                (3)
-
-
-
-
-                MultiSymbol (comment)
-                    ( Prints 3..)
-
-
-            Identifier (Exception)
-            Identifier (e)
-            MultiSymbol (statement)
-                MultiSymbol (print)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            MultiSymbol (parenexpr)
+                            MultiSymbol (functioncall)
+                                Identifier (int)
                                 MultiSymbol (expression)
                                     MultiSymbol (value)
-                                        MultiSymbol (basevalue)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
                                             MultiSymbol (string)
-                                                (Caught an exception)
+                                                (-i)
 
 
 
@@ -96,93 +195,988 @@ MultiSymbol (main)
 
     MultiSymbol (statement)
         MultiSymbol (assignment)
-            Identifier (heights)
+            MultiSymbol (elementaccess)
+                Identifier (dictionary)
+                MultiSymbol (string)
+                    (-i)
+
+
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (dictionary)
-                        MultiSymbol (kvpair)
+                    MultiSymbol (basevalue)
+                        Identifier (interactive)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-iters)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    Identifier (iterations)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (int)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-iters)
+
+
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            MultiSymbol (elementaccess)
+                Identifier (dictionary)
+                MultiSymbol (string)
+                    (-iters)
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (iterations)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-seed)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    Identifier (seed)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (int)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-seed)
+
+
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            MultiSymbol (elementaccess)
+                Identifier (dictionary)
+                MultiSymbol (string)
+                    (-seed)
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (seed)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (memberaccess)
+            Identifier (rd)
+            MultiSymbol (functioncall)
+                Identifier (seed)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (basevalue)
+                            Identifier (seed)
+
+
+
+
+
+        MultiSymbol (comment)
+            (Get the files to read from)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (files_to_process)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-files)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (conditional)
+                    MultiSymbol (boolexpression)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (isinstance)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (elementaccess)
+                                                Identifier (dictionary)
+                                                MultiSymbol (string)
+                                                    (-files)
+
+
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (str)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (assignment)
+                            Identifier (files_to_process)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (vector)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                MultiSymbol (elementaccess)
+                                                    Identifier (dictionary)
+                                                    MultiSymbol (string)
+                                                        (-files)
+
+
+
+
+
+
+
+
+
+                    MultiSymbol (elsebranch)
+                        MultiSymbol (statement)
+                            MultiSymbol (assignment)
+                                Identifier (files_to_process)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-files)
+
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    MultiSymbol (elementaccess)
+                        Identifier (dictionary)
+                        MultiSymbol (string)
+                            (-files)
+
+
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (files_to_process)
+
+
+
+
+
+
+        MultiSymbol (comment)
+            (Get the folders to search in)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (folders)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-folders)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (conditional)
+                    MultiSymbol (boolexpression)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (isinstance)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (elementaccess)
+                                                Identifier (dictionary)
+                                                MultiSymbol (string)
+                                                    (-folders)
+
+
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (str)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (assignment)
+                            Identifier (folders)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (vector)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                MultiSymbol (elementaccess)
+                                                    Identifier (dictionary)
+                                                    MultiSymbol (string)
+                                                        (-folders)
+
+
+
+
+
+
+
+
+
+                    MultiSymbol (elsebranch)
+                        MultiSymbol (statement)
+                            MultiSymbol (assignment)
+                                Identifier (folders)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-folders)
+
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    MultiSymbol (elementaccess)
+                        Identifier (dictionary)
+                        MultiSymbol (string)
+                            (-folders)
+
+
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (folders)
+
+
+
+
+
+
+        MultiSymbol (comment)
+            (Get all the valid file extensions.)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (extensions)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (vector)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-extensions)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (conditional)
+                    MultiSymbol (boolexpression)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (isinstance)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (elementaccess)
+                                                Identifier (dictionary)
+                                                MultiSymbol (string)
+                                                    (-extensions)
+
+
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (str)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (assignment)
+                            Identifier (extensions)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (vector)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                MultiSymbol (elementaccess)
+                                                    Identifier (dictionary)
+                                                    MultiSymbol (string)
+                                                        (-extensions)
+
+
+
+
+
+
+
+
+
+                    MultiSymbol (elsebranch)
+                        MultiSymbol (statement)
+                            MultiSymbol (assignment)
+                                Identifier (extensions)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-extensions)
+
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    MultiSymbol (elementaccess)
+                        Identifier (dictionary)
+                        MultiSymbol (string)
+                            (-extensions)
+
+
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                Identifier (extensions)
+
+
+
+
+
+
+        MultiSymbol (comment)
+            (Whether or not to make articles and subsequent nouns one unit.)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (articlesSep)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        (1)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (in)
+                            (-articlesSep)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (memberaccess)
+                                        Identifier (dictionary)
+                                        MultiSymbol (functioncall)
+                                            Identifier (keys)
+
+
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    Identifier (articlesSep)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (int)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (elementaccess)
+                                            Identifier (dictionary)
+                                            MultiSymbol (string)
+                                                (-articlesSep)
+
+
+
+
+
+
+
+
+
+
+        MultiSymbol (comment)
+            (Get all the files to read in.)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (f)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (folders)
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (forloop)
+                    Identifier (thisfile)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (memberaccess)
+                                Identifier (os)
+                                MultiSymbol (functioncall)
+                                    Identifier (listdir)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (f)
+
+
+
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (conditional)
+                            MultiSymbol (boolexpression)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (functioncall)
+                                            Identifier (hasValidExtension)
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    MultiSymbol (basevalue)
+                                                        Identifier (thisfile)
+
+
+
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    MultiSymbol (basevalue)
+                                                        Identifier (extensions)
+
+
+
+
+
+
+
+                            MultiSymbol (statement)
+                                MultiSymbol (memberaccess)
+                                    Identifier (files_to_process)
+                                    MultiSymbol (functioncall)
+                                        Identifier (append)
+                                        MultiSymbol (expression)
+                                            MultiSymbol (value)
+                                                MultiSymbol (basevalue)
+                                                    Identifier (f)
+
+
+                                            (+)
+                                            MultiSymbol (value)
+                                                MultiSymbol (basevalue)
+                                                    Identifier (thisfile)
+
+
+
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        MultiSymbol (string)
+                            (\nTESTING file list: )
+
+
+
+                (+)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (str)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (files_to_process)
+
+
+
+
+
+                (+)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        MultiSymbol (string)
+                            (\n)
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (conditional)
+            MultiSymbol (boolexpression)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (functioncall)
+                            Identifier (len)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        Identifier (files_to_process)
+
+
+
+
+
+
+                MultiSymbol (boolseperator)
+                    (<=)
+
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (basevalue)
+                            (0)
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (print)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            MultiSymbol (basevalue)
+                                MultiSymbol (string)
+                                    (\nNo files could be found.\n)
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (functioncall)
+                    Identifier (usage)
+
+
+            MultiSymbol (statement)
+                MultiSymbol (functioncall)
+                    Identifier (exit)
+
+
+
+        MultiSymbol (comment)
+            (Process every file:)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (f)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (files_to_process)
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (memberaccess)
+                    Identifier (wordlist)
+                    MultiSymbol (functioncall)
+                        Identifier (addWords)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (functioncall)
+                                    Identifier (processFile)
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (f)
+
+
+
+                                    MultiSymbol (expression)
+                                        MultiSymbol (value)
+                                            MultiSymbol (basevalue)
+                                                Identifier (articlesSep)
+
+
+
+
+
+
+
+
+
+
+        MultiSymbol (comment)
+            (TESTING: print sorted accepted words:)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (comment)
+            (print '\nTESTING accepted words: '+str(sorted(wordlist.wordlist.keys()))+'\n')
+
+        MultiSymbol (comment)
+            (TESTING: print sorted rejected words:)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (comment)
+            (print '\nTESTING rejected words: '+str(sorted(rejected_words))+'\n')
+
+
+    MultiSymbol (statement)
+        MultiSymbol (memberaccess)
+            Identifier (wordlist)
+            MultiSymbol (functioncall)
+                Identifier (getSentenceDeterministic)
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (memberaccess)
+            Identifier (wordlist)
+            MultiSymbol (functioncall)
+                Identifier (getSentenceWeighted)
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (memberaccess)
+            Identifier (wordlist)
+            MultiSymbol (functioncall)
+                Identifier (getSentenceUniform)
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (memberaccess)
+            Identifier (wordlist)
+            MultiSymbol (functioncall)
+                Identifier (getWordsByMostFrequentUsage)
+
+
+        MultiSymbol (comment)
+            (Main loop)
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (i)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (range)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (iterations)
+
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (conditional)
+                    MultiSymbol (boolexpression)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (interactive)
+
+
+
+                        MultiSymbol (boolseperator)
+                            (and)
+
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (moveAhead)
+
+
+
+                        MultiSymbol (boolseperator)
+                            (>)
+
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    (0)
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (assignment)
+                            Identifier (moveAhead)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        Identifier (moveAhead)
+
+
+                                (-)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        (1)
+
+
+
+
+
+                    MultiSymbol (elifbranch)
+                        MultiSymbol (boolexpression)
+                            MultiSymbol (expression)
+                                MultiSymbol (value)
+                                    MultiSymbol (basevalue)
+                                        Identifier (interactive)
+
+
+
+
+                        MultiSymbol (statement)
+                            MultiSymbol (print)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        MultiSymbol (basevalue)
+                                            MultiSymbol (string)
+                                                (Iteration: )
+
+
+
+                                    (+)
+                                    MultiSymbol (value)
+                                        MultiSymbol (functioncall)
+                                            Identifier (str)
+                                            MultiSymbol (expression)
+                                                MultiSymbol (value)
+                                                    MultiSymbol (basevalue)
+                                                        Identifier (i)
+
+
+
+
+
+
+
+                            MultiSymbol (comment)
+                                (quit, interactive, moveAhead = checkForInput(quit,              #    interactive, moveAhead))
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (conditional)
+                    MultiSymbol (boolexpression)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (quit)
+
+
+
+
+                    MultiSymbol (statement)
+                        MultiSymbol (print)
                             MultiSymbol (expression)
                                 MultiSymbol (value)
                                     MultiSymbol (basevalue)
                                         MultiSymbol (string)
-                                            (tom)
-
-
-
-
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        (6)
-
-
-
-
-                        MultiSymbol (kvpair)
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        MultiSymbol (string)
-                                            (sally)
-
-
-
-
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        (5)
+                                            (Exiting.)
 
 
 
 
 
 
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (forloop)
-            Identifier (key)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (iterkeys)
-                        Identifier (heights)
-
-
-
-            MultiSymbol (statement)
-                MultiSymbol (print)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            MultiSymbol (basevalue)
-                                Identifier (key)
-
-
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (forloop)
-            Identifier (value)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (memberaccess)
-                        Identifier (heights)
+                    MultiSymbol (statement)
                         MultiSymbol (functioncall)
-                            Identifier (values)
-
-
-
-
-            MultiSymbol (statement)
-                MultiSymbol (print)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            MultiSymbol (basevalue)
-                                Identifier (value)
+                            Identifier (exit)
 
 
 
@@ -190,26 +1184,16 @@ MultiSymbol (main)
 
 
 
+MultiSymbol (main)
     MultiSymbol (statement)
-        MultiSymbol (forloop)
-            Identifier (item)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (memberaccess)
-                        Identifier (heights)
+        MultiSymbol (memberaccess)
+            Identifier (sys)
+            MultiSymbol (functioncall)
+                Identifier (exit)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
                         MultiSymbol (functioncall)
-                            Identifier (items)
-
-
-
-
-            MultiSymbol (statement)
-                MultiSymbol (print)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            MultiSymbol (basevalue)
-                                Identifier (item)
-
+                            Identifier (main)
 
 
 

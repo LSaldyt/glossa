@@ -1,3 +1,4 @@
-anyOf link class link import link global link exception link importall link assignment link classmemberaccess link function link elementaccess link whileloop link print link supercall link trycatch link elsebranch link main link comment link forloop link conditional link return link assert link elifbranch link fileprint link in link functioncall
+anyOf link main link class link import link global link exception link importall link assignment link classmemberaccess link function link elementaccess link whileloop link print link supercall link trycatch link elsebranch  link comment link forloop link conditional link return link assert link elifbranch link fileprint link functioncall link memberaccess
+optional punctuator ;
 optional link comment
-0 sep 1
+0 sep 2
