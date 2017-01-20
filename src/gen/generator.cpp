@@ -425,7 +425,7 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
                 }
             }
         }
-        print("Symbol storage creation finished");
+        //print("Symbol storage creation finished");
         return storage;
     };
 }
@@ -511,7 +511,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     string                              filename,
                                                                     int                                 nesting)
 {
-    print("Running generator for " + symbol_type);
+    //print("Running generator for " + symbol_type);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];

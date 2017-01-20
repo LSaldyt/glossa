@@ -10,9 +10,10 @@ OutputManager::OutputManager(int verbosity) :
 
 void OutputManager::log(std::string message, int message_level)
 {
+    assert(message_level >= 1);
     if (message_level <= level)
     {
-        print(message);
+        print(repeatString("    ", message_level - 1) + message);
     }
 }
 

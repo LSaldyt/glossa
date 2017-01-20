@@ -25,7 +25,7 @@ def benchmark(f, iterations, *args, **kwargs):
     total  = (end - begin) / iterations
     return total
 
-def build(directory, languageargs):
+def build(directory, languageargs, verbosity):
     inputfiles = []
 
     for dirpath, dnames, filenames in os.walk(directory):
@@ -40,7 +40,7 @@ def build(directory, languageargs):
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
-    t = benchmark(run, 1, ['./build/progtran'] + languageargs + inputfiles)
+    t = benchmark(run, 1, ['./build/progtran', str(verbosity)] + languageargs + inputfiles)
     print('Compilation took roughly: %ss' % t)
 
 def time_run(language, directory, iterations, filename):
@@ -113,7 +113,7 @@ def load_demos():
         demos[a] = ['examples/' + a] + terms[1:]
     return demos
 
-def transpile(demoname, demos, run_compare=False):
+def transpile(demoname, demos, verbosity, run_compare=False):
     if not os.path.exists('output'):
         os.makedirs('output')
     if not os.path.exists('input'):
@@ -124,7 +124,7 @@ def transpile(demoname, demos, run_compare=False):
         l = demos[demoname]
         directory = l[0]
         languageargs = l[1:]
-        build(directory, languageargs)
+        build(directory, languageargs, verbosity)
 	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
@@ -172,7 +172,12 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    transpile(demoname, demos, True)
+    if len(sys.argv) > 2:
+        verbosity = sys.argv[2]
+    else:
+        verbosity = 1
+
+    transpile(demoname, demos, verbosity, True)
     #transpile(demoname, demos)
 
 
