@@ -36,6 +36,7 @@ comment
 forloop
 conditional
 expression
+qualified_import
 functioncall
 return
 assert

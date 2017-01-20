@@ -43,6 +43,7 @@ main
 comment
 forloop
 conditional
+qualified_import
 return
 assert
 elifbranch

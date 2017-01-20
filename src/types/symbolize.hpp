@@ -15,7 +15,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
     symbolic_tokens.reserve(tokens.size());
     for (auto token : tokens)
     {
-        logger.log("Symbolizing token (type: " + token.type + "), (sub_type: " + token.sub_type + ")");
+        logger.log("Symbolizing token (type: " + token.type + "), (sub_type: " + token.sub_type + ")", 2);
         std::string text;
         for (auto v : token.values)
         {
@@ -32,7 +32,9 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
         }
         else
         {
-            logger.log("Failed to generate type from \"" + text + "\", (type: " + token.type + "), (subtype: " + token.sub_type + ")");
+            throw tools::named_exception("Failed to generate type from \"" + 
+                                          text + "\", (type: " + token.type + "), " + 
+                                          "(subtype: " + token.sub_type + ")");
         }
     }
 

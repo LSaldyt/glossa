@@ -20,7 +20,7 @@ def loadIntoDictionary(argv, dictionary):
     """Parse the argv array to a dictionary of strings->strings or 
     strings->string arrays. We assume all flags begin with a hyphen and all
     arguments to flags do not. So if we see -abc 1 2 3 then in the 
-    dictionary we will get: dict['abc'] = ['1','2','3']"""
+    dictionary we will get: dict['abc'] = ['1','2','3']
     limit = len(argv)
     i = 0
     while i < limit:
@@ -43,6 +43,7 @@ def loadIntoDictionary(argv, dictionary):
             i = j-1
         i += 1
     return dictionary
+    """
 
 
 def parseInput(argv):
@@ -65,9 +66,7 @@ def parseInput(argv):
         try: #Try to open the file.
             f = open(argv[temp], 'r')
         except IOError as e:
-            print ('ERROR: Argument following --config should be a '
-            +'file. Could not open "'+str(argv[temp])+
-            '" file does not exist.\n')
+            print ('ERROR: Argument following --config should be a file. Could not open "'+str(argv[temp])+'" file does not exist.\n')
             usage()
             sys.exit()
         contents = f.read()
