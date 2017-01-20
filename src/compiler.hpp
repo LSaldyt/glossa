@@ -24,7 +24,7 @@ namespace compiler
     Generator loadGenerator(string language);
 
     std::vector<Tokens> tokenPass(std::vector<std::string>, Grammar&, unordered_map<string, string>&, OutputManager logger);
-    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens);
+    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens, OutputManager logger);
     vector<SymbolicToken> join(std::vector<vector<SymbolicToken>>, bool newline=false);
     unordered_map<string, string> readSymbolTable(string filename);
 }

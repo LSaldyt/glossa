@@ -16,7 +16,9 @@ namespace syntax
     using Comment    = StringLiteral;
 
     const auto stringGenerator = [](string s){
-        return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
+        tools::print(s);
+        //return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
+        return make_shared<String>(String(s));
     };
     const auto keywordGenerator = [](string s){ return make_shared<Keyword>(Keyword(s)); };
     const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };

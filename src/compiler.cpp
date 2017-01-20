@@ -146,7 +146,7 @@ namespace compiler
         logger.log("Lexing terms");
         auto tokens          = tokenPass    (content, grammar, symbol_table, logger); 
         logger.log("Creating symbols");
-        auto symbolic_tokens = symbolicPass (tokens);
+        auto symbolic_tokens = symbolicPass (tokens, logger);
         logger.log("Joining symbolic tokens");
         auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
 
@@ -300,12 +300,12 @@ namespace compiler
      * @param tokens Non symbolized tokens
      * @return 2D array of Symbolized tokens
      */
-    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens)
+    std::vector<vector<SymbolicToken>> symbolicPass(std::vector<Tokens> tokens, OutputManager logger)
     {
         std::vector<vector<SymbolicToken>> symbolic_tokens;
         for (auto token_group : tokens)
         {
-            symbolic_tokens.push_back(toSymbolic(generatorMap, token_group));
+            symbolic_tokens.push_back(toSymbolic(generatorMap, token_group, logger));
         }
         return symbolic_tokens;
     }

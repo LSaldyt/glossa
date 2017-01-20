@@ -4,6 +4,7 @@ value.auto
 value.bak
 statement
 value
+boolpart
 expression
 statement.auto
 boolseperator
@@ -16,6 +17,7 @@ parenexpr
 string
 elementaccess
 vector
+is
 tuple
 functioncall
 dictionary

@@ -25,10 +25,12 @@ print
 supercall
 trycatch
 elsebranch
+is
 main
 statement
 tuple
 value
+boolpart
 range
 comment
 forloop
