@@ -3,15 +3,12 @@ import string
 import random as rd
 from functions import *
 
-#Environment:
 dictionary = dict()
 iterations = 0
 interactive = False
 moveAhead = 0
 quit = False
 seed = rd.randint(0,1000000)
-
-#Functions:
 
 def usage():
     """Print out information regarding how to use this particular program."""
@@ -21,11 +18,13 @@ def loadIntoDictionary(argv, dictionary):
     strings->string arrays. We assume all flags begin with a hyphen and all
     arguments to flags do not. So if we see -abc 1 2 3 then in the 
     dictionary we will get: dict['abc'] = ['1','2','3']
+    """
     limit = len(argv)
     i = 0
     while i < limit:
         if argv[i].startswith('-'):
             j = i+1
+    """
             temp = []
             while j < limit and not argv[j].startswith('-'):
                 temp.append(argv[j])
@@ -49,6 +48,7 @@ def loadIntoDictionary(argv, dictionary):
 def parseInput(argv):
     #This is important for if you're interacting with the program through 
     #the python interpreter or something. Don't ask me.
+    """
     if argv is None:
         argv = sys.argv
     #User SOS: Check for help.
@@ -82,9 +82,11 @@ def parseInput(argv):
     #if it's already in the dictionary, replace the value in the dict with 
     #the command line args.
     return loadIntoDictionary(argv, dictionary)
+    """
 
 
 def checkForInput(quit, interactive, moveAhead):
+    """
     global wordlist
     while True:
         inStr = raw_input('Waiting on user input... (Type: h for help)\n>')
@@ -107,4 +109,5 @@ def checkForInput(quit, interactive, moveAhead):
             wordlist.getSentenceUniform()
         else:
     return quit, interactive, moveAhead
+    """
 

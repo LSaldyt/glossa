@@ -1,98 +1,26 @@
 MultiSymbol (main)
     MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (d1)
-            (=)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (dictionary)
-                        MultiSymbol (kvpair)
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        MultiSymbol (string)
-                                            ('a')
-
-
-
-
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        (1)
-
-
-
-
-
-
-
+        MultiSymbol (comment)
+            (d1['a'].a)
 
 
     MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (d2)
-            (=)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (dictionary)
-                        MultiSymbol (kvpair)
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        MultiSymbol (string)
-                                            ('b')
-
-
-
-
-                            MultiSymbol (expression)
-                                MultiSymbol (value)
-                                    MultiSymbol (basevalue)
-                                        MultiSymbol (string)
-                                            ('a')
-
-
-
-
-
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (a)
-            (=)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (elementaccess)
-                        Identifier (d1)
-                        MultiSymbol (string)
-                            ('a')
-
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
+        MultiSymbol (memberaccess)
             MultiSymbol (elementaccess)
                 Identifier (d1)
-                MultiSymbol (elementaccess)
-                    Identifier (d2)
-                    MultiSymbol (string)
-                        ('b')
+                MultiSymbol (string)
+                    ('a')
 
 
+            MultiSymbol (functioncall)
+                Identifier (startswith)
+                MultiSymbol (expression)
+                    MultiSymbol (value)
+                        MultiSymbol (basevalue)
+                            MultiSymbol (string)
+                                ('b')
 
-            (=)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (basevalue)
-                        Identifier (a)
+
 
 
 

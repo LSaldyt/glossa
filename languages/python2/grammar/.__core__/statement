@@ -1,4 +1,4 @@
-anyOf link forloop link main link class link qualified_import link import link global link exception link tuple_unpack link importall link assignment link classmemberaccess link function link elementaccess link whileloop link print link supercall link trycatch link elsebranch  link comment  link conditional link return link assert link elifbranch link fileprint link functioncall link memberaccess
+anyOf link forloop link main link class link qualified_import link import link global link exception link tuple_unpack link importall link assignment link classmemberaccess link function link memberaccess link whileloop link print link supercall link trycatch link elsebranch  link comment  link conditional link return link assert link elifbranch link fileprint link functioncall 
 optional punctuator ;
 optional link comment
 0 sep 2
