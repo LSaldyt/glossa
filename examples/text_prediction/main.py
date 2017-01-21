@@ -116,11 +116,10 @@ def main(argv=None):
     #Main loop
     for i in xrange(iterations):
         if interactive and moveAhead > 0:
-            moveAhead -= 1
+            moveAhead = moveAhead - 1
         elif interactive:
             print 'Iteration: '+str(i)
-            quit, interactive, moveAhead = checkForInput(quit, \
-                interactive, moveAhead)
+            quit, interactive, moveAhead = checkForInput(quit, interactive, moveAhead)
         if quit:
             print 'Exiting.'
             exit()

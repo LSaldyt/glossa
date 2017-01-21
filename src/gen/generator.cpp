@@ -248,7 +248,7 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
 LineConstructor Generator::generateLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting)
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
     {
         string representation;
         if (terms.size() == 1)
@@ -286,12 +286,12 @@ LineConstructor Generator::generateLineConstructor(string line)
                 else if (special_formatting)
                 {
                     auto slc = generateSpecialLineConstructor(t);
-                    representation += slc(names, storage, filetype, definitions, nesting);
+                    representation += slc(names, storage, filetype, definitions, nesting, logger);
                 }
                 else
                 {
                     auto lc = generateLineConstructor(t);
-                    representation += lc(names, storage, filetype, definitions, nesting);
+                    representation += lc(names, storage, filetype, definitions, nesting, logger);
                 }
             }
         }
@@ -311,7 +311,7 @@ LineConstructor Generator::generateLineConstructor(string line)
 LineConstructor Generator::generateSpecialLineConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting)
+    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
     {
         string representation = "";
         if (not terms.empty())
@@ -425,7 +425,7 @@ SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> 
                 }
             }
         }
-        print("Symbol storage creation finished");
+        //print("Symbol storage creation finished");
         return storage;
     };
 }
@@ -509,9 +509,10 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
                                                                     string                              symbol_type, 
                                                                     string                              filename,
-                                                                    int                                 nesting)
+                                                                    int                                 nesting,
+                                                                    OutputManager                       logger)
 {
-    print("Running generator for " + symbol_type);
+    logger.log("Running generator for " + symbol_type);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
@@ -538,7 +539,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(local_names, symbol_groups, type, nesting);
+        auto constructed = constructor(local_names, symbol_groups, type, nesting, logger);
         concat(default_content, constructed);
         added_names.insert(local_names.begin(), local_names.end());
         files.push_back(make_tuple(type, filename + extension, default_content));

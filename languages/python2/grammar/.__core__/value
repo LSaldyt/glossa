@@ -1,2 +1,3 @@
-anyOf link vector link tuple link division link parenexpr link memberaccess link listcomp link iterkeys link functioncall link dictionary link basevalue
-0
+optional operator -
+anyOf link elementaccess link vector link tuple link division link parenexpr link memberaccess link listcomp link iterkeys link functioncall link dictionary link in link basevalue
+0 sep 1
