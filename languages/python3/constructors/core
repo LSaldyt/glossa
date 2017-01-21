@@ -21,6 +21,7 @@ memberinit
 whileloop
 vector
 multistatement
+import_select
 print
 supercall
 trycatch

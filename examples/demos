@@ -8,3 +8,5 @@ test             python2 python3
 multiline        python2 python3
 value_test       python2 python3
 mod_assign       python2 python3
+shedskin-chess   python2 python3
+neg_test         python2 python3

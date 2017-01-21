@@ -1,24 +1,54 @@
 MultiSymbol (main)
     MultiSymbol (statement)
-        MultiSymbol (comment)
-            (d1['a'].a)
+        MultiSymbol (assignment)
+            Identifier (a)
+            (=)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    (-)
+                    MultiSymbol (basevalue)
+                        (2)
+
+
+                (+)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        (3)
+
+
+
 
 
     MultiSymbol (statement)
-        MultiSymbol (memberaccess)
-            MultiSymbol (elementaccess)
-                Identifier (d1)
-                MultiSymbol (string)
-                    ('a')
+        MultiSymbol (assignment)
+            Identifier (b)
+            (=)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (basevalue)
+                        Identifier (a)
 
 
-            MultiSymbol (functioncall)
-                Identifier (startswith)
-                MultiSymbol (expression)
-                    MultiSymbol (value)
-                        MultiSymbol (basevalue)
-                            MultiSymbol (string)
-                                ('b')
+                (-)
+                MultiSymbol (value)
+                    (-)
+                    MultiSymbol (basevalue)
+                        Identifier (a)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (parenexpr)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                MultiSymbol (basevalue)
+                                    Identifier (b)
+
 
 
 

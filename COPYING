@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2016 Lsaldyt
+Copyright (c) 2016 LSaldyt
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Certain examples in this software, namely shedskin's python2 code, are licensed under the GNU GPL v3 license.
+This license has additional restrictions, such as continued open-sourced licensing of the software.
+Therefore, these specific examples must be used under their original licensing, and not for commercial purposes.
+A full copy of the GNU GPL v3 license is included in the /examples/shedskin-examples../COPYING file
+If you have any questions, contact me at lucassaldyt@gmail.com
