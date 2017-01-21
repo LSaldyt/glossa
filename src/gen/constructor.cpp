@@ -30,7 +30,7 @@ Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator,
  * @param nesting Level of indentation
  * @return Lines of source code
  */
-vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype, int nesting)
+vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype, int nesting, OutputManager logger)
 {
     vector<string> generated;
 
@@ -39,7 +39,7 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         for (auto it = branch.line_constructors.begin(); it != branch.line_constructors.end(); it++)
         {
             auto line_constructor = *it;
-            generated.push_back(line_constructor(names, symbol_storage, filetype, definitions, nesting));
+            generated.push_back(line_constructor(names, symbol_storage, filetype, definitions, nesting, logger));
             if (it + 1 != branch.line_constructors.end())
             {
                 generated.push_back("\n");
@@ -47,7 +47,7 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
         }
         for (auto nested_branch : branch.nested_branches)
         {
-            concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype, nesting));
+            concat(generated, evaluateBranch(nested_branch, names, symbol_storage, filetype, nesting, logger));
         }  
     }
 
@@ -62,8 +62,9 @@ vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>&
  * @param nesting Indentation level
  * @return Lines of source code representing the given syntax element
  */
-vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype, int nesting)
+vector<string> Constructor::operator()(unordered_set<string>& names, vector<vector<shared_ptr<Symbol>>>& symbol_groups, string filetype, int nesting, OutputManager logger)
 {
+    logger.log("Running constructor for " + filetype + " file");
     auto symbol_storage = symbol_storage_generator(symbol_groups);
     auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype, nesting);
     return generated;

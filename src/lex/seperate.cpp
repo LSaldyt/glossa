@@ -86,8 +86,9 @@ namespace lex
                     size_t found = remaining.find(string(1, string_char));
                     if (found != string::npos) // IF there actually is a second quotation mark
                     {
-                        found += 2; //Account for " characters surrounding the vector<string>
-                        string content(it, it + found);
+                        found += 2;
+                        string content(it, it + found); // Account for quote characters
+                        print("ADDED STRING WITH CONTENT: (" + content + ")");
                         terms.push_back(content);
                         current = it + found;
                         it      = it + found;

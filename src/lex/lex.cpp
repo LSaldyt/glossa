@@ -12,7 +12,6 @@ namespace lex
      */
     Tokens lexWith(const string& sentence, const LexMap& lexmap, vector<char> string_delimiters, string comment_delimiter)
     {
-        //const vector<string>& cleanline = removeComments(sentence);
         //print("Seperating sentence");
         // Seperate sentence..
         auto terms  = seperate(sentence, lexmap.seperators, string_delimiters, comment_delimiter);
