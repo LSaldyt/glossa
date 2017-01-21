@@ -27,7 +27,7 @@ using SymbolStorage    = tuple<SymbolTable, MultiSymbolTable>;
 using SymbolStorageGenerator = function<SymbolStorage(vector<vector<shared_ptr<Symbol>>>&)>;
 
 using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&, const vector<string>&)>;
-using LineConstructor    = function<string(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting)>;
+using LineConstructor    = function<string(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
 const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)

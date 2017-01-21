@@ -182,7 +182,7 @@ namespace compiler
             }
             logger.log("Generating code for " + get<0>(identified_group));
             auto a = getTime();
-            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with);
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with, 1, logger);
             auto b = getTime();
             logger.log("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
             logger.log("Adding generated code to file content");

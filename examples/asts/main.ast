@@ -1,54 +1,143 @@
-MultiSymbol (main)
+MultiSymbol (function)
+    Identifier (f)
+    Identifier (x)
     MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (a)
-            (=)
+        MultiSymbol (return)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    (-)
-                    MultiSymbol (basevalue)
-                        (2)
+                    Identifier (x)
 
-
-                (+)
+                (*)
                 MultiSymbol (value)
-                    MultiSymbol (basevalue)
-                        (3)
-
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (b)
-            (=)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (basevalue)
-                        Identifier (a)
-
+                    Identifier (x)
 
                 (-)
                 MultiSymbol (value)
-                    (-)
-                    MultiSymbol (basevalue)
-                        Identifier (a)
+                    Identifier (x)
 
+
+
+
+
+MultiSymbol (function)
+    Identifier (integrate_f)
+    Identifier (a)
+    Identifier (b)
+    Identifier (N)
+    MultiSymbol (statement)
+        MultiSymbol (assignment)
+            Identifier (s)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    (0)
 
 
 
 
     MultiSymbol (statement)
-        MultiSymbol (print)
+        MultiSymbol (assignment)
+            Identifier (dx)
             MultiSymbol (expression)
                 MultiSymbol (value)
                     MultiSymbol (parenexpr)
                         MultiSymbol (expression)
                             MultiSymbol (value)
-                                MultiSymbol (basevalue)
-                                    Identifier (b)
+                                Identifier (b)
 
+                            (-)
+                            MultiSymbol (value)
+                                Identifier (a)
+
+
+
+
+                (/)
+                MultiSymbol (value)
+                    Identifier (N)
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (forloop)
+            Identifier (i)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (range)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                Identifier (N)
+
+
+
+
+
+            MultiSymbol (statement)
+                MultiSymbol (assignment)
+                    Identifier (s)
+                    MultiSymbol (expression)
+                        MultiSymbol (value)
+                            Identifier (s)
+
+                        (+)
+                        MultiSymbol (value)
+                            MultiSymbol (functioncall)
+                                Identifier (f)
+                                MultiSymbol (expression)
+                                    MultiSymbol (value)
+                                        Identifier (a)
+
+                                    (+)
+                                    MultiSymbol (value)
+                                        Identifier (i)
+
+                                    (*)
+                                    MultiSymbol (value)
+                                        Identifier (dx)
+
+
+
+
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (return)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    Identifier (s)
+
+                (*)
+                MultiSymbol (value)
+                    Identifier (dx)
+
+
+
+
+
+MultiSymbol (main)
+    MultiSymbol (statement)
+        MultiSymbol (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (functioncall)
+                        Identifier (integrate_f)
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                (1)
+
+
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                (100)
+
+
+                        MultiSymbol (expression)
+                            MultiSymbol (value)
+                                (200)
 
 
 
