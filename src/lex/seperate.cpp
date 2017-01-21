@@ -88,7 +88,7 @@ namespace lex
                     {
                         found += 2;
                         string content(it, it + found); // Account for quote characters
-                        print("ADDED STRING WITH CONTENT: (" + content + ")");
+                        print("Added string with content: (" + content + ")");
                         terms.push_back(content);
                         current = it + found;
                         it      = it + found;

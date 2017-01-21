@@ -4,9 +4,5 @@ porting          python2 python3
 integrate        python3 cpp
 fortran          fortran cpp
 text_prediction  python2 python3
-test             python2 python3
 multiline        python2 python3
-value_test       python2 python3
-mod_assign       python2 python3
 shedskin-chess   python2 python3
-neg_test         python2 python3
