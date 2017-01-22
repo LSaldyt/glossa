@@ -512,7 +512,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                                                                     int                                 nesting,
                                                                     OutputManager                       logger)
 {
-    logger.log("Running generator for " + symbol_type);
+    logger.log("Running generator for " + symbol_type, 2);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];

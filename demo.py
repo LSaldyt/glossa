@@ -36,7 +36,7 @@ def build(directory, languageargs, verbosity):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3', 'python3_auto_gen']:
+            if languageargs[0] in ['python', 'python2', 'python3', 'auta']:
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
@@ -62,7 +62,7 @@ def run_language(directory, inputlang, outputlang):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     if outputlang == 'cpp':
         os.chdir('output')
-        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
+        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/cpp/*.cpp', shell=True)
         subprocess.run('./a.out', shell=True)
         os.chdir('..')
     else:
@@ -72,7 +72,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     if outputlang == 'cpp':
         os.chdir('output')
-        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/*.cpp', shell=True)
+        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/cpp/*.cpp', shell=True)
         output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
@@ -113,7 +113,7 @@ def load_demos():
         demos[a] = ['examples/' + a] + terms[1:]
     return demos
 
-def transpile(demoname, demos, verbosity, run_compare=False):
+def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
     if not os.path.exists('output'):
         os.makedirs('output')
     if not os.path.exists('input'):
@@ -125,22 +125,22 @@ def transpile(demoname, demos, verbosity, run_compare=False):
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs, verbosity)
+        if languageargs[0] in ['python2', 'python3', 'auta']:
+            shutil.copytree('std/__pylib__/', 'output/__pylib__')
 	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
             shutil.rmtree(outputdir)
-        shutil.copytree('output', outputdir)
+        print('Copying output to %s' % outputdir)
+        shutil.copytree('output/', outputdir)
 
-        if run_compare:
+        if runcomp:
             compare(directory, languageargs[0], languageargs[1], iterations=100)
-        else:
+        elif runlang:
             run_language(directory, languageargs[0], languageargs[1])
-        # Cleanup
-        if os.path.exists(outputdir):
-            shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
-        #shutil.rmtree('input')
+        shutil.rmtree('input')
 
 def main():
     structure()
@@ -177,8 +177,8 @@ def main():
     else:
         verbosity = 1
 
-    transpile(demoname, demos, verbosity, True)
-    #transpile(demoname, demos)
+    #transpile(demoname, demos, verbosity, True)
+    transpile(demoname, demos, verbosity, runlang=False)
 
 
 if __name__ == '__main__':

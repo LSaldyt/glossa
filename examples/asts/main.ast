@@ -1,145 +1,76 @@
-MultiSymbol (function)
-    Identifier (f)
-    Identifier (x)
+MultiSymbol (every)
+    Identifier (second)
     MultiSymbol (statement)
-        MultiSymbol (return)
+        MultiSymbol (functioncall)
+            Identifier (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    Identifier (x)
-
-                (*)
-                MultiSymbol (value)
-                    Identifier (x)
-
-                (-)
-                MultiSymbol (value)
-                    Identifier (x)
+                    MultiSymbol (string)
+                        (One second has passed)
 
 
 
 
 
-MultiSymbol (function)
-    Identifier (integrate_f)
-    Identifier (a)
-    Identifier (b)
-    Identifier (N)
+
+MultiSymbol (every)
+    (2)
+    Identifier (seconds)
     MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (s)
+        MultiSymbol (functioncall)
+            Identifier (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    (0)
+                    MultiSymbol (string)
+                        (An even number of seconds have passed)
 
 
 
 
+
+
+MultiSymbol (every)
+    Identifier (day)
     MultiSymbol (statement)
-        MultiSymbol (assignment)
-            Identifier (dx)
+        MultiSymbol (functioncall)
+            Identifier (send_gmail)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (parenexpr)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                Identifier (b)
-
-                            (-)
-                            MultiSymbol (value)
-                                Identifier (a)
+                    MultiSymbol (string)
+                        (lucassaldyt@gmail.com)
 
 
 
-
-                (/)
-                MultiSymbol (value)
-                    Identifier (N)
-
-
-
-
-    MultiSymbol (statement)
-        MultiSymbol (forloop)
-            Identifier (i)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    MultiSymbol (functioncall)
-                        Identifier (range)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                Identifier (N)
+                    MultiSymbol (string)
+                        (lucassaldyt@gmail.com)
 
 
 
-
-
-            MultiSymbol (statement)
-                MultiSymbol (assignment)
-                    Identifier (s)
-                    MultiSymbol (expression)
-                        MultiSymbol (value)
-                            Identifier (s)
-
-                        (+)
-                        MultiSymbol (value)
-                            MultiSymbol (functioncall)
-                                Identifier (f)
-                                MultiSymbol (expression)
-                                    MultiSymbol (value)
-                                        Identifier (a)
-
-                                    (+)
-                                    MultiSymbol (value)
-                                        Identifier (i)
-
-                                    (*)
-                                    MultiSymbol (value)
-                                        Identifier (dx)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (This is a test message)
 
 
 
-
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (This is not actually my password)
 
 
 
 
 
     MultiSymbol (statement)
-        MultiSymbol (return)
+        MultiSymbol (functioncall)
+            Identifier (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
-                    Identifier (s)
-
-                (*)
-                MultiSymbol (value)
-                    Identifier (dx)
-
-
-
-
-
-MultiSymbol (main)
-    MultiSymbol (statement)
-        MultiSymbol (print)
-            MultiSymbol (expression)
-                MultiSymbol (value)
-                    MultiSymbol (functioncall)
-                        Identifier (integrate_f)
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                (1)
-
-
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                (100)
-
-
-                        MultiSymbol (expression)
-                            MultiSymbol (value)
-                                (200)
-
-
+                    MultiSymbol (string)
+                        (Sent daily gmail)
 
 
 
