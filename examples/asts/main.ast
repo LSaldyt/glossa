@@ -1,11 +1,76 @@
-MultiSymbol (main)
+MultiSymbol (every)
+    Identifier (second)
     MultiSymbol (statement)
         MultiSymbol (functioncall)
             Identifier (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
                     MultiSymbol (string)
-                        (Hello World)
+                        (One second has passed)
+
+
+
+
+
+
+MultiSymbol (every)
+    (2)
+    Identifier (seconds)
+    MultiSymbol (statement)
+        MultiSymbol (functioncall)
+            Identifier (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (An even number of seconds have passed)
+
+
+
+
+
+
+MultiSymbol (every)
+    Identifier (day)
+    MultiSymbol (statement)
+        MultiSymbol (functioncall)
+            Identifier (send_gmail)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (lucassaldyt@gmail.com)
+
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (lucassaldyt@gmail.com)
+
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (This is a test message)
+
+
+
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (This is not actually my password)
+
+
+
+
+
+    MultiSymbol (statement)
+        MultiSymbol (functioncall)
+            Identifier (print)
+            MultiSymbol (expression)
+                MultiSymbol (value)
+                    MultiSymbol (string)
+                        (Sent daily gmail)
 
 
 

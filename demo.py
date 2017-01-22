@@ -113,7 +113,7 @@ def load_demos():
         demos[a] = ['examples/' + a] + terms[1:]
     return demos
 
-def transpile(demoname, demos, verbosity, run_compare=False):
+def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
     if not os.path.exists('output'):
         os.makedirs('output')
     if not os.path.exists('input'):
@@ -131,15 +131,13 @@ def transpile(demoname, demos, verbosity, run_compare=False):
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
             shutil.rmtree(outputdir)
-        shutil.copytree('output', outputdir)
+        print('Copying output to %s' % outputdir)
+        shutil.copytree('output/', outputdir)
 
-        if run_compare:
+        if runcomp:
             compare(directory, languageargs[0], languageargs[1], iterations=100)
-        else:
+        elif runlang:
             run_language(directory, languageargs[0], languageargs[1])
-        # Cleanup
-        if os.path.exists(outputdir):
-            shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
         shutil.rmtree('input')
@@ -179,8 +177,8 @@ def main():
     else:
         verbosity = 1
 
-    transpile(demoname, demos, verbosity, True)
-    #transpile(demoname, demos)
+    #transpile(demoname, demos, verbosity, True)
+    transpile(demoname, demos, verbosity, runlang=False)
 
 
 if __name__ == '__main__':

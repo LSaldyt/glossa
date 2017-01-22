@@ -21,6 +21,7 @@ value
 assignment
 function
 whileloop
+every
 trycatch
 elsebranch
 main

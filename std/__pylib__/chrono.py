@@ -30,7 +30,9 @@ def to_seconds(n, label='seconds'):
         raise ValueError(message)
     return __CONVERSION_TABLE__[label] * n
 
-def __every__(f, duration, durationLabel='seconds'):
+def every(f, duration, durationLabel='seconds'):
+    if not durationLabel.endswith('s'):
+        durationLabel += 's'
     duration = to_seconds(duration, durationLabel)
 
     def __repeated_task__():
