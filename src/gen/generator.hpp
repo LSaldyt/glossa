@@ -1,6 +1,7 @@
 #pragma once
 #include "constructor.hpp"
 #include "fileconstructor.hpp"
+#include "read.hpp"
 
 namespace gen 
 {
@@ -22,18 +23,16 @@ public:
 private:
     unordered_map<string, vector<tuple<string, Constructor<string>>>> construction_map;
 
+    string formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions);
+
     vector<tuple<string, Constructor<string>>> readConstructor(string filename);
     void readStructureFile(string filename);
 
-    string formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions);
 
-    Constructor<string>               generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
-    Branch<string>                    generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
-    ElementConstructor<string>        generateElementConstructor(string line);
-    ElementConstructor<string>        generateSpecialElementConstructor(string line);
-    SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content);
-    ConditionEvaluator     generateConditionEvaluator(vector<string> terms);
-
+    Constructor<string>        generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    Branch<string>             generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    ElementConstructor<string> generateElementConstructor(string line);
+    ElementConstructor<string> generateSpecialElementConstructor(string line);
 };
 
 }
