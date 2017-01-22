@@ -18,16 +18,9 @@ tuple
 functioncall
 dictionary
 value
-class
-import
-exception
 assignment
-classmemberaccess
 function
-memberinit
 whileloop
-print
-supercall
 trycatch
 elsebranch
 main
@@ -35,5 +28,4 @@ comment
 forloop
 conditional
 return
-assert
 statement

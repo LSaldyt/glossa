@@ -1,6 +1,7 @@
 MultiSymbol (main)
     MultiSymbol (statement)
-        MultiSymbol (print)
+        MultiSymbol (functioncall)
+            Identifier (print)
             MultiSymbol (expression)
                 MultiSymbol (value)
                     MultiSymbol (string)
