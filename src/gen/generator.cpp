@@ -64,7 +64,7 @@ void Generator::readStructureFile(string filename)
  * @param filename File containing the constructor description
  * @return vector of annotated file constructors (i.e. {("header", Constructor), ("source", Constructor)}
  */
-vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
+vector<tuple<string, Constructor<string>>> Generator::readConstructor(string filename)
 {
     auto content = readFile(filename);
     
@@ -83,7 +83,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     auto it = content.begin();
 
     // Iterate over file types for each constructor file
-    vector<tuple<string, Constructor>> constructors;
+    vector<tuple<string, Constructor<string>>> constructors;
     for (auto file_constructor : file_constructors)
     {
         tag = get<0>(file_constructor);
@@ -101,7 +101,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         {
             auto body = vector<string>(last_it + 1, it);
             //print("Created body");
-            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
+            auto constructor = Constructor<string>(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
@@ -109,7 +109,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         //print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
-    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
+    auto constructor = Constructor<string>(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
     constructors.push_back(make_tuple(type, constructor));
 
     return constructors;
@@ -119,12 +119,12 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
  * Create a branch from lines in a constructor file
  * @param content Lines of constructor file
  * @param symbol_storage_generator Function for creating symbol storage
- * @return Branch which will follow user-defined logic to build a syntax element
+ * @return Branch<string> which will follow user-defined logic to build a syntax element
  */
-Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
+Branch<string> Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
 {
-    vector<LineConstructor> line_constructors;
-    vector<Branch>          nested_branches;
+    vector<ElementConstructor<string>> line_constructors;
+    vector<Branch<string>>          nested_branches;
 
     auto if_body_start   = content.begin();
     auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
@@ -164,7 +164,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
                 if (nest_count == 0)
                 {
                     if_body_start = it;
-                    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+                    nested_branches.push_back(Branch<string>(defaultBranch, line_constructors, {}));
                     line_constructors.clear();
                 }
                 nest_count++;
@@ -198,16 +198,16 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
             }   
             else if (nest_count == 0)
             {
-                line_constructors.push_back(generateLineConstructor(*it));
+                line_constructors.push_back(generateElementConstructor(*it));
             }
         }
         it++;
     }
-    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
+    nested_branches.push_back(Branch<string>(defaultBranch, line_constructors, {}));
     line_constructors.clear();
     assert(nest_count == 0);
 
-    return Branch(defaultBranch, line_constructors, nested_branches);
+    return Branch<string>(defaultBranch, line_constructors, nested_branches);
 }
 
 /**
@@ -243,9 +243,9 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
 /**
  * Builds a line constructor from a line in a constructor file
  * @param line Line in constructor file
- * @return LineConstructor, see TypeDef
+ * @return ElementConstructor<string>, see TypeDef
  */
-LineConstructor Generator::generateLineConstructor(string line)
+ElementConstructor<string> Generator::generateElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
@@ -285,12 +285,12 @@ LineConstructor Generator::generateLineConstructor(string line)
                 }
                 else if (special_formatting)
                 {
-                    auto slc = generateSpecialLineConstructor(t);
+                    auto slc = generateSpecialElementConstructor(t);
                     representation += slc(names, storage, filetype, definitions, nesting, logger);
                 }
                 else
                 {
-                    auto lc = generateLineConstructor(t);
+                    auto lc = generateElementConstructor(t);
                     representation += lc(names, storage, filetype, definitions, nesting, logger);
                 }
             }
@@ -306,9 +306,9 @@ LineConstructor Generator::generateLineConstructor(string line)
 /**
  * Builds a backtick seperated line constructor
  * @param line content inside of backticks
- * @return LineConstructor, see typedef
+ * @return ElementConstructor<string>, see typedef
  */
-LineConstructor Generator::generateSpecialLineConstructor(string line)
+ElementConstructor<string> Generator::generateSpecialElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)

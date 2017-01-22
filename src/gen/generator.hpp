@@ -20,17 +20,17 @@ public:
 
     vector<tuple<string, FileConstructor>> file_constructors;
 private:
-    unordered_map<string, vector<tuple<string, Constructor>>> construction_map;
+    unordered_map<string, vector<tuple<string, Constructor<string>>>> construction_map;
 
-    vector<tuple<string, Constructor>> readConstructor(string filename);
+    vector<tuple<string, Constructor<string>>> readConstructor(string filename);
     void readStructureFile(string filename);
 
     string formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions);
 
-    Constructor            generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
-    Branch                 generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
-    LineConstructor        generateLineConstructor(string line);
-    LineConstructor        generateSpecialLineConstructor(string line);
+    Constructor<string>               generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    Branch<string>                    generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
+    ElementConstructor<string>        generateElementConstructor(string line);
+    ElementConstructor<string>        generateSpecialElementConstructor(string line);
     SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content);
     ConditionEvaluator     generateConditionEvaluator(vector<string> terms);
 
