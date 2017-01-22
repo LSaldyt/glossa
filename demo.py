@@ -125,6 +125,8 @@ def transpile(demoname, demos, verbosity, run_compare=False):
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs, verbosity)
+        if languageargs[0] in ['python2', 'python3', 'auta']:
+            shutil.copytree('std/__pylib__/', 'output/__pylib__')
 	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'
         if os.path.exists(outputdir):
@@ -140,7 +142,7 @@ def transpile(demoname, demos, verbosity, run_compare=False):
             shutil.rmtree(outputdir)
     finally:
         shutil.rmtree('output')
-        #shutil.rmtree('input')
+        shutil.rmtree('input')
 
 def main():
     structure()
