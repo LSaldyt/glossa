@@ -32,6 +32,7 @@ Constructor::Constructor(SymbolStorageGenerator set_symbol_storage_generator,
  */
 vector<string> Constructor::evaluateBranch(Branch branch, unordered_set<string>& names, SymbolStorage& symbol_storage, string filetype, int nesting, OutputManager logger)
 {
+    logger.log("Evaluating branch", 2);
     vector<string> generated;
 
     if (branch.condition_evaluator(names, symbol_storage, generated))
@@ -66,6 +67,7 @@ vector<string> Constructor::operator()(unordered_set<string>& names, vector<vect
 {
     logger.log("Running constructor for " + filetype + " file");
     auto symbol_storage = symbol_storage_generator(symbol_groups);
+    logger.log("Symbol storage created for " + filetype + " constructor, evaluating branch");
     auto generated = evaluateBranch(main_branch, names, symbol_storage, filetype, nesting);
     return generated;
 }

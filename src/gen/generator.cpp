@@ -221,6 +221,7 @@ Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator 
  */
 string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
 {
+    //print("Formatting symbol " + s);
     assert(contains(get<0>(storage), s));
     auto symbol         = get<0>(storage)[s];         
     auto representation = symbol->representation(*this, names, filetype);

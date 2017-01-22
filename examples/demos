@@ -6,3 +6,4 @@ fortran          fortran cpp
 text_prediction  python2 python3
 multiline        python2 python3
 shedskin-chess   python2 python3
+auta             auta    python3
