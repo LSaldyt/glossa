@@ -2,13 +2,15 @@
 #include "../gen/read.hpp"
 #include "../grammar/grammar.hpp"
 
+/**
+ * Module for making transformations to an AST post-identification
+ */
 namespace transform 
 {
 using namespace gen;
 using namespace grammar;
 
-using TransformerConditionEvaluator = function<bool(SymbolStorage&, const vector<string>&)>;
-using Transformer                   = function<SymbolMatrix(SymbolMatrix)>;
+using Transformer = function<SymbolMatrix(SymbolMatrix, SymbolStorage&)>;
 
 /**
  * Class for manipulating AST in a particular language
@@ -22,6 +24,8 @@ public:
 
 private:
     vector<tuple<string, Transformer>> transformers;
+    void readTransformerBody(string filename);
+    Transformer readTransformer(vector<string>);
 };
 
 }
