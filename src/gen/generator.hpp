@@ -28,7 +28,6 @@ private:
     vector<tuple<string, Constructor<string>>> readConstructor(string filename);
     void readStructureFile(string filename);
 
-
     Constructor<string>        generateConstructor(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
     Branch<string>             generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator);
     ElementConstructor<string> generateElementConstructor(string line);
