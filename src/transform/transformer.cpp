@@ -14,16 +14,31 @@ TransformerMap::TransformerMap(vector<string> filenames, string directory)
     for (auto filename : filenames)
     {
         print("Reading transformer " + directory + filename);
-        readTransformerBody(directory + filename);
+        readTransformerFile(directory + filename);
     }
 }
 
-IdentifiedGroups TransformerMap::operator()(IdentifiedGroups identified_groups)
+void TransformerMap::operator()(IdentifiedGroups& identified_groups)
 {
-    return identified_groups;
+    for (auto& group : identified_groups)
+    {
+        auto  tag    = get<0>(group);
+        auto& matrix = get<1>(group);
+        for (auto transformer_tuple : transformers)
+        {
+            auto name                     = get<0>(transformer_tuple);
+            auto transformer              = get<1>(transformer_tuple);
+            auto symbol_storage_generator = get<2>(transformer_tuple);
+            auto symbol_storage           = symbol_storage_generator(matrix);
+            if (name == tag)
+            {
+                matrix = transformer(matrix, symbol_storage);
+            }
+        }
+    }
 }
 
-void TransformerMap::readTransformerBody(string filename)
+void TransformerMap::readTransformerFile(string filename)
 {
     auto content = readFile(filename);
     
@@ -35,7 +50,7 @@ void TransformerMap::readTransformerBody(string filename)
     auto declarations = vector<string>(content.begin(), name_i);
     auto body         = vector<string>(name_i + 2, content.end());
 
-    transformers.push_back(make_tuple(name, readTransformer(body)));
+    transformers.push_back(make_tuple(name, readTransformer(body), generateSymbolStorageGenerator(declarations)));
 }
 
 Transformer TransformerMap::readTransformer(vector<string> content)

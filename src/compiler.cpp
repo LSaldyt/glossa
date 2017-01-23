@@ -173,7 +173,7 @@ namespace compiler
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
-        identified_groups = transformer(identified_groups);
+        transformer(identified_groups);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
 

@@ -20,11 +20,11 @@ class TransformerMap
 
 public:
     TransformerMap(vector<string> grammar_files, string directory);
-    IdentifiedGroups operator()(IdentifiedGroups identified_groups);
+    void operator()(IdentifiedGroups& identified_groups);
 
 private:
-    vector<tuple<string, Transformer>> transformers;
-    void readTransformerBody(string filename);
+    vector<tuple<string, Transformer, SymbolStorageGenerator>> transformers;
+    void readTransformerFile(string filename);
     Transformer readTransformer(vector<string>);
 };
 
