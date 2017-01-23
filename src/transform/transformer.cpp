@@ -22,7 +22,7 @@ void TransformerMap::operator()(IdentifiedGroups& identified_groups)
 {
     for (auto& group : identified_groups)
     {
-        auto  tag    = get<0>(group);
+        auto& tag    = get<0>(group);
         auto& matrix = get<1>(group);
         for (auto transformer_tuple : transformers)
         {
@@ -32,7 +32,9 @@ void TransformerMap::operator()(IdentifiedGroups& identified_groups)
             auto symbol_storage           = symbol_storage_generator(matrix);
             if (name == tag)
             {
-                matrix = transformer(matrix, symbol_storage);
+                auto transform_result = transformer(matrix, symbol_storage);
+                tag    = get<0>(transform_result);
+                matrix = get<1>(transform_result);
             }
         }
     }
@@ -55,8 +57,36 @@ void TransformerMap::readTransformerFile(string filename)
 
 Transformer TransformerMap::readTransformer(vector<string> content)
 {
-    return [](SymbolMatrix matrix, SymbolStorage& symbol_storage){
-        return matrix;
+    string name = "statement";
+    if (content.size() > 1)
+    {
+        name    = content[0];
+        content = slice(content, 1);
+    }
+    return [content, name](SymbolMatrix matrix, SymbolStorage& symbol_storage){
+        SymbolMatrix new_matrix;
+        /*
+        for (auto line : content)
+        {
+            vector<shared_ptr<Symbol>> new_row;
+            auto terms = lex::seperate(line, {make_tuple(" ", false)});
+            for (auto term : terms)
+            {
+                bool single_elem = contains(get<0>(symbol_storage), line);
+                if (single_elem)
+                {
+                    new_row.push_back(get<0>(symbol_storage)[line]);
+                }
+                else
+                {
+                    assert(contains(get<1>(symbol_storage), line));
+                    concat(new_row, get<1>(symbol_storage)[line]);
+                }
+            }
+            new_matrix.push_back(new_row);
+        }
+        */
+        return make_tuple(name, new_matrix);
     };
 }
 

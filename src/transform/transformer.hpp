@@ -1,16 +1,10 @@
 #pragma once
-#include "../gen/read.hpp"
-#include "../grammar/grammar.hpp"
+#include "conditional.hpp"
 
-/**
- * Module for making transformations to an AST post-identification
- */
 namespace transform 
 {
-using namespace gen;
-using namespace grammar;
-
-using Transformer = function<SymbolMatrix(SymbolMatrix, SymbolStorage&)>;
+// Alias for a specific manipulation of a symbol matrix
+using Transformer = function<tuple<string, SymbolMatrix>(SymbolMatrix, SymbolStorage&)>;
 
 /**
  * Class for manipulating AST in a particular language
