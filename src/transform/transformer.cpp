@@ -1,7 +1,7 @@
 #include "../syntax/symbols/export.hpp"
 #include "transformer.hpp"
 
-namespace gen 
+namespace transform 
 {
 
 /**
@@ -13,8 +13,13 @@ TransformerMap::TransformerMap(vector<string> filenames, string directory)
 {
     for (auto filename : filenames)
     {
-        //readConstructor(directory + filename);
+        print("Reading transformer " + directory + filename);
     }
+}
+
+IdentifiedGroups TransformerMap::operator()(IdentifiedGroups identified_groups)
+{
+    return identified_groups;
 }
 
 }

@@ -46,14 +46,13 @@ def structure_grammar(language):
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))
 
-def structure_constructor(language):
-    directory = 'languages/' + language + '/constructors/'
+def build_core_file(language, coretype, excluded=['core']):
+    directory = 'languages/' + language + '/' + coretype + '/'
     coredir = directory + '.__core__/'
     if os.path.exists(coredir):
         shutil.rmtree(coredir)
     os.makedirs(coredir)
 
-    excluded  = ['core', 'file']
     corefiles = [name for name in filenames(directory) if name not in excluded] 
 
     with open(directory + 'core', 'w') as corefile:
@@ -65,5 +64,5 @@ def structure():
     for language in languages:
         if language not in excluded:
             structure_grammar(language)
-            structure_constructor(language)
-
+            build_core_file(language, 'constructors', excluded=['core', 'file'])
+            build_core_file(language, 'transformers')

@@ -105,6 +105,21 @@ namespace compiler
     }
 
     /**
+     * High level function for loading a transformer map for a language
+     * @param language Language for transformer to be loaded for
+     * @return TransformerMap which can manipulate AST for the given language
+     */
+    TransformerMap loadTransformer (string language)
+    {
+        print("Loading transformers for " + language);
+        auto transformer_files = readFile("languages/" + language + "/transformers/core");
+        auto transformer = TransformerMap(transformer_files, "languages/" + language + "/transformers/");
+        print("Done");
+        return transformer;
+
+    }
+
+    /**
      * High level function for transpilation
      * Converts source files of one language to source files of another, copying them into a new directory
      * @param filenames   List of files to transpile
@@ -116,8 +131,9 @@ namespace compiler
      */ 
     void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang, int verbosity)
     {
-        auto grammar   = loadGrammar(input_lang);
-        auto generator = loadGenerator(output_lang);
+        auto grammar     = loadGrammar(input_lang);
+        auto generator   = loadGenerator(output_lang);
+        auto transformer = loadTransformer(input_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -125,7 +141,7 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, symbol_table, input_dir, output_dir, logger);
+            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
         }
     }
 
@@ -139,7 +155,9 @@ namespace compiler
      * @param output_directory String name of output directory
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
-    void compile(string filename, Grammar& grammar, Generator& generator, unordered_map<string, string>& symbol_table, string input_directory, string output_directory, OutputManager logger)
+    void compile(string filename, Grammar& grammar, Generator& generator, TransformerMap& transformer,
+                 unordered_map<string, string>& symbol_table, string input_directory, 
+                 string output_directory, OutputManager logger)
     {
         logger.log("Reading file " + filename);
         auto content         = readFile     (input_directory + "/" + filename);
@@ -149,62 +167,16 @@ namespace compiler
         auto symbolic_tokens = symbolicPass (tokens, logger);
         logger.log("Joining symbolic tokens");
         auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
-
         for(auto& jt : joined_tokens)
         {
             logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"", 2);
         }
-
-        logger.log("Constructing from grammar:");
-        unordered_map<string, tuple<vector<string>, string>> files;
-
-        vector<vector<string>> asts;
+        logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
-        for (auto identified_group : identified_groups)
-        {
-            vector<string> ast;
-            logger.log("Compiling groups (Identified as " + get<0>(identified_group) + ")");
-            string gen_with = "none";
-            if (files.empty())
-            {
-                gen_with = filename;
-            }
-            unordered_set<string> names;
-            auto groups = get<1>(identified_group);
-            for (auto group : groups)
-            {
-                for (auto symbol : group)
-                {
-                    auto abstract = symbol->abstract();
-                    logger.log(abstract);
-                    ast.push_back(abstract);
-                }
-            }
-            logger.log("Generating code for " + get<0>(identified_group));
-            auto a = getTime();
-            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with, 1, logger);
-            auto b = getTime();
-            logger.log("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
-            logger.log("Adding generated code to file content");
-            for (auto fileinfo : generated)
-            {
-                string type         = get<0>(fileinfo);
-                string path         = get<1>(fileinfo);
-                vector<string> body = get<2>(fileinfo);
+        identified_groups = transformer(identified_groups);
+        logger.log("Compiling identified groups");
+        auto files = compileGroups(identified_groups, filename, generator, logger);
 
-                if (contains(files, type))
-                {
-                    logger.log("Adding to " + type + " file");
-                    concat(get<0>(files[type]), body);
-                }
-                else
-                {
-                    logger.log("Creating initial " + type + " file");
-                    files[type] = make_tuple(body, path);
-                }
-            }
-            asts.push_back(ast);
-        }
 
         logger.log("Initial file");
         for (auto line : content)
@@ -223,13 +195,6 @@ namespace compiler
             }
             writeFile(body, output_directory + "/" + path);
         }
-
-        vector<string> global_ast;
-        for (auto ast : asts)
-        {
-            concat(global_ast, ast);
-        } 
-        writeFile(global_ast, "examples/asts/" + filename + ".ast");
     }
 
     /**
@@ -331,6 +296,58 @@ namespace compiler
             }
         }
         return tokens;
+    }
+
+    unordered_map<string, tuple<vector<string>, string>> compileGroups(vector<tuple<string, SymbolMatrix>> identified_groups,
+                                                                       string filename,
+                                                                       Generator &generator,
+                                                                       OutputManager logger)
+    {
+        unordered_map<string, tuple<vector<string>, string>> files;
+        for (auto identified_group : identified_groups)
+        {
+            vector<string> ast;
+            logger.log("Compiling groups (Identified as " + get<0>(identified_group) + ")");
+            string gen_with = "none";
+            if (files.empty())
+            {
+                gen_with = filename;
+            }
+            unordered_set<string> names;
+            auto groups = get<1>(identified_group);
+            for (auto group : groups)
+            {
+                for (auto symbol : group)
+                {
+                    auto abstract = symbol->abstract();
+                    logger.log(abstract);
+                }
+            }
+            logger.log("Generating code for " + get<0>(identified_group));
+            auto a = getTime();
+            auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with, 1, logger);
+            auto b = getTime();
+            logger.log("Generation step took " + std::to_string((double)(b - a) / 1000000.) + "s");
+            logger.log("Adding generated code to file content");
+            for (auto fileinfo : generated)
+            {
+                string type         = get<0>(fileinfo);
+                string path         = get<1>(fileinfo);
+                vector<string> body = get<2>(fileinfo);
+
+                if (contains(files, type))
+                {
+                    logger.log("Adding to " + type + " file");
+                    concat(get<0>(files[type]), body);
+                }
+                else
+                {
+                    logger.log("Creating initial " + type + " file");
+                    files[type] = make_tuple(body, path);
+                }
+            }
+        }
+        return files;
     }
 
 }
