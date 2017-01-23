@@ -62,6 +62,8 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
                 {
                     int index_a = std::stoi(terms[2]);
                     int index_b = std::stoi(terms[3]);
+                    assert(symbol_groups.size() > index_a);
+                    assert(symbol_groups[index_a].size() > index_b);
                     get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
                 }
             }

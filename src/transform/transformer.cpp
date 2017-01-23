@@ -20,6 +20,7 @@ TransformerMap::TransformerMap(vector<string> filenames, string directory)
 
 void TransformerMap::operator()(IdentifiedGroups& identified_groups)
 {
+    print("Performing transformation of identified groups");
     for (auto& group : identified_groups)
     {
         auto& tag    = get<0>(group);
@@ -32,9 +33,10 @@ void TransformerMap::operator()(IdentifiedGroups& identified_groups)
             auto symbol_storage           = symbol_storage_generator(matrix);
             if (name == tag)
             {
-                auto transform_result = transformer(matrix, symbol_storage);
-                tag    = get<0>(transform_result);
-                matrix = get<1>(transform_result);
+                print("Transforming tagged group " + tag);
+                //auto transform_result = transformer(matrix, symbol_storage);
+                //tag    = get<0>(transform_result);
+                //matrix = get<1>(transform_result);
             }
         }
     }
