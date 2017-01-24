@@ -51,7 +51,9 @@ struct Branch
     vector<ElementConstructor<T>> line_constructors;
     vector<Branch<T>> nested_branches;
 
-    Branch(ConditionEvaluator set_condition_evaluator, vector<ElementConstructor<T>> set_line_constructors, vector<Branch<T>> set_nested_branches)
+    Branch(ConditionEvaluator set_condition_evaluator, 
+           vector<ElementConstructor<T>> set_line_constructors, 
+           vector<Branch<T>> set_nested_branches)
     : condition_evaluator(set_condition_evaluator),
       line_constructors(set_line_constructors),
       nested_branches(set_nested_branches)

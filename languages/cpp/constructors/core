@@ -11,6 +11,7 @@ parenexpr
 constantdeclaration
 string
 function
+symbol_list
 kvpair
 elementaccess
 memberinit

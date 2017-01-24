@@ -15,6 +15,7 @@ parenexpr
 tuple_unpack
 string
 function
+symbol_list
 kvpair
 elementaccess
 memberinit

@@ -14,6 +14,7 @@ class Conditional
 {
 public:
     Conditional();
+    bool operator()();
 
 };
 

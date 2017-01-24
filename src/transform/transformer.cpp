@@ -34,9 +34,9 @@ void TransformerMap::operator()(IdentifiedGroups& identified_groups)
             if (name == tag)
             {
                 print("Transforming tagged group " + tag);
-                //auto transform_result = transformer(matrix, symbol_storage);
-                //tag    = get<0>(transform_result);
-                //matrix = get<1>(transform_result);
+                auto transform_result = transformer(matrix, symbol_storage);
+                tag    = get<0>(transform_result);
+                matrix = get<1>(transform_result);
             }
         }
     }
@@ -59,36 +59,45 @@ void TransformerMap::readTransformerFile(string filename)
 
 Transformer TransformerMap::readTransformer(vector<string> content)
 {
-    string name = "statement";
-    if (content.size() > 1)
-    {
-        name    = content[0];
-        content = slice(content, 1);
-    }
-    return [content, name](SymbolMatrix matrix, SymbolStorage& symbol_storage){
+    return [content](SymbolMatrix matrix, SymbolStorage& symbol_storage){
         SymbolMatrix new_matrix;
-        /*
+        SymbolMatrix temp_matrix;
+        string tag = "undefined";
         for (auto line : content)
         {
-            vector<shared_ptr<Symbol>> new_row;
+            vector<shared_ptr<Symbol>> temp_row;
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
-            for (auto term : terms)
+            assert(terms.size() > 0);
+            if (terms[0] == "new")
             {
-                bool single_elem = contains(get<0>(symbol_storage), line);
-                if (single_elem)
+                if (not temp_matrix.empty())
                 {
-                    new_row.push_back(get<0>(symbol_storage)[line]);
+                    new_matrix.push_back( vector<shared_ptr<Symbol>>({ make_shared<Symbol>(
+                                    MultiSymbol(tag, temp_matrix))   }) );
+                    temp_matrix.clear();
                 }
-                else
+                assert(terms.size() == 2);
+                tag = terms[1];
+            }
+            else
+            {
+                for (auto term : terms)
                 {
-                    assert(contains(get<1>(symbol_storage), line));
-                    concat(new_row, get<1>(symbol_storage)[line]);
+                    bool single_elem = contains(get<0>(symbol_storage), line);
+                    if (single_elem)
+                    {
+                        temp_row.push_back(get<0>(symbol_storage)[line]);
+                    }
+                    else
+                    {
+                        assert(contains(get<1>(symbol_storage), line));
+                        concat(temp_row, get<1>(symbol_storage)[line]);
+                    }
                 }
             }
-            new_matrix.push_back(new_row);
+            temp_matrix.push_back(temp_row);
         }
-        */
-        return make_tuple(name, new_matrix);
+        return make_tuple("symbol_list", new_matrix);
     };
 }
 

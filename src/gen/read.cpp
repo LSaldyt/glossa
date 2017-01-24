@@ -13,11 +13,11 @@ namespace gen
 SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        print("Building symbol storage");
+        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {
-            print(line);
+            //print(line);
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             assert(terms.size() == 3 or 
                    terms.size() == 4);
