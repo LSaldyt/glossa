@@ -64,7 +64,7 @@ void Generator::readStructureFile(string filename)
  * @param filename File containing the constructor description
  * @return vector of annotated file constructors (i.e. {("header", Constructor), ("source", Constructor)}
  */
-vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
+vector<tuple<string, Constructor<string>>> Generator::readConstructor(string filename)
 {
     auto content = readFile(filename);
     
@@ -83,7 +83,7 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
     auto it = content.begin();
 
     // Iterate over file types for each constructor file
-    vector<tuple<string, Constructor>> constructors;
+    vector<tuple<string, Constructor<string>>> constructors;
     for (auto file_constructor : file_constructors)
     {
         tag = get<0>(file_constructor);
@@ -101,7 +101,9 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         {
             auto body = vector<string>(last_it + 1, it);
             //print("Created body");
-            auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
+            auto constructor = Constructor<string>(symbol_storage_generator, 
+                                                   generateBranch(body, symbol_storage_generator),
+                                                   definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
         }
@@ -109,143 +111,73 @@ vector<tuple<string, Constructor>> Generator::readConstructor(string filename)
         //print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
-    auto constructor = Constructor(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
+    auto constructor = Constructor<string>(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
     constructors.push_back(make_tuple(type, constructor));
 
     return constructors;
 }
 
-/**
- * Create a branch from lines in a constructor file
- * @param content Lines of constructor file
- * @param symbol_storage_generator Function for creating symbol storage
- * @return Branch which will follow user-defined logic to build a syntax element
- */
-Branch Generator::generateBranch(vector<string> content, SymbolStorageGenerator symbol_storage_generator)
-{
-    vector<LineConstructor> line_constructors;
-    vector<Branch>          nested_branches;
-
-    auto if_body_start   = content.begin();
-    auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
-    auto if_body_end     = content.begin();
-    auto else_body_end   = content.begin();
-
-    bool has_else = false;
-
-    const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
-    {
-        vector<string> body(start, end);
-        auto nested_branch                = generateBranch(body, symbol_storage_generator);
-        auto original_condition_terms     = lex::seperate(*conditionline, {make_tuple(" ", false)});
-        if (inverse)
-        {
-            nested_branch.condition_evaluator = inverseBranch(generateConditionEvaluator(slice(original_condition_terms, 1)));
-        }
-        else
-        {
-            nested_branch.condition_evaluator = generateConditionEvaluator(slice(original_condition_terms, 1));
-        }
-        nested_branches.push_back(nested_branch);
-    };
 
 
-    int nest_count = 0;
-
-    auto it = content.begin();
-    while (it != content.end())
-    {
-        auto terms = lex::seperate(*it, {make_tuple(" ", false)});
-        if (not terms.empty())
-        {
-            auto keyword = terms[0];
-            if (keyword == "branch")
-            {
-                if (nest_count == 0)
-                {
-                    if_body_start = it;
-                    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
-                    line_constructors.clear();
-                }
-                nest_count++;
-            }
-            else if (keyword == "elsebranch")
-            {
-                if (nest_count == 1)
-                {
-                    if_body_end     = it;
-                    else_body_start = it;
-                    has_else = true;
-                }
-            }
-            else if (keyword == "end")
-            {
-                if (nest_count == 1)
-                {
-                    if (not has_else)
-                    {
-                        if_body_end = it;
-                    }
-                    addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
-
-                    if (has_else)
-                    {
-                        else_body_end = it;
-                        addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
-                    }
-                }
-                nest_count--;
-            }   
-            else if (nest_count == 0)
-            {
-                line_constructors.push_back(generateLineConstructor(*it));
-            }
-        }
-        it++;
-    }
-    nested_branches.push_back(Branch(defaultBranch, line_constructors, {}));
-    line_constructors.clear();
-    assert(nest_count == 0);
-
-    return Branch(defaultBranch, line_constructors, nested_branches);
-}
 
 /**
- * Function for retrieving/building a symbol from storage
- * @param s The user-defined name for the symbol
+ * High level function for generating source code for a particular langauge
  * @param names Namespace
- * @param storage Dual dictionaries containing symbol types
- * @param filetype The target filetype to generate for
- * @param definitions Defined names
- * @return Formatted string representing a stored symbol
+ * @param symbol_groups 2D array of symbols
+ * @param symbol_type High level symbol name to be created
+ * @param filename Name of file to be created
+ * @param nesting Indentation level
+ * @return Vector of files 
  */
-string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
+                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
+                                                                    string                              symbol_type, 
+                                                                    string                              filename,
+                                                                    int                                 nesting,
+                                                                    OutputManager                       logger)
 {
-    assert(contains(get<0>(storage), s));
-    auto symbol         = get<0>(storage)[s];         
-    auto representation = symbol->representation(*this, names, filetype);
-    auto new_name       = symbol->name();
-    if (new_name != "none" and contains(definitions, s)) 
+    logger.log("Running generator for " + symbol_type, 2);
+    vector<tuple<string, string, vector<string>>> files;
+    unordered_set<string> added_names;
+    auto constructors = construction_map[symbol_type];
+    for (auto t : constructors)
     {
-        if (contains(names, new_name))
+        auto type        = get<0>(t);
+        auto constructor = get<1>(t);
+        unordered_set<string> local_names(names);
+
+        string extension;
+        vector<string> default_content;
+        for (auto fc : file_constructors)
         {
-            //print("Name " + new_name + " is already defined");
-        }
-        else
-        {
-            //print("Adding name: " + new_name);
-            names.insert(new_name);
-        }
+            if (get<0>(fc) == type)
+            {
+                if (filename != "none")
+                {
+                    for (auto line : get<1>(fc).default_content)
+                    {
+                        default_content.push_back(format(filename, line));
+                    }
+                }
+                extension = get<1>(fc).extension;
+                break;
+            }
+        } 
+        auto constructed = constructor(local_names, symbol_groups, type, nesting, logger);
+        concat(default_content, constructed);
+        added_names.insert(local_names.begin(), local_names.end());
+        files.push_back(make_tuple(type, filename + extension, default_content));
     }
-    return representation;
+    names.insert(added_names.begin(), added_names.end());
+    return files;
 }
 
 /**
  * Builds a line constructor from a line in a constructor file
  * @param line Line in constructor file
- * @return LineConstructor, see TypeDef
+ * @return ElementConstructor<string>, see TypeDef
  */
-LineConstructor Generator::generateLineConstructor(string line)
+ElementConstructor<string> Generator::generateElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
@@ -285,12 +217,12 @@ LineConstructor Generator::generateLineConstructor(string line)
                 }
                 else if (special_formatting)
                 {
-                    auto slc = generateSpecialLineConstructor(t);
+                    auto slc = generateSpecialElementConstructor(t);
                     representation += slc(names, storage, filetype, definitions, nesting, logger);
                 }
                 else
                 {
-                    auto lc = generateLineConstructor(t);
+                    auto lc = generateElementConstructor(t);
                     representation += lc(names, storage, filetype, definitions, nesting, logger);
                 }
             }
@@ -306,9 +238,9 @@ LineConstructor Generator::generateLineConstructor(string line)
 /**
  * Builds a backtick seperated line constructor
  * @param line content inside of backticks
- * @return LineConstructor, see typedef
+ * @return ElementConstructor<string>, see typedef
  */
-LineConstructor Generator::generateSpecialLineConstructor(string line)
+ElementConstructor<string> Generator::generateSpecialElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
     return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
@@ -364,188 +296,129 @@ LineConstructor Generator::generateSpecialLineConstructor(string line)
 }
 
 /**
- * Builds a symbol storage from file description
- * Allows user to refer to symbols by name instead of array index
- * @param content Definition lines of constructor file
- * @return SymbolStorageGenerator function for building a symbol storage (tuple of dictionaries) from 2d array of symbols
+ * Function for retrieving/building a symbol from storage
+ * @param s The user-defined name for the symbol
+ * @param names Namespace
+ * @param storage Dual dictionaries containing symbol types
+ * @param filetype The target filetype to generate for
+ * @param definitions Defined names
+ * @return Formatted string representing a stored symbol
  */
-SymbolStorageGenerator Generator::generateSymbolStorageGenerator(vector<string> content)
+string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
 {
-    return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        //print("Building symbol storage");
-        SymbolStorage storage;
-        for (auto line : content)
+    assert(contains(get<0>(storage), s));
+    auto symbol         = get<0>(storage)[s];         
+    auto representation = symbol->representation(*this, names, filetype);
+    auto new_name       = symbol->name();
+    if (new_name != "none" and contains(definitions, s)) 
+    {
+        if (contains(names, new_name))
         {
-            auto terms = lex::seperate(line, {make_tuple(" ", false)});
-            assert(terms.size() == 3 or 
-                   terms.size() == 4);
-            auto identifier = terms[0];
-            if (terms.size() == 3)
+            //print("Name " + new_name + " is already defined");
+        }
+        else
+        {
+            //print("Adding name: " + new_name);
+            names.insert(new_name);
+        }
+    }
+    return representation;
+}
+
+/**
+ * Create a branch from lines in a constructor file
+ * @param content Lines of constructor file
+ * @param symbol_storage_generator Function for creating symbol storage
+ * @return Branch<string> which will follow user-defined logic to build a syntax element
+ */
+Branch<string> Generator::generateBranch(vector<string> content, 
+                         SymbolStorageGenerator symbol_storage_generator)
+{
+    vector<ElementConstructor<string>> line_constructors;
+    vector<Branch<string>>             nested_branches;
+
+    auto if_body_start   = content.begin();
+    auto else_body_start = content.begin(); // For collecting and processing contents of an if statement body
+    auto if_body_end     = content.begin();
+    auto else_body_end   = content.begin();
+
+    bool has_else = false;
+
+    const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
+    {
+        vector<string> body(start, end);
+        auto nested_branch                = generateBranch(body, symbol_storage_generator);
+        auto original_condition_terms     = lex::seperate(*conditionline, {make_tuple(" ", false)});
+        if (inverse)
+        {
+            nested_branch.condition_evaluator = inverseBranch(generateConditionEvaluator(slice(original_condition_terms, 1)));
+        }
+        else
+        {
+            nested_branch.condition_evaluator = generateConditionEvaluator(slice(original_condition_terms, 1));
+        }
+        nested_branches.push_back(nested_branch);
+    };
+
+
+    int nest_count = 0;
+
+    auto it = content.begin();
+    while (it != content.end())
+    {
+        auto terms = lex::seperate(*it, {make_tuple(" ", false)});
+        if (not terms.empty())
+        {
+            auto keyword = terms[0];
+            if (keyword == "branch")
             {
-                auto keyword = terms[0];
-                if (keyword == "append")
+                if (nest_count == 0)
                 {
-                    assert(contains(get<1>(storage), terms[2]));
-                    assert(contains(get<0>(storage), terms[1]));
-                    auto& symbols = get<1>(storage)[terms[2]];
-                    auto& symbol  = get<0>(storage)[terms[1]];
-                    symbols.push_back(symbol);
+                    if_body_start = it;
+                    nested_branches.push_back(Branch<string>(defaultBranch, line_constructors, {}));
+                    line_constructors.clear();
                 }
-                else if (keyword == "concat")
+                nest_count++;
+            }
+            else if (keyword == "elsebranch")
+            {
+                if (nest_count == 1)
                 {
-                    assert(contains(get<1>(storage), terms[1]));
-                    assert(contains(get<1>(storage), terms[2]));
-                    auto& a_symbols = get<1>(storage)[terms[1]];
-                    auto& b_symbols = get<1>(storage)[terms[2]];
-                    concat(a_symbols, b_symbols);
-                }
-                else
-                {
-                    int index = std::stoi(terms[2]);
-                    get<1>(storage)[identifier] = symbol_groups[index]; 
+                    if_body_end     = it;
+                    else_body_start = it;
+                    has_else = true;
                 }
             }
-            else if (terms.size() == 4)
+            else if (keyword == "end")
             {
-                if (terms[2] == "names")
+                if (nest_count == 1)
                 {
-                    vector<shared_ptr<Symbol>> names;
-                    int index = std::stoi(terms[3]);
-                    for (auto symbol : symbol_groups[index])
+                    if (not has_else)
                     {
-                        names.push_back(make_shared<Identifier>(Identifier(symbol->name())));
+                        if_body_end = it;
                     }
-                    get<1>(storage)[identifier] = names;
+                    addNestedBranch(if_body_start + 1, if_body_end, if_body_start, false);
+
+                    if (has_else)
+                    {
+                        else_body_end = it;
+                        addNestedBranch(else_body_start + 1, else_body_end, if_body_start, true);
+                    }
                 }
-                else
-                {
-                    int index_a = std::stoi(terms[2]);
-                    int index_b = std::stoi(terms[3]);
-                    get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
-                }
+                nest_count--;
+            }   
+            else if (nest_count == 0)
+            {
+                line_constructors.push_back(generateElementConstructor(*it));
             }
         }
-        //print("Symbol storage creation finished");
-        return storage;
-    };
-}
+        it++;
+    }
+    nested_branches.push_back(Branch<string>(defaultBranch, line_constructors, {}));
+    line_constructors.clear();
+    assert(nest_count == 0);
 
-/**
- * Builds a function for evaluation conditions
- * @param terms whitespace seperated terms of a condition line
- * @return Predicate function used in branch creation
- */
-ConditionEvaluator Generator::generateConditionEvaluator(vector<string> terms)
-{
-    assert(not terms.empty());
-    auto keyword = terms[0];
-    if (keyword == "defined")
-    {
-        assert(terms.size() == 2);
-        auto identifier = terms[1];
-        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
-        {
-            string to_define = get<0>(symbol_storage)[identifier]->name();
-            return contains(names, to_define); 
-        };
-    }
-    else if (keyword == "equalTo")
-    {
-        assert(terms.size() == 3);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
-        {
-            assert(contains(get<0>(symbol_storage), terms[1]));
-            auto name = get<0>(symbol_storage)[terms[1]]->name();
-            return name == terms[2]; 
-        };
-    }
-    else if (keyword == "empty")
-    {
-        assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
-        {
-            assert(contains(get<1>(symbol_storage), terms[1]));
-            return get<1>(symbol_storage)[terms[1]].empty();
-        };
-    }
-    else if (keyword == "nonempty")
-    {
-        assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
-        {
-            assert(contains(get<1>(symbol_storage), terms[1]));
-            return not get<1>(symbol_storage)[terms[1]].empty();
-        };
-    }
-    else if (keyword == "both")
-    {
-        assert(contains(terms, "and"s));
-        auto split = std::find(terms.begin(), terms.end(), "and");
-        vector<string> first(terms.begin() + 1, split);
-        vector<string> second(split + 1, terms.end());
-        auto a = generateConditionEvaluator(first);
-        auto b = generateConditionEvaluator(second);
-        return [this, a, b](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
-        {
-            return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
-        };
-    }
-    else
-    {
-        throw named_exception("Constructor keyword " + keyword + " is not defined");
-    }
-}
-
-/**
- * High level function for generating source code for a particular langauge
- * @param names Namespace
- * @param symbol_groups 2D array of symbols
- * @param symbol_type High level symbol name to be created
- * @param filename Name of file to be created
- * @param nesting Indentation level
- * @return Vector of files 
- */
-vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
-                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
-                                                                    string                              symbol_type, 
-                                                                    string                              filename,
-                                                                    int                                 nesting,
-                                                                    OutputManager                       logger)
-{
-    logger.log("Running generator for " + symbol_type, 2);
-    vector<tuple<string, string, vector<string>>> files;
-    unordered_set<string> added_names;
-    auto constructors = construction_map[symbol_type];
-    for (auto t : constructors)
-    {
-        auto type        = get<0>(t);
-        auto constructor = get<1>(t);
-        unordered_set<string> local_names(names);
-
-        string extension;
-        vector<string> default_content;
-        for (auto fc : file_constructors)
-        {
-            if (get<0>(fc) == type)
-            {
-                if (filename != "none")
-                {
-                    for (auto line : get<1>(fc).default_content)
-                    {
-                        default_content.push_back(format(filename, line));
-                    }
-                }
-                extension = get<1>(fc).extension;
-                break;
-            }
-        } 
-        auto constructed = constructor(local_names, symbol_groups, type, nesting, logger);
-        concat(default_content, constructed);
-        added_names.insert(local_names.begin(), local_names.end());
-        files.push_back(make_tuple(type, filename + extension, default_content));
-    }
-    names.insert(added_names.begin(), added_names.end());
-    return files;
+    return Branch<string>(defaultBranch, line_constructors, nested_branches);
 }
 
 }
