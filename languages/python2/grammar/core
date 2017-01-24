@@ -29,15 +29,12 @@ global
 exception
 importall
 assignment
-classmemberaccess
 tuple_unpack
 function
-memberinit
 whileloop
 multistatement
 import_select
 print
-supercall
 trycatch
 elsebranch
 main

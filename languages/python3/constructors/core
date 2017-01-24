@@ -9,7 +9,6 @@ listcomp
 exception
 importall
 assignment
-classmemberaccess
 basevalue
 parenexpr
 tuple_unpack
@@ -18,14 +17,12 @@ function
 symbol_list
 kvpair
 elementaccess
-memberinit
 whileloop
 vector
 multistatement
 every
 import_select
 print
-supercall
 trycatch
 elsebranch
 is
