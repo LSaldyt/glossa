@@ -3,5 +3,6 @@ derivate
 variable
 statement
 value
+multiply
 add_op
 add_expression
