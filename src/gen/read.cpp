@@ -17,7 +17,7 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
         SymbolStorage storage;
         for (auto line : content)
         {
-            //print(line);
+            print(line);
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             assert(terms.size() == 3 or 
                    terms.size() == 4);

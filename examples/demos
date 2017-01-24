@@ -8,3 +8,4 @@ multiline        python2 python3
 class            python2 python3
 shedskin-chess   python2 python3
 auta             auta    python3
+calc             __pre_derivate__ __post_derivate__

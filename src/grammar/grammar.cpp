@@ -243,7 +243,15 @@ tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             if (not terms.empty())
             {
-                parsers.push_back(readGrammarTerms(terms));
+                try
+                {
+                    parsers.push_back(readGrammarTerms(terms));
+                }
+                catch (named_exception& e)
+                {
+                    print("Grammar file threw exception: " + filename);
+                    throw;
+                }
             }
         }
     }

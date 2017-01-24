@@ -17,6 +17,8 @@ namespace syntax
         virtual string abstract(int indent=0);
         virtual string name();
 
+        virtual tuple<string, vector<vector<shared_ptr<Symbol>>>> to_id_group();
+
         string annotation = "symbol";
 
         Symbol();
