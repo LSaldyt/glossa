@@ -1,0 +1,6 @@
+symbols = 0
+defines
+header
+`sep NEWLINE symbols`
+source
+`sep NEWLINE symbols`
