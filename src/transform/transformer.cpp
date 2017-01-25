@@ -101,13 +101,6 @@ Transformer TransformerMap::readTransformer(vector<string> content)
 
 void TransformerMap::transform(string& tag, SymbolMatrix& matrix)
 {
-    for (auto& row : matrix)
-    {
-        for (auto& item : row)
-        {
-            transformSymbol(item);
-        }
-    }
     for (auto transformer_tuple : transformers)
     {
         auto name = get<0>(transformer_tuple);
@@ -125,16 +118,24 @@ void TransformerMap::transform(string& tag, SymbolMatrix& matrix)
     }
 }
 
-void TransformerMap::transformSymbol(shared_ptr<Symbol>& symbol)
+shared_ptr<Symbol> TransformerMap::transformSymbol(shared_ptr<Symbol> symbol)
 {
     auto id_group = symbol->to_id_group();
     auto tag   = get<0>(id_group);
     auto group = get<1>(id_group);
-    if (tag != "undefined")
+    if (tag != "undefined") // If multisymbol, transform each sub element, the the element itself
     {
+        for (auto& row : group)
+        {
+            for (auto& item : row)
+            {
+                item = transformSymbol(item);
+            }
+        }
         transform(tag, group);
-        symbol = std::make_shared<Symbol>(MultiSymbol(tag, group));
+        return std::make_shared<Symbol>(MultiSymbol(tag, group));
     }
+    return symbol;
 }
 
 }

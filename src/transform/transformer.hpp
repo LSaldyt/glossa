@@ -11,7 +11,6 @@ using Transformer = function<tuple<string, SymbolMatrix>(SymbolMatrix, SymbolSto
  */
 class TransformerMap 
 {
-
 public:
     TransformerMap(vector<string> grammar_files, string directory);
     void operator()(IdentifiedGroups& identified_groups);
@@ -21,7 +20,7 @@ private:
     void readTransformerFile(string filename);
     Transformer readTransformer(vector<string>);
     void transform(string& tag, SymbolMatrix& matrix);
-    void transformSymbol(shared_ptr<Symbol>& symbol);
+    shared_ptr<Symbol> transformSymbol(shared_ptr<Symbol> symbol);
 };
 
 }
