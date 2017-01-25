@@ -17,7 +17,7 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
         SymbolStorage storage;
         for (auto line : content)
         {
-            print(line);
+            //print(line);
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             assert(terms.size() == 3 or 
                    terms.size() == 4);
@@ -64,6 +64,10 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
                     int index_a = std::stoi(terms[2]);
                     int index_b = std::stoi(terms[3]);
                     assert(symbol_groups.size() > index_a);
+                    if (symbol_groups[index_a].size() <= index_b)
+                    {
+                        print(line);
+                    }
                     assert(symbol_groups[index_a].size() > index_b);
                     get<0>(storage)[identifier] = symbol_groups[index_a][index_b]; 
                 }

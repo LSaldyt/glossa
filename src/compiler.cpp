@@ -173,10 +173,13 @@ namespace compiler
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
+        logger.log("Identified groups AST:");
+        showAST(identified_groups, logger);
         transformer(identified_groups);
+        logger.log("Transformed groups AST:");
+        showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
-
 
         logger.log("Initial file");
         for (auto line : content)
@@ -306,7 +309,6 @@ namespace compiler
         unordered_map<string, tuple<vector<string>, string>> files;
         for (auto identified_group : identified_groups)
         {
-            vector<string> ast;
             logger.log("Compiling groups (Identified as " + get<0>(identified_group) + ")");
             string gen_with = "none";
             if (files.empty())
@@ -314,15 +316,6 @@ namespace compiler
                 gen_with = filename;
             }
             unordered_set<string> names;
-            auto groups = get<1>(identified_group);
-            for (auto group : groups)
-            {
-                for (auto symbol : group)
-                {
-                    auto abstract = symbol->abstract();
-                    logger.log(abstract);
-                }
-            }
             logger.log("Generating code for " + get<0>(identified_group));
             auto a = getTime();
             auto generated = generator(names, get<1>(identified_group), get<0>(identified_group), gen_with, 1, logger);
@@ -350,4 +343,19 @@ namespace compiler
         return files;
     }
 
+    void showAST(const IdentifiedGroups& identified_groups, OutputManager logger)
+    {
+        for (const auto& identified_group : identified_groups)
+        {
+            auto groups = get<1>(identified_group);
+            for (auto group : groups)
+            {
+                for (auto symbol : group)
+                {
+                    auto abstract = symbol->abstract();
+                    logger.log(abstract);
+                }
+            }
+        }
+    }
 }

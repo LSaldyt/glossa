@@ -90,36 +90,42 @@ Transformer TransformerMap::readTransformer(vector<string> content)
             }
             temp_matrix.push_back(temp_row);
         }
+        if (not temp_matrix.empty())
+        {
+            new_matrix.push_back( vector<shared_ptr<Symbol>>({ make_shared<Symbol>(
+                            MultiSymbol(tag, temp_matrix))   }) );
+        }
         return make_tuple(name, new_matrix);
     };
 }
 
 void TransformerMap::transform(string& tag, SymbolMatrix& matrix)
 {
-    for (auto transformer_tuple : transformers)
+    for (auto& row : matrix)
     {
-        auto name                     = get<0>(transformer_tuple);
-        auto transformer              = get<1>(transformer_tuple);
-        auto symbol_storage_generator = get<2>(transformer_tuple);
-        auto symbol_storage           = symbol_storage_generator(matrix);
-        if (name == tag)
-        {
-            print("Transforming tagged group " + tag);
-            auto transform_result = transformer(matrix, symbol_storage);
-            tag    = get<0>(transform_result);
-            matrix = get<1>(transform_result);
-        }
-    }
-    for (auto row : matrix)
-    {
-        for (auto item : row)
+        for (auto& item : row)
         {
             transformSymbol(item);
         }
     }
+    for (auto transformer_tuple : transformers)
+    {
+        auto name = get<0>(transformer_tuple);
+        if (name == tag)
+        {
+            print("Performing transformation for " + tag);
+            auto transformer              = get<1>(transformer_tuple);
+            auto symbol_storage_generator = get<2>(transformer_tuple);
+            auto symbol_storage           = symbol_storage_generator(matrix);
+            auto transform_result         = transformer(matrix, symbol_storage);
+
+            tag    = get<0>(transform_result);
+            matrix = get<1>(transform_result);
+        }
+    }
 }
 
-void TransformerMap::transformSymbol(shared_ptr<Symbol> symbol)
+void TransformerMap::transformSymbol(shared_ptr<Symbol>& symbol)
 {
     auto id_group = symbol->to_id_group();
     auto tag   = get<0>(id_group);
@@ -127,8 +133,8 @@ void TransformerMap::transformSymbol(shared_ptr<Symbol> symbol)
     if (tag != "undefined")
     {
         transform(tag, group);
+        symbol = std::make_shared<Symbol>(MultiSymbol(tag, group));
     }
-    symbol = std::make_shared<Symbol>(MultiSymbol(tag, group));
 }
 
 }

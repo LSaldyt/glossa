@@ -21,7 +21,7 @@ private:
     void readTransformerFile(string filename);
     Transformer readTransformer(vector<string>);
     void transform(string& tag, SymbolMatrix& matrix);
-    void transformSymbol(shared_ptr<Symbol> symbol);
+    void transformSymbol(shared_ptr<Symbol>& symbol);
 };
 
 }

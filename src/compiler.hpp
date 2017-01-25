@@ -40,4 +40,5 @@ namespace compiler
                                                                        string filename,
                                                                        Generator& generator,
                                                                        OutputManager logger);
+    void showAST(const IdentifiedGroups& identified_groups, OutputManager logger);
 }
