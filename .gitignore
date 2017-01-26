@@ -11,3 +11,5 @@ docs/doxygen/*
 input/
 output/
 *.png
+*.log
+*.aux
