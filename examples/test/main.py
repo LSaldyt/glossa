@@ -2,7 +2,6 @@ import obj_word
 import string
 
 class WordList():
-    '''WordList uses words as keys and a list of values as the value. The list has words that follow the word used as the key. This can then be used to create automatically generated sentences. I'm also keeping raw counts of words to see what may be over used.'''
     def __init__(self, limit=20):
         self.wordlist = dict()
         #Add period to the word list.
@@ -21,6 +20,7 @@ class WordList():
                 self.wordlist[w].incrementCount()
             except KeyError:
                 self.wordlist[w] = obj_word.WordNode()
+    """
             #If there is a previous word.
             if i != 0:
                 #Add this word as outgoing from the previous word.
@@ -79,3 +79,4 @@ class WordList():
         s = sorted(self.wordlist.keys(), key=lambda word: self.wordlist[word].count)
         for word in s:
             print word+' - '+str(self.wordlist[word].count)
+    """
