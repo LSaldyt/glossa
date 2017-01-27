@@ -20,7 +20,6 @@ class WordList():
                 self.wordlist[w].incrementCount()
             except KeyError:
                 self.wordlist[w] = obj_word.WordNode()
-    """
             #If there is a previous word.
             if i != 0:
                 #Add this word as outgoing from the previous word.
@@ -76,7 +75,6 @@ class WordList():
         self.getSentence('u', 'uniform random')
 
     def getWordsByMostFrequentUsage(self):
-        s = sorted(self.wordlist.keys(), key=lambda word: self.wordlist[word].count)
+        #s = sorted(self.wordlist.keys(), key=lambda word: self.wordlist[word].count)
         for word in s:
             print word+' - '+str(self.wordlist[word].count)
-    """

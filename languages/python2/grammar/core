@@ -17,10 +17,13 @@ parenexpr
 string
 elementaccess
 vector
+lambda
 is
+funcarg
 tuple
 functioncall
 dictionary
+defaultarg
 in
 value
 class
@@ -48,4 +51,3 @@ elifbranch
 fileprint
 statement
 kvpair
-defaultarg
