@@ -20,7 +20,7 @@ rejected_words = []
 
 #For now, use a regular expression to match only words containing
 #alpha-numeric characters, hyphens, or apostrophes.
-alpha = re.compile('^[\w\'-]+$')
+alpha = re.compile("^[\w\'-]+$")
 
 #Match articles
 articles = re.compile('a|an|the')
