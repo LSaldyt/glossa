@@ -1,5 +1,0 @@
-a = 0 0
-b = 1 0
-defines
-source
-(dy/dx ($a$)) * $b$ + (dy/dx ($b)) * $a$

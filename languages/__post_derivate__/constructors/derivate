@@ -1,4 +1,0 @@
-expr = 0 0
-defines
-source
-dy/dx = $expr$
