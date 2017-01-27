@@ -177,8 +177,8 @@ def main():
     else:
         verbosity = 1
 
-    #transpile(demoname, demos, verbosity, True)
-    transpile(demoname, demos, verbosity, runlang=False)
+    transpile(demoname, demos, verbosity, True)
+    #transpile(demoname, demos, verbosity, runlang=False)
 
 
 if __name__ == '__main__':
