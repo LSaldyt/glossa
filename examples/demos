@@ -8,4 +8,5 @@ class            python2 python3
 shedskin-chess   python2 python3
 auta             auta    python3
 test             python2 python3
+bool             python2 python3
 value            python2 python3

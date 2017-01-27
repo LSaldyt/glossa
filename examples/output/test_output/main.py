@@ -12,12 +12,16 @@ class WordNode():
     def __init__ (self): 
         self.incoming = [] 
         self.outgoing = dict() 
-        self.count = 1  
-    def addIncoming (self,word): 
-        if (not word in self.incoming): 
-            self.incoming.append(word) 
-         
+        self.count = 1 
     """
+        def addIncoming(self, word):
+    
+            if not word in self.incoming:
+    
+                self.incoming.append(word)
+    
+    end
+    end
         def addOutgoing(self, word):
     
             if word in self.outgoing.keys():
