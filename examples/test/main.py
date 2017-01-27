@@ -1,54 +1,81 @@
-import sys
-import random as r
-sys.path.append('../random')
-import randomWeighted as rw
+import obj_word
+import string
 
-class WordNode():
-    def __init__(self):
-        self.incoming = []
-        self.outgoing = dict()
-        self.count = 1
+class WordList():
+    '''WordList uses words as keys and a list of values as the value. The list has words that follow the word used as the key. This can then be used to create automatically generated sentences. I'm also keeping raw counts of words to see what may be over used.'''
+    def __init__(self, limit=20):
+        self.wordlist = dict()
+        #Add period to the word list.
+        self.wordlist['.'] = obj_word.WordNode()
 
-    """
+        self.sentenceLengthLimit=limit
 
-    def addIncoming(self, word):
-        if not word in self.incoming:
-            self.incoming.append(word)
+        self.currentWord = '.'
 
-    def addOutgoing(self, word):
-        if word in self.outgoing.keys():
-            self.outgoing[word] += 1
+
+    def addWords(self, words):
+        previous_word = '.'
+        for i in xrange(len(words)):
+            w = words[i]
+            try:
+                self.wordlist[w].incrementCount()
+            except KeyError:
+                self.wordlist[w] = obj_word.WordNode()
+            #If there is a previous word.
+            if i != 0:
+                #Add this word as outgoing from the previous word.
+                self.wordlist[previous_word].addOutgoing(w)
+                #Add the previous word as incoming to this word.
+                self.wordlist[w].addIncoming(previous_word)
+            else:
+                #Add period as outgoing to this word to 
+                #indicate that this word can begin a sentence.
+                self.wordlist['.'].addOutgoing(w)
+                self.wordlist[w].addIncoming('.')
+            previous_word = w
+        #If the very last word is not a period, it should be
+        if previous_word != '.':
+            self.wordlist[previous_word].addOutgoing('.')
+            self.wordlist['.'].addIncoming(previous_word)
+
+    def getNextWord(self, howToGet):
+        if howToGet == 'd':
+            self.currentWord = self.wordlist[self.currentWord]\
+            .getNextWordDeterministic()
+        elif howToGet == 'w':
+            self.currentWord = self.wordlist[self.currentWord]\
+            .getNextWordWeighted()
+        elif howToGet == 'u':
+            self.currentWord = self.wordlist[self.currentWord]\
+            .getNextWordUniform()
         else:
-            self.outgoing[word] = 1
-    def incrementCount(self):
-        self.count += 1
+            print 'ERROR in obj_wordlist.py.'; exit()
+        return self.currentWord
 
-    def getNextWordUniform(self):
-        rand = r.randint(0, len(self.outgoing.keys())-1)
-        key = self.outgoing.keys()[rand]
-        return key
 
-    def getNextWordDeterministic(self):
-        heaviest = []
-        weight = 0
-        for key in self.outgoing.keys():
-            if self.outgoing[key] > weight:
-                weight = self.outgoing[key]
-                heaviest = [key]
-            elif self.outgoing[key] == weight:
-                heaviest.append(key)
-        key = heaviest[0]
-        if len(heaviest) > 1:
-            key = heaviest[r.randint(0, len(heaviest)-1)]
-        return key
+    def getSentence(self, howToGet, sentence_type):
+        print '\nA '+sentence_type+' sentence: '
+        word = self.getNextWord(howToGet)
+        sentence = string.capitalize(str(word)+' ')
+        count = 0
+        while word != '.' and count < self.sentenceLengthLimit:
+            word = self.getNextWord(howToGet)
+            sentence += word+' '
+            count+=1
+        print sentence
+        print 'Counted to '+str(count)
+        self.currentWord = '.' #Reset to sentence start.
 
-    def getNextWordWeighted(self):
-        #TODO it might save time to store this permanently and only update it when new outgoing edges are added. For now don't worry about such things.
-        weights = []
-        for key in self.outgoing.keys():
-            weights.append(self.outgoing[key])
-        randgen = rw.WeightedRandomGenerator(weights)
-        key = self.outgoing.keys()[randgen.next()]
-        return key
-    """
+    def getSentenceDeterministic(self):
+        self.getSentence('d', 'deterministic')
 
+    def getSentenceWeighted(self):
+        self.getSentence('w', 'weighted random')
+
+    def getSentenceUniform(self):
+        self.getSentence('u', 'uniform random')
+
+    def getWordsByMostFrequentUsage(self):
+        s = sorted(self.wordlist.keys(), key=lambda word: self.wordlist[word].count)
+        for word in s:
+            print word+' - '+str(self.wordlist[word].count)
