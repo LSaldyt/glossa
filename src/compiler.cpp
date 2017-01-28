@@ -76,7 +76,7 @@ namespace compiler
             LexMapLexer(just("    "s),     "tab",        "tab",        3),
             LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
             LexMapLexer(digits,            "int",        "literal",    3),
-            LexMapLexer(identifiers,       "identifier", "identifier", 3)};
+            LexMapLexer(identifiers,       "*text*",    "identifier", 3)};
 
         lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
         for (auto delimiter : grammar.string_delimiters)

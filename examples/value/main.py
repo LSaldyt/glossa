@@ -6,4 +6,3 @@ if __name__ == "__main__":
     key = heaviest[r.randint(0, len(heaviest)-1)]
     self.wordlist[w].incrementCount()
     s = sorted(self.wordlist.keys(), key=lambda word: self.wordlist[word].count)
-    s = sorted(self.wordlist.keys(), key=lambda word : 0)

@@ -68,6 +68,11 @@ namespace lex
      */
     tuple<Token, vector<string>> LexMap::identify(vector<string> terms) const
     {
+        string text;
+        for (auto term : terms)
+        {
+            text += term;
+        }
         // Return result of first lexer to match against remaining terms
         for (auto lexer : language_lexers)
         {
@@ -75,7 +80,9 @@ namespace lex
             if(result.result)
             {
                 //print("vector<string> identified as " + lexer.name);
-                return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
+                string type = lexer.type == "*text*" ? text
+                                                     : lexer.type;
+                return make_tuple(Token(result.consumed, lexer.name, type), result.remaining);
             }
         }
 
