@@ -1,6 +1,10 @@
 \documentclass{article}
 
-\title{Progtran Paper Outline}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\doublespacing
+
+\title{Fully Generalized Compilation}
 \date{01-26-2017}
 \author{Lucas Saldyt}
 
@@ -12,8 +16,13 @@
 \pagenumbering{arabic}
 
 \section{Abstract}
-Progtran is an attempt to build a multi-language source-to-source compiler. Ideally, one will be able to convert programs in one language to programs in another without a loss in readability. This will allows for more user flexibility. For example, Python syntax is generally easier to understand than C++'s, but if one can translate Python to C++, then one can have both benefits. Progtran is an investigation into the feasibility of such conversions.
+
+Assuming that two languages are \textit{isomorphic}, one syntax can be converted to another if given an adequate description of each syntax's grammar. At an abstract level, this conversion is entirely practical. Progtran is an investigation into the feasibility of a \textbf{Fully Generalized Compiler}, a multi-language source-to-source compiler. Given source code in one language, a description of its grammar \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}?
+
 \section{Introduction}
+
+A \textbf{Full Generalized Compiler} is a tool for programming language researchers, providing a \textit{dynamic framework} for easily modifying syntax of input and output languages. The grammar of a programming language can be modified without recompiling the software. This is demonstrated by how easily a new programming language can be invented with Progtran. However, Progtran also uses this concept (dynamic syntax changes) to re-implement existing source-to-source compilation tools, such as \textbf{Cython} or \textbf{2to3}.
+
 \section{Methods}
 \subsection{Grammars}
 \subsection{Constructors}
