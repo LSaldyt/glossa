@@ -1,6 +1,6 @@
-# Progtran
+# Glossa 
 
-Progran is a simple transpiler, based on the principles of formal grammars. The program uses a database of grammar files to convert between several programming languages (Currently Haskell, Python, and C++). 
+Glossa is a simple multi-language source-to-source compiler. The program uses a database of grammar files to convert between several programming languages (Currently Haskell, Python, and C++). 
 
 <object data="description.pdf" type="application/pdf" width="700px" height="700px">
     <embed src="description">
