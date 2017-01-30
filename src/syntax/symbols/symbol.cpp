@@ -11,4 +11,8 @@ string Symbol::abstract(int indent)
 }
 string Symbol::name(){return "none";}
 Symbol::Symbol(){}
+tuple<string, vector<vector<shared_ptr<Symbol>>>> Symbol::to_id_group()
+{
+    return make_tuple("undefined", vector<vector<shared_ptr<Symbol>>>());
+}
 }

@@ -43,4 +43,9 @@ string MultiSymbol::abstract(int indent)
     return representation;
 }
 
+tuple<string, vector<vector<shared_ptr<Symbol>>>> MultiSymbol::to_id_group()
+{
+    return make_tuple(tag, groups);
+}
+
 }
