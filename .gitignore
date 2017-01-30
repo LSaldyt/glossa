@@ -11,3 +11,6 @@ docs/doxygen/*
 input/
 output/
 *.png
+*.log
+*.aux
+papers/outline.pdf

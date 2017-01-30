@@ -2,6 +2,12 @@
 
 Progran is a simple transpiler, based on the principles of formal grammars. The program uses a database of grammar files to convert between several programming languages (Currently Haskell, Python, and C++). 
 
+<object data="description.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="description">
+        This browser does not support PDFs. Please download the PDF to view it: <a href="description.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
 ### Demonstrations
 
 To run demonstrations:

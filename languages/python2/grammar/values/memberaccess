@@ -1,4 +1,4 @@
 anyOf link elementaccess identifier wildcard 
 punctuator .
-anyOf link functioncall link memberaccess identifier wildcard 
+anyOf link elementaccess link functioncall link memberaccess identifier wildcard 
 0 sep 2

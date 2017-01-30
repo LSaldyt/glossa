@@ -27,7 +27,8 @@ using SymbolStorage    = tuple<SymbolTable, MultiSymbolTable>;
 using SymbolStorageGenerator = function<SymbolStorage(vector<vector<shared_ptr<Symbol>>>&)>;
 
 using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&, const vector<string>&)>;
-using LineConstructor    = function<string(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
+template <typename T>
+using ElementConstructor    = function<T(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
 const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
@@ -43,14 +44,23 @@ const auto inverseBranch = [](ConditionEvaluator c)
  * Optionally constructs pieces of source code if certain conditions are met
  * Allows user-defined code construction by enforcing meta-rules
  */
+template <typename T>
 struct Branch
 {
     ConditionEvaluator condition_evaluator;
-    vector<LineConstructor> line_constructors;
-    vector<Branch> nested_branches;
+    vector<ElementConstructor<T>> line_constructors;
+    vector<Branch<T>> nested_branches;
 
-    Branch(ConditionEvaluator set_condition_evaluator, vector<LineConstructor> set_line_constructors, vector<Branch> set_nested_branches);
-    Branch();
+    Branch(ConditionEvaluator set_condition_evaluator, 
+           vector<ElementConstructor<T>> set_line_constructors, 
+           vector<Branch<T>> set_nested_branches)
+    : condition_evaluator(set_condition_evaluator),
+      line_constructors(set_line_constructors),
+      nested_branches(set_nested_branches)
+    {
+
+    }
+    Branch(){}
 };
 
 }

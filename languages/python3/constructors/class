@@ -1,14 +1,12 @@
-$name = 0 0
-$inheritance = 1    
-$constructorargs = 2
-$supercall = 3
-$constructorbody = 4
-$auxillaryargs = 5
-$members = 5
-$inners = 5
-$body = 6
-concat $auxillaryargs $inheritance
-concat $inners $inheritance
+name        = 0 0
+inheritance = 1    
+body        = 2
 defines
 source
-    // No source for template class definitions
+branch nonempty inheritance
+class $name$($inheritance$):
+`block body`
+elsebranch
+class $name$():
+`block body`
+end

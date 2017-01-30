@@ -1,3 +1,4 @@
+#pragma once
 #include "constructor.hpp"
 
 namespace gen

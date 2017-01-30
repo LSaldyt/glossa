@@ -25,10 +25,10 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
  * @param logger OutputManager to track verbose output
  * @return vector of annotated matrices, each representing a high level symbolic type (statement)
  */
-vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger)
+IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger)
 {
     logger.log("Identifying groups with grammar");
-    vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> identified_groups;
+    IdentifiedGroups identified_groups;
     try 
     {
         // Consume all tokens
@@ -77,11 +77,11 @@ vector<tuple<string, vector<vector<shared_ptr<Symbol>>>>> Grammar::identifyGroup
  * @param results Results of matching against a given statement
  * @return        2D matrix of Symbols
  */
-vector<vector<shared_ptr<Symbol>>> Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
+SymbolMatrix Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
 {
     auto construction_indices = get<1>(grammar_map[name]);
 
-    vector<vector<shared_ptr<Symbol>>> groups;
+    SymbolMatrix groups;
     groups.push_back(vector<shared_ptr<Symbol>>());
 
     for (auto i : construction_indices)
@@ -243,7 +243,15 @@ tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             if (not terms.empty())
             {
-                parsers.push_back(readGrammarTerms(terms));
+                try
+                {
+                    parsers.push_back(readGrammarTerms(terms));
+                }
+                catch (named_exception& e)
+                {
+                    print("Grammar file threw exception: " + filename);
+                    throw;
+                }
             }
         }
     }
