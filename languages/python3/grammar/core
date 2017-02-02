@@ -14,7 +14,6 @@ string
 function
 kvpair
 elementaccess
-memberinit
 vector
 tuple
 functioncall
@@ -24,9 +23,7 @@ class
 import
 exception
 assignment
-classmemberaccess
 function
-memberinit
 whileloop
 print
 supercall

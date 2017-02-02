@@ -68,21 +68,21 @@ namespace lex
      */
     tuple<Token, vector<string>> LexMap::identify(vector<string> terms) const
     {
-        string text;
-        for (auto term : terms)
-        {
-            text += term;
-        }
         // Return result of first lexer to match against remaining terms
         for (auto lexer : language_lexers)
         {
             auto result = lexer.match(terms);
             if(result.result)
             {
+                string text;
+                for (auto term : result.consumed)
+                {
+                    text += term;
+                }
                 //print("vector<string> identified as " + lexer.name);
-                string type = lexer.type == "*text*" ? text
-                                                     : lexer.type;
-                return make_tuple(Token(result.consumed, lexer.name, type), result.remaining);
+                string name = lexer.name == "*text*" ? text
+                                                     : lexer.name;
+                return make_tuple(Token(result.consumed, name, lexer.type), result.remaining);
             }
         }
 
