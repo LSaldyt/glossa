@@ -1,85 +1,9 @@
 name = 0 0
-inheritance = 1
-constructorargs = 2
-supercall = 3
-constructorbody = 4
-auxillaryargs = 5
-members = 5
-inners = 5
-body = 6
-concat auxillaryargs inheritance
-concat inners inheritance
+constructor_args = 1
+constructor_body = 2
+body = 3
 defines
 header
-
-template <
-sep , auxillaryargs typenameSPACET_@
->
-class 
-__$name$__
-
-branch nonempty inheritance
-: 
-sep , inheritance publicSPACET_@ 
-end
-
-{
-public:
-sep NEWLINE members T_@SPACE@;
-__$name$__
-(
-sep , auxillaryargs T_@SPACEset_@
-)
-
-branch nonempty inheritance
-: 
-sep , inheritance T_@(set_@) 
-end
-
-{
-sep SPACE members @=set_@;
-}
-sep ;^ body
-};
-template <
-sep , constructorargs typenameSPACET_@
->
-auto $name$ (
-sep , constructorargs T_@SPACE@
-){
-sep NEWLINE constructorbody @; 
-
-branch nonempty supercall
-auto 
-sep SPACE inheritance T_@SPACE=@(
-sep SPACE supercall
-);
-end
-
-return 
-__$name$__<
-sep , members decltype(@) source
-
-branch both nonempty supercall and nonempty members
-,
-end
-
-branch nonempty supercall
-sep SPACE inheritance decltype(T_@)
-end
-
->
-(
-sep , members @ source
-
-branch both nonempty supercall and nonempty members
-,
-end
-branch nonempty supercall
-sep SPACE inheritance T_@
-end
-);
-};
-
+// Class $name$
 source
-// No source for template class definitions
+// Class $name$

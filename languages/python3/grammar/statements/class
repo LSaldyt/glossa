@@ -3,9 +3,16 @@ identifier wildcard
 punctuator (
 punctuator )
 punctuator :
-inOrder identifier __init__ punctuator (
-identifier wildcard 
+keyword def
+keyword __init__
+punctuator (
+identifier self
 optional inOrder !punctuator , identifier wildcard
 many inOrder !punctuator , identifier wildcard
 punctuator )
-1
+punctuator :
+many link statement
+keyword end
+many link statement
+keyword end
+1 sep 9 10 sep 13 sep 15
