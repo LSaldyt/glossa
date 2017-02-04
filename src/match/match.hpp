@@ -135,10 +135,10 @@ namespace match
             for (auto matcher : matchers)
             {
                 auto match_result = matcher(terms);
-                if(match_result.result)
+                if ((match_result.result and match_result.consumed.size() > result.consumed.size()) 
+                     or not result.result)
                 {
                     result = match_result;
-                    break;
                 }
             }
             return result;
