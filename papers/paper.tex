@@ -29,6 +29,20 @@ breakatwhitespace=true,
 tabsize=3
 }
 
+% Package for flowcharts/diagrams
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [diamond, minimum width=2cm, minimum height=0cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% ==================================================
+% Begin Paper
+% ==================================================
+
 \title{Fully Generalized Compilation}
 \date{01-26-2017}
 \author{Lucas Saldyt}
@@ -54,13 +68,42 @@ A new programming language can even be fully implemented without recompiling the
 Progtran also uses this concept (user defined dynamic grammars) to re-implement existing source-to-source compilation tools, such as \textbf{Cython} or \textbf{2to3}.
 
 \section{Methods}
+
+
 \subsection{Grammars}
 \subsection{Constructors}
 \subsection{AST Transformations}
 
+\newpage
+
+\begin{tikzpicture}[node distance=2.5cm]
+
+    \node (sourcea) [startstop]                 {Source Code A};
+    \node (lexer)   [process, below of=sourcea] {Lexical Analyzer};
+    \node (tokens)  [io, below of=lexer]        {Symbolic Tokens};
+    \node (parser)  [process, below of=tokens]  {Parser};
+    \node (asta)    [io, below of=parser]       {AST};
+    \node (trans)   [process, below of=asta]    {Transformer};
+    \node (astb)    [io, below of=trans]        {Intermediate AST};
+    \node (gen)     [process, below of=astb]    {Generator};
+    \node (stop)    [startstop, below of=gen]   {Source Code B};
+
+
+    \draw [arrow] (sourcea) -- (lexer);
+    \draw [arrow] (lexer) -- (tokens);
+    \draw [arrow] (tokens) -- (parser);
+    \draw [arrow] (parser) -- (asta);
+    \draw [arrow] (asta) -- (trans);
+    \draw [arrow] (trans) -- (astb);
+    \draw [arrow] (astb) -- (gen);
+    \draw [arrow] (gen) -- (stop);
+
+\end{tikzpicture}
+
 
 \section{Results}
 \subsection{Quicksort Cython Comparison}
+
 This is not meant to be a robust benchmark. Instead, it aims to show that Cython and Transpilation yield similar results.
 
 Output for 1000 sorting iterations:
