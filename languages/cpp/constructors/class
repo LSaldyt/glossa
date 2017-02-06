@@ -4,6 +4,13 @@ constructor_body = 2
 body = 3
 defines
 header
-class $name$
-{};
+class $name$ : public Base
+{
+public:
+$name$ (`sep , constructor_args`);
+};
 source
+$name$::$name$ (`sep , constructor_args`)
+{
+`block constructor_body @;`
+}

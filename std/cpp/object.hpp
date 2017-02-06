@@ -105,6 +105,7 @@ public:
         : p( other.p->clone() ) {}
     Object( Object && other ) noexcept 
         : p( std::move(other.p) ) {}
+    Object();
     void swap( Object & other ) noexcept 
         { p.swap(other.p); }
     Object & operator=( Object other ) 

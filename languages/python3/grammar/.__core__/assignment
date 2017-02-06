@@ -1,4 +1,4 @@
-anyOf link self identifier wildcard
+identifier wildcard
 operator   =
 link expression
 0 sep 2 
