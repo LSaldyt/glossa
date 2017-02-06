@@ -1,7 +1,0 @@
-name  = 0 0
-value = 1 0
-defines
-header
-$name$
-source
-$value$

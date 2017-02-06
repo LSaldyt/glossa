@@ -14,6 +14,7 @@ string
 function
 kvpair
 elementaccess
+self
 vector
 tuple
 functioncall

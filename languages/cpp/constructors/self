@@ -1,0 +1,6 @@
+id = 0 0
+defines
+header
+__self__[$id$]
+source
+__self__[$id$]

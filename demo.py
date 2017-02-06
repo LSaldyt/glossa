@@ -126,6 +126,8 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         languageargs = l[1:]
         build(directory, languageargs, verbosity)
         if languageargs[0] in ['python2', 'python3', 'auta']:
+            if os.path.exists('output/__pylib__'):
+                shutil.rmtree('output/__pylib__')
             shutil.copytree('std/__pylib__/', 'output/__pylib__')
 	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'

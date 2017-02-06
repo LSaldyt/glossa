@@ -14,8 +14,8 @@ function
 symbol_list
 kvpair
 elementaccess
-memberinit
 whileloop
+self
 vector
 do
 dobody

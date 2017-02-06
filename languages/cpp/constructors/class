@@ -4,6 +4,6 @@ constructor_body = 2
 body = 3
 defines
 header
-// Class $name$
+class $name$
+{};
 source
-// Class $name$
