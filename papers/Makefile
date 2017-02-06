@@ -1,6 +1,9 @@
 
-all: outline 
+all: paper open 
 	
-outline:
-	pdflatex outline.tex 
+paper:
+	pdflatex paper.tex 
+
+open:
+	xdg-open paper.pdf
 
