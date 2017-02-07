@@ -17,6 +17,7 @@ elementaccess
 self
 vector
 tuple
+selfval
 functioncall
 dictionary
 value
@@ -24,6 +25,7 @@ class
 import
 exception
 assignment
+memberfunction
 function
 memberinit
 whileloop

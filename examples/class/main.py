@@ -4,5 +4,9 @@ class A():
         print('Created Object')
         self.x = 2
 
+    def foo(self, x):
+        print(x*x)
+
 if __name__ == '__main__':
-    A()
+    a = A()
+    a.foo(2)

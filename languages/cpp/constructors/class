@@ -8,6 +8,7 @@ class $name$ : public Base
 {
 public:
 $name$ (`sep , constructor_args`);
+`block body`
 };
 source
 $name$::$name$ (`sep , constructor_args`)
