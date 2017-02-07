@@ -105,21 +105,6 @@ namespace compiler
     }
 
     /**
-     * High level function for loading a transformer map for a language
-     * @param language Language for transformer to be loaded for
-     * @return TransformerMap which can manipulate AST for the given language
-     */
-    TransformerMap loadTransformer (string language)
-    {
-        print("Loading transformers for " + language);
-        auto transformer_files = readFile("languages/" + language + "/transformers/core");
-        auto transformer = TransformerMap(transformer_files, "languages/" + language + "/transformers/");
-        print("Done");
-        return transformer;
-
-    }
-
-    /**
      * High level function for transpilation
      * Converts source files of one language to source files of another, copying them into a new directory
      * @param filenames   List of files to transpile
@@ -133,7 +118,6 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
-        auto transformer = loadTransformer(input_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -141,7 +125,7 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
+            compile(file, grammar, generator, symbol_table, input_dir, output_dir, logger);
         }
     }
 
@@ -155,7 +139,7 @@ namespace compiler
      * @param output_directory String name of output directory
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
-    void compile(string filename, Grammar& grammar, Generator& generator, TransformerMap& transformer,
+    void compile(string filename, Grammar& grammar, Generator& generator,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
     {
@@ -175,8 +159,6 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
-        transformer(identified_groups);
-        logger.log("Transformed groups AST:");
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
