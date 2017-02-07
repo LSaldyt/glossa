@@ -102,7 +102,8 @@ vector<tuple<string, Constructor<string>>> Generator::readConstructor(string fil
             auto body = vector<string>(last_it + 1, it);
             //print("Created body");
             auto constructor = Constructor<string>(symbol_storage_generator, 
-                                                   generateBranch(body, symbol_storage_generator),
+                                                   generateBranch(body, symbol_storage_generator, 
+                                                       [this](string s){return this->generateElementConstructor(s);}),
                                                    definitions);
             constructors.push_back(make_tuple(type, constructor));
             last_it = it;
@@ -111,7 +112,11 @@ vector<tuple<string, Constructor<string>>> Generator::readConstructor(string fil
         //print("Done");
     }
     auto body = vector<string>(last_it + 1, content.end());
-    auto constructor = Constructor<string>(symbol_storage_generator, generateBranch(body, symbol_storage_generator), definitions);
+    auto constructor = Constructor<string>(symbol_storage_generator, 
+                                           generateBranch(body, 
+                                                          symbol_storage_generator, 
+                                                          [this](string s){return this->generateElementConstructor(s);}), 
+                                           definitions);
     constructors.push_back(make_tuple(type, constructor));
 
     return constructors;
@@ -329,10 +334,12 @@ string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolSt
  * Create a branch from lines in a constructor file
  * @param content Lines of constructor file
  * @param symbol_storage_generator Function for creating symbol storage
+ * @param ec_creator function defining how to build an element constructor
  * @return Branch<string> which will follow user-defined logic to build a syntax element
  */
 Branch<string> Generator::generateBranch(vector<string> content, 
-                         SymbolStorageGenerator symbol_storage_generator)
+                         SymbolStorageGenerator symbol_storage_generator,
+                         ElementConstructorCreator<string> ec_creator)
 {
     vector<ElementConstructor<string>> line_constructors;
     vector<Branch<string>>             nested_branches;
@@ -347,7 +354,7 @@ Branch<string> Generator::generateBranch(vector<string> content,
     const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
     {
         vector<string> body(start, end);
-        auto nested_branch                = generateBranch(body, symbol_storage_generator);
+        auto nested_branch                = generateBranch(body, symbol_storage_generator, ec_creator);
         auto original_condition_terms     = lex::seperate(*conditionline, {make_tuple(" ", false)});
         if (inverse)
         {
@@ -409,7 +416,7 @@ Branch<string> Generator::generateBranch(vector<string> content,
             }   
             else if (nest_count == 0)
             {
-                line_constructors.push_back(generateElementConstructor(*it));
+                line_constructors.push_back(ec_creator(*it));
             }
         }
         it++;
