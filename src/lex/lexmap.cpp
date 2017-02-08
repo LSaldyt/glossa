@@ -74,8 +74,15 @@ namespace lex
             auto result = lexer.match(terms);
             if(result.result)
             {
+                string text;
+                for (auto term : result.consumed)
+                {
+                    text += term;
+                }
                 //print("vector<string> identified as " + lexer.name);
-                return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
+                string name = lexer.name == "*text*" ? text
+                                                     : lexer.name;
+                return make_tuple(Token(result.consumed, name, lexer.type), result.remaining);
             }
         }
 

@@ -62,7 +62,7 @@ def run_language(directory, inputlang, outputlang):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     if outputlang == 'cpp':
         os.chdir('output')
-        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/cpp/*.cpp', shell=True)
+        subprocess.run('g++ -std=c++17 *.cpp -O2 ../std/cpp/*.cpp', shell=True)
         subprocess.run('./a.out', shell=True)
         os.chdir('..')
     else:
@@ -72,7 +72,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     if outputlang == 'cpp':
         os.chdir('output')
-        subprocess.run('g++ -std=c++14 *.cpp -Os ../std/cpp/*.cpp', shell=True)
+        subprocess.run('g++ -std=c++17 *.cpp -O2 ../std/cpp/*.cpp', shell=True)
         output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
@@ -126,6 +126,8 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         languageargs = l[1:]
         build(directory, languageargs, verbosity)
         if languageargs[0] in ['python2', 'python3', 'auta']:
+            if os.path.exists('output/__pylib__'):
+                shutil.rmtree('output/__pylib__')
             shutil.copytree('std/__pylib__/', 'output/__pylib__')
 	# Save demo output before trying to run anything else
         outputdir = 'examples/output/' + demoname + '_output'

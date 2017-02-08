@@ -16,6 +16,10 @@ std::ostream& operator<<(std::ostream& os, Object& obj)
     return os;
 }
 
+Object::Object() : Object(0)
+{
+}
+
 Object operator+(Object lhs, const Object& rhs)
 {
     return lhs.__add__(rhs);

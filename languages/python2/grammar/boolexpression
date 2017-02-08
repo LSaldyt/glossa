@@ -1,3 +1,3 @@
-link expression 
-many inOrder link boolseperator link expression 
+link boolpart 
+many inOrder link boolseperator link boolpart 
 0 1

@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8.10)
 cmake_policy(VERSION 2.8.10)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O0")
 
 file (GLOB_RECURSE LIB_SOURCES
     "${CMAKE_SOURCE_DIR}/src/*/*.cpp" # Skip Compiler.hpp and Compiler.cpp, which include int main()

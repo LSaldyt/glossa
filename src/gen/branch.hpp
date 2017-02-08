@@ -30,6 +30,9 @@ using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&,
 template <typename T>
 using ElementConstructor    = function<T(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
+template <typename T>
+using ElementConstructorCreator = function<ElementConstructor<T>(string)>;
+
 const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
 {

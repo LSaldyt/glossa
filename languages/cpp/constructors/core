@@ -6,6 +6,7 @@ boolexpression
 listcomp
 exception
 assignment
+memberfunction
 list
 parenexpr
 constantdeclaration
@@ -16,6 +17,7 @@ kvpair
 elementaccess
 memberinit
 whileloop
+self
 vector
 do
 dobody
@@ -33,6 +35,7 @@ forloop
 conditional
 expression
 haskellfunction
+selfval
 functioncall
 return
 assert
