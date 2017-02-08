@@ -14,9 +14,10 @@ string
 function
 kvpair
 elementaccess
-memberinit
+self
 vector
 tuple
+selfval
 functioncall
 dictionary
 value
@@ -24,7 +25,7 @@ class
 import
 exception
 assignment
-classmemberaccess
+memberfunction
 function
 memberinit
 whileloop

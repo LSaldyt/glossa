@@ -4,8 +4,8 @@ many link statement
 keyword end
 keyword except
 identifier wildcard
-anyOf punctuator , keyword as
-identifier wildcard
+optional anyOf punctuator , keyword as
+optional identifier wildcard
 punctuator :
 many link statement
 keyword end

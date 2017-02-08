@@ -1,3 +1,3 @@
 optional operator -
-anyOf link elementaccess link memberaccess link functioncall link string literal wildcard identifier wildcard keyword true keyword false link vector link tuple link classmemberaccess link dictionary link listcomp link parenexpr link tuple
+anyOf link selfval link elementaccess link memberaccess link functioncall link string literal wildcard identifier wildcard keyword true keyword false link vector link tuple link dictionary link listcomp link parenexpr link tuple
 0 sep 1

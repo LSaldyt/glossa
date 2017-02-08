@@ -1,10 +1,11 @@
-statement.bak
 value.auto
-value.bak
-main
 statement
 value
 statement.auto
+basevalue
+string
 value
+main
 comment
+write
 statement
