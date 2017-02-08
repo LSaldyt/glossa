@@ -24,11 +24,13 @@ value
 class
 import
 exception
+importall
 assignment
 memberfunction
 function
 memberinit
 whileloop
+import_select
 print
 supercall
 trycatch
@@ -37,6 +39,7 @@ main
 comment
 forloop
 conditional
+qualified_import
 return
 assert
 statement

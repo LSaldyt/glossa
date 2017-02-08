@@ -51,8 +51,8 @@ def time_run(language, directory, iterations, filename):
     os.chdir(directory + '_copy')
     try:
         for line in content[:-1]:
-            subprocess.check_output(line, shell=True) # Yes, this is unescaped.
-        t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
+            subprocess.call(line, shell=True) # Yes, this is unescaped.
+        t = benchmark(subprocess.call, iterations, content[-1], shell=True)
     finally:
         os.chdir(olddir)
         shutil.rmtree(directory + '_copy')
@@ -69,24 +69,24 @@ def run_language(directory, inputlang, outputlang):
         time_run(outputlang, 'output', 1, 'main')
 
 def compare(directory, inputlang, outputlang, iterations=1):
+    print('Input code:')
+    input_time = time_run(inputlang, directory, iterations, 'main')
+
     # Compile output c++ code (hardcoded for now, since output language is always c++)
+    print('Output code:')
     if outputlang == 'cpp':
         os.chdir('output')
         subprocess.run('g++ -std=c++17 *.cpp -O2 ../std/cpp/*.cpp', shell=True)
-        output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
+        output_time = benchmark(subprocess.call, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
         output_time = time_run(outputlang, 'output', iterations, 'main')
-    print('Output code time:')
-    print(output_time)
 
+    '''
     # Timing of inputlang isn't hardcoded:
-    input_time = time_run(inputlang, directory, iterations, 'main')
-    print('Input code time:')
-    print(input_time)
-    print('Transpile speedup:')
-    transpile_speedup = input_time / output_time
-    print(transpile_speedup)
+    # print('Transpile speedup:')
+    # transpile_speedup = input_time / output_time
+    # print(transpile_speedup)
 
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
@@ -99,6 +99,7 @@ def compare(directory, inputlang, outputlang, iterations=1):
         
         print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
         print(transpile_speedup / cython_speedup)
+    '''
 
 def load_demos():
     # Build list of demonstrations
@@ -137,7 +138,7 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         shutil.copytree('output/', outputdir)
 
         if runcomp:
-            compare(directory, languageargs[0], languageargs[1], iterations=100)
+            compare(directory, languageargs[0], languageargs[1], iterations=1)
         elif runlang:
             run_language(directory, languageargs[0], languageargs[1])
     finally:

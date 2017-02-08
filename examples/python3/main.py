@@ -1,3 +1,4 @@
+from time import time
 
 def sort(array):
     """
@@ -21,7 +22,14 @@ def sort(array):
         return sort(less) + equal + sort(greater)
 
 def main():
-    l = sort([3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743])
+    iterations = 1000
+    r = range(iterations)
+    l = [] 
+    a = time()
+    for i in r:
+        l = sort(l)
+    b = time()
+    print(b - a)
 
 if __name__ == "__main__":
     main()
