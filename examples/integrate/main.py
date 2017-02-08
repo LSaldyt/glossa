@@ -1,3 +1,5 @@
+from time import time
+
 def f(x):
     return x*x-x
 
@@ -9,5 +11,13 @@ def integrate_f(a, b, N):
     return s * dx
 
 if __name__ == "__main__":
-    print(integrate_f(1, 100, 200))
+    iterations = 1
+    N = 200
+    start = 1
+    r = list(range(iterations))
+    a = time()
+    for i in r:
+        integrate_f(start, i, N)
+    b = time()
+    print((b - a) / iterations)
 

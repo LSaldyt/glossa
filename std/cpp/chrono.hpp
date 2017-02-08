@@ -8,6 +8,6 @@ auto time()
 
 std::ostream& operator <<(std::ostream& os, const std::chrono::duration<long int, std::ratio<1l, 1000000000l>>& t)
 {
-    os << t.count() << std::endl;
+    os << std::chrono::duration_cast<std::chrono::duration<float>>(t).count();
     return os;
 }

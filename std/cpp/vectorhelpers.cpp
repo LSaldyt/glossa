@@ -9,5 +9,5 @@ vector<Object> range(int b, int a, int step)
     {
         v.push_back(Object(i));
     }
-    return v;
+    return std::move(v);
 }

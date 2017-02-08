@@ -71,6 +71,7 @@ def run_language(directory, inputlang, outputlang):
 def compare(directory, inputlang, outputlang, iterations=1):
     print('Input code:')
     input_time = time_run(inputlang, directory, iterations, 'main')
+    print('%s seconds total' % input_time)
 
     # Compile output c++ code (hardcoded for now, since output language is always c++)
     print('Output code:')
@@ -81,25 +82,13 @@ def compare(directory, inputlang, outputlang, iterations=1):
         os.chdir('..')
     else:
         output_time = time_run(outputlang, 'output', iterations, 'main')
-
-    '''
-    # Timing of inputlang isn't hardcoded:
-    # print('Transpile speedup:')
-    # transpile_speedup = input_time / output_time
-    # print(transpile_speedup)
+    print('%s seconds total' % output_time)
 
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
+        print('Cython code:')
         cython_time = time_run(cythonversion, directory, iterations, 'main')
-        print('Cython time:')
-        print(cython_time)
-        print('Cython speedup:')
-        cython_speedup = cython_time / output_time
-        print(cython_speedup)
-        
-        print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
-        print(transpile_speedup / cython_speedup)
-    '''
+        print('%s seconds total' % cython_time)
 
 def load_demos():
     # Build list of demonstrations
