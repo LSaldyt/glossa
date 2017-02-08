@@ -68,7 +68,7 @@ vector<tuple<string, Constructor<string>>> Generator::readConstructor(string fil
 {
     auto content    = readFile(filename);
     auto ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
-    return generateConstructor(content, file_constructors, ec_creator);
+    return generateConstructor<string>(content, file_constructors, ec_creator);
 }
 
 
