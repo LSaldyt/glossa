@@ -40,5 +40,8 @@ bool is_double(const std::string &str)
     bool digits_and_dots = all_of(str.begin(), str.end(), [](auto c){
             return isdigit(c) or c == '.';
             });
-    return digits_and_dots and not is_digits(str); // Str cant be only digits 
+    bool dots = all_of(str.begin(), str.end(), [](auto c){
+            return c == '.';
+            });
+    return digits_and_dots and not is_digits(str) and not dots; // Str cant be only digits or only dots 
 }
