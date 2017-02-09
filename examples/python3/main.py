@@ -22,9 +22,12 @@ def sort(array):
         return sort(less) + equal + sort(greater)
 
 def main():
+    iterations = 100
+    l = list(range(100)) 
     a = time()
+    sort(l)
     b = time()
-    print(b - a)
+    print((b - a) / iterations)
 
 if __name__ == "__main__":
     main()

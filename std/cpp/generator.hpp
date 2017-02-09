@@ -1,8 +1,11 @@
+#pragma once
+
 #include <cstddef>
 #include <iostream>
 #include <limits>
 #include <functional>
 #include <assert.h>
+#include <vector>
 
 #include "io.hpp"
 
@@ -61,9 +64,10 @@ public:
         return value != other.value;
     }
 
-    explicit operator vector<value_type>() const
+    explicit operator std::vector<value_type>() 
     {
-        return vector<value_type>(begin(), end());
+        std::cout << "Explicitly converted generator to vector" << std::endl;
+        return std::vector<value_type>(begin(), end());
     }
 
 private:
