@@ -22,10 +22,12 @@ def sort(array):
         return sort(less) + equal + sort(greater)
 
 def main():
-    iterations = 100
+    iterations = 1000
     l = list(range(100)) 
+    r = range(iterations)
     a = time()
-    sort(l)
+    for i in r:
+        l = sort(l)
     b = time()
     print((b - a) / iterations)
 
