@@ -67,15 +67,16 @@ namespace compiler
         auto punctuators      = readFile(lex_dir + "punctuators");
 
         LexMapTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
-        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
-        term_sets.push_back(make_tuple(operators,        "operator"));
-        term_sets.push_back(make_tuple(punctuators,      "punctuator"));
+        term_sets.push_back(make_tuple(grammar.keywords, "keyword",         1));         // Keywords are read in automatically from grammar file usage
+        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
+        term_sets.push_back(make_tuple(operators,        "operator",        1));
+        term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
 
         vector<LexMapLexer> lexer_set = {
             LexMapLexer(just("    "s),     "tab",        "tab",        3),
             LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
             LexMapLexer(digits,            "int",        "literal",    3),
+            LexMapLexer(doubles,           "double",     "literal",    1),
             LexMapLexer(identifiers,       "*text*",    "identifier", 3)};
 
         lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));

@@ -236,4 +236,6 @@ namespace match
     const auto lowers = singleTemplate<string>(is_lowers);
     /// Parse a single string against valid identifier characters 
     const auto identifiers = singleTemplate<string>(is_identifiers);
+    /// Parse a double
+    const auto doubles = singleTemplate<string>(is_double);
 }

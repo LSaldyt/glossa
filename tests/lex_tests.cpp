@@ -11,8 +11,8 @@ TEST_CASE("The lexer and language modules work")
     vector<string> operators = {"+", "-", "/", "*"};
 
     vector<LexMapTermSet> term_set;
-    term_set.push_back(make_tuple(keywords, "keyword"));
-    term_set.push_back(make_tuple(operators, "operator"));
+    term_set.push_back(make_tuple(keywords, "keyword", 1));
+    term_set.push_back(make_tuple(operators, "operator", 1));
 
     vector<LexMapLexer>  lexer_set;
     lexer_set.push_back(LexMapLexer(digits, "int", "type", 1));

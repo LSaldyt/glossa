@@ -10,6 +10,7 @@ namespace syntax
 {
     using Punctuator = StringLiteral;
     using Integer    = Literal<int>;
+    using Double     = Literal<double>;
     using Keyword    = StringLiteral;
     using Tab        = StringLiteral;
     using Newline    = StringLiteral;
@@ -28,6 +29,7 @@ namespace syntax
     };
     const auto keywordGenerator = [](string s){ return make_shared<Keyword>(Keyword(s)); };
     const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
+    const auto doubleGenerator  = [](string s){ return make_shared<Double>(Double(stod(s))); };
     const auto puncGenerator    = [](string s){ return make_shared<Punctuator>(Punctuator(s));};
     const auto tabGenerator     = [](string s){ return make_shared<Tab>(Tab(s));};
     const auto commentGenerator = [](string s){ return make_shared<Comment>(Comment(string(s.begin() + 1, s.end()))); };
@@ -36,7 +38,15 @@ namespace syntax
     {
         shared_ptr<Symbol> value;
         try {
-            value = intGenerator(s);
+            auto found = s.find(".");
+              if (found != std::string::npos)
+              {
+                  value = doubleGenerator(s);
+              }
+              else
+              {
+                  value = intGenerator(s);
+              }
         }
         catch(std::exception)
         {

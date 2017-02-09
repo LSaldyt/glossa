@@ -34,3 +34,11 @@ bool is_identifiers(const std::string &str)
     bool idents = all_of(str.begin(), str.end(), [](auto c){return isalpha(c) or isdigit(c) or c == '_';});
     return idents and not (is_digits(str));
 }
+
+bool is_double(const std::string &str)
+{
+    bool digits_and_dots = all_of(str.begin(), str.end(), [](auto c){
+            return isdigit(c) or c == '.';
+            });
+    return digits_and_dots and not is_digits(str); // Str cant be only digits 
+}
