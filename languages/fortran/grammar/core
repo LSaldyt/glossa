@@ -1,11 +1,14 @@
 value.auto
 statement
 value
+expression
 statement.auto
 basevalue
 string
 value
+definition
+declaration
+print
 main
 comment
-write
 statement

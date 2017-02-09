@@ -13,11 +13,9 @@ namespace gen
 SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {
-            //print(line);
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             assert(terms.size() == 3 or 
                    terms.size() == 4);
@@ -63,6 +61,10 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
                 {
                     int index_a = std::stoi(terms[2]);
                     int index_b = std::stoi(terms[3]);
+                    if (symbol_groups.size() <= index_a)
+                    {
+                        print(line);
+                    }
                     assert(symbol_groups.size() > index_a);
                     if (symbol_groups[index_a].size() <= index_b)
                     {

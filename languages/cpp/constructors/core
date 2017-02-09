@@ -13,12 +13,14 @@ constantdeclaration
 string
 function
 symbol_list
+definition
 kvpair
 elementaccess
 memberinit
 whileloop
 self
 vector
+declaration
 do
 dobody
 print
