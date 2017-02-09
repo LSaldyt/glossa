@@ -3,4 +3,5 @@ PROGRAM hello
     INTEGER :: B = 1
     REAL :: C = 2.3
     WRITE(*,*) 'Hello World'
+    WRITE(*,*) C
 END PROGRAM 
