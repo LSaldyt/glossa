@@ -9,6 +9,7 @@ def main():
         a = time()
         b = time()
         total += (b - a)
+    print(total)
     print(total / (iterations + 1))
 
 if __name__ == "__main__":

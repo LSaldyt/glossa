@@ -14,3 +14,4 @@ trycatch         python2 python3
 lambda           python2 python3
 class            python3 cpp
 benchmark        python3 cpp
+loop             python3 cpp

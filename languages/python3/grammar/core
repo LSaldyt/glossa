@@ -33,6 +33,7 @@ memberinit
 whileloop
 import_select
 print
+forrange
 supercall
 trycatch
 elsebranch

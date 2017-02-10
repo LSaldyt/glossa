@@ -24,6 +24,7 @@ declaration
 do
 dobody
 print
+forrange
 supercall
 elsebranch
 main
