@@ -24,12 +24,11 @@ def sort(array):
 def main():
     iterations = 1000
     l = list(range(100)) 
-    r = range(iterations)
     a = time()
-    for i in r:
-        l = sort(l)
+    for i in range(iterations):
+        sort(l)
     b = time()
-    print((b - a) / iterations)
+    print(b - a)
 
 if __name__ == "__main__":
     main()

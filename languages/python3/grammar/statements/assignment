@@ -1,4 +1,4 @@
 identifier wildcard
 anyOf operator += operator -= operator /= operator *= operator =
 link expression
-0 sep 2 
+0 sep 1 sep 2 

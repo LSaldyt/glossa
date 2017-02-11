@@ -1,16 +1,17 @@
 identifier = 0 0
-value = 1 0
+operator = 1 0
+value = 2 0
 defines
 identifier
 header
 branch defined identifier
-$identifier$ = $value$
+$identifier$ $operator$ $value$
 elsebranch
-auto $identifier$ = $value$
+auto $identifier$ $operator$ $value$
 end
 source
 branch defined identifier
-$identifier$ = $value$
+$identifier$ $operator$ $value$
 elsebranch
-auto $identifier$ = $value$
+auto $identifier$ $operator$ $value$
 end

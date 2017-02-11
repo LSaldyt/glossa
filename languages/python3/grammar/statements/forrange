@@ -3,7 +3,7 @@ identifier wildcard
 keyword in
 identifier range
 punctuator (
-literal int
+link expression
 punctuator )
 punctuator :
 many link statement

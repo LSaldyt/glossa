@@ -5,19 +5,20 @@ def f(x):
 
 def integrate_f(a, b, N):
     s = 0
-    dx = (b-a)/N
+    dx = (b - a) / N
     for i in range(N):
-        s = s + f(a + i * dx)
+        s += f(a + i * dx)
     return s * dx
 
 if __name__ == "__main__":
-    iterations = 1
-    N = 200
-    start = 1
-    r = list(range(iterations))
+    iterations = 10
+    N          = 200
+    start      = 1
+    ans = 0
     a = time()
-    for i in r:
-        integrate_f(start, i, N)
+    for i in range(iterations):
+        ans = integrate_f(start, i, N)
+        print(ans)
     b = time()
-    print((b - a) / iterations)
+    print(b - a)
 
