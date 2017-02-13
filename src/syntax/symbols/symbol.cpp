@@ -15,4 +15,8 @@ tuple<string, vector<vector<shared_ptr<Symbol>>>> Symbol::to_id_group()
 {
     return make_tuple("undefined", vector<vector<shared_ptr<Symbol>>>());
 }
+void Symbol::modify_id_group(string, vector<vector<shared_ptr<Symbol>>>)
+{
+    throw std::exception();
+}
 }

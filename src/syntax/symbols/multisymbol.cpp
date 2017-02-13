@@ -48,4 +48,10 @@ tuple<string, vector<vector<shared_ptr<Symbol>>>> MultiSymbol::to_id_group()
     return make_tuple(tag, groups);
 }
 
+void MultiSymbol::modify_id_group(string set_tag, vector<vector<shared_ptr<Symbol>>> set_groups)
+{
+    tag = set_tag;
+    groups = set_groups;
+}
+
 }

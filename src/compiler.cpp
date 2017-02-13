@@ -141,7 +141,7 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, symbol_table, input_dir, output_dir, logger);
+            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
         }
     }
 
@@ -156,6 +156,7 @@ namespace compiler
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
     void compile(string filename, Grammar& grammar, Generator& generator,
+                 Transformer& transformer,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
     {
@@ -175,6 +176,7 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
+        transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
