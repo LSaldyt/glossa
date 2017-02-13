@@ -3,18 +3,74 @@
 
 namespace transform 
 {
-ElementConstructor<shared_ptr<Symbol>> ec = [](unordered_set<string>& names,
-              SymbolStorage& symbol_storage,
-              string,
-              vector<string>& definitions,
-              int nesting,
-              OutputManager logger){
-        return make_shared<Symbol>(Symbol());
-        };
-ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = 
-                [](string s){
-                return ec;
+ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = [](string s)
+{
+    ElementConstructor<shared_ptr<Symbol>> ec;
+    auto terms = lex::seperate(s, {make_tuple(" ", false)});
+    assert(not terms.empty());
+    if (terms.size() == 1)
+    {
+        auto keyword = terms[0];
+        if (keyword == "newrow")
+        {
+            ec = [](unordered_set<string>& names,
+                      SymbolStorage& symbol_storage,
+                      string filename,
+                      vector<string>& definitions,
+                      int nesting,
+                      OutputManager logger)
+            {
+                return make_shared<SentinelSymbol>(SentinelSymbol("__newrow__"));
+            };
+        }
+        else
+        {
+            ec = [keyword](unordered_set<string>& names,
+                           SymbolStorage& symbol_storage,
+                           string filename,
+                           vector<string>& definitions,
+                           int nesting,
+                           OutputManager logger)
+            {
+                shared_ptr<Symbol> s;
+                if (contains(get<0>(symbol_storage), keyword))
+                {
+                    s = get<0>(symbol_storage)[keyword];
+                }
+                else
+                {
+                    auto symbol_list = get<1>(symbol_storage)[keyword];
+                    SymbolMatrix mx;
+                    for (auto item : symbol_list)
+                    {
+                        mx.push_back(vector<shared_ptr<Symbol>>({item}));
+                    }
+                    s = make_shared<MultiSymbol>(MultiSymbol("__symbol_list__", mx));
                 };
+                return s;
+            };
+        }
+    }
+    else if (terms[0] == "name:")
+    {
+        auto name = terms[1];
+        ec = [name](unordered_set<string>& names,
+                  SymbolStorage& symbol_storage,
+                  string filename,
+                  vector<string>& definitions,
+                  int nesting,
+                  OutputManager logger)
+        {
+            return make_shared<SentinelSymbol>(SentinelSymbol("__name__", name));
+        };
+    }
+    else
+    {
+        print(s);
+        throw std::exception();
+    }
+    return ec;
+};
 
 Transformer::Transformer(vector<string> transformer_files, string directory)
 {
@@ -45,13 +101,18 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
     {
         if (kv.first == tag)
         {
+            print("Transforming " + tag);
             unordered_set<string> names;
             auto generated = kv.second(names, symbol_matrix, "transform:");
-            print(generated.size());
-        }
-        else
-        {
-            print("Did not transform " + tag);
+            for (auto s : generated)
+            {
+                auto s_tag = s->abstract();
+                auto s_val = s->name();
+                if (s_tag == "__name__")
+                {
+                    tag = s_val;
+                }
+            }
         }
     }
     for (auto& row : symbol_matrix)

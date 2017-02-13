@@ -1,2 +1,6 @@
+a = 0 0
 defines
 transform:
+name: print 
+newrow
+a
