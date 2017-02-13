@@ -45,8 +45,8 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
     {
         if (kv.first == tag)
         {
-            print("Transforming " + tag);
-            tag = tag + "_transformed";
+            unordered_set<string> names;
+            auto generated = kv.second(names, symbol_matrix, "transform:");
         }
         else
         {

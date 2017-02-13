@@ -50,7 +50,7 @@ public:
         logger.log("Evaluating branch", 2);
         vector<T> generated;
 
-        if (branch.condition_evaluator(names, symbol_storage, generated))
+        if (branch.condition_evaluator(names, symbol_storage))
         {
             for (auto it = branch.line_constructors.begin(); it != branch.line_constructors.end(); it++)
             {
@@ -58,7 +58,7 @@ public:
                 generated.push_back(line_constructor(names, symbol_storage, filetype, definitions, nesting, logger));
                 if (it + 1 != branch.line_constructors.end())
                 {
-                    generated.push_back("\n");
+                    //generated.push_back("\n");
                 }
             }
             for (auto nested_branch : branch.nested_branches)
