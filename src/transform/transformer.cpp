@@ -47,6 +47,7 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
         {
             unordered_set<string> names;
             auto generated = kv.second(names, symbol_matrix, "transform:");
+            print(generated.size());
         }
         else
         {

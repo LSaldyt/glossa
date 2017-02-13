@@ -1,8 +1,13 @@
 #pragma once
 #include "branch.hpp"
+#include <type_traits>
 
 namespace gen 
 {
+
+void addNewLine(vector<string>& generated);
+void addNewLine(vector<shared_ptr<Symbol>>& generated);
+
 
 /**
  * Constructs source code for a single syntax element
@@ -32,6 +37,7 @@ public:
     {
     }
 
+
     /**
      * Evaluates a branch within a constructor
      * @param names Namespace
@@ -58,7 +64,7 @@ public:
                 generated.push_back(line_constructor(names, symbol_storage, filetype, definitions, nesting, logger));
                 if (it + 1 != branch.line_constructors.end())
                 {
-                    //generated.push_back("\n");
+                    addNewLine(generated);
                 }
             }
             for (auto nested_branch : branch.nested_branches)
