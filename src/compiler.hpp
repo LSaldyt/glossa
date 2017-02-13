@@ -26,8 +26,9 @@ namespace compiler
                  string input_directory="", string output_directory="", 
                  OutputManager logger=OutputManager(1));
 
-    Grammar   loadGrammar   (string language);
-    Generator loadGenerator (string language);
+    Grammar     loadGrammar   (string language);
+    Generator   loadGenerator (string language);
+    Transformer loadTransformer (string language);
 
     unordered_map<string, string> readSymbolTable(string filename);
 

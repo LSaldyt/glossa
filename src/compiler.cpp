@@ -106,6 +106,20 @@ namespace compiler
     }
 
     /**
+     * High level function for loading a code transformer for a language
+     * @param language Language for code generator to be loaded for
+     * @return Transformer which can transformer AST for the given language
+     */
+    Transformer loadTransformer(string language)
+    {
+        print("Loading transformers for " + language);
+        auto transformer_files = readFile("languages/" + language + "/transformers/core");
+        auto transformer = Transformer(transformer_files, "languages/" + language + "/transformers/");
+        print("Done");
+        return transformer;
+    }
+
+    /**
      * High level function for transpilation
      * Converts source files of one language to source files of another, copying them into a new directory
      * @param filenames   List of files to transpile
@@ -119,6 +133,7 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
+        auto transformer = loadTransformer(input_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 

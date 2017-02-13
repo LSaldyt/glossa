@@ -24,7 +24,7 @@ public:
      * @param set_definitions Defined names
      */
     Constructor(SymbolStorageGenerator set_symbol_storage_generator, 
-                             Branch<string> set_main_branch, 
+                             Branch<T> set_main_branch, 
                              vector<string> set_definitions) : 
         symbol_storage_generator(set_symbol_storage_generator), 
         main_branch(set_main_branch),
@@ -40,7 +40,7 @@ public:
      * @param nesting Level of indentation
      * @return Lines of source code
      */
-    vector<T> evaluateBranch(Branch<string> branch, 
+    vector<T> evaluateBranch(Branch<T> branch, 
                              unordered_set<string>& names, 
                              SymbolStorage& symbol_storage, 
                              string filetype, 
@@ -48,7 +48,7 @@ public:
                              OutputManager logger=OutputManager(0))
     {
         logger.log("Evaluating branch", 2);
-        vector<string> generated;
+        vector<T> generated;
 
         if (branch.condition_evaluator(names, symbol_storage, generated))
         {
