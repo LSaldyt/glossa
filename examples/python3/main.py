@@ -23,11 +23,12 @@ def sort(array):
 
 def main():
     iterations = 1000
-    l = list(range(100)) 
+    l = list(range(100))
     a = time()
     for i in range(iterations):
-        sort(l)
+        l = sort(l)
     b = time()
+    print(l[0])
     print(b - a)
 
 if __name__ == "__main__":
