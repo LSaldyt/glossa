@@ -103,6 +103,8 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
         {
             print("Transforming " + tag);
             unordered_set<string> names;
+            SymbolMatrix new_mx;
+            new_mx.push_back(vector<shared_ptr<Symbol>>());
             auto generated = kv.second(names, symbol_matrix, "transform:");
             for (auto s : generated)
             {
@@ -112,7 +114,16 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
                 {
                     tag = s_val;
                 }
+                else if (s_tag[0] == '_')
+                {
+                    throw std::exception();
+                }
+                else
+                {
+                    new_mx.back().push_back(s);
+                }
             }
+            symbol_matrix = new_mx;
         }
     }
     for (auto& row : symbol_matrix)
