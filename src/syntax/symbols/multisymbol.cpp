@@ -39,6 +39,7 @@ string MultiSymbol::abstract(int indent)
         {
             representation += symbol->abstract(indent + 1) + "\n";
         }
+        representation += ",";
     }
     return representation;
 }

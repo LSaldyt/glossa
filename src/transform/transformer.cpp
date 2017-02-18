@@ -114,13 +114,34 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
                 {
                     tag = s_val;
                 }
+                else if (s_tag == "__newrow__")
+                {
+                    new_mx.push_back(vector<shared_ptr<Symbol>>());
+                }
                 else if (s_tag[0] == '_')
                 {
+                    print(s_tag);
                     throw std::exception();
                 }
                 else
                 {
-                    new_mx.back().push_back(s);
+                    auto id_group = s->to_id_group();
+                    auto id_tag = get<0>(id_group);
+                    auto id_mx  = get<1>(id_group);
+                    if (id_tag == "__symbol_list__")
+                    {
+                        for (auto row : id_mx)
+                        {
+                            for (auto item : row)
+                            {
+                                new_mx.back().push_back(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        new_mx.back().push_back(s);
+                    }
                 }
             }
             symbol_matrix = new_mx;
