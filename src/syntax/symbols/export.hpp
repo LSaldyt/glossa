@@ -5,6 +5,7 @@
 #include "operator.hpp"
 #include "logicaloperator.hpp"
 #include "multisymbol.hpp"
+#include "sentinel.hpp"
 
 namespace syntax
 {

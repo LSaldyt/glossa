@@ -18,6 +18,7 @@ namespace syntax
         virtual string name();
 
         virtual tuple<string, vector<vector<shared_ptr<Symbol>>>> to_id_group();
+        virtual void modify_id_group(string, vector<vector<shared_ptr<Symbol>>>);
 
         string annotation = "symbol";
 
