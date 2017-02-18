@@ -64,6 +64,24 @@ ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = [](string s)
             return make_shared<SentinelSymbol>(SentinelSymbol("__name__", name));
         };
     }
+    else if (terms[0] == "literal:")
+    {
+        assert(terms.size() == 3);
+        auto key = terms[1];
+        auto val = terms[2];
+        auto s = syntax::generatorMap.at(key)({val});
+        ec = [s]
+                 (unordered_set<string>& names,
+                  SymbolStorage& symbol_storage,
+                  string filename,
+                  vector<string>& definitions,
+                  int nesting,
+                  OutputManager logger)
+        {
+            return s;
+            //return make_shared<SentinelSymbol>(SentinelSymbol("__name__", name));
+        };
+    }
     else
     {
         print(s);
