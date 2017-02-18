@@ -1,34 +1,18 @@
 keyword class
 identifier wildcard
 punctuator (
-optional identifier wildcard
 punctuator )
 punctuator :
-
-# Constructor begins here
-
-keyword __init__                               
+keyword def
+keyword __init__
 punctuator (
-
-# Constructor args 
-
-optional identifier wildcard 
-many inOrder !punctuator , identifier wildcard 
+identifier self
+optional inOrder !punctuator , identifier wildcard
+many inOrder !punctuator , identifier wildcard
 punctuator )
 punctuator :
-
-# Supercall
-
-optional link supercall                  
-
-# Constructor body
-
-many link statement 
-many link memberinit
+many link statement
 keyword end
-
-# Class methods
-
-many link function                              
+many link statement
 keyword end
-1 sep 3 sep 8 9 sep 12 sep 13 sep 14 sep 16
+1 sep 9 10 sep 13 sep 15

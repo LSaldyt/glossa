@@ -39,6 +39,7 @@ string MultiSymbol::abstract(int indent)
         {
             representation += symbol->abstract(indent + 1) + "\n";
         }
+        representation += ",";
     }
     return representation;
 }
@@ -46,6 +47,12 @@ string MultiSymbol::abstract(int indent)
 tuple<string, vector<vector<shared_ptr<Symbol>>>> MultiSymbol::to_id_group()
 {
     return make_tuple(tag, groups);
+}
+
+void MultiSymbol::modify_id_group(string set_tag, vector<vector<shared_ptr<Symbol>>> set_groups)
+{
+    tag = set_tag;
+    groups = set_groups;
 }
 
 }

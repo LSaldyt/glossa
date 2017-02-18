@@ -1,0 +1,8 @@
+Compilation finished
+Compilation took roughly: 24.359572410583496s
+Copying output to examples/output/python3_output
+Input code:
+17.477399826049805
+Output code:
+4
+

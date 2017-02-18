@@ -1,6 +1,4 @@
-keyword self
-punctuator .
-identifier wildcard
+link self
 operator =
 link expression
-2 sep 4
+0 sep 2

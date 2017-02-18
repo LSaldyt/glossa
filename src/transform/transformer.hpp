@@ -1,26 +1,34 @@
 #pragma once
-#include "conditional.hpp"
+#include "../gen/read.hpp"
+#include "../grammar/grammar.hpp"
 
 namespace transform 
 {
-// Alias for a specific manipulation of a symbol matrix
-using Transformer = function<tuple<string, SymbolMatrix>(SymbolMatrix, SymbolStorage&)>;
+using namespace gen;
+using namespace grammar;
 
-/**
- * Class for manipulating AST in a particular language
- */
-class TransformerMap 
+template <typename T>
+Constructor<T> generateTransformConstructor(vector<string> content,
+        ElementConstructorCreator<T>  ec_creator)
+{
+    auto constructors = generateConstructor<T>(
+            content,
+            {make_tuple("transform:", FileConstructor("none", {}))},
+            ec_creator);
+    assert(not constructors.empty());
+    return get<1>(constructors[0]);
+}
+
+class Transformer
 {
 public:
-    TransformerMap(vector<string> grammar_files, string directory);
+    Transformer(vector<string> transformer_files, string directory);
     void operator()(IdentifiedGroups& identified_groups);
 
 private:
-    vector<tuple<string, Transformer, SymbolStorageGenerator>> transformers;
-    void readTransformerFile(string filename);
-    Transformer readTransformer(vector<string>);
-    void transform(string& tag, SymbolMatrix& matrix);
-    shared_ptr<Symbol> transformSymbol(shared_ptr<Symbol> symbol);
+    unordered_map<string, Constructor<shared_ptr<Symbol>>> transformation_map;
+
+    void transform(string& tag, SymbolMatrix& symbol_matrix);
 };
 
 }

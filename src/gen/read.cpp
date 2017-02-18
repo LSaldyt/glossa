@@ -13,11 +13,9 @@ namespace gen
 SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
 {
     return [content](vector<vector<shared_ptr<Symbol>>>& symbol_groups){
-        //print("Building symbol storage");
         SymbolStorage storage;
         for (auto line : content)
         {
-            //print(line);
             auto terms = lex::seperate(line, {make_tuple(" ", false)});
             assert(terms.size() == 3 or 
                    terms.size() == 4);
@@ -63,6 +61,10 @@ SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content)
                 {
                     int index_a = std::stoi(terms[2]);
                     int index_b = std::stoi(terms[3]);
+                    if (symbol_groups.size() <= index_a)
+                    {
+                        print(line);
+                    }
                     assert(symbol_groups.size() > index_a);
                     if (symbol_groups[index_a].size() <= index_b)
                     {
@@ -91,7 +93,7 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
     {
         assert(terms.size() == 2);
         auto identifier = terms[1];
-        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
             string to_define = get<0>(symbol_storage)[identifier]->name();
             return contains(names, to_define); 
@@ -100,7 +102,7 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
     else if (keyword == "equalTo")
     {
         assert(terms.size() == 3);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
             assert(contains(get<0>(symbol_storage), terms[1]));
             auto name = get<0>(symbol_storage)[terms[1]]->name();
@@ -110,7 +112,7 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
     else if (keyword == "empty")
     {
         assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
             assert(contains(get<1>(symbol_storage), terms[1]));
             return get<1>(symbol_storage)[terms[1]].empty();
@@ -119,7 +121,7 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
     else if (keyword == "nonempty")
     {
         assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>&)
+        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
             assert(contains(get<1>(symbol_storage), terms[1]));
             return not get<1>(symbol_storage)[terms[1]].empty();
@@ -133,9 +135,9 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
         vector<string> second(split + 1, terms.end());
         auto a = generateConditionEvaluator(first);
         auto b = generateConditionEvaluator(second);
-        return [a, b](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+        return [a, b](unordered_set<string>& names, SymbolStorage& symbol_storage)
         {
-            return a(names, symbol_storage, generated) and b(names, symbol_storage, generated);
+            return a(names, symbol_storage) and b(names, symbol_storage);
         };
     }
     else
@@ -143,6 +145,7 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
         throw named_exception("Constructor keyword " + keyword + " is not defined");
     }
 }
+
 
 
 }

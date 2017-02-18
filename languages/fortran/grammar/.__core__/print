@@ -1,0 +1,8 @@
+keyword WRITE
+punctuator (
+operator *
+punctuator ,
+operator *
+punctuator )
+link expression
+6

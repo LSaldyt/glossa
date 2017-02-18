@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <functional>
 
+#include "io.hpp"
+
 // http://stackoverflow.com/questions/18856824/ad-hoc-polymorphism-and-heterogeneous-containers-with-value-semantics
 
 /*
@@ -100,17 +102,24 @@ class Object
 {
 public:
     template <typename T> Object( T t )
-        : p( std::make_unique<ObjectImpl<T>>( std::move(t) ) ) {}
+        : p( std::make_unique<ObjectImpl<T>>( std::move(t) ) ) 
+    {
+    }
     Object( const Object& other ) 
-        : p( other.p->clone() ) {}
+        : p( other.p->clone() ) 
+    {
+    }
     Object( Object && other ) noexcept 
-        : p( std::move(other.p) ) {}
+        : p( std::move(other.p) ) 
+    {
+    }
+    Object();
     void swap( Object & other ) noexcept 
         { p.swap(other.p); }
     Object & operator=( Object other ) 
         { swap(other); }
     virtual std::string __str__() 
-        { return p->__str__(); }
+        { return "Object: " + p->__str__(); }
     bool __lt__ (const Object& other) const
         { return p->__lt__(other.p); }
     bool __eq__ (const Object& other) const
@@ -180,7 +189,7 @@ public:
         }
         catch(const std::exception& e)
         {
-            std::cout << "Could not convert object" << std::endl;
+            print("Failed to convert object");
         }
     }
 

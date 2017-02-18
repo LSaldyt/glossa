@@ -10,5 +10,7 @@
 #include "object.hpp"
 #include "io.hpp"
 #include "generator.hpp"
+#include "base.hpp"
+#include "chrono.hpp"
 
 using namespace std::string_literals;

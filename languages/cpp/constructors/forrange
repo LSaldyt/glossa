@@ -1,0 +1,14 @@
+loopvar = 0 0
+count   = 1 0
+body    = 2
+defines
+header
+for (auto i = 0; i < $count$; i++)
+{
+`block body @;`
+}
+source
+for (auto i = 0; i < $count$; i++)
+{
+`block body @;`
+}

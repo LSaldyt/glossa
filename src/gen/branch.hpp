@@ -26,16 +26,19 @@ using MultiSymbolTable = unordered_map<string, vector<shared_ptr<Symbol>>>;
 using SymbolStorage    = tuple<SymbolTable, MultiSymbolTable>;
 using SymbolStorageGenerator = function<SymbolStorage(vector<vector<shared_ptr<Symbol>>>&)>;
 
-using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&, const vector<string>&)>;
+using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&)>;
 template <typename T>
 using ElementConstructor    = function<T(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
-const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
+template <typename T>
+using ElementConstructorCreator = function<ElementConstructor<T>(string)>;
+
+const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
 {
-    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage)
     {
-        auto condition = c(names, symbol_storage, generated);
+        auto condition = c(names, symbol_storage);
         return not condition;
     };
 };

@@ -24,14 +24,14 @@ namespace lex
         // Custom language lexers (like int, vector<string>, etc..)
         concat(language_lexers, set_language_lexers);
 
-        vector<tuple<string, string>> term_lexers;
+        vector<tuple<string, string, int>> term_lexers;
 
         // Add term sets (like operators) to a language's seperators
         for (auto term_set : language_term_sets)
         {
             for (auto term : get<0>(term_set))
             {
-                term_lexers.push_back(make_tuple(term, get<1>(term_set))); 
+                term_lexers.push_back(make_tuple(term, get<1>(term_set), get<2>(term_set))); 
             }
         }
 
@@ -42,9 +42,10 @@ namespace lex
 
         for (auto term_lexer : term_lexers)
         {
-            auto term = get<0>(term_lexer);
-            auto type = get<1>(term_lexer);
-            language_lexers.push_back(LexMapLexer(just(term), term, type, 1));
+            auto term     = get<0>(term_lexer);
+            auto type     = get<1>(term_lexer);
+            auto priority = get<2>(term_lexer);
+            language_lexers.push_back(LexMapLexer(just(term), term, type, priority));
             if (type != "keyword") //seperating by keywords would make identifiers containing keywords impossible
             {
                 seperators.push_back(make_tuple(term, true)); // Keep seperators from term sets (ie operators)
@@ -74,8 +75,15 @@ namespace lex
             auto result = lexer.match(terms);
             if(result.result)
             {
+                string text;
+                for (auto term : result.consumed)
+                {
+                    text += term;
+                }
                 //print("vector<string> identified as " + lexer.name);
-                return make_tuple(Token(result.consumed, lexer.name, lexer.type), result.remaining);
+                string name = lexer.name == "*text*" ? text
+                                                     : lexer.name;
+                return make_tuple(Token(result.consumed, name, lexer.type), result.remaining);
             }
         }
 

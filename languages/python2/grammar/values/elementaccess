@@ -1,5 +1,5 @@
-identifier wildcard
+anyOf link functioncall identifier wildcard
 punctuator [
-anyOf link elementaccess link string literal wildcard
+anyOf link memberaccess link elementaccess link functioncall identifier wildcard link string literal wildcard
 punctuator ]
 0 sep 2

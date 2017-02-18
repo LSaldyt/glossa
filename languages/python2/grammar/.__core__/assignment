@@ -1,4 +1,4 @@
-anyOf link elementaccess link memberaccess identifier wildcard 
+anyOf link memberaccess link elementaccess identifier wildcard 
 anyOf operator = operator += operator -= operator *= operator /=
 link expression
 0 sep 1 sep 2 

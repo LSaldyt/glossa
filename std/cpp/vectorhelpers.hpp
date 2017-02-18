@@ -1,11 +1,14 @@
 #pragma once
 #include <vector>
 #include <functional>
+
 #include "object.hpp"
+#include "generator.hpp"
 
 using std::vector;
 
-vector<Object> range(int b, int a=0, int step=1);
+Sequence<Object> range(int b, int a=0, int step=1);
+//vector<Object> range(int b, int a=0, int step=1);
 
 template <typename T>
 vector<T> operator+(vector<T> lhs, const vector<T>& rhs)

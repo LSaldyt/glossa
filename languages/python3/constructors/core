@@ -22,11 +22,12 @@ vector
 multistatement
 every
 import_select
-print
+lambda
 trycatch
 elsebranch
 is
 main
+funcarg
 statement
 tuple
 value

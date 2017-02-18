@@ -1,10 +1,14 @@
-statement.bak
 value.auto
-value.bak
-main
 statement
 value
+expression
 statement.auto
+basevalue
+string
 value
+definition
+declaration
+print
+main
 comment
 statement

@@ -135,10 +135,10 @@ namespace match
             for (auto matcher : matchers)
             {
                 auto match_result = matcher(terms);
-                if(match_result.result)
+                if ((match_result.result and match_result.consumed.size() > result.consumed.size()) 
+                     or not result.result)
                 {
                     result = match_result;
-                    break;
                 }
             }
             return result;
@@ -236,4 +236,6 @@ namespace match
     const auto lowers = singleTemplate<string>(is_lowers);
     /// Parse a single string against valid identifier characters 
     const auto identifiers = singleTemplate<string>(is_identifiers);
+    /// Parse a double
+    const auto doubles = singleTemplate<string>(is_double);
 }
