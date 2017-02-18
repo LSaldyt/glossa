@@ -17,7 +17,7 @@ namespace lex
             if (seperator_string.size() <= s.size())
             {
                 bool exited_early = false;
-                for (unsigned i = 0; i < seperator_string.size(); i++)
+                for (auto i = 0; i < seperator_string.size(); i++)
                 {
                     if (seperator_string[i] != s[i])
                     {
@@ -95,6 +95,12 @@ namespace lex
                     }
                 }
             }
+            // Anti seperation for floating-point constants
+            if (it != sentence.begin() and it != sentence.end() and *it == '.' and isdigit(*(it - 1)))
+            {
+                continue;
+            }
+
             // Normal seperation
             string remaining(it, sentence.end());
             auto found = find_seperator(remaining, seperators);

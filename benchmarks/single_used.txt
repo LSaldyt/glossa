@@ -1,0 +1,8 @@
+Input code:
+19.27351474761963
+First list element (anti-optimizer)
+1
+Output code:
+81
+First list element (anti-optimizer)
+1

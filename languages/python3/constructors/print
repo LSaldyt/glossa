@@ -1,9 +1,0 @@
-val = 0 0
-end = 1
-defines
-source
-branch empty end
-print($val$)
-elsebranch
-print($val$, end='')
-end

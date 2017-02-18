@@ -4,5 +4,5 @@ operator *
 punctuator ,
 operator *
 punctuator )
-link string
+link expression
 6

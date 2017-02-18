@@ -1,2 +1,3 @@
-anyOf literal wildcard 
-0
+optional operator -
+anyOf link string identifier wildcard literal wildcard 
+0 sep 1

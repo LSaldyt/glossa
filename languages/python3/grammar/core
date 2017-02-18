@@ -6,6 +6,7 @@ statement
 value
 expression
 statement.auto
+division
 memberaccess
 listcomp
 basevalue
@@ -24,12 +25,15 @@ value
 class
 import
 exception
+importall
+pass
 assignment
 memberfunction
 function
 memberinit
 whileloop
-print
+import_select
+forrange
 supercall
 trycatch
 elsebranch
@@ -37,6 +41,7 @@ main
 comment
 forloop
 conditional
+qualified_import
 return
 assert
 statement

@@ -106,6 +106,7 @@ namespace gen
         return Branch<T>(defaultBranch, line_constructors, nested_branches);
     }
 
+
     template <typename T>
     vector<tuple<string, Constructor<T>>> generateConstructor(vector<string> content, 
             vector<tuple<string, FileConstructor>> file_constructors,
@@ -130,7 +131,6 @@ namespace gen
         for (auto file_constructor : file_constructors)
         {
             tag = get<0>(file_constructor);
-            //print(tag);
             assert(contains(content, tag));
             it = std::find(content.begin(), content.end(), tag);
 
@@ -143,7 +143,6 @@ namespace gen
             else
             {
                 auto body = vector<string>(last_it + 1, it);
-                //print("Created body");
                 auto constructor = Constructor<T>(symbol_storage_generator, 
                                                   generateBranch(body, 
                                                       symbol_storage_generator, 
@@ -153,7 +152,6 @@ namespace gen
                 last_it = it;
             }
             type = tag;
-            //print("Done");
         }
         auto body = vector<string>(last_it + 1, content.end());
         auto constructor = Constructor<T>(symbol_storage_generator, 

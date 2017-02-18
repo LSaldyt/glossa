@@ -67,15 +67,16 @@ namespace compiler
         auto punctuators      = readFile(lex_dir + "punctuators");
 
         LexMapTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords, "keyword"));         // Keywords are read in automatically from grammar file usage
-        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator"));
-        term_sets.push_back(make_tuple(operators,        "operator"));
-        term_sets.push_back(make_tuple(punctuators,      "punctuator"));
+        term_sets.push_back(make_tuple(grammar.keywords, "keyword",         1));         // Keywords are read in automatically from grammar file usage
+        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
+        term_sets.push_back(make_tuple(operators,        "operator",        1));
+        term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
 
         vector<LexMapLexer> lexer_set = {
             LexMapLexer(just("    "s),     "tab",        "tab",        3),
             LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
             LexMapLexer(digits,            "int",        "literal",    3),
+            LexMapLexer(doubles,           "double",     "literal",    1),
             LexMapLexer(identifiers,       "*text*",    "identifier", 3)};
 
         lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
@@ -105,6 +106,20 @@ namespace compiler
     }
 
     /**
+     * High level function for loading a code transformer for a language
+     * @param language Language for code generator to be loaded for
+     * @return Transformer which can transformer AST for the given language
+     */
+    Transformer loadTransformer(string language)
+    {
+        print("Loading transformers for " + language);
+        auto transformer_files = readFile("languages/" + language + "/transformers/core");
+        auto transformer = Transformer(transformer_files, "languages/" + language + "/transformers/");
+        print("Done");
+        return transformer;
+    }
+
+    /**
      * High level function for transpilation
      * Converts source files of one language to source files of another, copying them into a new directory
      * @param filenames   List of files to transpile
@@ -118,6 +133,7 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
+        auto transformer = loadTransformer(input_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -125,7 +141,7 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, symbol_table, input_dir, output_dir, logger);
+            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
         }
     }
 
@@ -140,6 +156,7 @@ namespace compiler
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
     void compile(string filename, Grammar& grammar, Generator& generator,
+                 Transformer& transformer,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
     {
@@ -159,6 +176,7 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
+        transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);

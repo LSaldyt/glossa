@@ -4,7 +4,7 @@
 
 namespace lex
 {
-    using LexMapTermSet  = tuple<vector<string>, string>;
+    using LexMapTermSet  = tuple<vector<string>, string, int>;
     using LexMapTermSets = vector<LexMapTermSet>;
 
     /** 
