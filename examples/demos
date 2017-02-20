@@ -2,7 +2,6 @@ python3          python3 cpp
 integrate        python3 cpp
 class            python3 cpp
 benchmark        python3 cpp
-loop             python3 cpp
 porting          python2 python3 
 text_prediction  python2 python3
 fortran          fortran cpp

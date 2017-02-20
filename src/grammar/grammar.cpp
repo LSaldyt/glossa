@@ -93,12 +93,15 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
                 }
             }
         }
+        logger.log("Next token: " + tokens[0].text);
+        /*
         logger.log("Remaining:");
         for (auto token : tokens)
         {
             logger.log("Token (type: " + token.type + "), (subtype: " + token.sub_type + "), (text:" + token.text + ")");
         }
-        throw;
+        */
+        throw; // Very important
     }
     logger.log("Group identification finished. " + std::to_string(identified_groups.size()) + " groups created");
 
