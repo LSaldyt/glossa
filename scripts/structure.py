@@ -7,7 +7,7 @@ def build_anyof(directory):
         with open(directory + name, 'r') as content:
             return len([line for line in content])
     names = sorted(filenames(directory), key=filelen, reverse=True)
-    names = ['link %s' % name for name in names]
+    names = ['link %s' % name for name in names] + ['literal wildcard']
     return 'anyOf %s' % ' '.join(names)
 
 def structure_grammar(language):
@@ -40,8 +40,9 @@ def structure_grammar(language):
             #shutil.copy(directory + t + '.auto', directory + t)
             #shutil.copy(directory + t + '.bak', directory + t)
             #if t == 'statement':
-            shutil.copy(directory + t, coredir)
-            corefiles.append(t)
+            if os.path.exists(directory + t):
+                shutil.copy(directory + t, coredir)
+                corefiles.append(t)
 
     with open(directory + 'core', 'w') as corefile:
         corefile.write('\n'.join(corefiles))

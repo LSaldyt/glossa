@@ -50,6 +50,7 @@ public:
 
     string multiline_comment_delimiter;
     string comment_delimiter;
+    vector<Seperator> whitespace; 
 
 private:
     GrammarMap grammar_map; 
@@ -67,6 +68,8 @@ private:
     SymbolicTokenParser  retrieveGrammar(string filename); 
 
     void readDelimiters(string directory);
+    void readInherits(string directory);
+    void readLexRules(string lex_dir);
 };
 
 }

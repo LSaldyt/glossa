@@ -61,33 +61,7 @@ namespace compiler
         string directory = "languages/" + language + "/grammar/";
         auto grammar_files = readFile(directory + "core");
         auto grammar       = Grammar(grammar_files, directory + ".__core__/", lex_dir);
-
-        auto operators        = readFile(lex_dir + "operators");
-        auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
-        auto punctuators      = readFile(lex_dir + "punctuators");
-
-        LexMapTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords, "keyword",         1));         // Keywords are read in automatically from grammar file usage
-        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
-        term_sets.push_back(make_tuple(operators,        "operator",        1));
-        term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
-
-        vector<LexMapLexer> lexer_set = {
-            LexMapLexer(just("    "s),     "tab",        "tab",        3),
-            LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
-            LexMapLexer(digits,            "int",        "literal",    3),
-            LexMapLexer(doubles,           "double",     "literal",    1),
-            LexMapLexer(identifiers,       "*text*",    "identifier", 3)};
-
-        lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
-        for (auto delimiter : grammar.string_delimiters)
-        {
-            lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
-        }
-
-        const vector<Seperator> whitespace = readWhitespaceFile(lex_dir + "whitespace");
-        LexMap test_language(term_sets, lexer_set, whitespace);
-        grammar.lexmap = test_language;
+        print("Done loading grammar file");
         return grammar;
     }
 

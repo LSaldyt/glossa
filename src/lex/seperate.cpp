@@ -166,6 +166,7 @@ namespace lex
                 print("Unrecognized whitespace keyword: " + keyword);
             }
         }
+        print("Done reading whitespace file " + filename);
         return whitespace;
     }
 }

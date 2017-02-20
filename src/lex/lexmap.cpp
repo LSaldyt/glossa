@@ -17,9 +17,13 @@ namespace lex
     LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, vector<Seperator> whitespace)
         : language_term_sets(set_term_sets)
     {
+        print("Creating lexmap for language");
         // Always seperate by whitespace
         concat(seperators, whitespace);
-        newline = get<1>(whitespace[3]);
+        if (whitespace.size() > 3)
+        {
+            newline = get<1>(whitespace[3]);
+        }
 
         // Custom language lexers (like int, vector<string>, etc..)
         concat(language_lexers, set_language_lexers);

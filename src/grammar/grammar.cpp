@@ -11,12 +11,46 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 /// Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory, string lex_dir) 
 {
+    //readInherits(directory + "../../");
     for (auto filename : filenames)
     {
-        //print(filename);
+        print(filename);
         grammar_map[filename] = read(directory + filename);
     }
     readDelimiters(lex_dir);
+    readLexRules(lex_dir);
+}
+
+void Grammar::readLexRules(string lex_dir)
+{
+    whitespace = readWhitespaceFile(lex_dir + "whitespace");
+
+    auto operators        = readFile(lex_dir + "operators");
+    auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
+    auto punctuators      = readFile(lex_dir + "punctuators");
+
+    LexMapTermSets term_sets;
+    term_sets.push_back(make_tuple(keywords,         "keyword",         1)); // Keywords are read in automatically from grammar file usage
+    term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
+    term_sets.push_back(make_tuple(operators,        "operator",        1));
+    term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
+
+    vector<LexMapLexer> lexer_set = {
+        LexMapLexer(just("    "s),     "tab",    "tab",        3),
+        LexMapLexer(startswith("\t"s), "tab",    "tab",        3),
+        LexMapLexer(digits,            "int",    "literal",    3),
+        LexMapLexer(doubles,           "double", "literal",    1),
+        LexMapLexer(identifiers,       "*text*", "identifier", 3)};
+
+    if (not comment_delimiter.empty())
+    {
+        lexer_set.push_back(LexMapLexer(startswith(comment_delimiter), "comment", "comment", 3));
+    }
+    for (auto delimiter : string_delimiters)
+    {
+        lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
+    }
+    lexmap = LexMap (term_sets, lexer_set, whitespace);
 }
 
 /**
@@ -400,6 +434,7 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
  */
 void Grammar::readDelimiters(string directory)
 {
+    print("Reading delimiters from " + directory);
     auto string_delimiters_file  = readFile(directory + "string_delimiters");
     auto comment_delimiters_file = readFile(directory + "comment_delimiters");
 
@@ -409,10 +444,40 @@ void Grammar::readDelimiters(string directory)
         string_delimiters.push_back(string_delimiter[0]);
     }
 
-    assert(comment_delimiters_file.size() == 2);
-    comment_delimiter           = comment_delimiters_file[0];
-    multiline_comment_delimiter = comment_delimiters_file[1];
+    if (comment_delimiters_file.size() == 2)
+    {
+        comment_delimiter           = comment_delimiters_file[0];
+        multiline_comment_delimiter = comment_delimiters_file[1];
+    }
+    else
+    {
+        print("Warning: no comment delimiters read from " + directory);
+    }
 }
 
+void Grammar::readInherits(string directory)
+{
+    print("Reading language inherits from " + directory);
+    auto content = readFile(directory + "inherits");
+    for (auto line : content)
+    {
+        //print(line);
+	auto lex_dir = "languages/" + line + "/lex/";
+        whitespace   = readWhitespaceFile(lex_dir + "whitespace"); //Override
+        readDelimiters(lex_dir);
+        readLexRules(lex_dir);
+
+        auto inherit_dir = "languages/" + line + "/grammar/.__core__/";
+        //print(inherit_dir);
+        auto grammar_files = readFile(inherit_dir + "../core");
+        for (auto filename : grammar_files)
+        {
+            //print(inherit_dir + filename);
+            grammar_map[filename] = read(inherit_dir + filename);
+        }
+        // readInherits(inherit_dir); // Uncomment for heirarchical inheritance
+    }
+    print("Done reading inheritances for " + directory);
+}
 
 }

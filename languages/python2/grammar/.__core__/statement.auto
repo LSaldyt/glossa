@@ -1,3 +1,3 @@
-anyOf link trycatch link function link class link main link forloop link conditional link fileprint link whileloop link import_select link elifbranch link exception link importall link tuple_unpack link elsebranch link qualified_import link global link assignment link print link import link multistatement link return link assert link comment
+anyOf link trycatch link function link class link main link forloop link conditional link fileprint link whileloop link import_select link elifbranch link exception link importall link tuple_unpack link elsebranch link qualified_import link global link assignment link print link import link multistatement link return link assert link comment literal wildcard
 optional link comment
 0 sep 1
