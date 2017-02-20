@@ -11,7 +11,7 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 /// Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory, string lex_dir) 
 {
-    //readInherits(directory + "../../");
+    readInherits(directory + "../../");
     for (auto filename : filenames)
     {
         print(filename);
@@ -19,15 +19,6 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
     }
     readDelimiters(lex_dir);
     readLexRules(lex_dir);
-}
-
-void Grammar::readLexRules(string lex_dir)
-{
-    whitespace = readWhitespaceFile(lex_dir + "whitespace");
-
-    auto operators        = readFile(lex_dir + "operators");
-    auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
-    auto punctuators      = readFile(lex_dir + "punctuators");
 
     LexMapTermSets term_sets;
     term_sets.push_back(make_tuple(keywords,         "keyword",         1)); // Keywords are read in automatically from grammar file usage
@@ -51,6 +42,14 @@ void Grammar::readLexRules(string lex_dir)
         lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
     }
     lexmap = LexMap (term_sets, lexer_set, whitespace);
+}
+
+void Grammar::readLexRules(string lex_dir)
+{
+    concat(whitespace,        readWhitespaceFile(lex_dir + "whitespace"));
+    concat(operators        , readFile(lex_dir + "operators"));
+    concat(logicaloperators , readFile(lex_dir + "logicaloperators"));
+    concat(punctuators      , readFile(lex_dir + "punctuators"));
 }
 
 /**

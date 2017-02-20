@@ -70,6 +70,10 @@ private:
     void readDelimiters(string directory);
     void readInherits(string directory);
     void readLexRules(string lex_dir);
+
+    vector<string> operators;
+    vector<string> logicaloperators; 
+    vector<string> punctuators; 
 };
 
 }
