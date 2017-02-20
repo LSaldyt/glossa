@@ -1,5 +1,11 @@
 import sys
 
+class Test():
+    def __init__(self, set_n=0):
+        self.n = set_n 
+    def use(self, x):
+        print(x * n)
+
 def f(x):
     print x / 2
     raise ValueError, "dodgy value"
