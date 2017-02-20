@@ -1,4 +1,4 @@
-python3          python3_inherit cpp
+python3          python3 cpp
 haskell          haskell cpp
 porting          python2 python3 
 integrate        python3 cpp

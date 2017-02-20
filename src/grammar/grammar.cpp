@@ -33,15 +33,17 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
         LexMapLexer(doubles,           "double", "literal",    1),
         LexMapLexer(identifiers,       "*text*", "identifier", 3)};
 
-    if (not comment_delimiter.empty())
-    {
-        lexer_set.push_back(LexMapLexer(startswith(comment_delimiter), "comment", "comment", 3));
-    }
+    lexer_set.push_back(LexMapLexer(startswith(comment_delimiter), "comment", "comment", 3));
     for (auto delimiter : string_delimiters)
     {
         lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
     }
     lexmap = LexMap (term_sets, lexer_set, whitespace);
+
+    for (auto kv : grammar_map)
+    {
+        //print(kv.first);
+    }
 }
 
 void Grammar::readLexRules(string lex_dir)
