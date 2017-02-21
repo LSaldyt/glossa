@@ -17,5 +17,5 @@ struct SymbolicToken
     std::string sub_type;
     std::string type;
     int line;
-    SymbolicToken(std::shared_ptr<syntax::Symbol> set_value, std::string set_sub_type, std::string set_type, std::string set_text, int set_line=0);
+    SymbolicToken(std::shared_ptr<syntax::Symbol> set_value, std::string set_sub_type, std::string set_type, std::string set_text, int set_line=-1);
 };

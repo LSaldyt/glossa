@@ -191,6 +191,7 @@ namespace compiler
      */
     std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table, OutputManager logger)
     {
+        int line_num = 0;
         std::vector<Tokens> tokens;
         string unseperated_content;
         for (auto line : content)
@@ -207,23 +208,28 @@ namespace compiler
             }
             else if (in_multiline_string)
             {
-                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment", 0)));
+                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment", line_num)));
+                // Count newlines in mulitline comment
+                size_t nPos = group.find("\n", 0); 
+                while (nPos != string::npos)
+                {
+                    line_num++;
+                    nPos = group.find("\n", nPos+1);
+                }
+                line_num++;
             }
             else
             {
                 auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
                 for (auto it = lines.begin(); it != lines.end(); it++)
                 {
-                    string line = rtrim(*it); // Remove trailing whitespace
-                    if (line.back() == '\\')
+                    line_num++;
+                    auto token_group = lexWith(*it, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter);
+                    for (auto& token : token_group)
                     {
-                        if (it + 1 != lines.end())
-                        {
-                            it++;
-                            line = string(line.begin(), line.end() - 1) + " " + *it;
-                        }
+                        token.line = line_num;
                     }
-                    tokens.push_back(lexWith(line, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter));
+                    tokens.push_back(token_group);
                 }
             }
         }
@@ -268,20 +274,17 @@ namespace compiler
      */
     vector<SymbolicToken> join(std::vector<vector<SymbolicToken>> token_groups, bool newline)
     {
-        int line = 0;
         auto tokens = vector<SymbolicToken>();
         for (auto token_group : token_groups)
         {
             for (auto t : token_group)
             {
-                t.line = line;
                 tokens.push_back(t);
             }
             if (newline)
             {
-                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n", line));
+                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n"));
             }
-            line++;
         }
         return tokens;
     }

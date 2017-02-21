@@ -11,7 +11,7 @@ struct Token
     tools::string sub_type;
     tools::string type;
     int line;
-    Token(tools::vector<tools::string> set_values, tools::string set_sub_type, tools::string set_type, int set_line=0)
+    Token(tools::vector<tools::string> set_values, tools::string set_sub_type, tools::string set_type, int set_line=-1)
     {
         values   = set_values;
         sub_type = set_sub_type;
