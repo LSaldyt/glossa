@@ -115,7 +115,15 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
+            try
+            {
+                compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
+            }
+            catch(...)
+            {
+                logger.log("Failed on file: " + file);
+                throw;
+            }
         }
     }
 
@@ -199,7 +207,7 @@ namespace compiler
             }
             else if (in_multiline_string)
             {
-                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment")));
+                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment", 0)));
             }
             else
             {
@@ -260,17 +268,20 @@ namespace compiler
      */
     vector<SymbolicToken> join(std::vector<vector<SymbolicToken>> token_groups, bool newline)
     {
+        int line = 0;
         auto tokens = vector<SymbolicToken>();
         for (auto token_group : token_groups)
         {
             for (auto t : token_group)
             {
+                t.line = line;
                 tokens.push_back(t);
             }
             if (newline)
             {
-                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n"));
+                tokens.push_back(SymbolicToken(make_shared<Symbol>(Newline("\n")), "newline", "newline", "\n", line));
             }
+            line++;
         }
         return tokens;
     }

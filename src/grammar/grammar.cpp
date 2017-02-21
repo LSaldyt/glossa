@@ -93,7 +93,7 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
                 }
             }
         }
-        logger.log("Next token: " + tokens[0].text);
+        logger.log("Failed on line: " + std::to_string(tokens[0].line));
         /*
         logger.log("Remaining:");
         for (auto token : tokens)
