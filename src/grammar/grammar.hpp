@@ -43,16 +43,16 @@ public:
 
     IdentifiedGroups identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger);
 
-    vector<string> keywords;
     LexMap lexmap;
 
     vector<char> string_delimiters;
-
     string multiline_comment_delimiter;
     string comment_delimiter;
+private:
+
+
     vector<Seperator> whitespace; 
 
-private:
     GrammarMap grammar_map; 
 
     void readSymbolFile(vector<string> symbol_file);
@@ -74,6 +74,7 @@ private:
     vector<string> operators;
     vector<string> logicaloperators; 
     vector<string> punctuators; 
+    vector<string> keywords;
 };
 
 }
