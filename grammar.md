@@ -46,5 +46,29 @@ parse tokens -> result consumed remaining symboldict
 
 In the process, it would be nice to borrow some other CPython grammar features, most notable being simplified anyOf syntax:
 `(a | b | c)` = `anyOf link a link b link c`
+many syntax:
+`stmt*` = `many link statement`
+etc...
 
 This also means rewriting the AST-transform feature....
+
+### Parsing of grammar files
+
+sep by newlines,
+each full line will be of the form:
+``` python
+name : parse_instructions
+```
+Retrieve name, pass parse instructions string to another function:
+sep by \` characters, get many individual parsers
+these will either be of the form
+`keyword def`, which already has a function for being parsed
+or `$name$ above_form`, where name will be extracted and the above parser form will be used.
+
+ 
+### AST Transformation feature
+
+AST transform will now be operating on a symboldict, not a matrix
+
+Disable AST Transform for now, handle this later
+
