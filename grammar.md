@@ -65,6 +65,12 @@ these will either be of the form
 `keyword def`, which already has a function for being parsed
 or `$name$ above_form`, where name will be extracted and the above parser form will be used.
 
+``` cpp
+Grammar::identifyGroups tokens logger -> vector<tuple<string, SymbolStorage>>
+
+Generator::operator() identifiedGroups -> vector<string>
+```
+
  
 ### AST Transformation feature
 

@@ -50,6 +50,7 @@ public:
     string comment_delimiter;
 private:
 
+    void readGrammarFile(string filename);
 
     vector<Seperator> whitespace; 
 

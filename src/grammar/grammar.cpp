@@ -15,8 +15,10 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
     for (auto filename : filenames)
     {
         print(filename);
-        grammar_map[filename] = read(directory + filename);
+        readGrammarFile(directory + filename);
+        //grammar_map[filename] = read(directory + filename);
     }
+    throw std::exception();
     readDelimiters(lex_dir);
     readLexRules(lex_dir);
 
@@ -416,6 +418,40 @@ Grammar::evaluateGrammar
     return make_tuple(true, results);
 };
 
+//using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<int>>>; 
+//funcdef: `keyword def` `$name$ identifier wildcard` `$args$ link parameters` `punctuator :` `$body$ many link statement` 
+void Grammar::readGrammarFile(string filename)
+{
+    vector<SymbolicTokenParser> parsers;
+    auto content = readFile(filename);
+    for (auto line : content)
+    {
+        auto terms = lex::seperate(line, {make_tuple("`", false)});
+        assert(terms.size() > 1);
+        auto tag = terms[0];
+        replaceAll(tag, " ", "");
+        replaceAll(tag, ":", "");
+        terms = slice(terms, 1);
+        for (auto t : terms)
+        {
+            if (not rtrim(t).empty())
+            {
+                auto interms = lex::seperate(t, {make_tuple(" ", false)});
+                assert(interms.size() > 0);
+                auto beginterm = interms[0];
+                if (beginterm[0] == '@')
+                {
+                    print(t);
+                    throw std::exception();
+                }
+                else
+                {
+                    parsers.push_back(readGrammarTerms(interms));
+                }
+            }
+        }
+    }
+}
 
 /**
  * Discard type information from vector<SymbolicToken>
