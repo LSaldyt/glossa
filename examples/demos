@@ -8,4 +8,4 @@ text_prediction  python2 python3
 fortran          fortran cpp
 haskell          haskell cpp
 auta             auta    python3
-new_grammar      a b
+new_grammar      a cpp

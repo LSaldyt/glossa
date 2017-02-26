@@ -11,14 +11,14 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 /// Standard grammar constructor (From list of files)
 Grammar::Grammar(vector<string> filenames, string directory, string lex_dir) 
 {
-    readInherits(directory + "../../");
+    print("Creating grammar");
+    //readInherits(directory + "../../");
     for (auto filename : filenames)
     {
-        print(filename);
         readGrammarFile(directory + filename);
         //grammar_map[filename] = read(directory + filename);
     }
-    throw std::exception();
+    //throw std::exception();
     readDelimiters(lex_dir);
     readLexRules(lex_dir);
 
@@ -326,7 +326,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     return [filename, this](vector<SymbolicToken> tokens)
     {
-        //print("Running parser for " + filename);
+        print("Running parser for " + filename);
         std::vector<SymbolicTokenParser> parsers;
 
         // Retrieve a list of parsers from the grammar map
@@ -345,6 +345,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         auto result = evaluateGrammar(parsers, tokens_copy, OutputManager(0));
         if (get<0>(result))
         {
+            print("Success");
             auto group       = toGroup(filename, get<1>(result));
             auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, group));
             auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
@@ -352,6 +353,7 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         }
         else
         {
+            print("Failure");
             return Result<SymbolicToken>(false, {}, tokens);
         }
     };
@@ -373,6 +375,7 @@ Grammar::identify
     assert(contains(grammar_map, "statement"));
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
+    print("Evaluating grammar..");
     auto result    = evaluateGrammar(parsers, tokens_copy, logger);
 
     if (get<0>(result))
@@ -414,6 +417,7 @@ Grammar::evaluateGrammar
         {
             return make_tuple(false, results);
         }
+        i++;
     }
 
     return make_tuple(true, results);
@@ -423,9 +427,11 @@ Grammar::evaluateGrammar
 //funcdef: `keyword def` `$name$ identifier wildcard` `$args$ link parameters` `punctuator :` `$body$ many link statement` 
 void Grammar::readGrammarFile(string filename)
 {
+    print("Reading grammar definitions from " + filename);
     auto content = readFile(filename);
     for (auto line : content)
     {
+        print("Line: " + line);
         vector<SymbolicTokenParser> parsers;
         vector<int> indices;
         auto terms = lex::seperate(line, {make_tuple("`", false)});
@@ -456,10 +462,11 @@ void Grammar::readGrammarFile(string filename)
                 {
                     parsers.push_back(readGrammarTerms(interms));
                 }
+                i++;
             }
-            grammar_map[tag] = make_tuple(parsers, indices);
-            i++;
         }
+        grammar_map[tag] = make_tuple(parsers, indices);
+        print("Added " + tag + " to grammar map");
     }
 }
 
