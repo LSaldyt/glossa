@@ -29,7 +29,7 @@ public:
 private:
     unordered_map<string, vector<tuple<string, Constructor<string>>>> construction_map;
 
-    string formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions);
+    string formatSymbol (string s, unordered_set<string>& names, MultiSymbolTable& ms_table, string filetype, vector<string>& definitions);
 
     vector<tuple<string, Constructor<string>>> readConstructor(string filename);
     void readStructureFile(string filename);

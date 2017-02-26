@@ -93,38 +93,46 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
     {
         assert(terms.size() == 2);
         auto identifier = terms[1];
-        return [identifier](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [identifier](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
-            string to_define = get<0>(symbol_storage)[identifier]->name();
+            assert(contains(ms_table, identifier));
+            auto ms_group = ms_table[identifier];
+            assert(not ms_group.empty());
+            string to_define = ms_group[0]->name();
             return contains(names, to_define); 
         };
     }
     else if (keyword == "equalTo")
     {
         assert(terms.size() == 3);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
-            assert(contains(get<0>(symbol_storage), terms[1]));
-            auto name = get<0>(symbol_storage)[terms[1]]->name();
+            auto id = terms[1];
+            assert(contains(ms_table, terms[1]));
+            auto ms_group = ms_table[id];
+            assert(not ms_group.empty());
+            auto name = ms_group[0]->name();
             return name == terms[2]; 
         };
     }
     else if (keyword == "empty")
     {
         assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
-            assert(contains(get<1>(symbol_storage), terms[1]));
-            return get<1>(symbol_storage)[terms[1]].empty();
+            auto id = terms[1];
+            assert(contains(ms_table, id));
+            return ms_table[id].empty();
         };
     }
     else if (keyword == "nonempty")
     {
         assert(terms.size() == 2);
-        return [terms](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
-            assert(contains(get<1>(symbol_storage), terms[1]));
-            return not get<1>(symbol_storage)[terms[1]].empty();
+            auto id = terms[1];
+            assert(contains(ms_table, id));
+            return not ms_table[id].empty();
         };
     }
     else if (keyword == "both")
@@ -135,9 +143,9 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
         vector<string> second(split + 1, terms.end());
         auto a = generateConditionEvaluator(first);
         auto b = generateConditionEvaluator(second);
-        return [a, b](unordered_set<string>& names, SymbolStorage& symbol_storage)
+        return [a, b](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
-            return a(names, symbol_storage) and b(names, symbol_storage);
+            return a(names, ms_table) and b(names, ms_table);
         };
     }
     else

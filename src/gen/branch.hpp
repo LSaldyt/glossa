@@ -15,19 +15,19 @@ using namespace lex;
 using namespace match;
 using namespace tools;
 
-using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&)>;
+using ConditionEvaluator = function<bool(unordered_set<string>&, MultiSymbolTable&)>;
 template <typename T>
-using ElementConstructor    = function<T(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
+using ElementConstructor    = function<T(unordered_set<string>&, MultiSymbolTable&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
 template <typename T>
 using ElementConstructorCreator = function<ElementConstructor<T>(string)>;
 
-const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&){return true;};
+const auto defaultBranch = [](unordered_set<string>&, MultiSymbolTable&){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
 {
-    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage)
+    return [c](unordered_set<string>& names, MultiSymbolTable& ms_table)
     {
-        auto condition = c(names, symbol_storage);
+        auto condition = c(names, ms_table);
         return not condition;
     };
 };
