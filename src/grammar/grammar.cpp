@@ -370,6 +370,7 @@ Grammar::identify
 {
     vector<SymbolicToken> tokens_copy(tokens);
 
+    assert(contains(grammar_map, "statement"));
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
     auto result    = evaluateGrammar(parsers, tokens_copy, logger);
@@ -422,16 +423,18 @@ Grammar::evaluateGrammar
 //funcdef: `keyword def` `$name$ identifier wildcard` `$args$ link parameters` `punctuator :` `$body$ many link statement` 
 void Grammar::readGrammarFile(string filename)
 {
-    vector<SymbolicTokenParser> parsers;
     auto content = readFile(filename);
     for (auto line : content)
     {
+        vector<SymbolicTokenParser> parsers;
+        vector<int> indices;
         auto terms = lex::seperate(line, {make_tuple("`", false)});
         assert(terms.size() > 1);
         auto tag = terms[0];
         replaceAll(tag, " ", "");
         replaceAll(tag, ":", "");
         terms = slice(terms, 1);
+        int i = 0;
         for (auto t : terms)
         {
             if (not rtrim(t).empty())
@@ -441,14 +444,21 @@ void Grammar::readGrammarFile(string filename)
                 auto beginterm = interms[0];
                 if (beginterm[0] == '@')
                 {
-                    print(t);
-                    throw std::exception();
+                    interms = slice(interms, 1);
+                    parsers.push_back(readGrammarTerms(interms));
+                    if (not indices.empty())
+                    {
+                        indices.push_back(-1);
+                    }
+                    indices.push_back(i);
                 }
                 else
                 {
                     parsers.push_back(readGrammarTerms(interms));
                 }
             }
+            grammar_map[tag] = make_tuple(parsers, indices);
+            i++;
         }
     }
 }

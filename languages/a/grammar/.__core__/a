@@ -1,1 +1,2 @@
+statement: `link print`
 print: `identifier print` `punctuator (` `literal wildcard` `punctuator )` 

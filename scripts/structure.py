@@ -36,7 +36,8 @@ def structure_grammar(language):
             elif t == 'value':
                 anyof = build_anyof(type_dir) + '\n0'
             with open(directory + t + '.auto', 'w') as anyoffile:
-                anyoffile.write(anyof)
+                pass
+                #anyoffile.write(anyof)
             #shutil.copy(directory + t + '.auto', directory + t)
             #shutil.copy(directory + t + '.bak', directory + t)
             #if t == 'statement':
