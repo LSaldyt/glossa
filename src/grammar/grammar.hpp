@@ -17,10 +17,12 @@ using namespace match;
 using namespace syntax;
 using namespace tools;
 
-using SymbolMatrix     = vector<vector<shared_ptr<Symbol>>>;
-using IdentifiedGroups = vector<tuple<string, SymbolMatrix>>;
-using StatementConstructor = function<shared_ptr<Symbol>(SymbolMatrix)>;
-using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<int>>>; 
+//using SymbolMatrix     = vector<vector<shared_ptr<Symbol>>>;
+//using IdentifiedGroups = vector<tuple<string, SymbolMatrix>>;
+//using MultiSymbolTable = unordered_map<string, vector<shared_ptr<Symbol>>>;
+using IdentifiedGroups = vector<tuple<string, MultiSymbolTable>>;
+//using StatementConstructor = function<shared_ptr<Symbol>(MultiSymbolTable)>;
+using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<tuple<int, string>>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
 
@@ -59,7 +61,7 @@ private:
     void readSymbolFile(vector<string> symbol_file);
 
     tuple<string, vector<Result<SymbolicToken>>> identify (vector<SymbolicToken>& tokens, OutputManager logger);
-    SymbolMatrix toGroup(string name, vector<Result<SymbolicToken>> results);
+    MultiSymbolTable createMultiSymbolTable(string name, vector<Result<SymbolicToken>> results);
 
     tuple<vector<SymbolicTokenParser>, vector<int>> read(string filename);
     tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens, OutputManager logger);

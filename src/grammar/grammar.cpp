@@ -75,8 +75,8 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
             logger.log("Attempting identification of remaining " + std::to_string(tokens.size()) + " tokens");
             auto result = identify(tokens, logger);
             logger.log("Identified group as " + get<0>(result) + ", grouping..");
-            auto group  = toGroup(get<0>(result), get<1>(result));
-            identified_groups.push_back(make_tuple(get<0>(result), group));
+            auto ms_table = createMultiSymbolTable(get<0>(result), get<1>(result));
+            identified_groups.push_back(make_tuple(get<0>(result), ms_table));
             logger.log("Group creation finished. " + std::to_string(tokens.size()) + " tokens remaining");
         }
     }
@@ -86,6 +86,7 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
         for (auto identified_group : identified_groups)
         {
             logger.log("Group identified as " + get<0>(identified_group));
+            /*
             auto groups = get<1>(identified_group);
             for (auto group : groups)
             {
@@ -94,6 +95,7 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
                     logger.log(symbol->abstract());
                 }
             }
+            */
         }
         logger.log("Failed on line: " + std::to_string(tokens[0].line));
         /*
@@ -117,36 +119,29 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
  * @param results Results of matching against a given statement
  * @return        2D matrix of Symbols
  */
-SymbolMatrix Grammar::toGroup(string name, vector<Result<SymbolicToken>> results)
+
+MultiSymbolTable Grammar::createMultiSymbolTable(string name, vector<Result<SymbolicToken>> results)
 {
-    auto construction_indices = get<1>(grammar_map[name]);
+    auto index_tags = get<1>(grammar_map[name]);
+    
+    MultiSymbolTable ms_table;
 
-    SymbolMatrix groups;
-    groups.push_back(vector<shared_ptr<Symbol>>());
-
-    for (auto i : construction_indices)
+    for (auto t : index_tags)
     {
-        // Account for the end-user's grouping instructions (grammar files)
-        if (i == -1)
-        {
-            groups.push_back(vector<shared_ptr<Symbol>>());
-        }
-        else
-        {
-            auto result = results[i];
-            result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
+        auto i = get<0>(t);
+        auto tag = get<1>(t);
+        auto result = results[i];
+        result.consumed = clean(result.consumed); // Discard tokens that have been marked as unneeded
 
-            auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
-            for (auto group : grouped_tokens)
-            {
-                for (auto t : group)
-                {
-                    groups.back().push_back(t.value);
-                }
-            }
+        auto grouped_tokens = reSeperate(result.consumed); // Expand multi-token parsers
+        vector<shared_ptr<Symbol>> ms_group;
+        for (auto group : grouped_tokens)
+        {
+            concat(ms_group, fromTokens(group));
         }
+        ms_table[tag] = ms_group;
     }
-    return groups;
+    return ms_table;
 }
 
 /**
@@ -346,8 +341,8 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         if (get<0>(result))
         {
             print("Success");
-            auto group       = toGroup(filename, get<1>(result));
-            auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, group));
+            auto ms_table    = createMultiSymbolTable(filename, get<1>(result));
+            auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, ms_table));
             auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
             return Result<SymbolicToken>(true, consumed, tokens_copy); 
         }
@@ -433,7 +428,7 @@ void Grammar::readGrammarFile(string filename)
     {
         print("Line: " + line);
         vector<SymbolicTokenParser> parsers;
-        vector<int> indices;
+        vector<tuple<int, string>> index_tags;
         auto terms = lex::seperate(line, {make_tuple("`", false)});
         assert(terms.size() > 1);
         auto tag = terms[0];
@@ -450,13 +445,10 @@ void Grammar::readGrammarFile(string filename)
                 auto beginterm = interms[0];
                 if (beginterm[0] == '@')
                 {
+                    replaceAll(beginterm, "@", "");
                     interms = slice(interms, 1);
                     parsers.push_back(readGrammarTerms(interms));
-                    if (not indices.empty())
-                    {
-                        indices.push_back(-1);
-                    }
-                    indices.push_back(i);
+                    index_tags.push_back(make_tuple(i, beginterm));
                 }
                 else
                 {
@@ -465,7 +457,7 @@ void Grammar::readGrammarFile(string filename)
                 i++;
             }
         }
-        grammar_map[tag] = make_tuple(parsers, indices);
+        grammar_map[tag] = make_tuple(parsers, index_tags);
         print("Added " + tag + " to grammar map");
     }
 }
@@ -515,6 +507,7 @@ void Grammar::readDelimiters(string directory)
 void Grammar::readInherits(string directory)
 {
     print("Reading language inherits from " + directory);
+    /*
     auto content = readFile(directory + "inherits");
     for (auto line : content)
     {
@@ -530,10 +523,11 @@ void Grammar::readInherits(string directory)
         for (auto filename : grammar_files)
         {
             //print(inherit_dir + filename);
-            grammar_map[filename] = read(inherit_dir + filename);
+            //grammar_map[filename] = read(inherit_dir + filename);
         }
         // readInherits(inherit_dir); // Uncomment for heirarchical inheritance
     }
+    */
     print("Done reading inheritances for " + directory);
 }
 

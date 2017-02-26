@@ -29,7 +29,7 @@ namespace compiler
 
     Grammar     loadGrammar   (string language);
     Generator   loadGenerator (string language);
-    Transformer loadTransformer (string language);
+    //Transformer loadTransformer (string language);
 
     unordered_map<string, string> readSymbolTable(string filename);
 
@@ -37,7 +37,7 @@ namespace compiler
     vector<vector<SymbolicToken>> symbolicPass(vector<Tokens> tokens, OutputManager logger);
     vector<SymbolicToken>         join(vector<vector<SymbolicToken>>, bool newline=false);
 
-    unordered_map<string, tuple<vector<string>, string>> compileGroups(vector<tuple<string, SymbolMatrix>> identified_groups,
+    unordered_map<string, tuple<vector<string>, string>> compileGroups(IdentifiedGroups identified_groups,
                                                                        string filename,
                                                                        Generator& generator,
                                                                        OutputManager logger);

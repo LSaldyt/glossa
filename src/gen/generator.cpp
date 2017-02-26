@@ -81,15 +81,16 @@ vector<tuple<string, Constructor<string>>> Generator::readConstructor(string fil
  * @param nesting Indentation level
  * @return Vector of files 
  */
-vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
-                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
-                                                                    string                              symbol_type, 
-                                                                    string                              filename,
-                                                                    int                                 nesting,
-                                                                    OutputManager                       logger)
+vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>& names, 
+                                                                    MultiSymbolTable&      ms_table, 
+                                                                    string                 symbol_type, 
+                                                                    string                 filename,
+                                                                    int                    nesting,
+                                                                    OutputManager          logger)
 {
     logger.log("Running generator for " + symbol_type, 2);
     vector<tuple<string, string, vector<string>>> files;
+    /*
     unordered_set<string> added_names;
     auto constructors = construction_map[symbol_type];
     for (auto t : constructors)
@@ -121,6 +122,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
         files.push_back(make_tuple(type, filename + extension, default_content));
     }
     names.insert(added_names.begin(), added_names.end());
+    */
     return files;
 }
 

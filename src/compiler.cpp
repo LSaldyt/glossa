@@ -83,7 +83,6 @@ namespace compiler
      * High level function for loading a code transformer for a language
      * @param language Language for code generator to be loaded for
      * @return Transformer which can transformer AST for the given language
-     */
     Transformer loadTransformer(string language)
     {
         print("Loading transformers for " + language);
@@ -92,6 +91,7 @@ namespace compiler
         print("Done");
         return transformer;
     }
+     */
 
     /**
      * High level function for transpilation
@@ -107,7 +107,8 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
-        auto transformer = loadTransformer(input_lang);
+        Transformer transformer;
+        //auto transformer = loadTransformer(input_lang);
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -158,7 +159,7 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
-        transformer(identified_groups);
+        //transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
@@ -289,7 +290,7 @@ namespace compiler
         return tokens;
     }
 
-    unordered_map<string, tuple<vector<string>, string>> compileGroups(vector<tuple<string, SymbolMatrix>> identified_groups,
+    unordered_map<string, tuple<vector<string>, string>> compileGroups(IdentifiedGroups identified_groups,
                                                                        string filename,
                                                                        Generator &generator,
                                                                        OutputManager logger)
@@ -333,6 +334,7 @@ namespace compiler
 
     void showAST(const IdentifiedGroups& identified_groups, OutputManager logger)
     {
+        /*
         for (const auto& identified_group : identified_groups)
         {
             auto groups = get<1>(identified_group);
@@ -345,5 +347,6 @@ namespace compiler
                 }
             }
         }
+        */
     }
 }
