@@ -207,16 +207,15 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
                                int nesting, 
                                OutputManager logger)
     {
-        string representation = "SPECIAL";
-        /*
+        string representation = "";
         if (not terms.empty())
         {
             auto keyword = terms[0];
             if (keyword == "sep")
             {
                 assert(terms.size() == 3 or terms.size() == 4 or terms.size() == 5);
-                assert(contains(get<1>(storage), terms[2]));
-                auto symbols = get<1>(storage)[terms[2]];
+                assert(contains(ms_table, terms[2]));
+                auto symbols = ms_table[terms[2]];
                 string formatter = "@";
                 if (terms.size() > 3)
                 {
@@ -227,8 +226,8 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
             else if (keyword == "block") // e.g. block body @;
             {
                 assert(terms.size() == 2 or terms.size() == 3);
-                assert(contains(get<1>(storage), terms[1]));
-                auto symbols = get<1>(storage)[terms[1]];
+                assert(contains(ms_table, terms[1]));
+                auto symbols = ms_table[terms[1]];
                 string formatter = "@";
                 if (terms.size() > 2)
                 {
@@ -254,7 +253,6 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
                 throw named_exception("Unknown special line constructor: " + line);
             }
         }
-        */
         return representation;
     };
 }
