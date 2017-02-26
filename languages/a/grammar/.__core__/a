@@ -1,3 +1,0 @@
-statement: `@statement anyOf link main link test`
-test: `identifier test`
-main: `keyword if` `identifier __name__` `logicaloperator ==` `literal string` `punctuator :` `@body many link statement` `keyword end`

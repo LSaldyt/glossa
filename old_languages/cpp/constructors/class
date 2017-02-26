@@ -1,0 +1,17 @@
+name = 0 0
+constructor_args = 1
+constructor_body = 2
+body = 3
+defines
+header
+class $name$ : public Base
+{
+public:
+$name$ (`sep , constructor_args`);
+`block body`
+};
+source
+$name$::$name$ (`sep , constructor_args`)
+{
+`block constructor_body @;`
+}

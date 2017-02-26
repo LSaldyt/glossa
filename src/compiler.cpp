@@ -57,10 +57,9 @@ namespace compiler
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
-	string lex_dir = "languages/" + language + "/lex/";
-        string directory = "languages/" + language + "/grammar/";
-        auto grammar_files = readFile(directory + "core");
-        auto grammar       = Grammar(grammar_files, directory + ".__core__/", lex_dir);
+        string directory = "languages/" + language + "/";
+	string lex_dir = directory + "lex/";
+        auto grammar   = Grammar(directory + "grammar", lex_dir);
         print("Done loading grammar file");
         return grammar;
     }

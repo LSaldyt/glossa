@@ -9,16 +9,12 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 }
 
 /// Standard grammar constructor (From list of files)
-Grammar::Grammar(vector<string> filenames, string directory, string lex_dir) 
+Grammar::Grammar(string grammar_file, string lex_dir) 
 {
     print("Creating grammar");
-    //readInherits(directory + "../../");
-    for (auto filename : filenames)
-    {
-        readGrammarFile(directory + filename);
-        //grammar_map[filename] = read(directory + filename);
-    }
-    //throw std::exception();
+    readGrammarFile(grammar_file);
+
+    //readInherits(grammar_fiile+ "../../");
     readDelimiters(lex_dir);
     readLexRules(lex_dir);
 
@@ -41,11 +37,6 @@ Grammar::Grammar(vector<string> filenames, string directory, string lex_dir)
         lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
     }
     lexmap = LexMap (term_sets, lexer_set, whitespace);
-
-    for (auto kv : grammar_map)
-    {
-        //print(kv.first);
-    }
 }
 
 void Grammar::readLexRules(string lex_dir)
@@ -258,59 +249,6 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 }
 
 /**
- * High level function for reading a grammar file
- * @param filename File to be read in
- * @return list of in order parsers, and a vector of construction indices
- * Construction indices indicate which parsed symbols are of significance
- */
-tuple<vector<SymbolicTokenParser>, vector<int>> Grammar::read(string filename)
-{
-    vector<SymbolicTokenParser> parsers;
-    auto content = readFile(filename);
-    auto construct_line = content.back();
-    content = slice(content, 0, -1);
-    
-    // Convert each line to a parser
-    for (auto line : content)
-    {
-        if (line[0] != '#')
-        {
-            auto terms = lex::seperate(line, {make_tuple(" ", false)});
-            if (not terms.empty())
-            {
-                try
-                {
-                    parsers.push_back(readGrammarTerms(terms));
-                }
-                catch (named_exception& e)
-                {
-                    print("Grammar file threw exception: " + filename);
-                    throw;
-                }
-            }
-        }
-    }
-
-    // The last line of a grammar file describes how to construct the syntax element
-    vector<int> construct_indices;
-    auto construct_terms = lex::seperate(construct_line, {make_tuple(" ", false)});
-    for (auto t : construct_terms)
-    {
-        // Allow end user to specify how to group tokens
-        if (t == "sep")
-        {
-            construct_indices.push_back(-1); // Signal for seperator
-        }
-        else
-        {
-            construct_indices.push_back(stoi(t));
-        }
-    }
-
-    return make_tuple(parsers, construct_indices);
-}
-
-/**
  * Lazily evaluate links between grammar files
  * ex link expression allows grammar files to reference one another.
  * Because of laziness, circular references are allowed (as long as they terminate eventually)
@@ -340,7 +278,6 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         auto result = evaluateGrammar(parsers, tokens_copy, OutputManager(0));
         if (get<0>(result))
         {
-            print("Success");
             auto ms_table    = createMultiSymbolTable(filename, get<1>(result));
             auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, ms_table));
             auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
@@ -348,7 +285,6 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
         }
         else
         {
-            print("Failure");
             return Result<SymbolicToken>(false, {}, tokens);
         }
     };
@@ -370,7 +306,6 @@ Grammar::identify
     assert(contains(grammar_map, "statement"));
     auto statement = grammar_map["statement"]; 
     auto parsers   = get<0>(statement);
-    print("Evaluating grammar..");
     auto result    = evaluateGrammar(parsers, tokens_copy, logger);
 
     if (get<0>(result))

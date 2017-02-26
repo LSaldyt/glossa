@@ -41,7 +41,7 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
 class Grammar
 {
 public:
-    Grammar(vector<string> grammar_files, string directory, string lex_dir);
+    Grammar(string grammarfile, string lex_dir);
 
     IdentifiedGroups identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger);
 
@@ -63,7 +63,6 @@ private:
     tuple<string, vector<Result<SymbolicToken>>> identify (vector<SymbolicToken>& tokens, OutputManager logger);
     MultiSymbolTable createMultiSymbolTable(string name, vector<Result<SymbolicToken>> results);
 
-    tuple<vector<SymbolicTokenParser>, vector<int>> read(string filename);
     tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens, OutputManager logger);
 
     vector<SymbolicTokenParser> readGrammarPairs(vector<string>& terms);

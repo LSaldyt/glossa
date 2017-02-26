@@ -14,7 +14,6 @@ void addNewLine(vector<shared_ptr<Symbol>>& generated);
 template <typename T>
 class Constructor
 {
-    SymbolStorageGenerator symbol_storage_generator;
     Branch<T> main_branch;
     vector<string> definitions;
 
@@ -27,10 +26,8 @@ public:
      * @param set_main_branch The main branch of the constructor
      * @param set_definitions Defined names
      */
-    Constructor(SymbolStorageGenerator set_symbol_storage_generator, 
-                             Branch<T> set_main_branch, 
-                             vector<string> set_definitions) : 
-        symbol_storage_generator(set_symbol_storage_generator), 
+    Constructor(Branch<T> set_main_branch, 
+                vector<string> set_definitions) : 
         main_branch(set_main_branch),
         definitions(set_definitions)
     {
