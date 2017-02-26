@@ -13,38 +13,6 @@ Grammar::Grammar(string grammar_file, string lex_dir)
 {
     print("Creating grammar");
     readGrammarFile(grammar_file);
-
-    //readInherits(grammar_fiile+ "../../");
-    readDelimiters(lex_dir);
-    readLexRules(lex_dir);
-
-    LexMapTermSets term_sets;
-    term_sets.push_back(make_tuple(keywords,         "keyword",         1)); // Keywords are read in automatically from grammar file usage
-    term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
-    term_sets.push_back(make_tuple(operators,        "operator",        1));
-    term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
-
-    vector<LexMapLexer> lexer_set = {
-        LexMapLexer(just("    "s),     "tab",    "tab",        3),
-        LexMapLexer(startswith("\t"s), "tab",    "tab",        3),
-        LexMapLexer(digits,            "int",    "literal",    3),
-        LexMapLexer(doubles,           "double", "literal",    1),
-        LexMapLexer(identifiers,       "*text*", "identifier", 3)};
-
-    lexer_set.push_back(LexMapLexer(startswith(comment_delimiter), "comment", "comment", 3));
-    for (auto delimiter : string_delimiters)
-    {
-        lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
-    }
-    lexmap = LexMap (term_sets, lexer_set, whitespace);
-}
-
-void Grammar::readLexRules(string lex_dir)
-{
-    concat(whitespace,        readWhitespaceFile(lex_dir + "whitespace"));
-    concat(operators        , readFile(lex_dir + "operators"));
-    concat(logicaloperators , readFile(lex_dir + "logicaloperators"));
-    concat(punctuators      , readFile(lex_dir + "punctuators"));
 }
 
 /**
@@ -411,32 +379,6 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     }
 
     return symbols;
-}
-
-/**
- * Function for reading in user-defined string and comment delimiters for a programming language
- */
-void Grammar::readDelimiters(string directory)
-{
-    print("Reading delimiters from " + directory);
-    auto string_delimiters_file  = readFile(directory + "string_delimiters");
-    auto comment_delimiters_file = readFile(directory + "comment_delimiters");
-
-    for (auto string_delimiter : string_delimiters_file)
-    {
-        assert(string_delimiter.size() == 1);
-        string_delimiters.push_back(string_delimiter[0]);
-    }
-
-    if (comment_delimiters_file.size() == 2)
-    {
-        comment_delimiter           = comment_delimiters_file[0];
-        multiline_comment_delimiter = comment_delimiters_file[1];
-    }
-    else
-    {
-        print("Warning: no comment delimiters read from " + directory);
-    }
 }
 
 void Grammar::readInherits(string directory)

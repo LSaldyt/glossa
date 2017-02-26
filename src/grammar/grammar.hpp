@@ -45,16 +45,11 @@ public:
 
     IdentifiedGroups identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger);
 
-    LexMap lexmap;
+    vector<string> keywords;
 
-    vector<char> string_delimiters;
-    string multiline_comment_delimiter;
-    string comment_delimiter;
 private:
 
     void readGrammarFile(string filename);
-
-    vector<Seperator> whitespace; 
 
     GrammarMap grammar_map; 
 
@@ -69,14 +64,8 @@ private:
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
     SymbolicTokenParser  retrieveGrammar(string filename); 
 
-    void readDelimiters(string directory);
     void readInherits(string directory);
-    void readLexRules(string lex_dir);
 
-    vector<string> operators;
-    vector<string> logicaloperators; 
-    vector<string> punctuators; 
-    vector<string> keywords;
 };
 
 }

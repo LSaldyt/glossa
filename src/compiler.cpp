@@ -106,8 +106,10 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
+        auto lexmap      = buildLexMap("languages/" + input_lang + "/lex/", grammar.keywords);
         Transformer transformer;
         //auto transformer = loadTransformer(input_lang);
+        
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -117,7 +119,7 @@ namespace compiler
         {
             try
             {
-                compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
+                compile(file, grammar, generator, lexmap, transformer, symbol_table, input_dir, output_dir, logger);
             }
             catch(...)
             {
@@ -137,7 +139,7 @@ namespace compiler
      * @param output_directory String name of output directory
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
-    void compile(string filename, Grammar& grammar, Generator& generator,
+    void compile(string filename, Grammar& grammar, Generator& generator, LexMap& lexmap,
                  Transformer& transformer,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
@@ -145,11 +147,11 @@ namespace compiler
         logger.log("Reading file " + filename);
         auto content         = readFile     (input_directory + "/" + filename);
         logger.log("Lexing terms");
-        auto tokens          = tokenPass    (content, grammar, symbol_table, logger); 
+        auto tokens          = tokenPass    (content, lexmap, symbol_table, logger); 
         logger.log("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens, logger);
         logger.log("Joining symbolic tokens");
-        auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
+        auto joined_tokens   = join         (symbolic_tokens, lexmap.newline);
         for(auto& jt : joined_tokens)
         {
             logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"", 2);
@@ -189,7 +191,7 @@ namespace compiler
      * @param symbol_table Dictionary of symbol conversions
      * @return Vector of unsymbolized tokens (annotated terms)
      */
-    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table, OutputManager logger)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, LexMap& lexmap, unordered_map<string, string>& symbol_table, OutputManager logger)
     {
         int line_num = 0;
         std::vector<Tokens> tokens;
@@ -199,10 +201,10 @@ namespace compiler
             unseperated_content += line + "\n";
         }
         bool in_multiline_string = false;
-        auto groups = lex::seperate(unseperated_content, {make_tuple(grammar.multiline_comment_delimiter, true)}, {}, "");
+        auto groups = lex::seperate(unseperated_content, {make_tuple(lexmap.multiline_comment_delimiter, true)}, {}, "");
         for (auto group : groups)
         {
-            if (group == grammar.multiline_comment_delimiter)
+            if (group == lexmap.multiline_comment_delimiter)
             {
                 in_multiline_string = !in_multiline_string;
             }
@@ -224,7 +226,7 @@ namespace compiler
                 for (auto it = lines.begin(); it != lines.end(); it++)
                 {
                     line_num++;
-                    auto token_group = lexWith(*it, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter);
+                    auto token_group = lexWith(*it, lexmap, lexmap.string_delimiters, lexmap.comment_delimiter);
                     for (auto& token : token_group)
                     {
                         token.line = line_num;

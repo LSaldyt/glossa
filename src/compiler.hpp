@@ -22,6 +22,7 @@ namespace compiler
 
     void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang, int verbosity=1);
     void compile(string filename, Grammar& grammar, Generator& generator, 
+                 LexMap& lexmap,
                  Transformer& transformer,
                  unordered_map<string, string>& symbol_table, 
                  string input_directory="", string output_directory="", 
@@ -33,7 +34,7 @@ namespace compiler
 
     unordered_map<string, string> readSymbolTable(string filename);
 
-    vector<Tokens>                tokenPass(vector<string>, Grammar&, unordered_map<string, string>&, OutputManager logger);
+    vector<Tokens>                tokenPass(vector<string>, LexMap&, unordered_map<string, string>&, OutputManager logger);
     vector<vector<SymbolicToken>> symbolicPass(vector<Tokens> tokens, OutputManager logger);
     vector<SymbolicToken>         join(vector<vector<SymbolicToken>>, bool newline=false);
 
