@@ -1,0 +1,22 @@
+statement: `@statement anyOf link main link function link assignment link pass`
+
+basevalue: `@val anyOf literal string identifier wildcard literal wildcard keyword None keyword True keyword False`
+
+value: `@val anyOf link basevalue link parenexpr`
+
+lvalue: `@val identifier wildcard`
+
+expression: `@body inOrder link value operator wildcard link value`
+boolexpression: `@body inOrder logicaloperator wildcard link expression`
+
+parenexpr: `punctuator (` `link expression` `punctuator )`
+
+main: `keyword if` `identifier __name__` `logicaloperator ==` `literal string` `punctuator :` `@body many link statement` `keyword end`
+
+function: `keyword def` `@identifier identifier wildcard` `punctuator (` `@args link arglist` `punctuator )` `punctuator :` `@body many link statement` `keyword end` 
+
+arglist: `many link expression`
+
+pass: `keyword pass`
+
+assignment: `@lval link lvalue` `@op operator =` `@rval literal wildcard`

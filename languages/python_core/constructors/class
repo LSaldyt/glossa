@@ -1,0 +1,12 @@
+name        = 0 0
+inheritance = 1    
+body        = 2
+defines
+source
+branch nonempty inheritance
+class $name$($inheritance$):
+`block body`
+elsebranch
+class $name$():
+`block body`
+end

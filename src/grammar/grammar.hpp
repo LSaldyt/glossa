@@ -17,11 +17,7 @@ using namespace match;
 using namespace syntax;
 using namespace tools;
 
-//using SymbolMatrix     = vector<vector<shared_ptr<Symbol>>>;
-//using IdentifiedGroups = vector<tuple<string, SymbolMatrix>>;
-//using MultiSymbolTable = unordered_map<string, vector<shared_ptr<Symbol>>>;
 using IdentifiedGroups = vector<tuple<string, MultiSymbolTable>>;
-//using StatementConstructor = function<shared_ptr<Symbol>(MultiSymbolTable)>;
 using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<tuple<int, string>>>>; 
 
 vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken>);
@@ -41,13 +37,14 @@ shared_ptr<Symbol> createSymbol(T t, string annotation)
 class Grammar
 {
 public:
-    Grammar(string grammarfile, string lex_dir);
+    Grammar(string directory); 
 
     IdentifiedGroups identifyGroups(vector<SymbolicToken>& tokens, OutputManager logger);
 
     vector<string> keywords;
 
 private:
+    void read(string filename);
 
     void readGrammarFile(string filename);
 
@@ -65,7 +62,6 @@ private:
     SymbolicTokenParser  retrieveGrammar(string filename); 
 
     void readInherits(string directory);
-
 };
 
 }

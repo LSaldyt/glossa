@@ -45,3 +45,4 @@ functioncall
 return
 assert
 dictionary
+lvalue

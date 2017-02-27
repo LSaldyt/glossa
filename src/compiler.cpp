@@ -59,7 +59,7 @@ namespace compiler
         print("Loading grammar for " + language);
         string directory = "languages/" + language + "/";
 	string lex_dir = directory + "lex/";
-        auto grammar   = Grammar(directory + "grammar", lex_dir);
+        auto grammar   = Grammar(directory);
         print("Done loading grammar file");
         return grammar;
     }

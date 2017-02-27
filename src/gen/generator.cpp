@@ -14,7 +14,7 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        print("Reading constructor file: " + filename);
+        //print("Reading constructor file: " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
 }

@@ -36,7 +36,7 @@ def build(directory, languageargs, verbosity):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3', 'python3_inherit', 'auta', 'a']:
+            if languageargs[0] in ['python', 'python2', 'python3', 'python_core', 'auta', 'a']:
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))

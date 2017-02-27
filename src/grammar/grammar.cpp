@@ -9,10 +9,15 @@ shared_ptr<Symbol> annotateSymbol(shared_ptr<Symbol> s, string annotation)
 }
 
 /// Standard grammar constructor (From list of files)
-Grammar::Grammar(string grammar_file, string lex_dir) 
+Grammar::Grammar(string directory) 
 {
-    print("Creating grammar");
-    readGrammarFile(grammar_file);
+    readInherits(directory + "inherits");
+
+    auto content = readFile(directory + "grammar");
+    for (auto line : content)
+    {
+        read(line);
+    }
 }
 
 /**
@@ -227,7 +232,6 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
 {
     return [filename, this](vector<SymbolicToken> tokens)
     {
-        print("Running parser for " + filename);
         std::vector<SymbolicTokenParser> parsers;
 
         // Retrieve a list of parsers from the grammar map
@@ -321,48 +325,39 @@ Grammar::evaluateGrammar
     return make_tuple(true, results);
 };
 
-//using GrammarMap = unordered_map<string, tuple<vector<SymbolicTokenParser>, vector<int>>>; 
-//funcdef: `keyword def` `$name$ identifier wildcard` `$args$ link parameters` `punctuator :` `$body$ many link statement` 
-void Grammar::readGrammarFile(string filename)
+void Grammar::read(string line)
 {
-    print("Reading grammar definitions from " + filename);
-    auto content = readFile(filename);
-    for (auto line : content)
+    vector<SymbolicTokenParser> parsers;
+    vector<tuple<int, string>> index_tags;
+    auto terms = lex::seperate(line, {make_tuple("`", false)});
+    if (terms.empty()) return;
+    auto tag = terms[0];
+    replaceAll(tag, " ", "");
+    replaceAll(tag, ":", "");
+    terms = slice(terms, 1);
+    int i = 0;
+    for (auto t : terms)
     {
-        print("Line: " + line);
-        vector<SymbolicTokenParser> parsers;
-        vector<tuple<int, string>> index_tags;
-        auto terms = lex::seperate(line, {make_tuple("`", false)});
-        assert(terms.size() > 1);
-        auto tag = terms[0];
-        replaceAll(tag, " ", "");
-        replaceAll(tag, ":", "");
-        terms = slice(terms, 1);
-        int i = 0;
-        for (auto t : terms)
+        if (not rtrim(t).empty())
         {
-            if (not rtrim(t).empty())
+            auto interms = lex::seperate(t, {make_tuple(" ", false)});
+            assert(interms.size() > 0);
+            auto beginterm = interms[0];
+            if (beginterm[0] == '@')
             {
-                auto interms = lex::seperate(t, {make_tuple(" ", false)});
-                assert(interms.size() > 0);
-                auto beginterm = interms[0];
-                if (beginterm[0] == '@')
-                {
-                    replaceAll(beginterm, "@", "");
-                    interms = slice(interms, 1);
-                    parsers.push_back(readGrammarTerms(interms));
-                    index_tags.push_back(make_tuple(i, beginterm));
-                }
-                else
-                {
-                    parsers.push_back(readGrammarTerms(interms));
-                }
-                i++;
+                replaceAll(beginterm, "@", "");
+                interms = slice(interms, 1);
+                parsers.push_back(readGrammarTerms(interms));
+                index_tags.push_back(make_tuple(i, beginterm));
             }
+            else
+            {
+                parsers.push_back(readGrammarTerms(interms));
+            }
+            i++;
         }
-        grammar_map[tag] = make_tuple(parsers, index_tags);
-        print("Added " + tag + " to grammar map");
     }
+    grammar_map[tag] = make_tuple(parsers, index_tags);
 }
 
 /**
@@ -381,31 +376,17 @@ vector<shared_ptr<Symbol>> fromTokens(vector<SymbolicToken> tokens)
     return symbols;
 }
 
-void Grammar::readInherits(string directory)
+void Grammar::readInherits(string inherit_file)
 {
-    print("Reading language inherits from " + directory);
-    /*
-    auto content = readFile(directory + "inherits");
-    for (auto line : content)
+    print("Reading language inherits from " + inherit_file);
+    auto content = readFile(inherit_file);
+    for (auto lang : content)
     {
-        //print(line);
-	auto lex_dir = "languages/" + line + "/lex/";
-        whitespace   = readWhitespaceFile(lex_dir + "whitespace"); //Override
-        readDelimiters(lex_dir);
-        readLexRules(lex_dir);
-
-        auto inherit_dir = "languages/" + line + "/grammar/.__core__/";
-        //print(inherit_dir);
-        auto grammar_files = readFile(inherit_dir + "../core");
-        for (auto filename : grammar_files)
+        for (auto line : readFile("languages/" + lang + "/grammar"))
         {
-            //print(inherit_dir + filename);
-            //grammar_map[filename] = read(inherit_dir + filename);
+            read(line);
         }
-        // readInherits(inherit_dir); // Uncomment for heirarchical inheritance
     }
-    */
-    print("Done reading inheritances for " + directory);
 }
 
 }
