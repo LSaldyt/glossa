@@ -62,6 +62,8 @@ private:
     SymbolicTokenParser  retrieveGrammar(string filename); 
 
     void readInherits(string directory);
+
+    vector<string> seperateGrammarLine(string line);
 };
 
 }

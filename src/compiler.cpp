@@ -154,7 +154,7 @@ namespace compiler
         auto joined_tokens   = join         (symbolic_tokens, lexmap.newline);
         for(auto& jt : joined_tokens)
         {
-            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"", 2);
+            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);

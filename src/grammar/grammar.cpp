@@ -76,6 +76,35 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
     return identified_groups;
 }
 
+vector<string> Grammar::seperateGrammarLine(string line)
+{
+    vector<string> grammar_terms;
+
+    auto terms = lex::seperate(line, {make_tuple("`", true)});
+    bool in_escaped = false;
+    for (auto t : terms)
+    {
+        if (t == "`")
+        {
+            in_escaped = !in_escaped;
+        }
+        else if (in_escaped)
+        {
+            grammar_terms.push_back(t);
+        }
+        else
+        {
+            auto interms = lex::seperate(t, {make_tuple(" ", false)});
+            for (auto in_t : interms)
+            {
+                grammar_terms.push_back(in_t);
+            }
+        }
+    }
+
+    return std::move(grammar_terms);
+}
+
 
 /**
  * Discards unwanted tokens marked by the user
@@ -327,35 +356,31 @@ Grammar::evaluateGrammar
 
 void Grammar::read(string line)
 {
-    vector<SymbolicTokenParser> parsers;
-    vector<tuple<int, string>> index_tags;
-    auto terms = lex::seperate(line, {make_tuple("`", false)});
+    auto terms = seperateGrammarLine(line);
     if (terms.empty()) return;
     auto tag = terms[0];
-    replaceAll(tag, " ", "");
     replaceAll(tag, ":", "");
     terms = slice(terms, 1);
+    vector<SymbolicTokenParser> parsers;
+    vector<tuple<int, string>> index_tags;
     int i = 0;
     for (auto t : terms)
     {
-        if (not rtrim(t).empty())
+        auto interms = lex::seperate(t, {make_tuple(" ", false)});
+        assert(not interms.empty());
+        auto beginterm = interms[0];
+        if (beginterm[0] == '@')
         {
-            auto interms = lex::seperate(t, {make_tuple(" ", false)});
-            assert(interms.size() > 0);
-            auto beginterm = interms[0];
-            if (beginterm[0] == '@')
-            {
-                replaceAll(beginterm, "@", "");
-                interms = slice(interms, 1);
-                parsers.push_back(readGrammarTerms(interms));
-                index_tags.push_back(make_tuple(i, beginterm));
-            }
-            else
-            {
-                parsers.push_back(readGrammarTerms(interms));
-            }
-            i++;
+            replaceAll(beginterm, "@", "");
+            interms = slice(interms, 1);
+            parsers.push_back(readGrammarTerms(interms));
+            index_tags.push_back(make_tuple(i, beginterm));
         }
+        else
+        {
+            parsers.push_back(readGrammarTerms(interms));
+        }
+        i++;
     }
     grammar_map[tag] = make_tuple(parsers, index_tags);
 }
