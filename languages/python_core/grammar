@@ -1,6 +1,6 @@
-statement: `@statement anyOf link main link function link assignment link pass`
+statement: `@statement main | function | assignment | pass`
 
-basevalue: `@val literal string | identifier ** | literal ** | keyword None | keyword True | keyword False`
+basevalue: `@val identifier ** | literal ** | 'None' | 'True' | 'False'`
 
 value `@val basevalue | parenexpr`
 
@@ -9,11 +9,11 @@ lvalue: `@val identifier **`
 expression: `@body link value operator ** link value`
 boolexpression: `@body logicaloperator ** link expression`
 
-parenexpr: '(' `link expression` ')'
+parenexpr: '(' `@expr expression` ')'
 
-main: 'if' '__name__' '==' `literal string` ':' `@body *link statement` 'end'
+main: 'if' '__name__' '==' `literal string` ':' `@body *statement` 'end'
 
-function: 'def' `@identifier identifier **` '(' `@args arglist` ')' ':' `@body *link statement` 'end' 
+function: 'def' `@identifier identifier **` '(' `@args arglist` ')' ':' `@body *statement` 'end' 
 
 arglist: `*link expression`
 

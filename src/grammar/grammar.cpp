@@ -206,45 +206,30 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 {
     SymbolicTokenParser parser;
 
-    if (terms.size() == 2)
+    assert(not terms.empty());
+
+    if (terms.size() == 1) 
     {
-        auto first = terms[0];
-        bool keep  = true;
-        // If first of pair starts with !, discard its parse result
-        if (first[0] == '!')
+        assert(terms.size() == 1);
+        if (terms[0][0] == '\'')
         {
-            first = string(first.begin() + 1, first.end());
-            keep = false;
+            replaceAll(terms[0], "'", "");
+            parser = subTypeParser (terms[0]);
         }
-        // Allow linking to other grammar files
-        if (first == "link")
-        {
-            parser = retrieveGrammar(terms[1]);
-        }
-        // Parse by type only
-        else if (terms[1] == "**" or terms[1] == "wildcard")
-        {
-            parser = typeParser(first);
-        }
-        // Parse by a specific subtype (ex "keyword return")
         else
         {
-            if (first == "keyword")
-            {
-                keywords.push_back(terms[1]);
-            }
-            parser = dualTypeParser(first, terms[1]);
-        }
-
-        // Take care of a "!" if it was found early - make the parser discard its result
-        if (not keep)
-        {
-            parser = discard(parser);
+            parser = retrieveGrammar(terms[0]);
         }
     }
-    else if (terms.size() > 2)
+    else 
     {
-        const auto keyword = terms[0];
+        auto keyword = terms[0];
+        bool keep  = true;
+        if (keyword[0] == '!')
+        {
+            keyword = sliceString(keyword, 1);
+            keep = false;
+        }
         auto sub_terms = vector<string>(terms.begin() + 1, terms.end());
 
         if (contains(terms, "|"s))
@@ -276,24 +261,35 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         {
             parser = inOrder<SymbolicToken>(readGrammarPairs(sub_terms));
         }
+        else if (terms.size() == 2)
+        {
+            // Allow linking to other grammar files
+            if (keyword== "link")
+            {
+                parser = retrieveGrammar(terms[1]);
+            }
+            // Parse by type only
+            else if (terms[1] == "**" or terms[1] == "wildcard")
+            {
+                parser = typeParser(keyword);
+            }
+            // Parse by a specific subtype (ex "keyword return")
+            else
+            {
+                if (keyword == "keyword")
+                {
+                    keywords.push_back(terms[1]);
+                }
+                parser = dualTypeParser(keyword, terms[1]);
+            }
+        }
         else
         {
-            // Implicitly use ordered parser
             parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
-            //throw named_exception("Expected keyword, got: " + keyword);
         }
-    }
-    else
-    {
-        assert(terms.size() == 1);
-        if (terms[0][0] == '\'')
+        if (not keep)
         {
-            replaceAll(terms[0], "'", "");
-            parser = subTypeParser (terms[0]);
-        }
-        else
-        {
-            parser = retrieveGrammar(terms[0]);
+            parser = discard(parser);
         }
     }
 
