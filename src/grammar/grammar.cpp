@@ -149,7 +149,7 @@ vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
 
     if (terms.size() % 2 != 0)
     {
-        throw named_exception("Could not read type pairs"); // Need an even number of terms
+        throw named_exception("Odd value of type pairs in grammar file"); // Need an even number of terms
     }
     for (int i = 0; i < (terms.size() / 2); i++)
     {
@@ -210,36 +210,38 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
     else if (terms.size() > 2)
     {
         const auto keyword = terms[0];
-        terms = vector<string>(terms.begin() + 1, terms.end());
+        auto sub_terms = vector<string>(terms.begin() + 1, terms.end());
 
         // Repeatedly parse a parser!
-        if (keyword == "many")
+        if (keyword == "*" or keyword == "many")
         {
-            parser = manySeperated(readGrammarTerms(terms)); 
+            parser = manySeperated(readGrammarTerms(sub_terms)); 
         }
         // Require at least one success
         else if (keyword == "many1")
         {
-            parser = manySeperated(readGrammarTerms(terms), true); 
+            parser = manySeperated(readGrammarTerms(sub_terms), true); 
         }
         // Optionally parse a parser
         else if (keyword == "optional")
         {
-            parser = optional<SymbolicToken>(readGrammarTerms(terms));
-        }
-        // Run several parsers in order, failing if any of them fail
-        else if (keyword == "inOrder")
-        {
-            parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
+            parser = optional<SymbolicToken>(readGrammarTerms(sub_terms));
         }
         // Choose from several parsers
         else if (keyword == "anyOf")
         {
-            parser = anyOf<SymbolicToken>(readGrammarPairs(terms));
+            parser = anyOf<SymbolicToken>(readGrammarPairs(sub_terms));
+        }
+        // Run several parsers in order, failing if any of them fail
+        else if (keyword == "inOrder")
+        {
+            parser = inOrder<SymbolicToken>(readGrammarPairs(sub_terms));
         }
         else
         {
-            throw named_exception("Expected keyword, got: " + keyword);
+            // Implicitly use ordered parser
+            parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
+            //throw named_exception("Expected keyword, got: " + keyword);
         }
     }
     else
@@ -375,7 +377,7 @@ void Grammar::read(string line)
     int i = 0;
     for (auto t : terms)
     {
-        auto interms = lex::seperate(t, {make_tuple(" ", false)});
+        auto interms = lex::seperate(t, {make_tuple(" ", false), make_tuple("**", true), make_tuple("*", true)});
         assert(not interms.empty());
         auto beginterm = interms[0];
         if (beginterm[0] == '@')

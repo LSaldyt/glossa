@@ -6,16 +6,16 @@ value: `@val anyOf link basevalue link parenexpr`
 
 lvalue: `@val identifier **`
 
-expression: `@body inOrder link value operator ** link value`
-boolexpression: `@body inOrder logicaloperator ** link expression`
+expression: `@body link value operator ** link value`
+boolexpression: `@body logicaloperator ** link expression`
 
 parenexpr: '(' `link expression` ')'
 
 main: 'if' '__name__' '==' `literal string` ':' `@body many link statement` 'end'
 
-function: 'def' `@identifier identifier **` '(' `@args arglist` ')' ':' `@body many link statement` 'end' 
+function: 'def' `@identifier identifier **` '(' `@args arglist` ')' ':' `@body *link statement` 'end' 
 
-arglist: `many link expression`
+arglist: `*link expression`
 
 pass: 'pass'
 
