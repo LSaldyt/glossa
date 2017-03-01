@@ -147,10 +147,16 @@ vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
 {
     vector<SymbolicTokenParser> parsers;
 
-    if (terms.size() % 2 != 0)
+    if (terms.size() == 1)
+    {
+        parsers.push_back(readGrammarTerms(terms));
+        return parsers;
+    }
+    else if (terms.size() % 2 != 0)
     {
         throw named_exception("Odd value of type pairs in grammar file"); // Need an even number of terms
     }
+    else
     for (int i = 0; i < (terms.size() / 2); i++)
     {
         int x = i * 2;
@@ -158,6 +164,35 @@ vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
         parsers.push_back(readGrammarTerms(pair));
     }
 
+    return parsers;
+}
+
+/**
+ * Parses parsers seperated by | tokens
+ * @param terms Whitespace seperated terms from a line in a grammar file
+ * @return A parser that matches against the line described in the grammar file
+ */
+vector<SymbolicTokenParser> Grammar::readAnyOf(vector<string>& terms)
+{
+    vector<vector<string>> term_groups;
+    term_groups.push_back(vector<string>());
+    for (auto t : terms)
+    {
+        if (t == "|")
+        {
+            term_groups.push_back(vector<string>());
+        }
+        else
+        {
+            term_groups.back().push_back(t);
+        }
+    }
+
+    vector<SymbolicTokenParser> parsers;
+    for (auto t_group : term_groups)
+    {
+        parsers.push_back(readGrammarTerms(t_group));
+    }
     return parsers;
 }
 
@@ -212,8 +247,12 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         const auto keyword = terms[0];
         auto sub_terms = vector<string>(terms.begin() + 1, terms.end());
 
+        if (contains(terms, "|"s))
+        {
+            parser = anyOf<SymbolicToken>(readAnyOf(terms));
+        }
         // Repeatedly parse a parser!
-        if (keyword == "*" or keyword == "many")
+        else if (keyword == "*" or keyword == "many")
         {
             parser = manySeperated(readGrammarTerms(sub_terms)); 
         }

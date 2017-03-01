@@ -57,6 +57,7 @@ private:
 
     tuple<bool, vector<Result<SymbolicToken>>> evaluateGrammar(vector<SymbolicTokenParser> parsers, vector<SymbolicToken>& tokens, OutputManager logger);
 
+    vector<SymbolicTokenParser> readAnyOf(vector<string>& terms);
     vector<SymbolicTokenParser> readGrammarPairs(vector<string>& terms);
     SymbolicTokenParser  readGrammarTerms(vector<string>& terms);
     SymbolicTokenParser  retrieveGrammar(string filename); 
