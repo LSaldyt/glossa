@@ -187,7 +187,7 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
             parser = retrieveGrammar(terms[1]);
         }
         // Parse by type only
-        else if (terms[1] == "wildcard")
+        else if (terms[1] == "**" or terms[1] == "wildcard")
         {
             parser = typeParser(first);
         }
@@ -244,7 +244,16 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
     }
     else
     {
-        throw named_exception("Grammar file incorrectly formatted");
+        assert(terms.size() == 1);
+        if (terms[0][0] == '\'')
+        {
+            replaceAll(terms[0], "'", "");
+            parser = subTypeParser (terms[0]);
+        }
+        else
+        {
+            parser = retrieveGrammar(terms[0]);
+        }
     }
 
     return parser;
