@@ -1,4 +1,4 @@
-statement: `@statement main | function | assignment | pass`
+statement: `@statement import_from | main | function | assignment | pass | import_from | comment` 
 
 basevalue: `@val identifier ** | literal ** | 'None' | 'True' | 'False'`
 
@@ -6,17 +6,19 @@ value `@val basevalue | parenexpr`
 
 lvalue: `@val identifier **`
 
-expression: `@body link value operator ** link value`
+expression: `@body sepWithKeep operator ** link value`
 boolexpression: `@body logicaloperator ** link expression`
 
 parenexpr: '(' `@expr expression` ')'
 
 main: 'if' '__name__' '==' `literal string` ':' `@body *statement` 'end'
 
-function: 'def' `@identifier identifier **` '(' `@args arglist` ')' ':' `@body *statement` 'end' 
-
-arglist: `*link expression`
+function: 'def' `@identifier identifier **` '(' `@args sep , expression` ')' ':' `@body *statement` 'end' 
 
 pass: 'pass'
 
 assignment: `@lval lvalue` `@op '='` `@rval literal **`
+
+import_from: 'from' `@source identifier **` 'import' `@import identifier **`
+
+comment: `@comment comment **`

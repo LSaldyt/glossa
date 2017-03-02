@@ -1,3 +1,8 @@
+from time import time
+
+def sort(array):
+    pass
+
 def f():
     pass
 

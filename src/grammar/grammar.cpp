@@ -154,7 +154,12 @@ vector<SymbolicTokenParser> Grammar::readGrammarPairs(vector<string>& terms)
     }
     else if (terms.size() % 2 != 0)
     {
-        throw named_exception("Odd value of type pairs in grammar file"); // Need an even number of terms
+        string line = "";
+        for (auto t : terms)
+        {
+            line += t + " ";
+        }
+        throw named_exception("Odd value of type pairs in grammar file: " + line); // Need an even number of terms
     }
     else
     for (int i = 0; i < (terms.size() / 2); i++)
@@ -230,11 +235,11 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
             keyword = sliceString(keyword, 1);
             keep = false;
         }
-        auto sub_terms = vector<string>(terms.begin() + 1, terms.end());
+        auto sub_terms = slice(terms, 1);
 
         if (contains(terms, "|"s))
         {
-            parser = anyOf<SymbolicToken>(readAnyOf(terms));
+            parser = anyOf(readAnyOf(terms));
         }
         // Repeatedly parse a parser!
         else if (keyword == "*" or keyword == "many")
@@ -249,17 +254,44 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         // Optionally parse a parser
         else if (keyword == "optional")
         {
-            parser = optional<SymbolicToken>(readGrammarTerms(sub_terms));
+            parser = optional(readGrammarTerms(sub_terms));
         }
         // Choose from several parsers
         else if (keyword == "anyOf")
         {
-            parser = anyOf<SymbolicToken>(readGrammarPairs(sub_terms));
+            parser = anyOf(readGrammarPairs(sub_terms));
         }
         // Run several parsers in order, failing if any of them fail
         else if (keyword == "inOrder")
         {
-            parser = inOrder<SymbolicToken>(readGrammarPairs(sub_terms));
+            parser = inOrder(readGrammarPairs(sub_terms));
+        }
+        else if (keyword == "sep" or keyword == "sepKeep" or keyword == "sepWith" or keyword == "sepWithKeep")
+        {
+            SymbolicTokenParser seperator;
+            vector<string> sub_parser_terms;
+            if (keyword == "sepWith" or keyword == "sepWithKeep")
+            {
+                assert(sub_terms.size() > 2);
+                seperator = dualTypeParser(sub_terms[0], sub_terms[1]);
+                sub_parser_terms = slice(sub_terms, 2);
+            }
+            else
+            {
+                assert(sub_terms.size() > 1);
+                seperator = subTypeParser(sub_terms[0]); 
+                sub_parser_terms = slice(sub_terms, 1);
+            }
+            if (keyword != "sepkeep" and keyword != "sepWithKeep") seperator = discard(seperator);
+            auto sub_parser = readGrammarTerms(sub_parser_terms); 
+            parser = inOrder(vector<SymbolicTokenParser>{
+                    optional(sub_parser),
+                    manySeperated(
+                            inOrder(vector<SymbolicTokenParser>{
+                                    seperator, 
+                                    sub_parser})
+                            )
+                    });
         }
         else if (terms.size() == 2)
         {
