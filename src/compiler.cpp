@@ -335,19 +335,17 @@ namespace compiler
 
     void showAST(const IdentifiedGroups& identified_groups, OutputManager logger)
     {
-        /*
         for (const auto& identified_group : identified_groups)
         {
-            auto groups = get<1>(identified_group);
-            for (auto group : groups)
+            auto ms_table = get<1>(identified_group);
+            for (auto kv : ms_table)
             {
-                for (auto symbol : group)
+                for (auto symbol : kv.second)
                 {
                     auto abstract = symbol->abstract();
                     logger.log(abstract);
                 }
             }
         }
-        */
     }
 }

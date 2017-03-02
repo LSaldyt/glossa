@@ -33,16 +33,14 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
 string MultiSymbol::abstract(int indent)
 {
     string representation = repeatString("    ", indent) + "MultiSymbol (" + tag + ")\n";
-    /*
-    for (auto group : groups)
+    for (auto kv : table)
     {
-        for (auto symbol : group)
+        for (auto symbol : kv.second)
         {
             representation += symbol->abstract(indent + 1) + "\n";
         }
         representation += ",";
     }
-    */
     return representation;
 }
 
