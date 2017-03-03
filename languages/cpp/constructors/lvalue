@@ -1,4 +1,5 @@
 defines
+val
 header
 $val$
 source

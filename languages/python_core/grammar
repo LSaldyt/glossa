@@ -1,12 +1,16 @@
-statement: `@statement import_from | main | function | functioncall | if | assignment | pass | import_from | comment` 
+statement: `@statement import_from | main | function | functioncall | memberaccess | forloop | if | assignment | pass | return | import_from | comment` 
 
 basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 
-value `@val vector | functioncall | basevalue | parenexpr`
-
-lvalue: `@val identifier **`
+value: `@val vector | functioncall | elementaccess | memberaccess | basevalue | parenexpr`
 
 string: `@val literal string`
+
+lvalue: `@val functioncall | identifier **`
+
+elementaccess: `@val lvalue` '[' `@access expression` ']'
+
+memberaccess: `@access lvalue` '.' `@member functioncall | identifier **` 
 
 functioncall: `@identifier identifier **` '(' `@args optional sep ',' expression` ')'
 
@@ -23,7 +27,9 @@ function: 'def' `@identifier identifier **` '(' `@args optional sep ',' identifi
 
 pass: 'pass'
 
-assignment: `@lval lvalue` `@op '='` `@rval boolexpression | expression`
+return: 'return' `@expression expression`
+
+assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
 
 import_from: 'from' `@source identifier **` 'import' `@import identifier **`
 
@@ -36,3 +42,5 @@ branch: `@elifs *elif` `@else optional else`
 elif: 'elif' `@condition boolexpression` ':' `@body *statement` 'end'
 
 else: 'else' ':' `@body *statement` 'end'
+
+forloop: 'for' `@loopvar identifier **` 'in' `@loopexpr link expression` ':' `@loopbody *statement` 'end'
