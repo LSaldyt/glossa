@@ -1,10 +1,17 @@
 from time import time
 
 def sort(array):
-    pass
-
-def f():
-    pass
+    """
+    Sorts an array of comparable values
+    """
+    less    = []
+    equal   = []
+    greater = []
+    if len(array) <= 1:
+        pass
+    else:
+        pass
 
 if __name__ == '__main__':
-    a = 2
+    pass
+

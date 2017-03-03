@@ -123,7 +123,8 @@ namespace compiler
             }
             catch(...)
             {
-                logger.log("Failed on file: " + file);
+                logger.log("In file: " + file);
+                logger.log("In directory: " + input_dir);
                 throw;
             }
         }
@@ -154,7 +155,7 @@ namespace compiler
         auto joined_tokens   = join         (symbolic_tokens, lexmap.newline);
         for(auto& jt : joined_tokens)
         {
-            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"");
+            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\" " + std::to_string(jt.line));
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);

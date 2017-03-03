@@ -135,7 +135,7 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         shutil.rmtree('input')
 
 def main():
-    #structure()
+    structure()
     # Build the compiler and test it
     os.chdir('build')
     run(['cmake', '..'])

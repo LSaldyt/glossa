@@ -65,6 +65,6 @@ def structure():
     languages = dirnames('languages/')
     for language in languages:
         if language not in excluded:
-            structure_grammar(language)
+            #structure_grammar(language)
             build_core_file(language, 'constructors', excluded=['core', 'file'])
             build_core_file(language, 'transformers')

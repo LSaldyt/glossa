@@ -1,24 +1,38 @@
-statement: `@statement import_from | main | function | assignment | pass | import_from | comment` 
+statement: `@statement import_from | main | function | functioncall | if | assignment | pass | import_from | comment` 
 
-basevalue: `@val identifier ** | literal ** | 'None' | 'True' | 'False'`
+basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 
-value `@val basevalue | parenexpr`
+value `@val vector | functioncall | basevalue | parenexpr`
 
 lvalue: `@val identifier **`
 
-expression: `@body sepWithKeep operator ** link value`
-boolexpression: `@body logicaloperator ** link expression`
+string: `@val literal string`
+
+functioncall: `@identifier identifier **` '(' `@args optional sep ',' expression` ')'
+
+vector: '[' `@values optional sep ',' expression` ']'
+
+expression: `@body sepWithKeep operator ** value`
+boolexpression: `@body sepWithKeep logicaloperator ** expression` 
 
 parenexpr: '(' `@expr expression` ')'
 
 main: 'if' '__name__' '==' `literal string` ':' `@body *statement` 'end'
 
-function: 'def' `@identifier identifier **` '(' `@args sep , expression` ')' ':' `@body *statement` 'end' 
+function: 'def' `@identifier identifier **` '(' `@args optional sep ',' identifier **` ')' ':' `@body *statement` 'end' 
 
 pass: 'pass'
 
-assignment: `@lval lvalue` `@op '='` `@rval literal **`
+assignment: `@lval lvalue` `@op '='` `@rval boolexpression | expression`
 
 import_from: 'from' `@source identifier **` 'import' `@import identifier **`
 
 comment: `@comment comment **`
+
+if: 'if' `@condition boolexpression` ':' `@body *statement` 'end' `@branches optional branch`
+
+branch: `@elifs *elif` `@else optional else`
+
+elif: 'elif' `@condition boolexpression` ':' `@body *statement` 'end'
+
+else: 'else' ':' `@body *statement` 'end'

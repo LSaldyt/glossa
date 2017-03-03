@@ -49,26 +49,36 @@ IdentifiedGroups Grammar::identifyGroups(vector<SymbolicToken>& tokens, OutputMa
         logger.log("Successfully identified:");
         for (auto identified_group : identified_groups)
         {
-            logger.log("Group identified as " + get<0>(identified_group));
-            /*
-            auto groups = get<1>(identified_group);
-            for (auto group : groups)
+            auto ms_table = get<1>(identified_group);
+            for (auto kv : ms_table)
             {
-                for (auto symbol : group)
+                for (auto symbol : kv.second)
                 {
                     logger.log(symbol->abstract());
                 }
             }
-            */
         }
-        logger.log("Failed on line: " + std::to_string(tokens[0].line));
-        /*
+        int line = tokens[0].line;
+        logger.log("Failed on line: " + std::to_string(line));
         logger.log("Remaining:");
+        string first = "";
+        string second = "";
         for (auto token : tokens)
         {
-            logger.log("Token (type: " + token.type + "), (subtype: " + token.sub_type + "), (text:" + token.text + ")");
+            if (token.line == line)
+            {
+                first += token.text + " ";
+            }
+            else if (token.line == line + 1)
+            {
+                second += token.text + " ";
+            }
+            else
+            {
+                break;
+            }
         }
-        */
+        print(first + "(" + std::to_string(line) + ")", second + "(" + std::to_string(line + 1) + ")");
         throw; // Very important
     }
     logger.log("Group identification finished. " + std::to_string(identified_groups.size()) + " groups created");
@@ -213,28 +223,27 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
 
     assert(not terms.empty());
 
+    auto keyword = terms[0];
+    bool keep  = true;
+    if (keyword[0] == '!')
+    {
+        keyword = sliceString(keyword, 1);
+        keep = false;
+    }
     if (terms.size() == 1) 
     {
-        assert(terms.size() == 1);
-        if (terms[0][0] == '\'')
+        if (keyword[0] == '\'')
         {
-            replaceAll(terms[0], "'", "");
-            parser = subTypeParser (terms[0]);
+            replaceAll(keyword, "'", "");
+            parser = subTypeParser (keyword);
         }
         else
         {
-            parser = retrieveGrammar(terms[0]);
+            parser = retrieveGrammar(keyword);
         }
     }
     else 
     {
-        auto keyword = terms[0];
-        bool keep  = true;
-        if (keyword[0] == '!')
-        {
-            keyword = sliceString(keyword, 1);
-            keep = false;
-        }
         auto sub_terms = slice(terms, 1);
 
         if (contains(terms, "|"s))
@@ -268,24 +277,25 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         }
         else if (keyword == "sep" or keyword == "sepKeep" or keyword == "sepWith" or keyword == "sepWithKeep")
         {
-            SymbolicTokenParser seperator;
             vector<string> sub_parser_terms;
+            vector<string> seperator_terms;
             if (keyword == "sepWith" or keyword == "sepWithKeep")
             {
                 assert(sub_terms.size() > 2);
-                seperator = dualTypeParser(sub_terms[0], sub_terms[1]);
+                seperator_terms = slice(sub_terms, 0, 2 - sub_terms.size());
                 sub_parser_terms = slice(sub_terms, 2);
             }
             else
             {
                 assert(sub_terms.size() > 1);
-                seperator = subTypeParser(sub_terms[0]); 
+                seperator_terms.push_back(sub_terms[0]);
                 sub_parser_terms = slice(sub_terms, 1);
             }
-            if (keyword != "sepkeep" and keyword != "sepWithKeep") seperator = discard(seperator);
+            auto seperator  = readGrammarTerms(seperator_terms);
+            if (keyword == "sep" or keyword == "sepWith") seperator = discard(seperator);
             auto sub_parser = readGrammarTerms(sub_parser_terms); 
             parser = inOrder(vector<SymbolicTokenParser>{
-                    optional(sub_parser),
+                    sub_parser,
                     manySeperated(
                             inOrder(vector<SymbolicTokenParser>{
                                     seperator, 
@@ -296,7 +306,7 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         else if (terms.size() == 2)
         {
             // Allow linking to other grammar files
-            if (keyword== "link")
+            if (keyword == "link")
             {
                 parser = retrieveGrammar(terms[1]);
             }
@@ -319,10 +329,10 @@ SymbolicTokenParser Grammar::readGrammarTerms(vector<string>& terms)
         {
             parser = inOrder<SymbolicToken>(readGrammarPairs(terms));
         }
-        if (not keep)
-        {
-            parser = discard(parser);
-        }
+    }
+    if (not keep)
+    {
+        parser = discard(parser);
     }
 
     return parser;
@@ -438,6 +448,7 @@ void Grammar::read(string line)
     if (terms.empty()) return;
     auto tag = terms[0];
     replaceAll(tag, ":", "");
+    print("Read grammar construct: " + tag);
     terms = slice(terms, 1);
     vector<SymbolicTokenParser> parsers;
     vector<tuple<int, string>> index_tags;
