@@ -153,8 +153,8 @@ def main():
     # Determine which demo to use
     if len(sys.argv) > 1:
         if sys.argv[1] == '--show': # Display which demos are available if --show flag given
-            for demo in demos:
-                print(demo)
+            for demo, info in demos.items():
+                print('%-20s: %s -> %s' % (demo, info[1], info[2]))
             sys.exit(0)
         if sys.argv[1] == '--test': # Test each demo
             for demo in demos:
