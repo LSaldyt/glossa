@@ -351,31 +351,30 @@ SymbolicTokenParser Grammar::retrieveGrammar(string filename)
     {
         std::vector<SymbolicTokenParser> parsers;
 
-        // Retrieve a list of parsers from the grammar map
-        auto search = grammar_map.find(filename);
-        if (search != grammar_map.end())
+        string tag = filename;
+
+        if (not contains(grammar_map, tag))
         {
-            parsers = std::get<0>(search->second);
-        }
-        else
-        {
-            throw named_exception(filename + " is not an element of the grammar map");
+            throw named_exception(tag+ " is not an element of the grammar map");
         }
 
-        // Evaluate the parsers, preserving the tokens on failure
-        vector<SymbolicToken> tokens_copy(tokens);
-        auto result = evaluateGrammar(parsers, tokens_copy, OutputManager(0));
-        if (get<0>(result))
+        while(true)
         {
-            auto ms_table    = createMultiSymbolTable(filename, get<1>(result));
-            auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, ms_table));
-            auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
-            return Result<SymbolicToken>(true, consumed, tokens_copy); 
+            if (not contains(grammar_map, tag)) break;
+
+            parsers = get<0>(grammar_map[tag]);
+            vector<SymbolicToken> tokens_copy(tokens);
+            auto result = evaluateGrammar(parsers, tokens_copy, OutputManager(0));
+            if (get<0>(result))
+            {
+                auto ms_table    = createMultiSymbolTable(filename, get<1>(result));
+                auto constructed = make_shared<MultiSymbol>(MultiSymbol(filename, ms_table));
+                auto consumed    = vector<SymbolicToken>(1, SymbolicToken(constructed, filename, filename, ""));
+                return Result<SymbolicToken>(true, consumed, tokens_copy); 
+            }
+            tag += "_inherit";
         }
-        else
-        {
-            return Result<SymbolicToken>(false, {}, tokens);
-        }
+        return Result<SymbolicToken>(false, {}, tokens);
     };
 }
 
@@ -393,18 +392,24 @@ Grammar::identify
     vector<SymbolicToken> tokens_copy(tokens);
 
     assert(contains(grammar_map, "statement"));
-    auto statement = grammar_map["statement"]; 
-    auto parsers   = get<0>(statement);
-    auto result    = evaluateGrammar(parsers, tokens_copy, logger);
 
-    if (get<0>(result))
+    string statement_tag = "statement";
+    while (true)
     {
-        tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
-        return make_tuple("statement", get<1>(result));
-    }
-    else
-    {
-        tokens_copy = tokens;
+        if (not contains(grammar_map, statement_tag)) break;
+        auto statement = grammar_map[statement_tag]; 
+        auto parsers   = get<0>(statement);
+        auto result    = evaluateGrammar(parsers, tokens_copy, logger);
+        if (get<0>(result))
+        {
+            tokens = tokens_copy; // Apply our changes once we know the tokens were positively identified
+            return make_tuple("statement", get<1>(result));
+        }
+        else
+        {
+            tokens_copy = tokens;
+        }
+        statement_tag += "_inherit";
     }
 
     throw named_exception("Could not identify tokens");
@@ -471,7 +476,18 @@ void Grammar::read(string line)
         }
         i++;
     }
-    grammar_map[tag] = make_tuple(parsers, index_tags);
+
+    auto current = make_tuple(parsers, index_tags);
+    decltype(current) temp; 
+    auto nested_tag = tag;
+    while (contains(grammar_map, nested_tag))
+    {
+        temp = grammar_map[nested_tag];
+        grammar_map[nested_tag] = current;
+        nested_tag += "_inherit";
+        current = temp;
+    }
+    grammar_map[nested_tag] = current;
 }
 
 /**
@@ -496,11 +512,13 @@ void Grammar::readInherits(string inherit_file)
     auto content = readFile(inherit_file);
     for (auto lang : content)
     {
+        readInherits("languages/" + lang + "/inherits");
         for (auto line : readFile("languages/" + lang + "/grammar"))
         {
             read(line);
         }
     }
+    print("Done reading language inherits");
 }
 
 }

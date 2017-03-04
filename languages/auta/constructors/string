@@ -1,0 +1,4 @@
+val = 0 0
+defines
+source
+"$val$"

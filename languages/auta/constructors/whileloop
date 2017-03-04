@@ -1,0 +1,6 @@
+boolexpr = 0 0
+loopbody = 1
+defines
+source
+while $boolexpr$: 
+`block loopbody`
