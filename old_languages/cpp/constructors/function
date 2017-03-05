@@ -1,0 +1,13 @@
+identifier = 0 0
+args = 1
+body = 2
+defines
+header
+branch nonempty args
+template <`sep , args typenameSPACET_@`>NEWLINE
+end
+auto $identifier$ (`sep , args T_@&&SPACE@`)
+{
+`block body @;`
+}
+source

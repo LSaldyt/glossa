@@ -1,0 +1,13 @@
+boolexpr = 0 0
+loopbody = 1
+defines
+header
+while ($boolexpr$)
+{
+`block loopbody @;`
+}
+source
+while ($boolexpr$)
+{
+`block loopbody @;`
+}

@@ -1,0 +1,15 @@
+neg = 0
+val = 1 0 
+defines
+header
+branch nonempty neg
+-$val$
+elsebranch
+$val$
+end
+source
+branch nonempty neg
+-$val$
+elsebranch
+$val$
+end

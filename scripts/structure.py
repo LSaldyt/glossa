@@ -36,7 +36,8 @@ def structure_grammar(language):
             elif t == 'value':
                 anyof = build_anyof(type_dir) + '\n0'
             with open(directory + t + '.auto', 'w') as anyoffile:
-                anyoffile.write(anyof)
+                pass
+                #anyoffile.write(anyof)
             #shutil.copy(directory + t + '.auto', directory + t)
             #shutil.copy(directory + t + '.bak', directory + t)
             #if t == 'statement':
@@ -64,6 +65,6 @@ def structure():
     languages = dirnames('languages/')
     for language in languages:
         if language not in excluded:
-            structure_grammar(language)
+            #structure_grammar(language)
             build_core_file(language, 'constructors', excluded=['core', 'file'])
             build_core_file(language, 'transformers')

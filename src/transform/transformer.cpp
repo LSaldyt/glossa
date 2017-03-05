@@ -1,5 +1,6 @@
 #include "../syntax/symbols/export.hpp"
 #include "transformer.hpp"
+/*
 
 namespace transform 
 {
@@ -193,3 +194,4 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
 }
 
 }
+*/

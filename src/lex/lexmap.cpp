@@ -14,8 +14,17 @@ namespace lex
      * Construct a LexMap from term sets, language lexers, and whitespace seperators
      * Term sets are sets of language lexers corresponding to a particular type of term, i.e. operators
      */
-    LexMap::LexMap(const LexMapTermSets& set_term_sets, const vector<LexMapLexer>&  set_language_lexers, vector<Seperator> whitespace)
-        : language_term_sets(set_term_sets)
+    LexMap::LexMap(const LexMapTermSets& set_term_sets, 
+               const vector<LexMapLexer>&  set_language_lexers, 
+               vector<Seperator> whitespace,
+               vector<char>      set_string_delimiters,
+               string            set_ml_comment_delimiter,
+               string            set_comment_delimiter
+            )
+        : language_term_sets(set_term_sets),
+        string_delimiters(set_string_delimiters),
+        multiline_comment_delimiter(set_ml_comment_delimiter),
+        comment_delimiter(set_comment_delimiter)
     {
         print("Creating lexmap for language");
         // Always seperate by whitespace

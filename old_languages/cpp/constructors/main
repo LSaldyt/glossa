@@ -1,0 +1,8 @@
+body = 0
+defines
+header
+source
+int main(int argc, char ** argv)
+{
+`block body @;`
+}

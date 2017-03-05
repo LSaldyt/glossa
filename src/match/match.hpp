@@ -120,9 +120,6 @@ namespace match
 
     /** 
      * Attempt to parse any matcher from a list of matchers, failing only if all of the matchers fail, and passing if any of them pass
-     * Useful for when multiple types are valid, i.e.:
-     *   # value.grm
-     *   anyOf link functioncall literal wildcard
      */
     template <typename T>
     Matcher<T>

@@ -1,0 +1,6 @@
+body = 0
+defines
+header
+`sep NEWLINE body @;`
+source
+`sep NEWLINE body @;`

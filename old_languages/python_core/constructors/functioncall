@@ -1,0 +1,5 @@
+identifier = 0 0
+args = 1
+defines
+source
+$identifier$(`sep , args`)

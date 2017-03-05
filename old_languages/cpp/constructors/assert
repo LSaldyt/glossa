@@ -1,0 +1,6 @@
+condition = 0 0
+defines
+header
+assert($condition$);
+source
+assert($condition$);

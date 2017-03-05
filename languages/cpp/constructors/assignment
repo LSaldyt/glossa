@@ -1,17 +1,16 @@
-identifier = 0 0
-operator = 1 0
-value = 2 0
 defines
-identifier
+lval
+
 header
-branch defined identifier
-$identifier$ $operator$ $value$
+branch defined lval 
+$lval$ $op$ $rval$
 elsebranch
-auto $identifier$ $operator$ $value$
+auto $lval$ $op$ $rval$
 end
+
 source
-branch defined identifier
-$identifier$ $operator$ $value$
+branch defined lval 
+$lval$ $op$ $rval$
 elsebranch
-auto $identifier$ $operator$ $value$
+auto $lval$ $op$ $rval$
 end

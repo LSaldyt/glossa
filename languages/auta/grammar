@@ -1,0 +1,5 @@
+statement: `@statement every | pass`
+
+every: 'every' `@count optional literal int` `@unit identifier **` ':' `@body *statement` 'end'
+
+pass: 'pass'
