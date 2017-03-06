@@ -1,3 +1,5 @@
 append -> push_back
 main   -> __py_main__
 list   -> std::vector<Object>
+True   -> true
+False  -> false

@@ -10,7 +10,6 @@ import_from
 exception
 assignment
 memberfunction
-basevalue
 list
 parenexpr
 if
@@ -39,7 +38,6 @@ supercall
 main
 tuple
 let
-value
 range
 test
 comment
