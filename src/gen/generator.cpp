@@ -14,7 +14,6 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        //print("Reading constructor file: " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
 }
@@ -67,7 +66,7 @@ void Generator::readStructureFile(string filename)
 vector<tuple<string, Constructor<string>>> Generator::readConstructor(string filename)
 {
     auto content    = readFile(filename);
-    auto ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
+    ElementConstructorCreator<string> ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
     return generateConstructor<string>(content, file_constructors, ec_creator);
 }
 
@@ -91,7 +90,25 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     logger.log("Running generator for " + symbol_type, 2);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
-    auto constructors = construction_map[symbol_type];
+    vector<tuple<string, Constructor<string>>> constructors;
+    if (not contains(construction_map, symbol_type))
+    {
+        ElementConstructorCreator<string> ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
+        vector<string> default_body = {"branch contains val", "$val$", "end"};
+        for (auto fc : file_constructors)
+        {
+            auto filetype = get<0>(fc);
+            constructors.push_back(make_tuple(filetype, 
+                        Constructor<string>(
+                            generateBranch<string>(default_body, ec_creator),
+                            {}
+                            )));
+        }
+    }
+    else
+    {
+        constructors = construction_map[symbol_type];
+    }
     for (auto t : constructors)
     {
         auto type        = get<0>(t);

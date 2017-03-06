@@ -55,9 +55,18 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
         return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
             auto id = terms[1];
-            print(id);
+            //print(id);
             assert(contains(ms_table, id));
             return not ms_table[id].empty();
+        };
+    }
+    else if (keyword == "contains")
+    {
+        assert(terms.size() == 2);
+        return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
+        {
+            auto id = terms[1];
+            return contains(ms_table, id);
         };
     }
     else if (keyword == "both")

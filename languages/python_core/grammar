@@ -1,4 +1,4 @@
-statement: `@statement import_from | main | function | functioncall | memberaccess | forloop | if | assignment | pass | return | import_from | comment` 
+statement: `@val import_from | main | function | functioncall | memberaccess | forloop | if | assignment | pass | break | continue | return | import_from | comment` 
 
 basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 
@@ -28,6 +28,10 @@ function: 'def' `@identifier identifier **` '(' `@args optional sep ',' identifi
 pass: 'pass'
 
 return: 'return' `@expression expression`
+
+break: 'break'
+
+continue: 'continue'
 
 assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
 

@@ -30,6 +30,7 @@ def main():
     b = time()
     print(l[0])
     print(b - a)
+    pass
 
 if __name__ == "__main__":
     main()
