@@ -16,6 +16,12 @@ Generator::Generator(vector<string> filenames, string directory)
     {
         construction_map[filename] = readConstructor(directory + filename);
     }
+    ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
+    vector<string> default_body = {"branch contains val", "$val$", "end"};
+    default_constructor = Constructor<string>(
+                                generateBranch<string>(default_body, ec_creator),
+                                {}
+                                );
 }
 
 /**
@@ -93,16 +99,12 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     vector<tuple<string, Constructor<string>>> constructors;
     if (not contains(construction_map, symbol_type))
     {
-        ElementConstructorCreator<string> ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
-        vector<string> default_body = {"branch contains val", "$val$", "end"};
         for (auto fc : file_constructors)
         {
             auto filetype = get<0>(fc);
             constructors.push_back(make_tuple(filetype, 
-                        Constructor<string>(
-                            generateBranch<string>(default_body, ec_creator),
-                            {}
-                            )));
+                        default_constructor
+                            ));
         }
     }
     else

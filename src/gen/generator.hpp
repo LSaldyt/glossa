@@ -36,6 +36,9 @@ private:
 
     ElementConstructor<string> generateElementConstructor(string line);
     ElementConstructor<string> generateSpecialElementConstructor(string line);
+
+    ElementConstructorCreator<string> ec_creator;
+    Constructor<string> default_constructor;
 };
 
 }
