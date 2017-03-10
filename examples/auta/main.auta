@@ -1,10 +1,2 @@
-
 every second:
     print("One second has passed")
-
-every 2 seconds:
-    print("An even number of seconds have passed")
-
-every day:
-    send_gmail('lucassaldyt@gmail.com', 'lucassaldyt@gmail.com', 'This is a test message', 'This is not actually my password')
-    print('Sent daily gmail')

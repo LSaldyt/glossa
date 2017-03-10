@@ -39,14 +39,11 @@ class WordList():
 
     def getNextWord(self, howToGet):
         if howToGet == 'd':
-            self.currentWord = self.wordlist[self.currentWord]\
-            .getNextWordDeterministic()
+            self.currentWord = self.wordlist[self.currentWord].getNextWordDeterministic()
         elif howToGet == 'w':
-            self.currentWord = self.wordlist[self.currentWord]\
-            .getNextWordWeighted()
+            self.currentWord = self.wordlist[self.currentWord].getNextWordWeighted()
         elif howToGet == 'u':
-            self.currentWord = self.wordlist[self.currentWord]\
-            .getNextWordUniform()
+            self.currentWord = self.wordlist[self.currentWord].getNextWordUniform()
         else:
             print 'ERROR in obj_wordlist.py.'; exit()
         return self.currentWord

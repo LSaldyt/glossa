@@ -1,16 +1,10 @@
 #pragma once
 
-// Avoid a circular include
-namespace syntax
-{
-class Symbol;
-}
-
 #include "../tools/tools.hpp"
 #include "../lex/seperate.hpp"
 #include "../lex/lexmap.hpp"
 #include "../parse/tokenparsers.hpp"
-
+#include "../syntax/types.hpp"
 
 namespace gen 
 {
@@ -21,24 +15,19 @@ using namespace lex;
 using namespace match;
 using namespace tools;
 
-using SymbolTable      = unordered_map<string, shared_ptr<Symbol>>;
-using MultiSymbolTable = unordered_map<string, vector<shared_ptr<Symbol>>>;
-using SymbolStorage    = tuple<SymbolTable, MultiSymbolTable>;
-using SymbolStorageGenerator = function<SymbolStorage(vector<vector<shared_ptr<Symbol>>>&)>;
-
-using ConditionEvaluator = function<bool(unordered_set<string>&, SymbolStorage&, const vector<string>&)>;
+using ConditionEvaluator = function<bool(unordered_set<string>&, MultiSymbolTable&)>;
 template <typename T>
-using ElementConstructor    = function<T(unordered_set<string>&, SymbolStorage&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
+using ElementConstructor    = function<T(unordered_set<string>&, MultiSymbolTable&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
 template <typename T>
 using ElementConstructorCreator = function<ElementConstructor<T>(string)>;
 
-const auto defaultBranch = [](unordered_set<string>&, SymbolStorage&, const vector<string>& generated){return true;};
+const auto defaultBranch = [](unordered_set<string>&, MultiSymbolTable&){return true;};
 const auto inverseBranch = [](ConditionEvaluator c)
 {
-    return [c](unordered_set<string>& names, SymbolStorage& symbol_storage, const vector<string>& generated)
+    return [c](unordered_set<string>& names, MultiSymbolTable& ms_table)
     {
-        auto condition = c(names, symbol_storage, generated);
+        auto condition = c(names, ms_table);
         return not condition;
     };
 };

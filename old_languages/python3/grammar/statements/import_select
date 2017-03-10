@@ -1,0 +1,6 @@
+keyword from
+identifier wildcard
+keyword import
+identifier wildcard
+many inOrder !punctuator , identifier wildcard
+1 sep 3 4

@@ -1,0 +1,15 @@
+tryblock    = 0
+exception   = 1 0
+identifier  = 2
+exceptblock = 3
+defines
+source
+try:NEWLINE
+`block tryblock`
+NEWLINE
+branch nonempty identifier
+except $exception$ as `sep EMPTY identifier`: NEWLINE
+elsebranch
+except $exception$: NEWLINE
+end
+`block exceptblock`

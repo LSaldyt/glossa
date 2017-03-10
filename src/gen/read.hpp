@@ -4,19 +4,16 @@
 
 namespace gen
 {
-    SymbolStorageGenerator generateSymbolStorageGenerator(vector<string> content);
     ConditionEvaluator     generateConditionEvaluator(vector<string> terms);
 
     /**
      * Create a branch from lines in a constructor file
      * @param content Lines of constructor file
-     * @param symbol_storage_generator Function for creating symbol storage
      * @param ec_creator function defining how to build an element constructor
      * @return Branch<string> which will follow user-defined logic to build a syntax element
      */
     template <typename T>
     Branch<T> generateBranch(vector<string> content, 
-                             SymbolStorageGenerator symbol_storage_generator,
                              ElementConstructorCreator<T> ec_creator)
     {
         vector<ElementConstructor<T>> line_constructors;
@@ -32,7 +29,7 @@ namespace gen
         const auto addNestedBranch = [&](auto start, auto end, auto conditionline, bool inverse)
         {
             vector<string> body(start, end);
-            auto nested_branch                = generateBranch(body, symbol_storage_generator, ec_creator);
+            auto nested_branch                = generateBranch(body, ec_creator);
             auto original_condition_terms     = lex::seperate(*conditionline, {make_tuple(" ", false)});
             if (inverse)
             {
@@ -106,17 +103,15 @@ namespace gen
         return Branch<T>(defaultBranch, line_constructors, nested_branches);
     }
 
+
     template <typename T>
     vector<tuple<string, Constructor<T>>> generateConstructor(vector<string> content, 
-            vector<tuple<string, FileConstructor>> file_constructors,
-            ElementConstructorCreator<T> ec_creator)
+                vector<tuple<string, FileConstructor>> file_constructors,
+                ElementConstructorCreator<T> ec_creator)
     {
         // Seperate constructor into header and source constructors
         assert(contains(content, "defines"s));
         auto defines_i = std::find(content.begin(), content.end(), "defines");
-        auto declarations = vector<string>(content.begin(), defines_i);
-
-        auto symbol_storage_generator = generateSymbolStorageGenerator(declarations);
         vector<string> definitions;
 
         string type = "definitions";
@@ -130,7 +125,6 @@ namespace gen
         for (auto file_constructor : file_constructors)
         {
             tag = get<0>(file_constructor);
-            //print(tag);
             assert(contains(content, tag));
             it = std::find(content.begin(), content.end(), tag);
 
@@ -143,22 +137,16 @@ namespace gen
             else
             {
                 auto body = vector<string>(last_it + 1, it);
-                //print("Created body");
-                auto constructor = Constructor<T>(symbol_storage_generator, 
-                                                  generateBranch(body, 
-                                                      symbol_storage_generator, 
+                auto constructor = Constructor<T>(generateBranch(body,
                                                       ec_creator),
                                                       definitions);
                 constructors.push_back(make_tuple(type, constructor));
                 last_it = it;
             }
             type = tag;
-            //print("Done");
         }
         auto body = vector<string>(last_it + 1, content.end());
-        auto constructor = Constructor<T>(symbol_storage_generator, 
-                                          generateBranch(body, 
-                                              symbol_storage_generator, 
+        auto constructor = Constructor<T>(generateBranch(body,  
                                               ec_creator), 
                                           definitions);
         constructors.push_back(make_tuple(type, constructor));

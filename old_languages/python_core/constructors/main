@@ -1,0 +1,5 @@
+body = 0
+defines
+source
+if __name__ == "__main__":
+`block body`

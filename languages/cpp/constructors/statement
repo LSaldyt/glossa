@@ -1,15 +1,5 @@
-statement = 0 0
-comment   = 1
 defines
 header
-branch nonempty comment
-$statement$ `sep EMPTY comment`
-elsebranch
 $statement$
-end
 source
-branch nonempty comment
-$statement$ `sep EMPTY comment`
-elsebranch
 $statement$
-end

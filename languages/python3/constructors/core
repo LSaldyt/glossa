@@ -23,7 +23,6 @@ multistatement
 every
 import_select
 lambda
-print
 trycatch
 elsebranch
 is

@@ -17,7 +17,7 @@ namespace lex
             if (seperator_string.size() <= s.size())
             {
                 bool exited_early = false;
-                for (unsigned i = 0; i < seperator_string.size(); i++)
+                for (auto i = 0; i < seperator_string.size(); i++)
                 {
                     if (seperator_string[i] != s[i])
                     {
@@ -53,7 +53,7 @@ namespace lex
      * @param inline_comment String delimiting inline comments, which also undergo special rules
      * @return seperated tokens
      */
-    vector<string> seperate(const string& sentence, const vector<Seperator> &seperators, vector<char> strings, string inline_comment)
+    vector<string> seperate(const string& sentence, const vector<Seperator> &seperators, vector<char> strings, string inline_comment, bool keep_empty)
     {
         auto terms   = vector<string>();
         auto current = sentence.begin();
@@ -95,13 +95,19 @@ namespace lex
                     }
                 }
             }
+            // Anti seperation for floating-point constants
+            if (it != sentence.begin() and it != sentence.end() and *it == '.' and isdigit(*(it - 1)))
+            {
+                continue;
+            }
+
             // Normal seperation
             string remaining(it, sentence.end());
             auto found = find_seperator(remaining, seperators);
             if(get<0>(found)) // Beginning of the remaining sentence is a seperator
             {
                 // If there is a term we have seperated, add it to terms
-                if (current != it)
+                if (keep_empty or current != it)
                 {
                     terms.push_back(string(current, it));
                 }
@@ -124,7 +130,6 @@ namespace lex
                 terms.push_back(remaining);
             }
         }
-
         return terms;
     }
 
@@ -160,6 +165,7 @@ namespace lex
                 print("Unrecognized whitespace keyword: " + keyword);
             }
         }
+        print("Done reading whitespace file " + filename);
         return whitespace;
     }
 }

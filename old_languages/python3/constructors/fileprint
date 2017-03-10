@@ -1,0 +1,10 @@
+file = 0 0
+val  = 1 0
+end  = 2
+defines
+source
+branch empty end
+print($val$, file=$file$)
+elsebranch
+print($val$, file=$file$, end='')
+end

@@ -1,0 +1,4 @@
+condition = 0 0
+defines
+source
+assert $condition$

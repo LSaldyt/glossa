@@ -36,7 +36,7 @@ def build(directory, languageargs, verbosity):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3', 'auta']:
+            if languageargs[0] in ['python', 'python2', 'python3', 'python_core', 'auta', 'a']:
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
@@ -51,8 +51,8 @@ def time_run(language, directory, iterations, filename):
     os.chdir(directory + '_copy')
     try:
         for line in content[:-1]:
-            subprocess.check_output(line, shell=True) # Yes, this is unescaped.
-        t = benchmark(subprocess.check_output, iterations, content[-1], shell=True)
+            subprocess.call(line, shell=True) # Yes, this is unescaped.
+        t = benchmark(subprocess.call, iterations, content[-1], shell=True)
     finally:
         os.chdir(olddir)
         shutil.rmtree(directory + '_copy')
@@ -69,36 +69,26 @@ def run_language(directory, inputlang, outputlang):
         time_run(outputlang, 'output', 1, 'main')
 
 def compare(directory, inputlang, outputlang, iterations=1):
+    print('Input code:')
+    input_time = time_run(inputlang, directory, iterations, 'main')
+    print('%s seconds total' % input_time)
+
     # Compile output c++ code (hardcoded for now, since output language is always c++)
+    print('Output code:')
     if outputlang == 'cpp':
         os.chdir('output')
         subprocess.run('g++ -std=c++17 *.cpp -O2 ../std/cpp/*.cpp', shell=True)
-        output_time = benchmark(subprocess.check_output, iterations, './a.out', shell=True)
+        output_time = benchmark(subprocess.call, iterations, './a.out', shell=True)
         os.chdir('..')
     else:
         output_time = time_run(outputlang, 'output', iterations, 'main')
-    print('Output code time:')
-    print(output_time)
-
-    # Timing of inputlang isn't hardcoded:
-    input_time = time_run(inputlang, directory, iterations, 'main')
-    print('Input code time:')
-    print(input_time)
-    print('Transpile speedup:')
-    transpile_speedup = input_time / output_time
-    print(transpile_speedup)
+    print('%s seconds total' % output_time)
 
     if inputlang in ['python2', 'python3']:
         cythonversion = 'cython3' if inputlang == 'python3' else 'cython'
+        print('Cython code:')
         cython_time = time_run(cythonversion, directory, iterations, 'main')
-        print('Cython time:')
-        print(cython_time)
-        print('Cython speedup:')
-        cython_speedup = cython_time / output_time
-        print(cython_speedup)
-        
-        print('Transpile : Cython comparison (1> indicates transpile is faster than cython)')
-        print(transpile_speedup / cython_speedup)
+        print('%s seconds total' % cython_time)
 
 def load_demos():
     # Build list of demonstrations
@@ -137,7 +127,7 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         shutil.copytree('output/', outputdir)
 
         if runcomp:
-            compare(directory, languageargs[0], languageargs[1], iterations=100)
+            compare(directory, languageargs[0], languageargs[1], iterations=1)
         elif runlang:
             run_language(directory, languageargs[0], languageargs[1])
     finally:
@@ -155,15 +145,21 @@ def main():
 
     demos = load_demos()
 
+    if len(sys.argv) > 2:
+        verbosity = sys.argv[2]
+    else:
+        verbosity = 1
+
     # Determine which demo to use
     if len(sys.argv) > 1:
         if sys.argv[1] == '--show': # Display which demos are available if --show flag given
-            pprint(demos)
+            for demo, info in demos.items():
+                print('%-20s: %s -> %s' % (demo, info[1], info[2]))
             sys.exit(0)
         if sys.argv[1] == '--test': # Test each demo
             for demo in demos:
                 try:
-                    transpile(demo, demos) # Test that each demo works
+                    transpile(demo, demos, verbosity, runlang=False) # Test that each demo works
                 except Exception as e:
                     print('Transpile test for demo %s failed' % demo)
                     raise e
@@ -174,12 +170,8 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    if len(sys.argv) > 2:
-        verbosity = sys.argv[2]
-    else:
-        verbosity = 1
 
-    transpile(demoname, demos, verbosity, True)
+    transpile(demoname, demos, verbosity, runlang=True)
     #transpile(demoname, demos, verbosity, runlang=False)
 
 

@@ -1,0 +1,8 @@
+condition = 0 0
+ifbody = 1
+else = 2
+defines
+source
+if ($condition$): 
+`block ifbody`
+`sep EMPTY else`

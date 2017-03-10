@@ -1,0 +1,11 @@
+defines
+header
+else if ($condition$)
+{
+`block body @;`
+}
+source
+else if ($condition$)
+{
+`block body @;`
+}

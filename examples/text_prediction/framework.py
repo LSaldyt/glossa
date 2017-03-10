@@ -15,22 +15,14 @@ seed = rd.randint(0,1000000)
 
 def usage():
     """Print out information regarding how to use this particular program."""
-    print 'Execute with:\n python program.py [arguments]\n\
-For example:\n\
- python main.py -config config.txt -i 1 -file readin.txt\n\
-Note that command line arguments take precedence over arguments contained in a configurations file. For example, if -iters 20 is in the config file and -iters 100 is a command line argument, then -iters 100 will be used.\n\
-Valid command line arguments include\n\
--config file_name\t\twhere file_name is the path to a file containing command line arguments, one per line.\n\
--i 1\t\tTurns on interactive mode.\n\
--iters #\t\twhere # is a positive integer. Specifies the number of iterations to run the program for.\n\
--seed #\t\twhere # is a positive integer. Sets the random seed to use for this run.\n\
-'
+    print("Usage removed, sorry!")
 
 def loadIntoDictionary(argv, dictionary):
     """Parse the argv array to a dictionary of strings->strings or 
     strings->string arrays. We assume all flags begin with a hyphen and all
     arguments to flags do not. So if we see -abc 1 2 3 then in the 
-    dictionary we will get: dict['abc'] = ['1','2','3']"""
+    dictionary we will get: dict['abc'] = ['1','2','3']
+    """
     limit = len(argv)
     i = 0
     while i < limit:
@@ -45,9 +37,6 @@ def loadIntoDictionary(argv, dictionary):
             elif len(temp) > 1:
                 dictionary[argv[i]] = temp
             else:
-                print 'ERROR: Every input beginning with '+\
-                '"-" should take at least one argument. "'+\
-                argv[i]+'". Has no such argument.\n'
                 usage()
                 sys.exit()
             i = j-1
@@ -82,9 +71,6 @@ def parseInput(argv):
         try: #Try to open the file.
             f = open(argv[temp], 'r')
         except IOError as e:
-            print 'ERROR: Argument following --config should be a '\
-            +'file. Could not open "'+str(argv[temp])+\
-            '" file does not exist.\n'
             usage()
             sys.exit()
         contents = f.read()
@@ -124,16 +110,6 @@ def checkForInput(quit, interactive, moveAhead):
         elif inStr == 'u':
             wordlist.getSentenceUniform()
         else:
-            print 'l or limit\t - \tYou will then be prompted to enter a number to \n\
-\t\t\tChange the sentence length limit.\n\
-d\t - \tGet a deterministic sentence.\n\
-w\t - \tGet a weighted random sentence.\n\
-u\t - \tGet a uniform random sentence.\n\
-\nfinish or f\t - \tFinish this run. \n\
-\t\t\tTurn off interactive mode.\n\
-num or #\t - \tYou will then be prompted to enter a number of \n\
-\t\t\titerations to advance the computation\n\
-quit or q\t - \tStop the simulation right now.\n\
-help or h\t - \tDisplay this text.'
+            print ''
     return quit, interactive, moveAhead
 

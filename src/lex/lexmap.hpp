@@ -4,7 +4,7 @@
 
 namespace lex
 {
-    using LexMapTermSet  = tuple<vector<string>, string>;
+    using LexMapTermSet  = tuple<vector<string>, string, int>;
     using LexMapTermSets = vector<LexMapTermSet>;
 
     /** 
@@ -30,15 +30,22 @@ namespace lex
      */
     struct LexMap
     {
-        vector<Seperator>    seperators;
+        vector<char>      string_delimiters;
+        string            multiline_comment_delimiter;
+        string            comment_delimiter;
+        vector<Seperator> seperators;
         bool          newline;
 
         LexMapTermSets language_term_sets;
         vector<LexMapLexer>   language_lexers;
 
         LexMap(const LexMapTermSets& set_term_sets,
-                 const vector<LexMapLexer>&   set_language_lexers,
-                 vector<Seperator> whitespace);
+               const vector<LexMapLexer>&   set_language_lexers,
+               vector<Seperator> whitespace,
+               vector<char>      string_delimiters,
+               string            multiline_comment_delimiter,
+               string            comment_delimiter
+                 );
         LexMap();
 
         tuple<Token, vector<string>> identify(vector<string> terms) const;
