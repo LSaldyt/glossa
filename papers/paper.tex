@@ -62,29 +62,47 @@ tabsize=3
 % ==================================================
 \section{Abstract}
 % ==================================================
-
+Glossa is an investigation into the feasibility of a multi-language source-to-source compiler with dynamic grammars. 
 Assuming that two languages are \textit{isomorphic}, one language can be converted to another if given an adequate description of each language's grammar.
-At an abstract level, this conversion is entirely practical. However, in practice,  
-Progtran is an investigation into the feasibility of a \textbf{Fully Generalized Compiler}, a multi-language source-to-source compiler. 
-Given source code in one language, a description of its grammar \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}?
+At an abstract level, this conversion is entirely practical. Given source code in one language, a description of its grammar \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}?
+Once this is achieved, the grammar description for \textbf{A} can be modified, and the program will still output code in the \textbf{B} language that satisfies the above constraint.
 
 % ==================================================
 \section{Introduction}
 % ==================================================
 
-A \textbf{Full Generalized Compiler} is a tool for programming language researchers, providing a \textit{dynamic framework} for easily modifying syntax of input and output languages. 
-A new programming language can even be fully implemented without recompiling the software. 
-Progtran also uses this concept (user defined dynamic grammars) to re-implement existing source-to-source compilation tools, such as \textbf{Cython} or \textbf{2to3}.
+A multi-language source to source compiler is potentially a tool for programming language researchers, providing a \textit{dynamic framework} for easily modifying syntax of input and output languages. 
+Glossa also uses this concept to re-implement existing source-to-source compilation tools, such as \textbf{Cython} or \textbf{2to3}.
 
 % ==================================================
 \section{Methods}
 % ==================================================
 
-\subsection{Traditional Compilation}
-Brief description of how compilers work
+\subsection{Compilation}
+Traditionally, a compiler takes a single high-level programming language, and converts it into machine instructions.
+\begin{enumerate}
+\item Code is lexed (seperated into tokens and tagged as keywords, punctuators, literals, etc...)
+\item Tokens are parsed to build an abstract syntax tree (symbolic code representation)
+\item The AST is optimized (i.e. unreachable code is removed, some loops are unrolled)
+\item Machine instructions are generated.
+\end{enumerate}
+While some compilers and interpreters have dynamic ways to modify the syntax of a language, this functionality seems to be unneeded for most compilers.
+
+Glossa differs only slightly from the steps above. Lexing and parsing work as above, but the rules for lexing and parsing respectively are read in at run-time. 
+In the current state of the software, optimizations don't occur, but could easily be modeled as transformations to the abstract syntax tree.
+Instead of generating machine instructions, Glossa generates code in another programming language. 
+Instructions for doing this are also read in at run-time.
+Because of its dynamic nature, it is very simple to have Glossa support multiple programming languages both for input and output.
 
 \subsection{Abstracting Language Definitions}
-Description of grammar, transformation, and constructor files
+
+As outlined above, Glossa reads in parse/generate descriptions for programming languages at run-time.
+Additionally, Glossa reads in rules for transforming the abstract syntax tree.
+
+To parse an input language, Glossa needs a description of the languages grammar, which is provided through a \textit{grammar file}.
+Optional descriptions of AST transformations are provided through \textit{transformer files}.
+
+To generate an output language from an AST, Glossa needs a set of \textit{constructor files}.
 
 \subsection{Grammars}
 Influence of formal grammars
@@ -98,11 +116,6 @@ Reasoning for and description of AST-transformations
 \subsection{Constructors}
 
 Description of Constructor implementation
-
-\subsection{Compilation in Glossa}
-Given all of the above details, how does compilation in Glossa compare to the traditional compilation process?
-
-(Grammar/Transform/Construction rules are read at run-time)
 
 \newpage
 
@@ -164,20 +177,6 @@ Cython comparison
 GHC comparison
 
 \subsection{Quicksort Cython Comparison}
-
-This is not meant to be a robust benchmark. Instead, it aims to show that Cython and Transpilation yield similar results.
-
-Output for 1000 sorting iterations:
-\begin{center}
-    \begin{verbatim}
-        Transpile speedup:
-        13.335545461765733
-        Cython speedup:
-        13.9866371311344
-        Transpile : Cython comparison 
-        0.9534
-    \end{verbatim}
-\end{center}
 
 \newpage
 \subsection{Original Python Code}
@@ -275,6 +274,5 @@ For example, this snippet declares an empty array
 % ==================================================
 \section{Conclusion}
 % ==================================================
-
 
 \end{document}
