@@ -84,7 +84,7 @@ Traditionally, a compiler takes a single high-level programming language, and co
 \item Code is lexed (seperated into tokens and tagged as keywords, punctuators, literals, etc...)
 \item Tokens are parsed to build an abstract syntax tree (symbolic code representation)
 \item The AST is optimized (i.e. unreachable code is removed, some loops are unrolled)
-\item Machine instructions are generated.
+\item Machine instructions are generated from AST.
 \end{enumerate}
 While some compilers and interpreters have dynamic ways to modify the syntax of a language, this functionality seems to be unneeded for most compilers.
 
@@ -96,18 +96,76 @@ Because of its dynamic nature, it is very simple to have Glossa support multiple
 
 \subsection{Abstracting Language Definitions}
 
-As outlined above, Glossa reads in parse/generate descriptions for programming languages at run-time.
-Additionally, Glossa reads in rules for transforming the abstract syntax tree.
-
 To parse an input language, Glossa needs a description of the languages grammar, which is provided through a \textit{grammar file}.
 Optional descriptions of AST transformations are provided through \textit{transformer files}.
 
 To generate an output language from an AST, Glossa needs a set of \textit{constructor files}.
 
-\subsection{Grammars}
-Influence of formal grammars
+\subsection{Grammar Files}
 
-Description of grammar file implementations 
+Glossa's parse operation can be modeled as a function with the signature:
+
+parse :: Tokens -> AST
+
+Where the body of the parse function looks like:
+
+\lstset{language=Python}
+\begin{lstlisting}
+while not tokens.empty():
+    identify_remaining(tokens)
+\end{lstlisting}
+
+Glossa will attempt to identify remaining tokens with any of the high-level statement types provided.
+These statement types can use other grammar constructs as well
+
+A single grammar files defines a potential identification of tokens, producing a tagged dictionary of symbols if the tokens are identified successfully:
+
+The simplest non-trivial grammar file is likely the assignment statement:
+\begin{lstlisting}
+    assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
+\end{lstlisting}
+
+In plain english this reads:
+"Parse an identifier, and save it to the symbol dictionary as `lval`, then parse an equals operator, and save it to `op`, lastly, parse a boolean expression or normal expression and save it to `rval`"
+
+In general, a grammar element is defined like the following:
+
+\begin{lstlisting}
+name: `first_element` `second_element`
+\end{lstlisting}
+
+Where first\_element and second\_element are parsers of the form:
+
+\begin{lstlisting}
+an optional "@name" tag, which saves the result of the parser to the symbol dictionary under "name"
+Either:
+- A subtype parser (i.e `'='`),
+- A subtype-type parser (i.e. `identifier self`)
+- A type parser (i.e. `identifier **`)
+- A link to another grammar element (i.e. `value`)
+
+So, the following are all examples of valid parsers:
+`@val value`          // Link to value type, saved as "val"
+`identifier self`     // Identifier "self", discarded
+`@name identifier **` // Any identifier saved as "name"
+
+However, these parsers can be prefixed with the following keywords to change their meaning:
+
+!           : discard the parse result of this parser
+anyOf a b   : parse either a or b, keeping the result of the first successful parser. This has syntactic sugar of the form (a | b)
+*/many      : parse the parser several times until it fails
+many1       : parse the parser several times, requiring it to parse successfully at least once
+optional    : make a parser optional
+inOrder a b : run several parsers in order
+sep a b     : parse bs seperated by as (i.e. sep , value) 
+
+Some examples of more sophisticated parsers
+
+`@statement import_from | main | ... ` 
+`@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
+`@val vector | functioncall | elementaccess | memberaccess | basevalue | parenexpr`
+`@args optional sep ',' expression`
+\end{lstlisting}
 
 \subsection{AST Transformations}
 
