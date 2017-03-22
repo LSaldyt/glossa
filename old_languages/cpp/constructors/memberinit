@@ -1,0 +1,7 @@
+self = 0 0
+expr = 1 0
+defines
+header
+$self$ = $expr$
+source
+$self$ = $expr$

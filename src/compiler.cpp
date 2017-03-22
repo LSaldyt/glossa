@@ -57,37 +57,10 @@ namespace compiler
     Grammar loadGrammar(string language)
     {
         print("Loading grammar for " + language);
-	string lex_dir = "languages/" + language + "/lex/";
-        string directory = "languages/" + language + "/grammar/";
-        auto grammar_files = readFile(directory + "core");
-        auto grammar       = Grammar(grammar_files, directory + ".__core__/", lex_dir);
-
-        auto operators        = readFile(lex_dir + "operators");
-        auto logicaloperators = readFile(lex_dir + "logicaloperators"); 
-        auto punctuators      = readFile(lex_dir + "punctuators");
-
-        LexMapTermSets term_sets;
-        term_sets.push_back(make_tuple(grammar.keywords, "keyword",         1));         // Keywords are read in automatically from grammar file usage
-        term_sets.push_back(make_tuple(logicaloperators, "logicaloperator", 3));
-        term_sets.push_back(make_tuple(operators,        "operator",        1));
-        term_sets.push_back(make_tuple(punctuators,      "punctuator",      3));
-
-        vector<LexMapLexer> lexer_set = {
-            LexMapLexer(just("    "s),     "tab",        "tab",        3),
-            LexMapLexer(startswith("\t"s), "tab",        "tab",        3),
-            LexMapLexer(digits,            "int",        "literal",    3),
-            LexMapLexer(doubles,           "double",     "literal",    1),
-            LexMapLexer(identifiers,       "*text*",    "identifier", 3)};
-
-        lexer_set.push_back(LexMapLexer(startswith(grammar.comment_delimiter), "comment", "comment", 3));
-        for (auto delimiter : grammar.string_delimiters)
-        {
-            lexer_set.push_back(LexMapLexer(startswith(string(1, delimiter)), "string", "literal", 1));
-        }
-
-        const vector<Seperator> whitespace = readWhitespaceFile(lex_dir + "whitespace");
-        LexMap test_language(term_sets, lexer_set, whitespace);
-        grammar.lexmap = test_language;
+        string directory = "languages/" + language + "/";
+	string lex_dir = directory + "lex/";
+        auto grammar   = Grammar(directory);
+        print("Done loading grammar file");
         return grammar;
     }
 
@@ -109,7 +82,6 @@ namespace compiler
      * High level function for loading a code transformer for a language
      * @param language Language for code generator to be loaded for
      * @return Transformer which can transformer AST for the given language
-     */
     Transformer loadTransformer(string language)
     {
         print("Loading transformers for " + language);
@@ -118,6 +90,7 @@ namespace compiler
         print("Done");
         return transformer;
     }
+     */
 
     /**
      * High level function for transpilation
@@ -133,7 +106,10 @@ namespace compiler
     {
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
-        auto transformer = loadTransformer(input_lang);
+        auto lexmap      = buildLexMap("languages/" + input_lang + "/lex/", grammar.keywords);
+        Transformer transformer;
+        //auto transformer = loadTransformer(input_lang);
+        
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
 
@@ -141,7 +117,16 @@ namespace compiler
 
         for (auto& file : filenames)
         {
-            compile(file, grammar, generator, transformer, symbol_table, input_dir, output_dir, logger);
+            try
+            {
+                compile(file, grammar, generator, lexmap, transformer, symbol_table, input_dir, output_dir, logger);
+            }
+            catch(...)
+            {
+                logger.log("In file: " + file);
+                logger.log("In directory: " + input_dir);
+                throw;
+            }
         }
     }
 
@@ -155,7 +140,7 @@ namespace compiler
      * @param output_directory String name of output directory
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
-    void compile(string filename, Grammar& grammar, Generator& generator,
+    void compile(string filename, Grammar& grammar, Generator& generator, LexMap& lexmap,
                  Transformer& transformer,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
@@ -163,20 +148,20 @@ namespace compiler
         logger.log("Reading file " + filename);
         auto content         = readFile     (input_directory + "/" + filename);
         logger.log("Lexing terms");
-        auto tokens          = tokenPass    (content, grammar, symbol_table, logger); 
+        auto tokens          = tokenPass    (content, lexmap, symbol_table, logger); 
         logger.log("Creating symbols");
         auto symbolic_tokens = symbolicPass (tokens, logger);
         logger.log("Joining symbolic tokens");
-        auto joined_tokens   = join         (symbolic_tokens, grammar.lexmap.newline);
+        auto joined_tokens   = join         (symbolic_tokens, lexmap.newline);
         for(auto& jt : joined_tokens)
         {
-            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\"", 2);
+            logger.log("Joined Token: " + jt.type + ", " + jt.sub_type + ", \"" + jt.text + "\" " + std::to_string(jt.line));
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
-        transformer(identified_groups);
+        //transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
@@ -207,8 +192,9 @@ namespace compiler
      * @param symbol_table Dictionary of symbol conversions
      * @return Vector of unsymbolized tokens (annotated terms)
      */
-    std::vector<Tokens> tokenPass(std::vector<std::string> content, Grammar& grammar, unordered_map<string, string>& symbol_table, OutputManager logger)
+    std::vector<Tokens> tokenPass(std::vector<std::string> content, LexMap& lexmap, unordered_map<string, string>& symbol_table, OutputManager logger)
     {
+        int line_num = 0;
         std::vector<Tokens> tokens;
         string unseperated_content;
         for (auto line : content)
@@ -216,32 +202,37 @@ namespace compiler
             unseperated_content += line + "\n";
         }
         bool in_multiline_string = false;
-        auto groups = lex::seperate(unseperated_content, {make_tuple(grammar.multiline_comment_delimiter, true)}, {}, "");
+        auto groups = lex::seperate(unseperated_content, {make_tuple(lexmap.multiline_comment_delimiter, true)}, {}, "");
         for (auto group : groups)
         {
-            if (group == grammar.multiline_comment_delimiter)
+            if (group == lexmap.multiline_comment_delimiter)
             {
                 in_multiline_string = !in_multiline_string;
             }
             else if (in_multiline_string)
             {
-                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment")));
+                tokens.push_back(Tokens(1, Token(vector<string>(1, group), "comment", "comment", line_num)));
+                // Count newlines in mulitline comment
+                size_t nPos = group.find("\n", 0); 
+                while (nPos != string::npos)
+                {
+                    line_num++;
+                    nPos = group.find("\n", nPos+1);
+                }
+                line_num++;
             }
             else
             {
                 auto lines = lex::seperate(group, {make_tuple("\n", false)}, {}, "");
                 for (auto it = lines.begin(); it != lines.end(); it++)
                 {
-                    string line = rtrim(*it); // Remove trailing whitespace
-                    if (line.back() == '\\')
+                    line_num++;
+                    auto token_group = lexWith(*it, lexmap, lexmap.string_delimiters, lexmap.comment_delimiter);
+                    for (auto& token : token_group)
                     {
-                        if (it + 1 != lines.end())
-                        {
-                            it++;
-                            line = string(line.begin(), line.end() - 1) + " " + *it;
-                        }
+                        token.line = line_num;
                     }
-                    tokens.push_back(lexWith(line, grammar.lexmap, grammar.string_delimiters, grammar.comment_delimiter));
+                    tokens.push_back(token_group);
                 }
             }
         }
@@ -301,7 +292,7 @@ namespace compiler
         return tokens;
     }
 
-    unordered_map<string, tuple<vector<string>, string>> compileGroups(vector<tuple<string, SymbolMatrix>> identified_groups,
+    unordered_map<string, tuple<vector<string>, string>> compileGroups(IdentifiedGroups identified_groups,
                                                                        string filename,
                                                                        Generator &generator,
                                                                        OutputManager logger)
@@ -347,10 +338,10 @@ namespace compiler
     {
         for (const auto& identified_group : identified_groups)
         {
-            auto groups = get<1>(identified_group);
-            for (auto group : groups)
+            auto ms_table = get<1>(identified_group);
+            for (auto kv : ms_table)
             {
-                for (auto symbol : group)
+                for (auto symbol : kv.second)
                 {
                     auto abstract = symbol->abstract();
                     logger.log(abstract);

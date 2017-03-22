@@ -1,0 +1,18 @@
+keyword class
+identifier wildcard
+punctuator (
+punctuator )
+punctuator :
+keyword def
+keyword __init__
+punctuator (
+identifier self
+optional inOrder !punctuator , identifier wildcard
+many inOrder !punctuator , identifier wildcard
+punctuator )
+punctuator :
+many link statement
+keyword end
+many link statement
+keyword end
+1 sep 9 10 sep 13 sep 15

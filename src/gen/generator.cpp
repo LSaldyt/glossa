@@ -14,9 +14,14 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
-        print("Reading constructor file: " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
+    ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
+    vector<string> default_body = {"branch contains val", "$val$", "end"};
+    default_constructor = Constructor<string>(
+                                generateBranch<string>(default_body, ec_creator),
+                                {}
+                                );
 }
 
 /**
@@ -67,7 +72,7 @@ void Generator::readStructureFile(string filename)
 vector<tuple<string, Constructor<string>>> Generator::readConstructor(string filename)
 {
     auto content    = readFile(filename);
-    auto ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
+    ElementConstructorCreator<string> ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
     return generateConstructor<string>(content, file_constructors, ec_creator);
 }
 
@@ -81,17 +86,31 @@ vector<tuple<string, Constructor<string>>> Generator::readConstructor(string fil
  * @param nesting Indentation level
  * @return Vector of files 
  */
-vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>&              names, 
-                                                                    vector<vector<shared_ptr<Symbol>>>& symbol_groups, 
-                                                                    string                              symbol_type, 
-                                                                    string                              filename,
-                                                                    int                                 nesting,
-                                                                    OutputManager                       logger)
+vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_set<string>& names, 
+                                                                    MultiSymbolTable&      ms_table, 
+                                                                    string                 symbol_type, 
+                                                                    string                 filename,
+                                                                    int                    nesting,
+                                                                    OutputManager          logger)
 {
     logger.log("Running generator for " + symbol_type, 2);
     vector<tuple<string, string, vector<string>>> files;
     unordered_set<string> added_names;
-    auto constructors = construction_map[symbol_type];
+    vector<tuple<string, Constructor<string>>> constructors;
+    if (not contains(construction_map, symbol_type))
+    {
+        for (auto fc : file_constructors)
+        {
+            auto filetype = get<0>(fc);
+            constructors.push_back(make_tuple(filetype, 
+                        default_constructor
+                            ));
+        }
+    }
+    else
+    {
+        constructors = construction_map[symbol_type];
+    }
     for (auto t : constructors)
     {
         auto type        = get<0>(t);
@@ -115,7 +134,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
                 break;
             }
         } 
-        auto constructed = constructor(local_names, symbol_groups, type, nesting, logger);
+        auto constructed = constructor(local_names, ms_table, type, nesting, logger);
         concat(default_content, constructed);
         added_names.insert(local_names.begin(), local_names.end());
         files.push_back(make_tuple(type, filename + extension, default_content));
@@ -132,7 +151,12 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
 ElementConstructor<string> Generator::generateElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple("`", true)}, {});
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
+    return [terms, line, this](unordered_set<string>& names, 
+                               MultiSymbolTable& ms_table, 
+                               string filetype, 
+                               vector<string>& definitions, 
+                               int nesting, 
+                               OutputManager logger)
     {
         string representation;
         if (terms.size() == 1)
@@ -149,7 +173,7 @@ ElementConstructor<string> Generator::generateElementConstructor(string line)
                 {
                     if (formatting_symbol)
                     {
-                        representation += formatSymbol(t, names, storage, filetype, definitions);
+                        representation += formatSymbol(t, names, ms_table, filetype, definitions);
                     }
                     else
                     {
@@ -170,12 +194,12 @@ ElementConstructor<string> Generator::generateElementConstructor(string line)
                 else if (special_formatting)
                 {
                     auto slc = generateSpecialElementConstructor(t);
-                    representation += slc(names, storage, filetype, definitions, nesting, logger);
+                    representation += slc(names, ms_table, filetype, definitions, nesting, logger);
                 }
                 else
                 {
                     auto lc = generateElementConstructor(t);
-                    representation += lc(names, storage, filetype, definitions, nesting, logger);
+                    representation += lc(names, ms_table, filetype, definitions, nesting, logger);
                 }
             }
         }
@@ -195,7 +219,12 @@ ElementConstructor<string> Generator::generateElementConstructor(string line)
 ElementConstructor<string> Generator::generateSpecialElementConstructor(string line)
 {
     auto terms = lex::seperate(line, {make_tuple(" ", false)});
-    return [terms, line, this](unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions, int nesting, OutputManager logger)
+    return [terms, line, this](unordered_set<string>& names, 
+                               MultiSymbolTable& ms_table, 
+                               string filetype, 
+                               vector<string>& definitions, 
+                               int nesting, 
+                               OutputManager logger)
     {
         string representation = "";
         if (not terms.empty())
@@ -204,8 +233,8 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
             if (keyword == "sep")
             {
                 assert(terms.size() == 3 or terms.size() == 4 or terms.size() == 5);
-                assert(contains(get<1>(storage), terms[2]));
-                auto symbols = get<1>(storage)[terms[2]];
+                assert(contains(ms_table, terms[2]));
+                auto symbols = ms_table[terms[2]];
                 string formatter = "@";
                 if (terms.size() > 3)
                 {
@@ -216,8 +245,8 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
             else if (keyword == "block") // e.g. block body @;
             {
                 assert(terms.size() == 2 or terms.size() == 3);
-                assert(contains(get<1>(storage), terms[1]));
-                auto symbols = get<1>(storage)[terms[1]];
+                assert(contains(ms_table, terms[1]));
+                auto symbols = ms_table[terms[1]];
                 string formatter = "@";
                 if (terms.size() > 2)
                 {
@@ -256,10 +285,13 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
  * @param definitions Defined names
  * @return Formatted string representing a stored symbol
  */
-string Generator::formatSymbol (string s, unordered_set<string>& names, SymbolStorage& storage, string filetype, vector<string>& definitions)
+string Generator::formatSymbol (string s, unordered_set<string>& names, MultiSymbolTable& ms_table, string filetype, vector<string>& definitions)
 {
-    assert(contains(get<0>(storage), s));
-    auto symbol         = get<0>(storage)[s];         
+    assert(contains(ms_table, s));
+    auto ms_group = ms_table[s];         
+    assert(ms_group.size() == 1);
+
+    auto symbol         = ms_group[0];
     auto representation = symbol->representation(*this, names, filetype);
     auto new_name       = symbol->name();
     if (new_name != "none" and contains(definitions, s)) 

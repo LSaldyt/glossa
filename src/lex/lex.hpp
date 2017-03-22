@@ -9,4 +9,7 @@
 namespace lex
 {
     Tokens lexWith(const string& sentence, const LexMap& language, vector<char> string_delimiters, string comment_delimiter);
+    LexMap buildLexMap(string language, vector<string> keywords);
+
+    tuple<vector<char>, string, string> readDelimiters(string directory);
 }

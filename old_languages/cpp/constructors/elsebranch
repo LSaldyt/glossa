@@ -1,0 +1,12 @@
+body = 0
+defines
+header
+else
+{
+`block body @;`
+}
+source
+else
+{
+`block body @;`
+}

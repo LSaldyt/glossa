@@ -1,13 +1,11 @@
-boolexpr = 0 0
-loopbody = 1
 defines
 header
 while ($boolexpr$)
 {
-`block loopbody @;`
+`block body @;`
 }
 source
 while ($boolexpr$)
 {
-`block loopbody @;`
+`block body @;`
 }

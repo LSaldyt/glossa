@@ -1,0 +1,37 @@
+identifier = 0 0
+args   = 1
+overloads  = 2
+body   = 3
+defines
+header
+branch equalTo identifier main
+// No main declaration required
+elsebranch
+branch nonempty args
+template <
+`sep , args typenameSPACET_@`
+>
+end
+
+auto $identifier$ (
+`sep , args T_@SPACE@`
+)
+{
+std::vector<Object> __func_args__({  
+`sep , args`
+});
+/* Pattern-matched overloads: */
+`sep NEWLINE overloads`
+/* Default body: */
+`sep NEWLINE body @;`
+}
+end
+source
+branch equalTo identifier main
+int main(int argc, char ** argv)
+{
+`sep NEWLINE body @;`
+}
+elsebranch
+// No source for non-main functions 
+end

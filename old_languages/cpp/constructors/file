@@ -1,0 +1,5 @@
+file header .hpp
+#pragma once
+#include "../std/cpp/std.hpp"
+file source .cpp
+#include "@.hpp"

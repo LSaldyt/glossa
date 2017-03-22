@@ -1,0 +1,6 @@
+a = 0 0
+b = 2 0
+step = 1 0
+defines
+source
+range($b$, $a$, $step$)

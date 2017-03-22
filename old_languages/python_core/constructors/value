@@ -1,0 +1,9 @@
+neg = 0
+val = 1 0 
+defines
+source
+branch nonempty neg
+-$val$
+elsebranch
+$val$
+end

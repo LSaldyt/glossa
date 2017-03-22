@@ -1,0 +1,5 @@
+source = 0 0
+items  = 1
+defines
+source
+from $source$ import `sep , items`

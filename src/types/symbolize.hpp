@@ -26,7 +26,7 @@ const auto toSymbolic = [](std::unordered_map<std::string, syntax::SymbolGenerat
         if (search != generatorMap.end())
         {
             logger.log("Rules for symbolic creation found, creating symbolic token", 2);
-            auto symbolic = SymbolicToken(search->second(token.values), token.sub_type, token.type, text);
+            auto symbolic = SymbolicToken(search->second(token.values), token.sub_type, token.type, text, token.line);
             logger.log("Symbolic token creation finished", 2);
             symbolic_tokens.push_back(symbolic);
         }

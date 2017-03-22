@@ -1,0 +1,10 @@
+type  = 0 0
+args  = 1
+trace = 2
+defines
+source
+branch nonempty trace
+raise $type$(`sep , args`).with_traceback()
+elsebranch
+raise $type$(`sep , args`)
+end
