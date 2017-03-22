@@ -1,0 +1,4 @@
+source = 0 0
+defines
+source
+from $source$ import *

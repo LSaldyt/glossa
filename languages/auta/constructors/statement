@@ -1,0 +1,9 @@
+statement = 0 0
+comment   = 1
+defines
+source
+branch nonempty comment
+$statement$NEWLINE`sep EMPTY comment` 
+elsebranch
+$statement$ 
+end

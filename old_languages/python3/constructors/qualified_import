@@ -1,0 +1,5 @@
+source    = 0 0
+qualifier = 1 0
+defines
+source
+import $source$ as $qualifier$

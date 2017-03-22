@@ -1,5 +1,6 @@
 #include "../syntax/symbols/export.hpp"
 #include "transformer.hpp"
+/*
 
 namespace transform 
 {
@@ -11,16 +12,16 @@ ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = [](string s)
     if (terms.size() == 1)
     {
         auto keyword = terms[0];
-        if (keyword == "newrow")
+        if (keyword == "newrow" or keyword == "endsymbol")
         {
-            ec = [](unordered_set<string>& names,
+            ec = [keyword](unordered_set<string>& names,
                       SymbolStorage& symbol_storage,
                       string filename,
                       vector<string>& definitions,
                       int nesting,
                       OutputManager logger)
             {
-                return make_shared<SentinelSymbol>(SentinelSymbol("__newrow__"));
+                return make_shared<SentinelSymbol>(SentinelSymbol("__" + keyword + "__"));
             };
         }
         else
@@ -64,14 +65,26 @@ ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = [](string s)
             return make_shared<SentinelSymbol>(SentinelSymbol("__name__", name));
         };
     }
+    else if (terms[0] == "subsymbol:")
+    {
+        auto name = terms[1];
+        ec = [name](unordered_set<string>& names,
+                  SymbolStorage& symbol_storage,
+                  string filename,
+                  vector<string>& definitions,
+                  int nesting,
+                  OutputManager logger)
+        {
+            return make_shared<SentinelSymbol>(SentinelSymbol("__subsymbol__", name));
+        };
+    }
     else if (terms[0] == "literal:")
     {
         assert(terms.size() == 3);
         auto key = terms[1];
         auto val = terms[2];
         auto s = syntax::generatorMap.at(key)({val});
-        ec = [s]
-                 (unordered_set<string>& names,
+        ec = [s](unordered_set<string>& names,
                   SymbolStorage& symbol_storage,
                   string filename,
                   vector<string>& definitions,
@@ -79,7 +92,6 @@ ElementConstructorCreator<shared_ptr<Symbol>> ec_creator = [](string s)
                   OutputManager logger)
         {
             return s;
-            //return make_shared<SentinelSymbol>(SentinelSymbol("__name__", name));
         };
     }
     else
@@ -182,3 +194,4 @@ void Transformer::transform(string& tag, SymbolMatrix& symbol_matrix)
 }
 
 }
+*/

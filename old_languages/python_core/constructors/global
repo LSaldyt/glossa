@@ -1,0 +1,4 @@
+vals = 0
+defines
+source
+global `sep , vals`

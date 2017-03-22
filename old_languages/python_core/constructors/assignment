@@ -1,0 +1,7 @@
+identifier = 0 0
+op    = 1 0
+value = 2 0
+defines
+identifier
+source
+$identifier$ $op$ $value$

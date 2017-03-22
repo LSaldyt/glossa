@@ -1,0 +1,8 @@
+ident = 0 0
+expr  = 1 0
+defines
+ident
+header
+const auto $ident$ = $expr$
+source
+const auto $ident$ = $expr$

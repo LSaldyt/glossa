@@ -1,6 +1,13 @@
-expression = 0 0
 defines
 header
+branch empty expression
+return
+elsebranch
 return $expression$
+end
 source
+branch empty expression
+return
+elsebranch
 return $expression$
+end

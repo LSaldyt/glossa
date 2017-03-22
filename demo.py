@@ -36,7 +36,7 @@ def build(directory, languageargs, verbosity):
 
             inputfiles.append(filename) # Uses filename, since the compiler knows to use input/output directories
             shutil.copyfile(filepath, inputfile)
-            if languageargs[0] in ['python', 'python2', 'python3', 'auta']:
+            if languageargs[0] in ['python', 'python2', 'python3', 'python_core', 'auta', 'a']:
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
@@ -145,15 +145,21 @@ def main():
 
     demos = load_demos()
 
+    if len(sys.argv) > 2:
+        verbosity = sys.argv[2]
+    else:
+        verbosity = 1
+
     # Determine which demo to use
     if len(sys.argv) > 1:
         if sys.argv[1] == '--show': # Display which demos are available if --show flag given
-            pprint(demos)
+            for demo, info in demos.items():
+                print('%-20s: %s -> %s' % (demo, info[1], info[2]))
             sys.exit(0)
         if sys.argv[1] == '--test': # Test each demo
             for demo in demos:
                 try:
-                    transpile(demo, demos) # Test that each demo works
+                    transpile(demo, demos, verbosity, runlang=False) # Test that each demo works
                 except Exception as e:
                     print('Transpile test for demo %s failed' % demo)
                     raise e
@@ -164,12 +170,8 @@ def main():
     else:
         demoname = 'python3'         # If none provided, show python demo by default
 
-    if len(sys.argv) > 2:
-        verbosity = sys.argv[2]
-    else:
-        verbosity = 1
 
-    transpile(demoname, demos, verbosity, True)
+    transpile(demoname, demos, verbosity, runlang=True)
     #transpile(demoname, demos, verbosity, runlang=False)
 
 

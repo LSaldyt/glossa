@@ -1,0 +1,4 @@
+anyOf literal wildcard identifier wildcard link parenexpr
+operator /
+anyOf literal wildcard identifier wildcard link parenexpr
+0 sep 2

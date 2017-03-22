@@ -1,7 +1,14 @@
 PROGRAM hello 
-    REAL :: A
-    INTEGER :: B = 1
-    REAL :: C = 2.3
     WRITE(*,*) 'Hello World'
-    WRITE(*,*) C
+    REAL :: Area_circle
+    IF (1 > 0) THEN
+        WRITE(*,*) 'DANG'
+    ELSE IF (2 < 3) THEN
+        WRITE(*,*) 'DANG'
+    ELSE
+        WRITE(*,*) 'DANG'
+    END IF
+
+    DO WHILE (1 > 2)
+    END DO
 END PROGRAM 

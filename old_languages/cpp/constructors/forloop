@@ -1,0 +1,14 @@
+loopvar  = 0 0
+loopexpr = 1 0
+loopbody = 2
+defines
+header
+for (auto& $loopvar$ : $loopexpr$)
+{
+`block loopbody @;`
+}
+source
+for (auto& $loopvar$ : $loopexpr$)
+{
+`block loopbody @;`
+}

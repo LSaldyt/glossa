@@ -1,0 +1,13 @@
+defines
+header
+if ($condition$)
+{
+`block body @;`
+}
+`sep SPACE branches`
+source
+if ($condition$)
+{
+`block body @;`
+}
+`sep EMPTY branches`

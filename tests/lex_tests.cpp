@@ -26,7 +26,7 @@ TEST_CASE("The lexer and language modules work")
         make_tuple(" ",  false),
         make_tuple("\n", false)
     };
-    LexMap test_language(term_set, lexer_set, whitespace);
+    LexMap test_language(term_set, lexer_set, whitespace, {}, "", "");
 
     SECTION("lexing based on keywords, operators and whitespace")
     {

@@ -1,0 +1,9 @@
+not  = 0
+expr = 1 0
+defines
+source
+branch nonempty not
+not $expr$
+elsebranch
+$expr$
+end

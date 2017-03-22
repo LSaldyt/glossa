@@ -27,6 +27,7 @@ articles = re.compile('a|an|the')
 
 def processFile(filetoreadin, articlesSep):
     """Takes a filename and returns an array of strings ready to be fed to the wordlist"""
+    """
     global alpha, rejected_words, articles
     to_return = []
     file_handle=open(filetoreadin)
@@ -67,6 +68,7 @@ def processFile(filetoreadin, articlesSep):
             if endsWithPeriod:
                 to_return.append('.')
         line = file_handle.readline()
+    """
     file_handle.close()
     return to_return
 

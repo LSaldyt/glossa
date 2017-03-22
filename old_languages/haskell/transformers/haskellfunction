@@ -1,0 +1,14 @@
+name = 0 0
+patterns = 1
+args     = 2
+body     = 3 0
+defines
+transform:
+name: haskellfunction
+name
+newrow
+args
+newrow
+patterns
+newrow
+body

@@ -1,0 +1,29 @@
+statement: `@val main | definition | declaration | if | print | whileloop`
+
+main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
+
+typename: `@val 'REAL' | 'INTEGER'`
+
+declaration: `@type typename` '::' `@identifier identifier **` 
+
+definition: `@type typename` '::' `@identifier identifier **` '=' `@expr link expression` 
+
+value: `@val basevalue | parenexpr`
+basevalue: `@val identifier ** | string | literal **`
+parenexpr: '(' `@expr expression` ')'
+string: `@val literal string`
+
+expression: `@body sepWithKeep operator ** value`
+boolexpression: `@body sepWithKeep logicaloperator ** expression` 
+
+if: 'IF' '(' `@condition boolexpression` ')' 'THEN' `@body *statement` `@branches branch`
+
+branch: `@elifs *elif` `@else optional else` 'END' 'IF'
+
+elif: 'ELSE' 'IF' '(' `@condition boolexpression` ')' 'THEN' `@body *statement`
+
+else: 'ELSE' `@body *statement`
+
+print: 'WRITE' '(' `operator *` ',' `operator *` ')' `@val expression`
+
+whileloop: 'DO' 'WHILE' '(' `@boolexpr boolexpression` ')' `@body *statement` 'END' 'DO'

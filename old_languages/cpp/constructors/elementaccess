@@ -1,0 +1,7 @@
+val = 0 0
+access = 1 0
+defines
+header
+$val$[$access$]
+source
+$val$[$access$]

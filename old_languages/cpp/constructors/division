@@ -1,0 +1,7 @@
+a = 0 0
+b = 1 0
+defines
+header
+static_cast<double>($a$) / static_cast<double>($b$)
+source
+static_cast<double>($a$) / static_cast<double>($b$)
