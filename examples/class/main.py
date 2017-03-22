@@ -2,7 +2,6 @@
 class A():
     def __init__(self):
         print('Created Object')
-        self.x = 2
 
     def foo(self, x):
         print(x*x)
