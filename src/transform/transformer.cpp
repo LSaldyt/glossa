@@ -41,11 +41,45 @@ void Transformer::operator()(IdentifiedGroups& identified_groups)
     {
         auto& tag      = get<0>(id_group);
         auto& ms_table = get<1>(id_group);
-        transform(tag, ms_table);
+        _transform(tag, ms_table);
     }
 }
 
-void Transformer::transform(string& tag, MultiSymbolTable& ms_table)
+void Transformer::_keyword_transform(vector<string>& terms, string& tag, MultiSymbolTable& ms_table)
+{
+    assert(not terms.empty());
+    auto keyword = terms[0];
+    if (keyword == "add")
+    {
+        assert(terms.size() == 4);
+        auto creator = syntax::generatorMap.at(terms[2]);
+        auto symbol  = creator({terms[3]});
+        ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+    }
+    else if (keyword == "copy" or keyword == "move")
+    {
+        assert(terms.size() == 3);
+        auto a = terms[1];
+        auto b = terms[2];
+        assert(contains(ms_table, a));
+        ms_table[b] = ms_table[a];
+        if (keyword == "move")
+        {
+            ms_table.erase(a);
+        }
+    }
+    else if (keyword == "retag")
+    {
+        assert(terms.size() == 2);
+        tag = terms[1];
+    }
+    else
+    {
+        throw named_exception("Invalid keyword transform: " + keyword);
+    }
+}
+
+void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
 {
     for (auto kv : transformation_map)
     {
@@ -53,9 +87,13 @@ void Transformer::transform(string& tag, MultiSymbolTable& ms_table)
         {
             print("Transforming " + tag);
             unordered_set<string> names;
-            auto terms = kv.second(names, 
-                                   ms_table, 
-                                   "none"); 
+            auto keyword_transforms = kv.second(names, 
+                                                ms_table, 
+                                                "none"); 
+            for (auto terms : keyword_transforms)
+            {
+                _keyword_transform(terms, tag, ms_table);
+            }
         }
     }
     for (auto& kv : ms_table)
@@ -67,7 +105,7 @@ void Transformer::transform(string& tag, MultiSymbolTable& ms_table)
             auto& ms_table = get<1>(id_group);
             if (tag != "undefined")
             {
-                transform(tag, ms_table);
+                _transform(tag, ms_table);
                 symbol->modify_id_group(tag, ms_table);
             }
         }

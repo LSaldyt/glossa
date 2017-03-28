@@ -1,5 +1,5 @@
 defines
 header
-print($val$)
+print($val$) /*print*/
 source
-print($val$)
+print($val$) /*print*/

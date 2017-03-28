@@ -160,6 +160,7 @@ namespace compiler
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
         logger.log("Identified groups AST:");
         showAST(identified_groups, logger);
+        logger.log("Transformed (intermediate) AST:");
         transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
