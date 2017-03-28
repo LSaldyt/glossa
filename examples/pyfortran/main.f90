@@ -10,5 +10,6 @@ PROGRAM hello
     END IF
 
     DO WHILE (1 > 2)
+        WRITE(*,*) 'DANG'
     END DO
 END PROGRAM 

@@ -6,6 +6,7 @@ namespace gen
 {
 
 void addNewLine(vector<string>& generated);
+void addNewLine(vector<vector<string>>& generated);
 void addNewLine(vector<shared_ptr<Symbol>>& generated);
 
 /**
