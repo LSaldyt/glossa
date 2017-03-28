@@ -44,4 +44,14 @@ string MultiSymbol::abstract(int indent)
     return representation;
 }
 
+tuple<string, MultiSymbolTable> MultiSymbol::to_id_group()
+{
+    return make_tuple(tag, table);
+}
+void MultiSymbol::modify_id_group(string set_tag, MultiSymbolTable set_table)
+{
+    tag = set_tag;
+    table = set_table;
+}
+
 }

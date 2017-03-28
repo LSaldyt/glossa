@@ -4,7 +4,7 @@
 
 namespace transform 
 {
-/*
+
 using namespace gen;
 using namespace grammar;
 
@@ -19,20 +19,18 @@ Constructor<T> generateTransformConstructor(vector<string> content,
     assert(not constructors.empty());
     return get<1>(constructors[0]);
 }
-*/
 
 class Transformer
 {
-/*
 public:
+    Transformer();
     Transformer(vector<string> transformer_files, string directory);
     void operator()(IdentifiedGroups& identified_groups);
 
 private:
-    unordered_map<string, Constructor<shared_ptr<Symbol>>> transformation_map;
+    unordered_map<string, Constructor<vector<string>>> transformation_map;
+    void transform(string& tag, MultiSymbolTable& ms_table);
 
-    void transform(string& tag, SymbolMatrix& symbol_matrix);
-*/
 };
 
 }

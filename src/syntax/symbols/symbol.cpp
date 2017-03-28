@@ -11,11 +11,11 @@ string Symbol::abstract(int indent)
 }
 string Symbol::name(){return "none";}
 Symbol::Symbol(){}
-tuple<string, vector<vector<shared_ptr<Symbol>>>> Symbol::to_id_group()
+tuple<string, MultiSymbolTable> Symbol::to_id_group()
 {
-    return make_tuple("undefined", vector<vector<shared_ptr<Symbol>>>());
+    return make_tuple("undefined", MultiSymbolTable());
 }
-void Symbol::modify_id_group(string, vector<vector<shared_ptr<Symbol>>>)
+void Symbol::modify_id_group(string, MultiSymbolTable)
 {
     throw std::exception();
 }
