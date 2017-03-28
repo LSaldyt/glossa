@@ -6,6 +6,8 @@ void addNewLine(vector<string>& generated)
 {
     generated.push_back("\n");
 }
+void addNewLine(vector<vector<string>>& generated)
+{}
 void addNewLine(vector<shared_ptr<Symbol>>& generated)
 {}
 }

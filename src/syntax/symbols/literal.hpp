@@ -21,7 +21,7 @@ namespace syntax
         }
         virtual string abstract(int indent=0)
         {
-            return repeatString("    ", indent) + "(" + std::to_string(value) + ")";
+            return repeatString("  ", indent) + "(" + std::to_string(value) + ")";
         }
     };
 
@@ -40,7 +40,7 @@ namespace syntax
         }
         virtual string abstract(int indent=0)
         {
-            return repeatString("    ", indent) + "(" + value + ")";
+            return repeatString("  ", indent) + "(" + value + ")";
         }
         virtual string name()
         {

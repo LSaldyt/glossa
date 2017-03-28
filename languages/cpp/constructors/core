@@ -6,10 +6,10 @@ memberaccess
 import
 boolexpression
 listcomp
+import_from
 exception
 assignment
 memberfunction
-basevalue
 list
 parenexpr
 if
@@ -19,6 +19,7 @@ lvalue
 function
 symbol_list
 definition
+continue
 kvpair
 elementaccess
 elif
@@ -30,14 +31,13 @@ declaration
 branch
 do
 dobody
+break
 print
 forrange
 supercall
 main
-statement
 tuple
 let
-value
 range
 test
 comment

@@ -1,4 +1,4 @@
-statement: `@statement import_from | main | function | functioncall | memberaccess | forloop | if | assignment | pass | return | import_from | comment` 
+statement: `@val main | class | if | whileloop | forloop | function | functioncall | memberaccess | assignment | pass | flow_stmt | import_from | comment` 
 
 basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 
@@ -25,9 +25,15 @@ main: 'if' '__name__' '==' `literal string` ':' `@body *statement` 'end'
 
 function: 'def' `@identifier identifier **` '(' `@args optional sep ',' identifier **` ')' ':' `@body *statement` 'end' 
 
+flow_stmt: `@val return | break | continue`
+
 pass: 'pass'
 
 return: 'return' `@expression expression`
+
+break: 'break'
+
+continue: 'continue'
 
 assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
 
@@ -44,3 +50,9 @@ elif: 'elif' `@condition boolexpression` ':' `@body *statement` 'end'
 else: 'else' ':' `@body *statement` 'end'
 
 forloop: 'for' `@loopvar identifier **` 'in' `@loopexpr link expression` ':' `@loopbody *statement` 'end'
+
+whileloop: 'while' `@boolexpr boolexpression` ':' `@body *statement` 'end'
+
+memberfunction: 'def' `@identifier identifier **` '(' 'self' `optional ','` `@args optional sep ',' identifier **` ')' ':' `@body *statement` 'end' 
+
+class: 'class' `@name identifier **` '(' `@inheritance optional identifier **` ')' ':' 'def' '__init__' '(' 'self' `optional ','` `@constructor_args optional sep ',' identifier **` ')' ':' `@constructor_body *statement` 'end'  `@body *memberfunction` 'end'
