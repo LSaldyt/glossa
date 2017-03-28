@@ -1,9 +1,11 @@
 python3          python3 cpp
+python2          python2 cpp 
 integrate        python3 cpp
 class            python3 cpp
 benchmark        python3 cpp
 porting          python2 python3 
 text_prediction  python2 python3
 fortran          fortran cpp
+pyfortran        fortran python3
 haskell          haskell cpp
 auta             auta    python3

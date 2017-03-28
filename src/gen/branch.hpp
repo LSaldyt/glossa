@@ -17,7 +17,7 @@ using namespace tools;
 
 using ConditionEvaluator = function<bool(unordered_set<string>&, MultiSymbolTable&)>;
 template <typename T>
-using ElementConstructor    = function<T(unordered_set<string>&, MultiSymbolTable&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
+using ElementConstructor = function<T(unordered_set<string>&, MultiSymbolTable&, string, vector<string>& definitions, int nesting, OutputManager logger)>;
 
 template <typename T>
 using ElementConstructorCreator = function<ElementConstructor<T>(string)>;

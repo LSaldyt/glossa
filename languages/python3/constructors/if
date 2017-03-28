@@ -1,0 +1,9 @@
+defines
+header
+if $condition$:
+`block body @`
+`sep EMPTY branches`
+source
+if $condition$:
+`block body @`
+`sep EMPTY branches`

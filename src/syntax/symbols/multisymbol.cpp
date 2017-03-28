@@ -23,7 +23,10 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
         {
             for (auto line : get<2>(file))
             {
-                representation += line;
+                if (not line.empty())
+                {
+                    representation += line;
+                }
             } 
         }
     }
@@ -32,16 +35,36 @@ string MultiSymbol::representation(Generator& generator, unordered_set<string>& 
 
 string MultiSymbol::abstract(int indent)
 {
-    string representation = repeatString("    ", indent) + "MultiSymbol (" + tag + ")\n";
+    int next_indent = indent;
+    string representation;
+    if (tag != "statement" and tag != "value" and tag != "basevalue")
+    {
+        representation = repeatString("  ", indent) + "MultiSymbol (" + tag + ")\n";
+        next_indent++;
+    }
     for (auto kv : table)
     {
         for (auto symbol : kv.second)
         {
-            representation += symbol->abstract(indent + 1) + "\n";
+            auto line = symbol->abstract(next_indent);
+            if (not rtrim(line).empty())
+            {
+                representation += line + "\n";
+            }
         }
-        representation += ",";
+        //representation += ",";
     }
     return representation;
+}
+
+tuple<string, MultiSymbolTable> MultiSymbol::to_id_group()
+{
+    return make_tuple(tag, table);
+}
+void MultiSymbol::modify_id_group(string set_tag, MultiSymbolTable set_table)
+{
+    tag = set_tag;
+    table = set_table;
 }
 
 }

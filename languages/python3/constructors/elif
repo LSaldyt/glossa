@@ -1,0 +1,7 @@
+defines
+header
+elif $condition$:
+`block body @`
+source
+elif $condition$:
+`block body @`

@@ -17,8 +17,8 @@ namespace syntax
         virtual string abstract(int indent=0);
         virtual string name();
 
-        virtual tuple<string, vector<vector<shared_ptr<Symbol>>>> to_id_group();
-        virtual void modify_id_group(string, vector<vector<shared_ptr<Symbol>>>);
+        virtual tuple<string, MultiSymbolTable> to_id_group();
+        virtual void modify_id_group(string, MultiSymbolTable);
 
         string annotation = "symbol";
 

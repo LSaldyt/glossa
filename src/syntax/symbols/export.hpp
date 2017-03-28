@@ -18,15 +18,8 @@ namespace syntax
     using Comment    = StringLiteral;
 
     const auto stringGenerator = [](string s){
-        if (s.size() >= 2)
-        {
-            return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
-        }
-        else
-        {
-            print("WARNING: Strange string (" + s + ")");
-            return make_shared<String>(String(s));
-        }
+        assert (s.size() >= 2);
+        return make_shared<String>(String(string(s.begin() + 1, s.end() - 1)));
     };
     const auto keywordGenerator = [](string s){ return make_shared<Keyword>(Keyword(s)); };
     const auto intGenerator     = [](string s){ return make_shared<Integer>(Integer(stoi(s))); };
@@ -61,13 +54,13 @@ namespace syntax
         return [f](vector<string> values){return f(values[0]); };
     };
     const unordered_map<string, SymbolGenerator> generatorMap = {
-     {"literal",       single(literalGenerator)},
-     {"operator",   single(opGenerator)},
-     {"identifier", single(identifierGenerator)},
-     {"keyword",    single(keywordGenerator)},
-     {"punctuator", single(puncGenerator)},
+     {"literal",         single(literalGenerator)},
+     {"operator",        single(opGenerator)},
+     {"identifier",      single(identifierGenerator)},
+     {"keyword",         single(keywordGenerator)},
+     {"punctuator",      single(puncGenerator)},
      {"logicaloperator", single(logicalOpGenerator)},
      {"tab",             single(tabGenerator)},
-     {"comment", single(commentGenerator)}
+     {"comment",         single(commentGenerator)}
     };
 }
