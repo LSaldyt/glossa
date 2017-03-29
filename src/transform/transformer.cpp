@@ -49,21 +49,37 @@ void Transformer::_keyword_transform(vector<string>& terms, string& tag, MultiSy
 {
     assert(not terms.empty());
     auto keyword = terms[0];
-    if (keyword == "add")
+    if (keyword == "add" or keyword == "append")
     {
         assert(terms.size() == 4);
         auto creator = syntax::generatorMap.at(terms[2]);
         auto symbol  = creator({terms[3]});
-        ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+        if (keyword == "add" or not contains(ms_table, terms[1]))
+        {
+            assert(not contains(ms_table, terms[1]));
+            ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+        }
+        else
+        {
+            ms_table[terms[1]].push_back(symbol);
+        }
     }
-    else if (keyword == "copy" or keyword == "move")
+    else if (contains(keyword, "copy") or contains(keyword, "move"))
     {
         assert(terms.size() == 3);
         auto a = terms[1];
         auto b = terms[2];
         assert(contains(ms_table, a));
-        ms_table[b] = ms_table[a];
-        if (keyword == "move")
+        if (contains(keyword, "append"))
+        {
+            assert(contains(ms_table, b));
+            concat(ms_table[b], ms_table[a]);
+        }
+        else
+        {
+            ms_table[b] = ms_table[a];
+        }
+        if (contains(keyword, "move"))
         {
             ms_table.erase(a);
         }
