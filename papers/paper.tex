@@ -48,7 +48,7 @@ tabsize=3
 % Paper
 % ==================================================
 
-\title{Fully Generalized Compilation}
+\title{Compilation with Dynamic Grammars}
 \date{01-26-2017}
 \author{Lucas Saldyt}
 
@@ -63,20 +63,42 @@ tabsize=3
 \section{Abstract}
 % ==================================================
 Glossa is an investigation into the feasibility of a multi-language source-to-source compiler with dynamic grammars. 
-Assuming that two languages are \textit{isomorphic}, one language can be converted to another if given an adequate description of each language's grammar.
-Given source code in one language, a description of its grammar \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}?
-What are the limiting factors on this kind of conversion? 
-How can they be overcome?
+If given an adequate description of each language's grammar, one language can be converted to another if the languages are \textit{isomorphic}.
+If two languages are not \textit{isomorphic}, one can still be converted to another if the non-isomorphisms are solved through an AST transformation.
+For example, C++ can be converted to C if classes are represented as collections of functions that all take a struct as their first argument. (Since C++ supports classes, but C does not (non-isomorphism).)
+
+Given source code in one language, a description of its grammar, \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}, in the same way that the output of Google Translate would look like something written by a native spanish speaker?
+The answer is yes, but there are some limitations. Grammars need to be described fully to Glossa, which is a potentially difficult task.
+The more accurate a grammar description becomes, the more complicated it is to create.
+However, grammar files must be simple, so that they can be created/understood/modified by users.
+Also, the more non-isomorphisms that exist between two programming languages, the less readable the result of a conversion between them will be.
+For example, C++'s class syntax is human-readable, but the C machinery emulating classes is far less readable. 
+This being noted, accurate conversions are 100\% possible if the description files are written properly.
+For description files to be easily written, their syntax should be as intuitive as possible. 
+In Glossa, the description file formats have been refactored several times, so that the current descriptor file syntax is near optimal.
+
+Glossa accomplishes near 100\% conversions for Python3 to C++, as well as Python2 to Python3.
+Glossa has proof of concept conversions for FORTRAN to C++, FORTRAN to Python3, and proof of concept for implementation of a new programming language, Auta.
 
 % ==================================================
 \section{Introduction}
 % ==================================================
 
 Glossa provides a \textit{dynamic framework} for easily modifying syntax of input and output languages. 
-As programming paradigms shift, so does language syntax. Ultimately, modifiable syntax leads to better programming languages. 
-Since each programming language has its own compiler, there is some redundancy in each implementation. If programming languages could be compiled with a framework, this redundancy would go away, and programming language researchers would be able to focus on the language itself, as opposed to its compiler.
+Ultimately, modifiable syntax leads to better programming languages.
+As programming paradigms shift, so does syntax. 
+If a language can be changed quickly and easily, then different styles can easily be experimented with, improving the chance of finding an optimal style.
+(i.e. A question like "What if C++ used indentation-delimiting instead of braces?" can be tested in an hour or so. If someone were to test this, they would likely find that indentation delimiting was clearer than brace delimiting..)
 
+Since each programming language has its own compiler, there is some redundancy in each implementation. 
+For example, the lexer for a C++ compiler and a Java compiler would be extremely similar, since both languages use braces, semicolons, and parentheses in the same way.
+Even two programming languages that don't have similar syntax have similar parts of their compiler. 
+For example, a lexer seperates text based on a list of delimiter-strings, which vary with each programming language. The string seperation function, however, is the same for every lexer, and would be redundant across multiple compilers.
+The same concept applies to Parsers and Generators, etc.. (Parsers read tokens and produce an ast, Generators use an AST to generate code)
+
+If programming languages could be compiled with a framework, this redundancy would go away, and programming language researchers would be able to focus on the language itself, as opposed to its compiler.
 Essentially, Glossa abstracts the parts of a compiler that don't depend on which language is being compiled, and reads in rules for each language, effectively seperating the language from how it is compiled. 
+Because of this, Glossa allows simple implementations of programming languages, which means that Glossa can easily become capable of translating many different languages with ease.
 
 % ==================================================
 \section{Methods}
@@ -85,69 +107,122 @@ Essentially, Glossa abstracts the parts of a compiler that don't depend on which
 \subsection{Compilation}
 Traditionally, a compiler takes a single high-level programming language, and converts it into machine instructions in the following steps:
 \begin{enumerate}
-\item Code is lexed (seperated into tokens and tagged as keywords, punctuators, literals, etc...)
-\item Tokens are parsed to build an abstract syntax tree (symbolic code representation)
-\item The AST is optimized (i.e. unreachable code is removed, some loops are unrolled)
-\item Machine instructions are generated from AST.
+\item Lexer: Code is lexed (seperated into tokens and tagged as keywords, punctuators, literals, etc...)
+\item Parser: Tokens are parsed to build an Abstract Syntax Tree (symbolic code representation)
+\item Transformer: The AST is optimized (i.e. unreachable code is removed, some loops are unrolled, much more..)
+\item Generator: Machine instructions are generated from AST.
 \end{enumerate}
 
-Glossa differs only slightly from the steps above. Lexing and parsing work as above, but the rules for lexing and parsing respectively are read in at run-time. 
-In the current state of the software, optimizations don't occur, but could easily be modeled as transformations to the abstract syntax tree.
-Instead of generating machine instructions, Glossa generates code in another programming language. (See next page) 
-Instructions for doing this are also read in at run-time.
-While some compilers and interpreters have dynamic ways to modify the syntax of a language, this functionality seems to be unneeded for most compilers.
-Because of its dynamic nature, it is very simple to have Glossa support multiple programming languages both for input and output.
+Glossa does exactly the same, but, instead of using hardcoded functions, Glossa creates a Lexer, Parser, Transformer and Generator during the compilation phase by reading in descriptions of the languages being translated.
+
+Assuming conversion from \textbf{A} to \textbf{B}, as in the Abstract, Glossa creates the Lexer, Parser, and Transformer based on \textbf{A}, and the Generator based on \textbf{B}.
+As one would expect, this means that Glossa has four types of descriptor files:
+
+\begin{enumerate}
+    \item \textit{lex files}: A list of strings that constitute atomic types like string literals, operators, keywords 
+    \item \textit{grammar files}: A description of a parser for each grammar element in language \textbf{A} 
+    \item \textit{constructor files}: A description of a generator for each grammar element in language \textbf{B}
+    \item \textit{transformer files}: A description of transformations for each grammar element in language \textbf{A}.
+\end{enumerate}
+
+The next page has a diagram of compilation in Glossa, utilizing these four file types to create the Lexer, Parser, Transformer, and Generator.
 
 \newpage
 
 \begin{tikzpicture}[node distance=2.5cm]
 
-    \node (sourcea) [startstop]                 {Source Code A};
-    \node (lexer)   [process, below of=sourcea] {Lexical Analyzer};
-    \node (tokens)  [io, below of=lexer]        {Symbolic Tokens};
-    \node (parser)  [process, below of=tokens]  {Parser};
-    \node (asta)    [io, below of=parser]       {AST};
-    \node (trans)   [process, below of=asta]    {Transformer};
-    \node (astb)    [io, below of=trans]        {Intermediate AST};
-    \node (gen)     [process, below of=astb]    {Generator};
-    \node (stop)    [startstop, below of=gen]   {Source Code B};
+    \node (sourcea) [startstop]                       {Source Code A};
+    \node (lexer)   [process, below of=sourcea]       {Lexer};
+    \node (tokens)  [io, below of=lexer]              {Symbolic Tokens};
+    \node (lrules)  [process, right of=lexer, xshift=2cm]  {Lex Rules};
+    \node (lfiles)  [io, right of=lrules, xshift=2cm]  {Lex Files};
+    \node (parser)  [process, below of=tokens]        {Parser};
+    \node (asta)    [io, below of=parser]             {AST};
+    \node (grules)  [process, right of=parser, xshift=2cm]  {Grammar Rules};
+    \node (gfiles)  [io, right of=grules, xshift=2cm] {Grammar Files};
+    \node (trans)   [process, below of=asta]          {Transformer};
+    \node (astb)    [io, below of=trans]              {Intermediate AST};
+    \node (trules)  [process, right of=trans, xshift=2cm]  {Transformer Rules};
+    \node (tfiles)  [io, right of=trules, xshift=2cm]  {Transformer Files};
+    \node (gen)     [process, below of=astb]          {Generator};
+    \node (stop)    [startstop, below of=gen]         {Source Code B};
+    \node (ggrules) [process, right of=gen, xshift=2cm]  {Generator Rules};
+    \node (ggfiles) [io, right of=ggrules, xshift=2cm]    {Generator Files};
 
     \draw [arrow] (sourcea) -- (lexer);
     \draw [arrow] (lexer) -- (tokens);
+    \draw [arrow] (lfiles) -- (lrules);
+    \draw [arrow] (lrules) -- (lexer);
     \draw [arrow] (tokens) -- (parser);
+    \draw [arrow] (gfiles) -- (grules);
+    \draw [arrow] (grules) -- (parser);
     \draw [arrow] (parser) -- (asta);
     \draw [arrow] (asta) -- (trans);
+    \draw [arrow] (tfiles) -- (trules);
+    \draw [arrow] (trules) -- (trans);
     \draw [arrow] (trans) -- (astb);
     \draw [arrow] (astb) -- (gen);
+    \draw [arrow] (ggfiles) -- (ggrules);
+    \draw [arrow] (ggrules) -- (gen);
     \draw [arrow] (gen) -- (stop);
+
+    % title
+    \node[align=center,font=\bfseries, yshift=2em] (title) 
+	at (current bounding box.north)
+	{Compilation in Glossa};
 
 \end{tikzpicture}
 
-\subsection{Abstracting Language Definitions}
+\subsection{Lex Files}
 
-To parse an input language, Glossa needs a description of the languages grammar, which is provided through a \textit{grammar file}.
-Optional descriptions of AST transformations are provided through \textit{transformer files}.
+Lex files are the most straightforward of all of Glossa's descriptor files.
 
-To generate an output language from an AST, Glossa needs a set of \textit{constructor files}.
+A language's lex directory contains the following files:
+\begin{verbatim}
+comment_delimiters  logicaloperators  operators  punctuators  string_delimiters  whitespace
+\end{verbatim}
+
+The files 
+\begin{verbatim}
+logicaloperators operators punctuators string_delimiters
+\end{verbatim}
+are each just lists of strings
+
+The 
+\begin{verbatim}
+comment_delimiters  
+\end{verbatim}
+file is a two-line file of the form:
+\begin{verbatim}
+#
+""" 
+\end{verbatim}
+In General:
+\begin{verbatim}
+Single line comment delim
+Multi line comment delim
+\end{verbatim}
+
+An example whitespace file:
+\begin{verbatim}
+indent  false
+space   false
+newline false
+\end{verbatim}
+Where "false" says if a whitespace element should be kept as a token when the language is lexed.
 
 \subsection{Grammar Files}
 
-Glossa's parse operation can be modeled as a function with the signature:
+Glossa's parse operation converts a list of tokens to an AST.
 
+Glossa will attempt to identify remaining tokens with high-level statement types, which in turn use lower-level grammar types:
 \begin{verbatim}
-parse :: Tokens -> AST
+statement: `@statement a | b | c`
 \end{verbatim}
-
-Where the body of the parse function looks like:
-
-\lstset{language=Python}
-\begin{lstlisting}
-while not tokens.empty():
-    identify_remaining(tokens)
-\end{lstlisting}
-
-Glossa will attempt to identify remaining tokens with any of the high-level statement types provided.
-These statement types can use other grammar constructs as well
+Where a might be:
+\begin{verbatim}
+a: `@val d | e`
+\end{verbatim}
 
 A single grammar files defines a potential identification of tokens, producing a tagged dictionary of symbols if the tokens are identified successfully:
 
@@ -162,37 +237,47 @@ In plain english this reads:
 In general, a grammar element is defined like the following:
 
 \begin{verbatim}
-name: `first_element` `second_element`
+name: `first_element` `second_element` .. `last_element`
+or
+name: `option_a` | `option_b` ..  | `option_c`
 \end{verbatim}
 
-Where first\_element and second\_element are parsers of the form:
+Where each element is a parser of the form:
 
-\begin{verbatim}
 an optional "@name" tag, which saves the result of the parser to the symbol dictionary under "name"
 Either:
+\begin{verbatim}
 - A subtype parser (i.e `'='`),
 - A subtype-type parser (i.e. `identifier self`)
 - A type parser (i.e. `identifier **`)
 - A link to another grammar element (i.e. `value`)
+\end{verbatim}
 
 So, the following are all examples of valid parsers:
+\begin{verbatim}
 `@val value`          // Link to value type, saved as "val"
 `identifier self`     // Identifier "self", discarded
 `@name identifier **` // Any identifier saved as "name"
+\end{verbatim}
 
-However, these parsers can be prefixed with the following keywords to change their meaning:
+However, these parsers can be prefixed with the following 
+  keywords to change their meaning:
 
+\begin{verbatim}
 !           : discard the parse result of this parser
 anyOf a b   : parse either a or b, keeping the result of the first successful parser. 
     (alternatively written a | b) 
 */many      : parse the parser several times until it fails
-many1       : parse the parser several times, requiring it to parse successfully at least once
+many1       : parse the parser several times, requiring it to parse successfully 
+                at least once.
 optional    : make a parser optional
 inOrder a b : run several parsers in order
 sep a b     : parse bs seperated by as (i.e. sep , value) 
+\end{verbatim}
 
-Some examples of more sophisticated parsers
+Some examples of more sophisticated parsers:
 
+\begin{verbatim}
 `@statement import_from | main | ... ` 
 `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 `@val vector | functioncall | elementaccess | memberaccess | basevalue | parenexpr`
@@ -203,21 +288,16 @@ So, fully formed grammar elements (for Python) look like:
 \begin{verbatim}
 main: 'if' '__name__' '==' `literal string` ':' `@body *statement` 'end'
 
-function: 'def' `@identifier identifier **` '(' `@args optional sep ',' identifier **` ')' ':' `@body *statement` 'end' 
+function: 'def' `@identifier identifier **` 
+    '(' `@args optional sep ',' identifier **` ')' ':' 
+    `@body *statement` 'end' 
 
 pass: 'pass'
 
 return: 'return' `@expression expression`
 
 assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
-
 \end{verbatim}
-
-\subsection{AST Transformations}
-
-Transformations to the AST allow for an overall simpler compilation process, reducing the number of construction files required for an output language. Essentially, transformations change language-specific features into more generalized ones. AST transforms can also model code optimizations.
-
-[Detail of how transformer files work]
 
 \subsection{Constructors}
 
@@ -271,35 +351,107 @@ end
 
 Where "header" and "source" are defined in the special cpp/constructors/file file, which outlines which filetypes c++ will construct
 
+\subsection{Transformer Files}
+
+Transformations to the AST allow for an overall simpler compilation process, reducing the number of construction files required for an output language. 
+AST transformations also solve non-isomorphisms, which is very useful if two languages are not very similar.
+
+Essentially, transformations change language-specific features into more generalized ones. 
+AST transforms can also model code optimizations.
+
+Each element of the AST is MultiSymbol, which is a tag (string), and a string dictionary of symbols.
+To transform an AST element, the tag can be changed, or elements within the string dictionary can be manipulated.
+
+A transformer file is just a series of these transformations:
+\begin{verbatim}
+add    key (literal | identifier | ..) (2 | x | ...)
+append key (literal | identifier | ..) (2 | x | ...)
+copy   key1 key2
+move   key1 key2
+copy-append key1 key2
+move-append key1 key2
+retag newtag
+\end{verbatim}
+Which can be surrounded by control flow, in the same way that constructor files can:
+\begin{verbatim}
+branch defined identifier 
+move identifier old_identifier
+add name identifier f
+elsebranch
+add name identifier f
+end
+\end{verbatim}
+(This AST transform renames the syntax element to f, saving the old name to the key "old\_identifier"
+
 % ==================================================
 \section{Applications}
 % ==================================================
 
-Glossas core focus is on language design and creation. Creation of new languages and extension of existing ones should be very simple. 
+Glossa has two core applications: Translation of code, and programming language design.
 
-\subsection{Glossa as a pre-processor}
+\subsection{Translation}
 
+If Glossa has adequate language descriptions, then translations are trivial. 
 Since Glossa can convert one language to another, it works as a pre-processor.
 Glossa has the ability for languages to inherit from and extend other languages, so, for example, C++ might inherit from C, and then implement class statements that compile into C code.
 
-\subsection{Language Creation, Design, and Modification}
+\subsection{Language Design}
 
-In its ability to create new languages and extend existing ones, Glossa aims to help programming language research.
-If syntax features can be quickly added or removed, programming languages will evolve more rapidly.
-Rapid development of programming languages leads to better programming languages.
+Since Glossa uses dynamic language descriptions, languages can easily be created or modified by changing their descriptor files. Glossa also allows languages to inherit from existing languages. For example, Glossa's descriptions for C++ might inherit from C, and only overwrite or add features.
+This functionality makes language experimentation painless, as code doesn't even need to be recompiled.
 
-\subsection{Simple code porting}
+Glossa provides examples of the following translations:
+\begin{enumerate}
+    \item Python3 -\textgreater C++
+    \item Python2 -\textgreater C++ 
+    \item Python2 -\textgreater Python3
+    \item FORTRAN -\textgreater C++ 
+    \item FORTRAN -\textgreater Python3 
+\end{enumerate}
+Glossa also has an example of a language implementation: Auta, which provides a simple automation-scripting interface, by building an API into the languages syntax:
 
-Additionally, Glossa is able to port code. For example, Glossa can easily re-implement software like 2to3, which updates old python code.
-For outdated projects, or projects written in too many languages, easy conversions between languages are extremely useful.
+\lstset{language=Python}
+\begin{lstlisting}
+every Tuesday:
+    send_email(team_a, “Meeting in room 1024 @ 2:00”)
+every week:
+    i = download_spreadsheet(“weekly income”)
+    out = calc_taxes(i)
+    upload_spreadsheet(out)
+\end{lstlisting}
+Which would compile to several Google-API calls in Python, which would be much more complicated. 
+Simplifying the API calls by building them into Auta's syntax allows a layperson to write simple scripts.
+
+This example isn't necessarily meant to be an actual programming language, but more to show how a language could easily be implemented in Glossa.
 
 % ==================================================
 \section{Results}
 % ==================================================
 
+Recall the current suite of translation examples:
+\begin{enumerate}
+    \item Python3 -\textgreater C++
+    \item Python2 -\textgreater C++ 
+    \item Python2 -\textgreater Python3
+    \item FORTRAN -\textgreater C++ 
+    \item FORTRAN -\textgreater Python3 
+\end{enumerate}
+
+Glossa's support for the different versions of Python and C++ output are significantly developed, supporting 80-90\% of the syntax for each language. 
+Glossa's support for FORTRAN is more experimental, but 100\% support would be trivial to add, since FORTRAN has very simple syntax.
+Glossa could currently support more complex input languages, like C++ or Haskell, but the description files would be more difficult to write.
+
+For language design, Glossa is fully equipped. The only restriction is the time required to write description files.
+
 % ==================================================
 \section{Conclusion}
 % ==================================================
+
+Glossa shows that a multi-language source to source compiler is possible. 
+While Glossa only supports a few different languages, it could easily support more if more description files were written.
+However, Glossa's interface would benefit from simplification, since writing description files is a hard task. Also, even in description files, there is some redundancy that could be eliminated.
+
+Glossa has accomplished far more than it originally set out to: Perhaps the software will mature in the future, and eventually be used at the industry level.
 
 % ==================================================
 \section{Appendix}
