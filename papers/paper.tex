@@ -62,29 +62,35 @@ tabsize=3
 % ==================================================
 \section{Abstract}
 % ==================================================
-Glossa is an investigation into the feasibility of a multi-language source-to-source compiler with dynamic grammars. 
+Glossa is both a multi-language source to source compiler and, by extension, a framework for creating compilers.
+Glossa's main goal is to convert any programming language \textbf{A} to any programming language \textbf{B}, such that the output in \textbf{B} is indistinguishable from code written by a native \textbf{B} programmer, in the same way that the output from Google Translate would ideally look as if it were written by a native speaker.
 If given an adequate description of each language's grammar, one language can be converted to another if the languages are \textit{isomorphic}.
 If two languages are not \textit{isomorphic}, one can still be converted to another if the non-isomorphisms are solved through an AST transformation.
-For example, C++ can be converted to C if classes are represented as collections of functions that all take a struct as their first argument. (Since C++ supports classes, but C does not (non-isomorphism).)
+For example, C++ can be converted to C if classes are represented as collections of functions that all take a struct as their first argument. (Since C++ supports classes, but C does not (an example of a non-isomorphism).)
+However, solving non-isomorphisms through AST transformations potentially compromises output code readability. This being noted, a human making the conversion would also have to compromise readability, since there \textit{is no other way to retain functionality.} So, when it has to, Glossa compromises output code readability for proper functionality.
 
-Given source code in one language, a description of its grammar, \textbf{A} , and a description of an output language's grammar \textbf{B}, can \textbf{A} be converted to \textbf{B} such that the output in \textbf{B} is indistinguishable from a program originally written in \textbf{B}, in the same way that the output of Google Translate would look like something written by a native spanish speaker?
-The answer is yes, but there are some limitations. Grammars need to be described fully to Glossa, which is a potentially difficult task.
+Glossa has several caveats. 
+Grammars need to be described fully to Glossa, which is potentially difficult.
 The more accurate a grammar description becomes, the more complicated it is to create.
 However, grammar files must be simple, so that they can be created/understood/modified by users.
 Also, the more non-isomorphisms that exist between two programming languages, the less readable the result of a conversion between them will be.
-For example, C++'s class syntax is human-readable, but the C machinery emulating classes is far less readable. 
 This being noted, accurate conversions are 100\% possible if the description files are written properly.
 For description files to be easily written, their syntax should be as intuitive as possible. 
 In Glossa, the description file formats have been refactored several times, so that the current descriptor file syntax is near optimal.
 
 Glossa accomplishes near 100\% conversions for Python3 to C++, as well as Python2 to Python3.
 Glossa has proof of concept conversions for FORTRAN to C++, FORTRAN to Python3, and proof of concept for implementation of a new programming language, Auta.
+While the software is still in its infancy, the core concepts have been proven, indicating that an industry level multi-language source to source compiler is possible.
 
 % ==================================================
 \section{Introduction}
 % ==================================================
 
-Glossa provides a \textit{dynamic framework} for easily modifying syntax of input and output languages. 
+Since Glossa aims to be capable of translating many different programming languages, it must provide a dynamic framework for easily modifying syntax of input and output languages. 
+In addition to letting Glossa translate existing languages, this functionality makes implementing new programming languages very simple.
+
+\textbf{EDITING POINT}
+
 Ultimately, modifiable syntax leads to better programming languages.
 As programming paradigms shift, so does syntax. 
 If a language can be changed quickly and easily, then different styles can easily be experimented with, improving the chance of finding an optimal style.
@@ -400,29 +406,6 @@ Glossa has the ability for languages to inherit from and extend other languages,
 Since Glossa uses dynamic language descriptions, languages can easily be created or modified by changing their descriptor files. Glossa also allows languages to inherit from existing languages. For example, Glossa's descriptions for C++ might inherit from C, and only overwrite or add features.
 This functionality makes language experimentation painless, as code doesn't even need to be recompiled.
 
-Glossa provides examples of the following translations:
-\begin{enumerate}
-    \item Python3 -\textgreater C++
-    \item Python2 -\textgreater C++ 
-    \item Python2 -\textgreater Python3
-    \item FORTRAN -\textgreater C++ 
-    \item FORTRAN -\textgreater Python3 
-\end{enumerate}
-Glossa also has an example of a language implementation: Auta, which provides a simple automation-scripting interface, by building an API into the languages syntax:
-
-\lstset{language=Python}
-\begin{lstlisting}
-every Tuesday:
-    send_email(team_a, “Meeting in room 1024 @ 2:00”)
-every week:
-    i = download_spreadsheet(“weekly income”)
-    out = calc_taxes(i)
-    upload_spreadsheet(out)
-\end{lstlisting}
-Which would compile to several Google-API calls in Python, which would be much more complicated. 
-Simplifying the API calls by building them into Auta's syntax allows a layperson to write simple scripts.
-
-This example isn't necessarily meant to be an actual programming language, but more to show how a language could easily be implemented in Glossa.
 
 % ==================================================
 \section{Results}
@@ -443,11 +426,31 @@ Glossa could currently support more complex input languages, like C++ or Haskell
 
 For language design, Glossa is fully equipped. The only restriction is the time required to write description files.
 
+\subsection{Language Design}
+
+As discussed in the Applications section, dynamic grammars simplify language creation.
+For example, Glossa ships with an experimental language, Auta, which extends the Python3 programming language by adding common tasks, like download spreadsheets or sending emails, to the language's syntax:
+
+\lstset{language=Python}
+\begin{lstlisting}
+every Tuesday:
+    send_email(team_a, “Meeting in room 1024 @ 2:00”)
+every week:
+    i = download_spreadsheet(“weekly income”)
+    out = calc_taxes(i)
+    upload_spreadsheet(out)
+\end{lstlisting}
+Which would compile to several Google-API calls in Python, which would be much more complicated. 
+Simplifying the API calls by building them into Auta's syntax allows a layperson to write simple scripts.
+
+This example isn't necessarily meant to be an actual programming language, but more to show how a language could easily be implemented in Glossa.
+
 % ==================================================
 \section{Conclusion}
 % ==================================================
 
 Glossa shows that a multi-language source to source compiler is possible. 
+Since description files are the only pre-requisite for translating a particular language, Glossa can theoretically translate any language, as long as a description is provided.
 While Glossa only supports a few different languages, it could easily support more if more description files were written.
 However, Glossa's interface would benefit from simplification, since writing description files is a hard task. Also, even in description files, there is some redundancy that could be eliminated.
 
