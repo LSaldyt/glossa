@@ -3,12 +3,17 @@
 Glossa is a simple multi-language source-to-source compiler. The program uses a database of description files to convert between several programming languages (Currently Python2, Python3, FORTRAN, and C++). 
 
 Possible input languages are Python2, Python3, and FORTRAN.
+
 Possible output languages are Python3 and C++.
 
 Glossa also has many proof of concept languages:
+
 Auta: DSL for automation, built on top of Python3
+
 structured\_english: Structured language that compiles to Java. Used to show students the need for precision in language.
+
 laypython: Proof of concept that a more verbose, english like version of Python3 could be built using Glossa.
+
 
 Glossa has a haskell demo, but the Haskell language is no longer supported with the current version of the software. However, it easily could be, if the correct description files were written.
 
