@@ -27,14 +27,12 @@ branch
 every
 import_select
 lambda
-print
 trycatch
 elsebranch
 is
 main
 funcarg
 tuple
-value
 boolpart
 range
 comment

@@ -1,0 +1,5 @@
+defines
+transform:
+retag functioncall
+add identifier identifier print
+move value args 

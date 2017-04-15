@@ -112,6 +112,10 @@ bool contains(const unordered_set<T>& data_structure, const T& key)
     return data_structure.find(key) != data_structure.end();
 }
 
+/**
+ *  * Shorthand for checking contents of common data structures
+ *   */
+bool contains(const string& s1, const string& s2);
 
 /**
  *  * Common string manipulation, useful in code generation
