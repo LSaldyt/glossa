@@ -1,0 +1,3 @@
+statement: `@val display | define`
+display: 'display' `@value expression`
+define: 'define' `@identifier identifier **` 'of' `@args optional sep ',' identifier **` 'as' `@body *statement`
