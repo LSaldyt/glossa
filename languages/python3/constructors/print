@@ -1,5 +1,0 @@
-defines
-header
-print($val$)
-source
-print($val$)

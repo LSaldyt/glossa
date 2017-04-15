@@ -99,6 +99,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     vector<tuple<string, Constructor<string>>> constructors;
     if (not contains(construction_map, symbol_type))
     {
+        assert(ms_table.size() == 1);
         for (auto fc : file_constructors)
         {
             auto filetype = get<0>(fc);
@@ -245,7 +246,7 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
             else if (keyword == "block") // e.g. block body @;
             {
                 assert(terms.size() == 2 or terms.size() == 3);
-                print(terms[1]);
+                //print(terms[1]);
                 assert(contains(ms_table, terms[1]));
                 auto symbols = ms_table[terms[1]];
                 string formatter = "@";

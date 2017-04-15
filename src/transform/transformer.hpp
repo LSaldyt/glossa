@@ -30,7 +30,11 @@ public:
 private:
     unordered_map<string, Constructor<vector<string>>> transformation_map;
     void _transform(string& tag, MultiSymbolTable& ms_table);
-    void _keyword_transform(vector<string>& terms, string& tag, MultiSymbolTable& ms_table);
+    void _keyword_transform(vector<string>& terms, 
+                            string& otag, 
+                            MultiSymbolTable& oms_table,
+                            string& reg_tag,
+                            MultiSymbolTable& reg_ms_table);
 
 };
 
