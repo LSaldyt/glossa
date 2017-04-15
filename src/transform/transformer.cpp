@@ -45,19 +45,27 @@ void Transformer::operator()(IdentifiedGroups& identified_groups)
     }
 }
 
-void Transformer::_keyword_transform(vector<string>& terms, string& tag, MultiSymbolTable& ms_table)
+void Transformer::_keyword_transform(vector<string>& terms, 
+                                     string& otag, 
+                                     MultiSymbolTable& oms_table,
+                                     string& reg_tag,
+                                     MultiSymbolTable& reg_ms_table)
 {
     assert(not terms.empty());
     auto keyword = terms[0];
-    if (keyword == "add" or keyword == "append")
+    bool reg = contains(keyword, "reg");
+    auto &ms_table = reg ? reg_ms_table : oms_table;
+    auto &tag      = reg ? reg_tag      : otag; 
+    if (contains(keyword, "add") or contains(keyword, "append"))
     {
         assert(terms.size() == 4);
         auto creator = syntax::generatorMap.at(terms[2]);
         auto symbol  = creator({terms[3]});
-        if (keyword == "add" or not contains(ms_table, terms[1]))
+        if (contains(keyword, "add") or not contains(ms_table, terms[1]))
         {
-            assert(not contains(ms_table, terms[1]));
+            assert(not contains(ms_table, terms[1])); // If "add" branch
             ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+            auto s = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
         }
         else
         {
@@ -84,10 +92,26 @@ void Transformer::_keyword_transform(vector<string>& terms, string& tag, MultiSy
             ms_table.erase(a);
         }
     }
-    else if (keyword == "retag")
+    else if (contains(keyword, "retag"))
     {
         assert(terms.size() == 2);
         tag = terms[1];
+    }
+    else if (contains(keyword, "pushback"))
+    {
+        assert(terms.size() == 2);
+        auto symbol = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
+        if (contains(keyword, "override") or not contains(oms_table, terms[1]))
+        {
+            oms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+        }
+        else
+        {
+            oms_table[terms[1]].push_back(symbol);
+        }
+        // Reset
+        reg_tag = "";
+        reg_ms_table = MultiSymbolTable();
     }
     else
     {
@@ -101,6 +125,8 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
     {
         if (kv.first == tag)
         {
+            string reg_tag;
+            MultiSymbolTable reg_ms_table;
             print("Transforming " + tag);
             unordered_set<string> names;
             auto keyword_transforms = kv.second(names, 
@@ -108,7 +134,7 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
                                                 "none"); 
             for (auto terms : keyword_transforms)
             {
-                _keyword_transform(terms, tag, ms_table);
+                _keyword_transform(terms, tag, ms_table, reg_tag, reg_ms_table);
             }
         }
     }

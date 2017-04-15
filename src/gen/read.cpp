@@ -55,7 +55,6 @@ ConditionEvaluator generateConditionEvaluator(vector<string> terms)
         return [terms](unordered_set<string>& names, MultiSymbolTable& ms_table)
         {
             auto id = terms[1];
-            //print(id);
             assert(contains(ms_table, id));
             return not ms_table[id].empty();
         };
