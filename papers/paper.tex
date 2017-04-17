@@ -89,8 +89,6 @@ While the software is still in its infancy, the core concepts have been proven, 
 Since Glossa aims to be capable of translating many different programming languages, it must provide a dynamic framework for easily modifying syntax of input and output languages. 
 In addition to letting Glossa translate existing languages, this functionality makes implementing new programming languages very simple.
 
-\textbf{EDITING POINT}
-
 Ultimately, modifiable syntax leads to better programming languages.
 As programming paradigms shift, so does syntax. 
 If a language can be changed quickly and easily, then different styles can easily be experimented with, improving the chance of finding an optimal style.
@@ -421,7 +419,7 @@ Recall the current suite of translation examples:
 \end{enumerate}
 
 Glossa's support for the different versions of Python and C++ output are significantly developed, supporting 80-90\% of the syntax for each language. 
-Glossa's support for FORTRAN is more experimental, but 100\% support would be trivial to add, since FORTRAN has very simple syntax.
+However, support for FORTRAN is more experimental, but 100\% support would be trivial to add, since FORTRAN has very simple syntax.
 Glossa could currently support more complex input languages, like C++ or Haskell, but the description files would be more difficult to write.
 
 For language design, Glossa is fully equipped. The only restriction is the time required to write description files.
@@ -454,7 +452,12 @@ Since description files are the only pre-requisite for translating a particular 
 While Glossa only supports a few different languages, it could easily support more if more description files were written.
 However, Glossa's interface would benefit from simplification, since writing description files is a hard task. Also, even in description files, there is some redundancy that could be eliminated.
 
-Glossa has accomplished far more than it originally set out to: Perhaps the software will mature in the future, and eventually be used at the industry level.
+However, Glossa in its current form is not intended to be industrial-level software. 
+Instead, it is an investigation into creating a generalized compilation system that does not hardcore any rules. 
+While Glossa is useful at doing \textit{some} automated translations, it is likely more useful for implementing new programming languages.
+Because of the generalizations (discarding of hard-coded rules) that Glossa makes, changing language definitions is trivial compared to the difficulty of modifying the source of a compiler.
+
+Glossa has accomplished far more than it originally set out to: Perhaps Glossa can be used as groundwork for an industrial-level compiler framework.
 
 % ==================================================
 \section{Appendix}

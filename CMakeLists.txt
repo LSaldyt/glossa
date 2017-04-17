@@ -13,8 +13,8 @@ file (GLOB_RECURSE TEST_SOURCES
     "${CMAKE_SOURCE_DIR}/tests/*.cpp" # Skip Compiler.hpp and Compiler.cpp, which include int main()
     "${CMAKE_SOURCE_DIR}/tests/*.hpp")
 
-add_library(progtranlib SHARED "${LIB_SOURCES}")
-add_executable(progtran "${PROG_SOURCES}")
-target_link_libraries(progtran progtranlib)
-add_executable(progtrantest "${TEST_SOURCES}")
-target_link_libraries(progtrantest progtranlib)
+add_library(glossalib SHARED "${LIB_SOURCES}")
+add_executable(glossa "${PROG_SOURCES}")
+target_link_libraries(glossa glossalib)
+add_executable(glossatest "${TEST_SOURCES}")
+target_link_libraries(glossatest glossalib)
