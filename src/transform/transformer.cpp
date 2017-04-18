@@ -52,6 +52,12 @@ void Transformer::_keyword_transform(vector<string>& terms,
 {
     assert(not terms.empty());
     auto keyword = terms[0];
+    bool reg = keyword == "reg" or contains(keyword, "transfer") or contains(keyword, "pushback");
+    assert(terms.size() >= 2);
+    auto reg_name = reg ? terms[1] : "";
+    if (reg) err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
+    auto& reg_tag      = reg ? get<0>(register_map[reg_name]) : otag;
+    auto& reg_ms_table = reg ? get<1>(register_map[reg_name]) : oms_table;
 
     if (keyword == "createreg")
     {
@@ -59,29 +65,15 @@ void Transformer::_keyword_transform(vector<string>& terms,
         register_map[terms[1]] = make_tuple("", MultiSymbolTable());
         return;
     }
-
-    if (keyword == "reg")
+    else if (keyword == "reg")
     {
-        assert(terms.size() > 2);
-        auto reg_name = terms[1];
-        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
-        auto& reg_tuple = register_map[reg_name];
         terms = slice(terms, 2);
-        auto& reg_tag      = get<0>(reg_tuple);
-        auto& reg_ms_table = get<1>(reg_tuple);
         _keyword_transform(terms, reg_tag, reg_ms_table, register_map);
         return;
     }
-
-    keyword = terms[0];
-    if (contains(keyword, "transfer"))
+    else if (contains(keyword, "transfer"))
     {
         assert(terms.size() == 4);
-
-        auto reg_name = terms[1];
-        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
-        auto& reg_ms_table = get<1>(register_map[reg_name]);
-
         auto a = terms[2];
         auto b = terms[3];
         err_if(not contains(oms_table, a), a + " not in original table");
@@ -138,12 +130,7 @@ void Transformer::_keyword_transform(vector<string>& terms,
     else if (contains(keyword, "pushback"))
     {
         assert(terms.size() == 3);
-        auto reg_name = terms[1];
         auto key      = terms[2];
-        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
-        auto& reg_tuple    = register_map[reg_name];
-        auto& reg_tag      = get<0>(reg_tuple);
-        auto& reg_ms_table = get<1>(reg_tuple);
         auto symbol = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
         if (contains(keyword, "override") or not contains(oms_table, key))
         {
