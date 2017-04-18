@@ -1,5 +1,0 @@
-identifier wildcard
-punctuator [
-anyOf link string literal wildcard
-punctuator ]
-0 sep 2

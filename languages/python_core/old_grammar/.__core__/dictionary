@@ -1,5 +1,0 @@
-punctuator {
-optional link kvpair 
-many inOrder !punctuator , link kvpair 
-punctuator }
-1 2
