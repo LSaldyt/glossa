@@ -1,0 +1,11 @@
+defines
+transform:
+retag whileloop
+createreg a 
+reg a retag symbollist
+reg a append values identifier not
+reg a append values identifier (
+transfer-append a boolexpr values
+reg a append values identifier )  
+delete boolexpr
+pushback a boolexpr

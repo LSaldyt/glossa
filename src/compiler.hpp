@@ -23,14 +23,15 @@ namespace compiler
     void compileFiles(vector<string> filenames, string input_dir, string input_lang, string output_dir, string output_lang, int verbosity=1);
     void compile(string filename, Grammar& grammar, Generator& generator, 
                  LexMap& lexmap,
-                 Transformer& transformer,
+                 Transformer& pre_transformer,
+                 Transformer& post_transformer,
                  unordered_map<string, string>& symbol_table, 
                  string input_directory="", string output_directory="", 
                  OutputManager logger=OutputManager(1));
 
     Grammar     loadGrammar   (string language);
     Generator   loadGenerator (string language);
-    //Transformer loadTransformer (string language);
+    Transformer loadTransformer(string language, string prefix="pre_");
 
     unordered_map<string, string> readSymbolTable(string filename);
 

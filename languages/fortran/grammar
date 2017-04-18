@@ -1,12 +1,12 @@
-statement: `@val main | definition | declaration | if | print | whileloop`
+statement: `@statement main | definition | declaration | if | print | whileloop | case`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 
 typename: `@val 'REAL' | 'INTEGER'`
 
-declaration: `@type typename` '::' `@identifier identifier **` 
+declaration: `@type typename` `optional '::'` `@identifier identifier **` 
 
-definition: `@type typename` '::' `@identifier identifier **` '=' `@expr link expression` 
+definition: `@type typename` '::' `@identifier identifier **` `@const optional inOrder punctuator , identifier PARAMETER` '=' `@expr link expression` 
 
 value: `@val basevalue | parenexpr`
 basevalue: `@val identifier ** | string | literal **`
@@ -27,3 +27,6 @@ else: 'ELSE' `@body *statement`
 print: 'WRITE' '(' `operator *` ',' `operator *` ')' `@val expression`
 
 whileloop: 'DO' 'WHILE' '(' `@boolexpr boolexpression` ')' `@body *statement` 'END' 'DO'
+
+case: 'SELECT' 'CASE' '(' `@selector expression` ')' `@cases *sub_case` `optional inOrder identifier CASE identifier DEFAULT` `@default_body *statement` 'END' 'SELECT'
+sub_case: 'CASE' '(' `@val expression` ')' `@body *statement`

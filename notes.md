@@ -13,7 +13,33 @@ Natural Java:
     functions
     objects     
     
-
 Assembly as output language
 
+### Completion lists sorted by ease/importance of implementation
 
+FORTRAN:
+ - index loop
+ - infinite loop
+ - functions
+ - subprograms
+ - arrays (where clause, multi dims)
+ - data types
+ - modules
+
+Python3:
+ - lamdas
+ - imports
+ - classes
+ - kwargs
+ - list/dict comps
+ - with stmt
+ - yield exprs
+ - decorators
+
+Python2:
+ ?
+
+natural\_java:
+ - better classes
+ - more types
+ - ?

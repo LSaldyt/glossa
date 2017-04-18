@@ -1,6 +1,3 @@
-name        = 0 0
-inheritance = 1    
-body        = 2
 defines
 source
 branch nonempty inheritance

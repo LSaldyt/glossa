@@ -1,4 +1,5 @@
 #include "base.hpp"
+#include "io.hpp"
 
 namespace tools
 {
@@ -52,12 +53,25 @@ unsigned long long getTime()
     return now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
 }
 
-void exception_assert(bool b)
+void err_if(bool b, string&& s)
 {
-    if (not b)
+    if (b)
     {
-        throw named_exception("Assertion failed");
+        print("****************************************************************************************************\n");
+        print(s + "\n");
+        print("****************************************************************************************************\n");
     }
+    assert(not b); // For stack trace w/ minimal effort
+}
+void err_if(bool b, string& s)
+{
+    if (b)
+    {
+        print("****************************************************************************************************\n");
+        print(s + "\n");
+        print("****************************************************************************************************\n");
+    }
+    assert(not b); // For stack trace w/ minimal effort
 }
 
 }

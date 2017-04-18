@@ -1,4 +1,4 @@
-statement: `@statement main | array_dec | array_init | loop | declaration | assignment`
+statement: `@statement main | array_dec | array_init | loop | declaration | assignment | function | return | class`
 
 main: 'program' ':' `@body *statement` 'end'
 
@@ -14,7 +14,14 @@ forloop: 'for' `@loopvar identifier **` 'in' `@loopexpr link expression` ':' `@l
 whileloop: 'while' `@boolexpr boolexpression` ':' `@body *statement` 'end'
 untilloop: 'until' `@boolexpr boolexpression` ':' `@body *statement` 'end'
 
-declaration: 'let' 'an' `@type identifier **` `@name identifier **` 'equal' `@value expression` 
+article: `@val identifier a | identifier an`
+
+declaration: 'let' article `@type identifier **` `@name identifier **` 'equal' `@value expression` 
 assignment: 'set' `@lval identifier **` 'to'  `@rval expression` 
 array_dec: 'create' `@type identifier **` 'array' 'called' `@name identifier **` 'of' 'length' `@length literal int`
 array_init: 'set' 'element' `@index literal int` 'of' 'array' `@name identifier **` 'to' `@value literal **`
+
+function: 'define' `@type identifier **` `@identifier identifier **` 'of' `@args optional sep ',' identifier **` 'as' `@body *statement` 'end' 
+return: 'return' `@expr expression`
+
+class: article `@name identifier **` ':' `@body *statement` 'end'
