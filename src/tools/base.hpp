@@ -49,7 +49,6 @@ private:
     std::string name;
 };
 
-void exception_assert(bool b);
 
 /** 
  * Resizes a vector using iterator based constructors
@@ -130,4 +129,8 @@ static inline std::string &rtrim(std::string &s)
     std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
+
+
+void err_if(bool b, string &&s);
+void err_if(bool b, string &s);
 }

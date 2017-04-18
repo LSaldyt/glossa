@@ -14,6 +14,7 @@ Generator::Generator(vector<string> filenames, string directory)
     readStructureFile(directory + "file");
     for (auto filename : filenames)
     {
+        print("Loading constructor " + filename);
         construction_map[filename] = readConstructor(directory + filename);
     }
     ec_creator = [this](string s){ return this->generateElementConstructor(s);}; 
@@ -99,7 +100,7 @@ vector<tuple<string, string, vector<string>>> Generator::operator()(unordered_se
     vector<tuple<string, Constructor<string>>> constructors;
     if (not contains(construction_map, symbol_type))
     {
-        assert(ms_table.size() == 1);
+        err_if(ms_table.size() != 1, "\"" + symbol_type + "\" is not in the construction map and cannot be built using a default constructor (id)");
         for (auto fc : file_constructors)
         {
             auto filetype = get<0>(fc);
@@ -289,7 +290,7 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
  */
 string Generator::formatSymbol (string s, unordered_set<string>& names, MultiSymbolTable& ms_table, string filetype, vector<string>& definitions)
 {
-    assert(contains(ms_table, s));
+    err_if(not contains(ms_table, s), s + " is not in the symbol table");
     auto ms_group = ms_table[s];         
     assert(ms_group.size() == 1);
 
