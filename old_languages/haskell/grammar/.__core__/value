@@ -1,3 +1,0 @@
-optional operator -
-anyOf link functioncall link elementaccess keyword True keyword False link list link range link listcomp link tuple literal wildcard identifier wildcard link parenexpr link do 
-0 sep 1

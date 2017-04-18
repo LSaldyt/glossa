@@ -1,6 +1,0 @@
-importfile = 0 0
-defines
-header
-#include "$importfile$"
-source
-#include "$importfile$"

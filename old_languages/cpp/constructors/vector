@@ -1,6 +1,0 @@
-values = 0
-defines
-header
-std::vector<Object>({`sep , values`})
-source
-std::vector<Object>({`sep , values`})

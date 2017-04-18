@@ -1,6 +1,0 @@
-statement = 0 0
-defines
-header
-$statement$
-source
-$statement$

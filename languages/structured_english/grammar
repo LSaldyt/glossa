@@ -1,5 +1,0 @@
-statement: `@statement array_dec | array_init`
-
-array_dec: 'create' `@type identifier **` 'array' 'called' `@name identifier **` 'of' 'length' `@length literal int`
-
-array_init: 'set' 'element' `@index literal int` 'of' 'array' `@name identifier **` 'to' `@value literal **`

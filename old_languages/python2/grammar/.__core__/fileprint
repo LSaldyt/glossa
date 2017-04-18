@@ -1,7 +1,0 @@
-keyword print
-operator >>
-link expression
-punctuator ,
-link expression
-optional punctuator ,
-2 sep 4 sep 5

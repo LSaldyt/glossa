@@ -1,7 +1,0 @@
-identifier = 0 0
-args = 1
-defines
-header
-$identifier$(`sep , args`)
-source
-$identifier$(`sep , args`)

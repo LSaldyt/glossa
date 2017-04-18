@@ -1,3 +1,0 @@
-cython --embed -o @.c @.py 
-gcc -Os -I /usr/include/python2.7 -o @.out @.c -lpython2.7 -lpthread -lm -lutil -ldl 
-./@.out

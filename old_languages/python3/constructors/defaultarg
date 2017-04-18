@@ -1,9 +1,0 @@
-name    = 0 0
-default = 1
-defines
-source
-branch nonempty default
-$name$=`sep EMPTY default`
-elsebranch
-$name$
-end

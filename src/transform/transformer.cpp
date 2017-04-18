@@ -56,7 +56,23 @@ void Transformer::_keyword_transform(vector<string>& terms,
     bool reg = contains(keyword, "reg");
     auto &ms_table = reg ? reg_ms_table : oms_table;
     auto &tag      = reg ? reg_tag      : otag; 
-    if (contains(keyword, "add") or contains(keyword, "append"))
+    if (contains(keyword, "transfer"))
+    {
+        assert(terms.size() == 3);
+        auto a = terms[1];
+        auto b = terms[2];
+        assert(contains(oms_table, a));
+        if (contains(keyword, "append"))
+        {
+            assert(contains(reg_ms_table, b));
+            concat(reg_ms_table[b], oms_table[a]);
+        }
+        else
+        {
+            reg_ms_table[b] = oms_table[a];
+        }
+    }
+    else if (contains(keyword, "add") or contains(keyword, "append"))
     {
         assert(terms.size() == 4);
         auto creator = syntax::generatorMap.at(terms[2]);
@@ -112,6 +128,10 @@ void Transformer::_keyword_transform(vector<string>& terms,
         // Reset
         reg_tag = "";
         reg_ms_table = MultiSymbolTable();
+    }
+    else if (contains(keyword, "delete"))
+    {
+        ms_table.erase(terms[1]);
     }
     else
     {
