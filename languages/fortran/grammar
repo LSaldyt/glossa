@@ -1,4 +1,4 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 
@@ -27,6 +27,9 @@ else: 'ELSE' `@body *statement`
 print: 'WRITE' '(' `operator *` ',' `operator *` ')' `@val expression`
 
 whileloop: 'DO' 'WHILE' '(' `@boolexpr boolexpression` ')' `@body *statement` 'END' 'DO'
+infiniteloop: 'DO' `@body *statement` 'END' 'DO'
+
+conditionalexit: `@boolexpr boolexpression` 'EXIT'
 
 case: 'SELECT' 'CASE' '(' `@selector expression` ')' `@cases *sub_case` `optional inOrder identifier CASE identifier DEFAULT` `@default_body *statement` 'END' 'SELECT'
 sub_case: 'CASE' '(' `@val expression` ')' `@body *statement`

@@ -33,4 +33,9 @@ PROGRAM hello
         WRITE(*,*) i
     END DO
 
+    DO
+        WRITE(*,*) "Looping infinitely"
+        1 < 2 EXIT
+    END DO
+
 END PROGRAM 
