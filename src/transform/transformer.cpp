@@ -48,20 +48,43 @@ void Transformer::operator()(IdentifiedGroups& identified_groups)
 void Transformer::_keyword_transform(vector<string>& terms, 
                                      string& otag, 
                                      MultiSymbolTable& oms_table,
-                                     string& reg_tag,
-                                     MultiSymbolTable& reg_ms_table)
+                                     RegisterMap& register_map)
 {
     assert(not terms.empty());
     auto keyword = terms[0];
-    bool reg = contains(keyword, "reg");
-    auto &ms_table = reg ? reg_ms_table : oms_table;
-    auto &tag      = reg ? reg_tag      : otag; 
+
+    if (keyword == "createreg")
+    {
+        assert(terms.size() == 2);
+        register_map[terms[1]] = make_tuple("", MultiSymbolTable());
+        return;
+    }
+
+    MultiSymbolTable& ms_table = oms_table;
+    string&           tag      = otag;
+    if (keyword == "reg")
+    {
+        assert(terms.size() > 2);
+        auto reg_name = terms[1];
+        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
+        auto& reg_tuple = register_map[reg_name];
+        terms = slice(terms, 2);
+        tag      = get<0>(reg_tuple);
+        ms_table = get<1>(reg_tuple);
+    }
+
+    keyword = terms[0];
     if (contains(keyword, "transfer"))
     {
-        assert(terms.size() == 3);
-        auto a = terms[1];
-        auto b = terms[2];
-        assert(contains(oms_table, a));
+        assert(terms.size() == 4);
+
+        auto reg_name = terms[1];
+        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
+        auto a = terms[2];
+        auto b = terms[3];
+        err_if(not contains(oms_table, a), a + " not in original table");
+        auto& reg_ms_table = get<1>(register_map[reg_name]);
+
         if (contains(keyword, "append"))
         {
             assert(contains(reg_ms_table, b));
@@ -81,7 +104,6 @@ void Transformer::_keyword_transform(vector<string>& terms,
         {
             assert(not contains(ms_table, terms[1])); // If "add" branch
             ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
-            auto s = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
         }
         else
         {
@@ -116,14 +138,20 @@ void Transformer::_keyword_transform(vector<string>& terms,
     else if (contains(keyword, "pushback"))
     {
         assert(terms.size() == 2);
+        auto reg_name = terms[1];
+        auto key      = terms[2];
+        err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
+        auto& reg_tuple    = register_map[reg_name];
+        auto& reg_tag      = get<0>(reg_tuple);
+        auto& reg_ms_table = get<1>(reg_tuple);
         auto symbol = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
-        if (contains(keyword, "override") or not contains(oms_table, terms[1]))
+        if (contains(keyword, "override") or not contains(oms_table, key))
         {
-            oms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+            oms_table[key] = vector<shared_ptr<Symbol>>({symbol});
         }
         else
         {
-            oms_table[terms[1]].push_back(symbol);
+            oms_table[key].push_back(symbol);
         }
         // Reset
         reg_tag = "";
@@ -145,8 +173,7 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
     {
         if (kv.first == tag)
         {
-            string reg_tag;
-            MultiSymbolTable reg_ms_table;
+            RegisterMap reg_map;
             print("Transforming " + tag);
             unordered_set<string> names;
             auto keyword_transforms = kv.second(names, 
@@ -154,7 +181,7 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
                                                 "none"); 
             for (auto terms : keyword_transforms)
             {
-                _keyword_transform(terms, tag, ms_table, reg_tag, reg_ms_table);
+                _keyword_transform(terms, tag, ms_table, reg_map);
             }
         }
     }

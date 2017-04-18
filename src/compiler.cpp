@@ -86,7 +86,7 @@ namespace compiler
     Transformer loadTransformer(string language, string prefix)
     {
         print("Loading transformers for " + language);
-        auto transformer_files = readFile("languages/" + language + "/transformers/core");
+        auto transformer_files = readFile("languages/" + language + "/" + prefix + "transformers/core");
         auto transformer = Transformer(transformer_files, "languages/" + language + "/" + prefix + "transformers/");
         print("Done");
         return transformer;

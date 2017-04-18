@@ -8,6 +8,9 @@ namespace transform
 using namespace gen;
 using namespace grammar;
 
+using Register    = tuple<string, MultiSymbolTable>;
+using RegisterMap = unordered_map<string, Register>; 
+
 template <typename T>
 Constructor<T> generateTransformConstructor(vector<string> content,
         ElementConstructorCreator<T>  ec_creator)
@@ -33,8 +36,7 @@ private:
     void _keyword_transform(vector<string>& terms, 
                             string& otag, 
                             MultiSymbolTable& oms_table,
-                            string& reg_tag,
-                            MultiSymbolTable& reg_ms_table);
+                            RegisterMap& register_map);
 
 };
 
