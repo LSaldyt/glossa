@@ -15,15 +15,31 @@ Natural Java:
     
 Assembly as output language
 
-Coverage completion list FORTRAN:
+### Completion lists sorted by ease/importance of implementation
+
+FORTRAN:
  - index loop
  - infinite loop
- - arrays (where clause, multi dims)
  - functions
  - subprograms
- - modules
+ - arrays (where clause, multi dims)
  - data types
+ - modules
 
-Build completion list for Python!!
+Python3:
+ - lamdas
+ - imports
+ - classes
+ - kwargs
+ - list/dict comps
+ - with stmt
+ - yield exprs
+ - decorators
 
+Python2:
+ ?
 
+natural\_java:
+ - better classes
+ - more types
+ - ?
