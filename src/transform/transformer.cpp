@@ -48,20 +48,35 @@ void Transformer::operator()(IdentifiedGroups& identified_groups)
 void Transformer::_keyword_transform(vector<string>& terms, 
                                      string& otag, 
                                      MultiSymbolTable& oms_table,
-                                     string& reg_tag,
-                                     MultiSymbolTable& reg_ms_table)
+                                     RegisterMap& register_map)
 {
     assert(not terms.empty());
     auto keyword = terms[0];
-    bool reg = contains(keyword, "reg");
-    auto &ms_table = reg ? reg_ms_table : oms_table;
-    auto &tag      = reg ? reg_tag      : otag; 
-    if (contains(keyword, "transfer"))
+    bool reg = keyword == "reg" or contains(keyword, "transfer") or contains(keyword, "pushback");
+    assert(terms.size() >= 2);
+    auto reg_name = reg ? terms[1] : "";
+    if (reg) err_if(not contains(register_map, reg_name), "Register " + reg_name + " not found");
+    auto& reg_tag      = reg ? get<0>(register_map[reg_name]) : otag;
+    auto& reg_ms_table = reg ? get<1>(register_map[reg_name]) : oms_table;
+
+    if (keyword == "createreg")
     {
-        assert(terms.size() == 3);
-        auto a = terms[1];
-        auto b = terms[2];
-        assert(contains(oms_table, a));
+        assert(terms.size() == 2);
+        register_map[terms[1]] = make_tuple("", MultiSymbolTable());
+        return;
+    }
+    else if (keyword == "reg")
+    {
+        terms = slice(terms, 2);
+        _keyword_transform(terms, reg_tag, reg_ms_table, register_map);
+        return;
+    }
+    else if (contains(keyword, "transfer"))
+    {
+        assert(terms.size() == 4);
+        auto a = terms[2];
+        auto b = terms[3];
+        err_if(not contains(oms_table, a), a + " not in original table");
         if (contains(keyword, "append"))
         {
             assert(contains(reg_ms_table, b));
@@ -77,15 +92,14 @@ void Transformer::_keyword_transform(vector<string>& terms,
         assert(terms.size() == 4);
         auto creator = syntax::generatorMap.at(terms[2]);
         auto symbol  = creator({terms[3]});
-        if (contains(keyword, "add") or not contains(ms_table, terms[1]))
+        if (contains(keyword, "add") or not contains(oms_table, terms[1]))
         {
-            assert(not contains(ms_table, terms[1])); // If "add" branch
-            ms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
-            auto s = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
+            assert(not contains(oms_table, terms[1])); // If "add" branch
+            oms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
         }
         else
         {
-            ms_table[terms[1]].push_back(symbol);
+            oms_table[terms[1]].push_back(symbol);
         }
     }
     else if (contains(keyword, "copy") or contains(keyword, "move"))
@@ -93,37 +107,38 @@ void Transformer::_keyword_transform(vector<string>& terms,
         assert(terms.size() == 3);
         auto a = terms[1];
         auto b = terms[2];
-        assert(contains(ms_table, a));
+        assert(contains(oms_table, a));
         if (contains(keyword, "append"))
         {
-            assert(contains(ms_table, b));
-            concat(ms_table[b], ms_table[a]);
+            assert(contains(oms_table, b));
+            concat(oms_table[b], oms_table[a]);
         }
         else
         {
-            ms_table[b] = ms_table[a];
+            oms_table[b] = oms_table[a];
         }
         if (contains(keyword, "move"))
         {
-            ms_table.erase(a);
+            oms_table.erase(a);
         }
     }
     else if (contains(keyword, "retag"))
     {
         assert(terms.size() == 2);
-        tag = terms[1];
+        otag = terms[1];
     }
     else if (contains(keyword, "pushback"))
     {
-        assert(terms.size() == 2);
+        assert(terms.size() == 3);
+        auto key      = terms[2];
         auto symbol = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
-        if (contains(keyword, "override") or not contains(oms_table, terms[1]))
+        if (contains(keyword, "override") or not contains(oms_table, key))
         {
-            oms_table[terms[1]] = vector<shared_ptr<Symbol>>({symbol});
+            oms_table[key] = vector<shared_ptr<Symbol>>({symbol});
         }
         else
         {
-            oms_table[terms[1]].push_back(symbol);
+            oms_table[key].push_back(symbol);
         }
         // Reset
         reg_tag = "";
@@ -131,7 +146,7 @@ void Transformer::_keyword_transform(vector<string>& terms,
     }
     else if (contains(keyword, "delete"))
     {
-        ms_table.erase(terms[1]);
+        oms_table.erase(terms[1]);
     }
     else
     {
@@ -145,8 +160,7 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
     {
         if (kv.first == tag)
         {
-            string reg_tag;
-            MultiSymbolTable reg_ms_table;
+            RegisterMap reg_map;
             print("Transforming " + tag);
             unordered_set<string> names;
             auto keyword_transforms = kv.second(names, 
@@ -154,7 +168,7 @@ void Transformer::_transform(string& tag, MultiSymbolTable& ms_table)
                                                 "none"); 
             for (auto terms : keyword_transforms)
             {
-                _keyword_transform(terms, tag, ms_table, reg_tag, reg_ms_table);
+                _keyword_transform(terms, tag, ms_table, reg_map);
             }
         }
     }

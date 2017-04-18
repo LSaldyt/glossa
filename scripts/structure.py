@@ -67,4 +67,5 @@ def structure():
         if language not in excluded:
             #structure_grammar(language)
             build_core_file(language, 'constructors', excluded=['core', 'file'])
-            build_core_file(language, 'transformers')
+            build_core_file(language, 'pre_transformers')
+            build_core_file(language, 'post_transformers')
