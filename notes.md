@@ -18,7 +18,6 @@ Assembly as output language
 ### Completion lists sorted by ease/importance of implementation
 
 FORTRAN:
- - index loop
  - infinite loop
  - functions
  - subprograms

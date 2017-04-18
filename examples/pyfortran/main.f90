@@ -24,4 +24,13 @@ PROGRAM hello
         CASE DEFAULT
     END SELECT
 
+    ! All nums from one to ten
+    DO i = 0 10 
+        WRITE(*,*) i
+    END DO
+    ! Even nums from one to ten
+    DO i = 0 10 2
+        WRITE(*,*) i
+    END DO
+
 END PROGRAM 

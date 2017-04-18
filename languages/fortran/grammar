@@ -1,4 +1,4 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 
@@ -30,3 +30,7 @@ whileloop: 'DO' 'WHILE' '(' `@boolexpr boolexpression` ')' `@body *statement` 'E
 
 case: 'SELECT' 'CASE' '(' `@selector expression` ')' `@cases *sub_case` `optional inOrder identifier CASE identifier DEFAULT` `@default_body *statement` 'END' 'SELECT'
 sub_case: 'CASE' '(' `@val expression` ')' `@body *statement`
+
+rangeloop: 'DO' `@index_var identifier **` '=' `@start literal int` `@end literal int` `@step optional literal int` `@body *statement` 'END' 'DO'
+
+comment: `@comment comment **`

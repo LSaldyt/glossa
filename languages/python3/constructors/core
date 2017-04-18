@@ -29,6 +29,7 @@ branch
 every
 import_select
 lambda
+rangeloop
 trycatch
 elsebranch
 is
