@@ -1,7 +1,9 @@
+class
 boolexpression
 assignment
 parenexpr
 string
+function
 whileloop
 declaration
 array_dec
@@ -11,3 +13,4 @@ statement
 forloop
 expression
 array_init
+return

@@ -1,0 +1,6 @@
+defines
+source
+public class $name$
+{
+`block body`
+}
