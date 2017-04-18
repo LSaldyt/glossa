@@ -3,6 +3,7 @@ division
 else
 memberaccess
 import
+sub_case
 global
 boolexpression
 iterkeys
@@ -17,6 +18,7 @@ tuple_unpack
 string
 function
 symbol_list
+definition
 kvpair
 elementaccess
 elif
@@ -32,6 +34,7 @@ elsebranch
 is
 main
 funcarg
+statement
 tuple
 boolpart
 range
@@ -42,6 +45,7 @@ expression
 qualified_import
 functioncall
 return
+case
 assert
 elifbranch
 fileprint
