@@ -50,6 +50,7 @@ case
 assert
 elifbranch
 fileprint
+array
 dictionary
 defaultarg
 boolseperator

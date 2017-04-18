@@ -1,4 +1,4 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 
@@ -37,3 +37,5 @@ sub_case: 'CASE' '(' `@val expression` ')' `@body *statement`
 rangeloop: 'DO' `@index_var identifier **` '=' `@start literal int` `@end literal int` `@step optional literal int` `@body *statement` 'END' 'DO'
 
 comment: `@comment comment **`
+
+array: `@type identifier **` ',' 'DIMENSION' '(' `@dims sep ',' literal int` ')' '::' `@name identifier **`

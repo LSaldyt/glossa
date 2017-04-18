@@ -38,4 +38,7 @@ PROGRAM hello
         1 < 2 EXIT
     END DO
 
+    INTEGER, DIMENSION(10) :: A
+    INTEGER, DIMENSION(10, 10) :: B
+
 END PROGRAM 
