@@ -83,11 +83,11 @@ namespace compiler
      * @param language Language for code generator to be loaded for
      * @return Transformer which can transformer AST for the given language
      */
-    Transformer loadTransformer(string language)
+    Transformer loadTransformer(string language, string prefix)
     {
         print("Loading transformers for " + language);
         auto transformer_files = readFile("languages/" + language + "/transformers/core");
-        auto transformer = Transformer(transformer_files, "languages/" + language + "/transformers/");
+        auto transformer = Transformer(transformer_files, "languages/" + language + "/" + prefix + "transformers/");
         print("Done");
         return transformer;
     }
@@ -107,7 +107,8 @@ namespace compiler
         auto grammar     = loadGrammar(input_lang);
         auto generator   = loadGenerator(output_lang);
         auto lexmap      = buildLexMap("languages/" + input_lang + "/lex/", grammar.keywords);
-        auto transformer = loadTransformer(input_lang);
+        auto pre_transformer  = loadTransformer(input_lang,  "pre_");
+        auto post_transformer = loadTransformer(output_lang, "post_");
         
 
         auto symbol_table = readSymbolTable("languages/symboltables/" + input_lang + output_lang);
@@ -118,7 +119,7 @@ namespace compiler
         {
             try
             {
-                compile(file, grammar, generator, lexmap, transformer, symbol_table, input_dir, output_dir, logger);
+                compile(file, grammar, generator, lexmap, pre_transformer, post_transformer, symbol_table, input_dir, output_dir, logger);
             }
             catch(...)
             {
@@ -140,7 +141,8 @@ namespace compiler
      * @param logger           OutputManager class for managing verbose output. Use instead of print() calls
      */
     void compile(string filename, Grammar& grammar, Generator& generator, LexMap& lexmap,
-                 Transformer& transformer,
+                 Transformer& pre_transformer,
+                 Transformer& post_transformer,
                  unordered_map<string, string>& symbol_table, string input_directory, 
                  string output_directory, OutputManager logger)
     {
@@ -158,10 +160,13 @@ namespace compiler
         }
         logger.log("Identifying tokens from grammar:");
         auto identified_groups = grammar.identifyGroups(joined_tokens, logger);
-        logger.log("Identified groups AST:");
+        logger.log("Initial AST:");
         showAST(identified_groups, logger);
-        logger.log("Transformed (intermediate) AST:");
-        transformer(identified_groups);
+        logger.log("Universal AST:");
+        pre_transformer(identified_groups);
+        showAST(identified_groups, logger);
+        logger.log("Specialized AST:");
+        post_transformer(identified_groups);
         showAST(identified_groups, logger);
         logger.log("Compiling identified groups");
         auto files = compileGroups(identified_groups, filename, generator, logger);
