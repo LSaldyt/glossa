@@ -13,7 +13,17 @@ Natural Java:
     functions
     objects     
     
-
 Assembly as output language
+
+Coverage completion list FORTRAN:
+ - index loop
+ - infinite loop
+ - arrays (where clause, multi dims)
+ - functions
+ - subprograms
+ - modules
+ - data types
+
+Build completion list for Python!!
 
 
