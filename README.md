@@ -1,38 +1,55 @@
 # Glossa 
 
-Glossa is a simple multi-language source-to-source compiler. The program uses a database of grammar files to convert between several programming languages (Currently Haskell, Python, and C++). 
+Glossa is a simple multi-language source-to-source compiler. The program uses a database of description files to convert between several programming languages (Currently Python2, Python3, FORTRAN, and C++). 
+
+Possible input languages are Python2, Python3, and FORTRAN.
+
+Possible output languages are Python3 and C++.
+
+Glossa also has many proof of concept languages:
+
+Auta: DSL for automation, built on top of Python3
+
+structured\_english: Structured language that compiles to Java. Used to show students the need for precision in language.
+
+laypython: Proof of concept that a more verbose, english like version of Python3 could be built using Glossa.
+
+
+Glossa has a haskell demo, but the Haskell language is no longer supported with the current version of the software. However, it easily could be, if the correct description files were written.
+
+For more information about how Glossa works, view my [paper](paper.pdf) and [presentation](https://docs.google.com/presentation/d/1w7LSmaNJLec89L3Sbt80ifWkb7AFh7tvpgxqdahggYI/edit?usp=sharing).
 
 ### Demonstrations
 
 To run demonstrations:
-- Download Progtran
-- Navigate to Progtran's home directory
-- Ensure g++/gcc, Python and cmake are installed
-- Install Haskell/ghc if you plan to run the Haskell related demos
+- g++, Python2/3, and cmake are required for main demos
+- gfortran required for FORTRAN demos
+- ghc required for Haskell demos
+
 ``` python
 # Python -> C++ quicksort demo (default)
 ./demo.py
 # View other available demos:
 ./demo.py --show
-p_quicksort      python3 cpp
-h_quicksort      haskell cpp
-python           python3 cpp
-haskell          haskell cpp
-listcomp         python3 cpp
-pattern_matching haskell cpp 
-do               haskell cpp
-# Choose one of the above demos:
-./demo.py h_quicksort
-# Output from Haskell -> C++ quicksort demo
-#...
+# Available demos by name
+python3             : python3 -> cpp
+class               : python3 -> cpp
+porting             : python2 -> python3
+auta                : auta -> python3
+laypython           : laypython -> python3
+haskell             : haskell -> cpp
+natural_java        : structured_english -> java
+fortran             : fortran -> cpp
+text_prediction     : python2 -> python3
+benchmark           : python3 -> cpp
+integrate           : python3 -> cpp
+pyfortran           : fortran -> python3
+python2             : python2 -> cpp
 ```
 
-Input code for each demo is in `examples/demoname` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
-Generated code can be found in `examples/output/demoname_output/` where `demoname` is the name of the demonstration that was run (e.g. `Python`)
+Input code for each demo is in `examples/demoname` where `demoname`, and generated code can be found in `examples/output/demoname_output/` where `demoname` is the name of the demonstration that was run (e.g. `python3`)
 
 ### Python -> Cpp example
-
-Here are the sources from the main demo (python to cpp conversion)
 
 ``` python
 def sort(array):
@@ -52,17 +69,10 @@ def sort(array):
             if x > pivot:
                 greater.append(x)
         return sort(less) + equal + sort(greater)
-
-def main():
-    l = sort([3, 2, 12, 9, 4, 68, 17, 1, 2, 3, 4, 5, 6, 12, 9  , 8, 7, 6,5, 4, 743])
-
-if __name__ == "__main__":
-    main()
 ```
 
 ``` cpp
 // main.hpp
-
 #include "../std/std.hpp"
 template <typename T_array>
 auto sort (T_array array)
@@ -83,32 +93,17 @@ auto sort (T_array array)
             {
                 less.push_back(x);
             }
-            ;
             if (x == pivot)
             {
                 equal.push_back(x);
             }
-            ;
             if (x > pivot)
             {
                 greater.push_back(x);
             }
-            ;
-        };
+        }
         return sort(less) + equal + sort(greater);
-    };
-}
-auto __py_main__ ()
-{
-    auto l = sort(std::vector<Object>({3,2,12,9,4,68,17,1,2,3,4,5,6,12,9,8,7,6,5,4,743}));
-}
-
-// main.cpp
-#include "main.hpp"
-
-int main(int argc, char ** argv)
-{
-    __py_main__();
+    }
 }
 ```
 
@@ -118,6 +113,8 @@ To generate documentation, run `doxygen Doxyfile` in the home directory of Progt
 
 Then, navigate to `docs/doxygen`:
 
-Use `firefox index.html` to open documentation in your browser
+Open `index.html` in your browser
 
-If doxygen is not installed, it can be by the command `sudo apt-get install doxygen`
+Alternatively, used the `./view_docs` script, which does this automatically.
+
+If doxygen is not installed, use `sudo apt-get install doxygen`

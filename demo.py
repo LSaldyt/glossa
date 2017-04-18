@@ -40,7 +40,7 @@ def build(directory, languageargs, verbosity):
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
-    t = benchmark(run, 1, ['./build/progtran', str(verbosity)] + languageargs + inputfiles)
+    t = benchmark(run, 1, ['./build/glossa', str(verbosity)] + languageargs + inputfiles)
     print('Compilation took roughly: %ss' % t)
 
 def time_run(language, directory, iterations, filename):
@@ -141,7 +141,7 @@ def main():
     run(['cmake', '..'])
     run(['make'])
     os.chdir('..')
-    run(['./build/progtrantest'])
+    run(['./build/glossatest'])
 
     demos = load_demos()
 

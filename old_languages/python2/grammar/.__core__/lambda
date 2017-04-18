@@ -1,6 +1,0 @@
-keyword lambda
-optional identifier wildcard
-many inOrder !punctuator , identifier wildcard
-punctuator :
-link expression
-1 2 sep 4

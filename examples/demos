@@ -9,3 +9,5 @@ fortran          fortran cpp
 pyfortran        fortran python3
 haskell          haskell cpp
 auta             auta    python3
+natural_java     natural_java java 
+laypython        laypython python3

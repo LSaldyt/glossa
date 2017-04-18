@@ -1,0 +1,20 @@
+statement: `@statement main | array_dec | array_init | loop | declaration | assignment`
+
+main: 'program' ':' `@body *statement` 'end'
+
+string: `@val literal string`
+parenexpr: '(' `@expr expression` ')'
+basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
+value: `@val basevalue | parenexpr`
+expression: `@body sepWithKeep operator ** value`
+boolexpression: `@body sepWithKeep logicaloperator ** expression` 
+
+loop: `@val forloop | whileloop | untilloop`
+forloop: 'for' `@loopvar identifier **` 'in' `@loopexpr link expression` ':' `@loopbody *statement` 'end'
+whileloop: 'while' `@boolexpr boolexpression` ':' `@body *statement` 'end'
+untilloop: 'until' `@boolexpr boolexpression` ':' `@body *statement` 'end'
+
+declaration: 'let' 'an' `@type identifier **` `@name identifier **` 'equal' `@value expression` 
+assignment: 'set' `@lval identifier **` 'to'  `@rval expression` 
+array_dec: 'create' `@type identifier **` 'array' 'called' `@name identifier **` 'of' 'length' `@length literal int`
+array_init: 'set' 'element' `@index literal int` 'of' 'array' `@name identifier **` 'to' `@value literal **`

@@ -1,7 +1,0 @@
-keyword every
-optional literal int
-identifier wildcard
-punctuator :
-many link statement
-keyword end
-1 sep 2 sep 4

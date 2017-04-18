@@ -1,7 +1,0 @@
-type = 0 0
-identifier = 1 0
-defines
-header
-$type$ $identifier$
-source
-$type$ $identifier$

@@ -37,13 +37,17 @@ string MultiSymbol::abstract(int indent)
 {
     int next_indent = indent;
     string representation;
-    if (tag != "statement" and tag != "value" and tag != "basevalue")
+    //if (tag != "statement" and tag != "value" and tag != "basevalue")
     {
         representation = repeatString("  ", indent) + "MultiSymbol (" + tag + ")\n";
         next_indent++;
     }
     for (auto kv : table)
     {
+        //if (kv.first != "val")
+        {
+            representation += repeatString("  ", next_indent) + kv.first + "\n";
+        }
         for (auto symbol : kv.second)
         {
             auto line = symbol->abstract(next_indent);

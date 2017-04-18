@@ -1,4 +1,0 @@
-keyword global
-identifier wildcard
-many inOrder !punctuator , identifier wildcard
-1 2

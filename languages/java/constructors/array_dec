@@ -1,0 +1,3 @@
+defines
+source
+$type$ $name$ [] = new $type$ [$length$]

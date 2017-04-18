@@ -1,8 +1,0 @@
-keyword if
-keyword __name__
-logicaloperator ==
-literal string
-punctuator :
-many link statement
-keyword end
-5

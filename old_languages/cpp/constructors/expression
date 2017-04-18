@@ -1,6 +1,0 @@
-body = 0
-defines
-header
-`sep SPACE body`
-source
-`sep SPACE body`
