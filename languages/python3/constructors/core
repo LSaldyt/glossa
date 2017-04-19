@@ -44,6 +44,7 @@ forloop
 conditional
 expression
 qualified_import
+array_init
 functioncall
 return
 case

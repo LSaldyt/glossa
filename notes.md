@@ -18,10 +18,7 @@ Assembly as output language
 ### Completion lists sorted by ease/importance of implementation
 
 FORTRAN:
- - infinite loop
- - functions
- - subprograms
- - arrays (where clause, multi dims)
+ - functions, subroutines
  - data types
  - modules
 

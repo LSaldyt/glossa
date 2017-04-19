@@ -4,3 +4,4 @@ from .gmail import send_gmail
 from .utilities import *
 from .chrono    import every 
 
+from .arrays import *

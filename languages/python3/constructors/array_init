@@ -1,0 +1,3 @@
+defines
+source
+$name$ = set_array($name$.shape, [`sep , values`])

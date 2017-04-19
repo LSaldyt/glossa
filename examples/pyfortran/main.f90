@@ -38,7 +38,13 @@ PROGRAM hello
         1 < 2 EXIT
     END DO
 
-    INTEGER, DIMENSION(10) :: A
-    INTEGER, DIMENSION(10, 10) :: B
+    INTEGER, DIMENSION(4) :: A
+    WRITE(*,*) A
+    A = (/1, 2, 3, 4/)
+    WRITE(*,*) A
+    INTEGER, DIMENSION(2, 4) :: B
+    WRITE(*,*) B
+    B = (/1, 2, 3, 4, 5, 6, 7, 8/)
+    WRITE(*,*) B
 
 END PROGRAM 

@@ -1,4 +1,4 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array | array_init`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 
@@ -39,3 +39,4 @@ rangeloop: 'DO' `@index_var identifier **` '=' `@start literal int` `@end litera
 comment: `@comment comment **`
 
 array: `@type identifier **` ',' 'DIMENSION' '(' `@dims sep ',' literal int` ')' '::' `@name identifier **`
+array_init: `@name identifier **` '=' '(' '/' `@values sep ',' literal **` '/' ')'
