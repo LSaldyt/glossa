@@ -129,16 +129,33 @@ void Transformer::_keyword_transform(vector<string>& terms,
     }
     else if (contains(keyword, "pushback"))
     {
-        assert(terms.size() == 3);
-        auto key      = terms[2];
+        assert(terms.size() == 3 or terms.size() == 4);
+        auto key         = terms[2];
+        auto destination = terms.size() == 4 ? terms[3] : ""s;
         auto symbol = make_shared<MultiSymbol>(MultiSymbol(reg_tag, reg_ms_table));
         if (contains(keyword, "override") or not contains(oms_table, key))
         {
-            oms_table[key] = vector<shared_ptr<Symbol>>({symbol});
+            if (destination.empty())
+            { 
+                oms_table[key] = vector<shared_ptr<Symbol>>({symbol});
+            }
+            else
+            {
+                auto& other_ms_table = get<1>(register_map[destination]);
+                other_ms_table[key] = vector<shared_ptr<Symbol>>({symbol}); 
+            }
         }
         else
         {
-            oms_table[key].push_back(symbol);
+            if (destination.empty())
+            { 
+                oms_table[key].push_back(symbol);
+            }
+            else
+            {
+                auto& other_ms_table = get<1>(register_map[destination]);
+                other_ms_table[key].push_back(symbol); 
+            }
         }
         // Reset
         reg_tag = "";

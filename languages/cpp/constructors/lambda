@@ -1,0 +1,5 @@
+defines
+header
+[&](`sep , args autoSPACE@`){return $expr$;}
+source
+[&](`sep , args autoSPACE@`){return $expr$;}

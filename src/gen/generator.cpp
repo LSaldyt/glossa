@@ -235,7 +235,7 @@ ElementConstructor<string> Generator::generateSpecialElementConstructor(string l
             if (keyword == "sep")
             {
                 assert(terms.size() == 3 or terms.size() == 4 or terms.size() == 5);
-                assert(contains(ms_table, terms[2]));
+                err_if(not contains(ms_table, terms[2]), terms[2] + " is not in the multi symbol table");
                 auto symbols = ms_table[terms[2]];
                 string formatter = "@";
                 if (terms.size() > 3)

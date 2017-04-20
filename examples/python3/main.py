@@ -1,4 +1,6 @@
-from time import time
+from time import time as t
+import time as t
+import time
 
 def sort(array):
     """
@@ -33,3 +35,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    a = lambda x : x * 2

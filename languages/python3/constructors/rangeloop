@@ -1,0 +1,8 @@
+defines
+source
+for $index_var$ in range($start$, $end$
+branch nonempty step
+, $step$
+end
+):
+`block body`

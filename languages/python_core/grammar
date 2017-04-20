@@ -1,8 +1,8 @@
-statement: `@val main | class | if | whileloop | forloop | function | functioncall | memberaccess | assignment | pass | flow_stmt | import_from | comment` 
+statement: `@val main | class | if | whileloop | forloop | function | functioncall | memberaccess | assignment | pass | flow_stmt | import | comment` 
 
 basevalue: `@val identifier ** | string | literal ** | 'None' | 'True' | 'False'`
 
-value: `@val vector | functioncall | elementaccess | memberaccess | basevalue | parenexpr`
+value: `@val lambda | vector | functioncall | elementaccess | memberaccess | basevalue | parenexpr`
 
 string: `@val literal string`
 
@@ -37,7 +37,9 @@ continue: 'continue'
 
 assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
 
-import_from: 'from' `@source identifier **` 'import' `@import identifier **`
+import: `@val normal_import | import_from`
+normal_import: 'import' `@imports sep ',' identifier **` `@qualifier optional inOrder !identifier as identifier **`
+import_from: 'from' `@source identifier **` 'import' `@import identifier **` `@qualifier optional inOrder !identifier as identifier **`
 
 comment: `@comment comment **`
 
@@ -56,3 +58,5 @@ whileloop: 'while' `@boolexpr boolexpression` ':' `@body *statement` 'end'
 memberfunction: 'def' `@identifier identifier **` '(' 'self' `optional ','` `@args optional sep ',' identifier **` ')' ':' `@body *statement` 'end' 
 
 class: 'class' `@name identifier **` '(' `@inheritance optional identifier **` ')' ':' 'def' '__init__' '(' 'self' `optional ','` `@constructor_args optional sep ',' identifier **` ')' ':' `@constructor_body *statement` 'end'  `@body *memberfunction` 'end'
+
+lambda: 'lambda' `@args optional sep ',' identifier **` ':' `@expr expression`

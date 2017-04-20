@@ -1,0 +1,4 @@
+defines
+transform:
+retag whileloop
+add boolexpr identifier True

@@ -29,6 +29,7 @@ branch
 every
 import_select
 lambda
+rangeloop
 trycatch
 elsebranch
 is
@@ -43,12 +44,14 @@ forloop
 conditional
 expression
 qualified_import
+array_init
 functioncall
 return
 case
 assert
 elifbranch
 fileprint
+array
 dictionary
 defaultarg
 boolseperator
