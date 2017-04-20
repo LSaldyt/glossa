@@ -1,9 +1,9 @@
 class
 division
 funcpattern
+normal_import
 else
 memberaccess
-import
 boolexpression
 listcomp
 import_from
@@ -32,6 +32,7 @@ branch
 do
 dobody
 break
+lambda
 print
 forrange
 supercall

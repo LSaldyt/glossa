@@ -1,11 +1,12 @@
 defines
+imports
 header
-// from $source$ import $import$
+// import `sep , imports`
 branch nonempty qualifier
 as $qualifier$
 end
 source
-// from $source$ import $import$
+// import `sep , imports`
 branch nonempty qualifier
 as $qualifier$
 end

@@ -1,19 +1,12 @@
 # Finishing touches
 
-Complete coverage for FORTRAN, Python
+Goals:
 
-Natural language programming
-    - Structured english
-    - Natural java
+Paper draft by end of week
 
-Natural Java:
-    control flow
-    variables
-    arrays
-    functions
-    objects     
-    
-Assembly as output language
+Better language coverage by end of school (April 27th)
+
+Failure logging
 
 ### Completion lists sorted by ease/importance of implementation
 
@@ -23,8 +16,6 @@ FORTRAN:
  - modules
 
 Python3:
- - lamdas
- - imports
  - classes
  - kwargs
  - list/dict comps
@@ -33,9 +24,12 @@ Python3:
  - decorators
 
 Python2:
- ?
+ - print statements
+ - import differences
+ - unicode/string differences
+ - exceptions
+ - division
 
 natural\_java:
  - better classes
  - more types
- - ?
