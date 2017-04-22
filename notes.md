@@ -2,7 +2,9 @@
 
 Goals:
 
-Paper draft by end of week
+Paper draft by Monday
+    Section on Auta, DSLs (Applications)
+    Rework conclusion, results.
 
 Better language coverage by end of school (April 27th)
 
