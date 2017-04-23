@@ -1,0 +1,6 @@
+defines
+source
+'''
+class $name$():
+`block body`
+'''

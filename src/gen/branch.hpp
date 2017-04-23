@@ -1,5 +1,4 @@
-#pragma once
-
+#pragma once 
 #include "../tools/tools.hpp"
 #include "../lex/seperate.hpp"
 #include "../lex/lexmap.hpp"

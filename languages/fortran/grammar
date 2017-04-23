@@ -1,4 +1,4 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array | array_init | function | assignment | implicit | intent | interface | functioncall`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array | array_init | function | assignment | implicit | intent | interface | functioncall | datatype`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
 implicit: 'IMPLICIT' 'NONE'
@@ -47,3 +47,6 @@ intent: `@type typename` ',' 'INTENT' '(' `@intent identifier **` ')' '::' `@nam
 interface: 'INTERFACE' `@body *statement` 'END' 'INTERFACE'
 
 functioncall: `@identifier identifier **` '(' `@args optional sep ',' expression` ')'
+
+datastatement: `@val declaration`
+datatype: 'TYPE' `@name identifier **` `@body *datastatement` 'END' 'TYPE'
