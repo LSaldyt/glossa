@@ -13,7 +13,7 @@ Failure logging
 ### Completion lists sorted by ease/importance of implementation
 
 FORTRAN:
- - functions, subroutines
+ - subroutines
  - data types
  - modules
 

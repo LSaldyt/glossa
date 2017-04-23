@@ -1,14 +1,15 @@
-statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array | array_init`
+statement: `@statement main | definition | declaration | if | print | whileloop | case | rangeloop | comment | infiniteloop | conditionalexit | array | array_init | function | assignment | implicit | intent | interface | functioncall`
 
 main: 'PROGRAM' `identifier **` `@body *statement` 'END' 'PROGRAM'
+implicit: 'IMPLICIT' 'NONE'
 
 typename: `@val 'REAL' | 'INTEGER'`
 
 declaration: `@type typename` `optional '::'` `@identifier identifier **` 
+definition: `@type typename` `@const optional inOrder punctuator , identifier PARAMETER` '::' `@identifier identifier **` '=' `@expr link expression` 
+assignment: `@identifier identifier **` `@op operator =` `@value expression`
 
-definition: `@type typename` '::' `@identifier identifier **` `@const optional inOrder punctuator , identifier PARAMETER` '=' `@expr link expression` 
-
-value: `@val basevalue | parenexpr`
+value: `@val functioncall | basevalue | parenexpr`
 basevalue: `@val identifier ** | string | literal **`
 parenexpr: '(' `@expr expression` ')'
 string: `@val literal string`
@@ -40,3 +41,9 @@ comment: `@comment comment **`
 
 array: `@type identifier **` ',' 'DIMENSION' '(' `@dims sep ',' literal int` ')' '::' `@name identifier **`
 array_init: `@name identifier **` '=' '(' '/' `@values sep ',' literal **` '/' ')'
+
+function: 'FUNCTION' `@name identifier **` '(' `@args optional sep ',' identifier **` ')' `@body *statement` 'END' 'FUNCTION' `identifier **`
+intent: `@type typename` ',' 'INTENT' '(' `@intent identifier **` ')' '::' `@name identifier **`
+interface: 'INTERFACE' `@body *statement` 'END' 'INTERFACE'
+
+functioncall: `@identifier identifier **` '(' `@args optional sep ',' expression` ')'

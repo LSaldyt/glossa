@@ -395,9 +395,9 @@ A transformer file is just a series of these transformations:
 \begin{verbatim}
 createreg [name]
 // Copy an element from global multisymbol table to a key in a register's multisymbol table
-reg [name] transfer(-append) [reg-key] [global-key]
+transfer(-append) [reg-name] [global-key] [reg-key] 
 // Move the multisymbol from a register to the destination key in the multisymbol table. If a destination_reg is specified, this table is the table of a register. Otherwise, it is the global multisymbol table
-pushback [reg-name] [destination] (optional)[destination_reg]
+pushback(-override) [reg-name] [destination] (optional)[destination_reg]
 // Prefix for performing an operation on a register
 reg [name] {command (any of below)} 
 
