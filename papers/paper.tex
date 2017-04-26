@@ -63,7 +63,7 @@ tabsize=3
 \section{Abstract}
 % ==================================================
 Glossa is both a multi-language source to source compiler and, by extension, a framework for creating compilers.
-Glossa should convert any programming language \textbf{A} to any programming language \textbf{B}, such that the output in \textbf{B} is indistinguishable from code written by a native \textbf{B} programmer, in the same way that the output from Google Translate would ideally look as if it were written by a native speaker.
+Ideally, Glossa converts any programming language \textbf{A} to any programming language \textbf{B}, such that the output in \textbf{B} is indistinguishable from code written by a native \textbf{B} programmer, in the same way that the output from Google Translate would ideally look as if it were written by a native speaker.
 If given an adequate description of each language's grammar, one language can be converted to another if the languages are \textit{isomorphic}.
 If two languages are not \textit{isomorphic}, one can still be converted to another if the non-isomorphisms are solved through an AST transformation.
 
@@ -73,12 +73,19 @@ This is done using the translation interface, where syntax of a new language is 
 % ==================================================
 \section{Introduction}
 % ==================================================
-`
-Since Glossa was created to be capable of translating many different programming languages, it must provide a dynamic framework for easily modifying syntax of input and output languages. 
+
+Many codebases have become unmanagable: they either use two many programming languages, or outdated programming languages, making them obsolete.
+Modern software needs to be written in a modern language. However, code should not be ported by hand, as this wastes the developers time, which could be spent on more important tasks.
+
+Glossa translates any programming language to any other programming language.
+Since Glossa was created to be capable of translating many different programming languages, it provides a dynamic framework for easily modifying syntax of input and output languages. 
 In addition to letting Glossa translate existing languages, this functionality makes implementing new programming languages very simple.
 
 Ultimately, modifiable syntax leads to better programming languages.
-As programming paradigms shift, so does syntax. 
+Programming paradigms are implemented in syntax, and paradigms determine code. 
+For example, strong, statically typed languages are used to build robust, scalable back-end software.
+Fluid, dynamically typed languages are used in scripting and front-end development.
+
 If a language can be changed quickly and easily, then different styles can easily be experimented with, improving the chance of finding an optimal style.
 (i.e. A question like "What if C++ used indentation-delimiting instead of braces?" can be tested in an hour or so. If someone were to test this, they would likely find that indentation delimiting was clearer than brace delimiting..)
 
@@ -111,7 +118,7 @@ Assuming conversion from \textbf{A} to \textbf{B}, as in the Abstract, Glossa cr
 As one would expect, this means that Glossa uses four types of descriptor files:
 
 \begin{enumerate}
-    \item \textit{lex files}: A list of strings that constitute atomic types like string literals, operators, keywords in language \textbf{A} 
+    \item \textit{lex files}: A list of strings that constitute atomic types like string literals, operators, and keywords in language \textbf{A} 
     \item \textit{grammar files}: A description of a parser for each grammar element in language \textbf{A} 
     \item \textit{constructor files}: A description of a generator for each grammar element in language \textbf{B}
     \item \textit{transformer files}: A description of transformations for each grammar element in language \textbf{A}.
@@ -165,13 +172,16 @@ e   \node (parser)  [process, below of=tokens]        {Parser};
 
 \end{tikzpicture}
 
+\newpage
+
 \subsection{Lex Files}
 
 Lex files are the most straightforward of all of the descriptor files in Glossa.
 
 A language's lex directory contains the following files:
 \begin{verbatim}
-comment_delimiters  logicaloperators  operators  punctuators  string_delimiters  whitespace
+comment_delimiters  logicaloperators  operators  
+punctuators  string_delimiters  whitespace
 \end{verbatim}
 
 The files 
@@ -201,7 +211,7 @@ indent  false
 space   false
 newline false
 \end{verbatim}
-Where "false" says if a whitespace element should be kept as a token when the language is lexed.
+Where each line is the name of a whitespace element, and a boolean indicating if the token should be kept when the language is lexed.
 
 \subsection{Grammar Files}
 
@@ -370,6 +380,7 @@ Then, if the output is in a language that doesn't support classes, i.e. C, then 
 	{Dual-AST transform};
 
 \end{tikzpicture}
+
 \newpage
 
 Each element of the AST is MultiSymbol, which is a tag (string), and a string dictionary of symbols. Each of these symbols can be either another MultiSymbol, or an atom like a literal, operator, or identifier.
@@ -380,14 +391,18 @@ A transformer file is just a series of these transformations:
 createreg [name]
 // Copy an element from global multisymbol table to a key in a register's multisymbol table
 transfer(-append) [reg-name] [global-key] [reg-key] 
-// Move the multisymbol from a register to the destination key in the multisymbol table. If a destination_reg is specified, this table is the table of a register. Otherwise, it is the global multisymbol table
+// Move the multisymbol from a register to the destination key in the multisymbol table. 
+// If a destination_reg is specified, this table is the table of a register. 
+// Otherwise, it is the global multisymbol table
 pushback(-override) [reg-name] [destination] (optional)[destination_reg]
 // Prefix for performing an operation on a register
 reg [name] {command (any of below)} 
 
 // The following also work with operations on the table of the current multisymbol
-// In add and append, type might be "identifier" or "literal" and value might be "x" or "2"
-// I.e to add an identifier foo under the key "name", use the command (add name identifier foo)
+// In add and append, type might be "identifier" or "literal" 
+//                              and value might be "x" or "2"
+// I.e to add an identifier foo under the key "name", 
+//   use the command (add name identifier foo)
 // Add overwrites a key, append adds onto it.
 add    [key] [type] [value]
 append [key] [type] [value]
@@ -409,6 +424,15 @@ add name identifier f
 end
 \end{verbatim}
 (This AST transform renames the syntax element to f, saving the old name to the key "old\_identifier"
+
+\subsection{Inheritance Lists}
+
+Languages can inherit from other programming languages.
+Currently, only the Parser for a particular language is inherited.
+Inheritance is defined in a special file, ./languages/lang\_name/inherits, which is simply a list of language IDs to inherit from.
+As with class constructs in programming, it is safer to only inherit from a single parent.
+However, heirarchical inheritance is possible.
+For example, Auta inherits from Python3, which inherits from Python\_core.
 
 % ==================================================
 \section{Applications}
@@ -439,6 +463,23 @@ Language design in Glossa is not affected in the same way that Translation is.
 The only possible limitation is the descriptor file interface.
 The success of an implemented language depends on how well it has been described.
 If description is straightforward, then language creation will be as well.
+
+Since Glossa ships with constructor files (Currently for Python3 and C++), a new language only has to provide grammar, lex and (optional) transformer files.
+
+For example, adding a function to a particular programming language takes a single line:
+\begin{verbatim}
+function: 'def' `@name identifier **` '(' `@args sep ',' identifier **` ')' ':' `@body *statement` 'end'
+\end{verbatim}
+To change this Python style function to one in Haskell:
+\begin{verbatim}
+function: `@name identifier **` `@args sep SPACE identifier **` '=' `@body return` 'end'
+\end{verbatim}
+Since these two parsers define the same fields (name, args, body), they would be compiled in identical ways.
+
+For reference, the CPython interpreter uses a Python grammar file, which is around 130 lines (counting whitespace).
+A grammar file for a similar language would be a similar size.
+While each line requires some careful thought, a new programming language could be implemented in a matter of hours.
+Alternatively, an existing language could be modified in the same way that the above function syntax was changed from Python style to Haskell style.
 
 % ==================================================
 \section{Results}
@@ -477,6 +518,15 @@ Which would compile to several Google-API calls in Python, which would be much m
 Simplifying the API calls by building them into Auta's syntax allows a layperson to write simple scripts.
 
 This is only an example of a DSL (Domain Specific Language), but a full language could easily be implemented using the exact same concepts.
+Autas grammar file is extremely brief (as it inherits syntax from Python3):
+
+\begin{verbatim}
+statement: `@val every`
+every: 'every' `@count optional literal int` `@unit identifier **` ':' `@body *statement` 'end'
+\end{verbatim}
+
+Most of Auta's functionality is made possible by a 200 line Python library, which is imported by the output script.
+While Auta is only a proof of concept, it was implemented in less than two hours, the majority of which was spent building the library.
 
 % ==================================================
 \section{Conclusion}
@@ -493,7 +543,7 @@ While Glossa is useful at doing some automated translations, it is likely more u
 Because of the generalizations (discarding of hard-coded rules) that Glossa makes, changing language definitions is trivial compared to the potential difficulty of modifying the source of a compiler.
 With Glossa, a new language can be implemented in a minimal amount of time, and then modified easily.
 
-Glossa has accomplished far more than it originally set out to: Perhaps as its interface improves, Glossa can be used as groundwork for an industrial-level compiler framework.
+Glossa has accomplished far more than it originally set out to. As it matures, it will certainly be capable of doing industrial-level transformations, as well as implementing new programming languages with minimal effort.
 
 % ==================================================
 \section{Appendix}
