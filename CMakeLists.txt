@@ -6,10 +6,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O0")
 file (GLOB_RECURSE LIB_SOURCES
     "${CMAKE_SOURCE_DIR}/src/*/*.cpp" # Skip Compiler.hpp and Compiler.cpp, which include int main()
     "${CMAKE_SOURCE_DIR}/src/*/*.hpp")
-file (GLOB_RECURSE PROG_SOURCES
+file (GLOB PROG_SOURCES
     "${CMAKE_SOURCE_DIR}/src/compiler.cpp"
     "${CMAKE_SOURCE_DIR}/src/compiler.hpp")
-file (GLOB_RECURSE TEST_SOURCES
+file (GLOB TEST_SOURCES
     "${CMAKE_SOURCE_DIR}/tests/*.cpp" # Skip Compiler.hpp and Compiler.cpp, which include int main()
     "${CMAKE_SOURCE_DIR}/tests/*.hpp")
 
