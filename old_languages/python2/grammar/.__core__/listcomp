@@ -1,9 +1,0 @@
-punctuator [
-link expression
-keyword for
-identifier wildcard
-keyword in
-link expression
-optional inOrder !keyword if link boolexpression
-punctuator ]
-1 sep 3 sep 5 sep 6

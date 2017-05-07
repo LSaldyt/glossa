@@ -1,0 +1,9 @@
+defines
+source
+class Main
+{
+public static void int main()
+{
+`block body @`
+}
+}

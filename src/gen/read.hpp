@@ -110,7 +110,7 @@ namespace gen
                 ElementConstructorCreator<T> ec_creator)
     {
         // Seperate constructor into header and source constructors
-        assert(contains(content, "defines"s));
+        err_if(not contains(content, "defines"s), "File does not contain \"defines\" line");
         auto defines_i = std::find(content.begin(), content.end(), "defines");
         vector<string> definitions;
 
@@ -125,7 +125,7 @@ namespace gen
         for (auto file_constructor : file_constructors)
         {
             tag = get<0>(file_constructor);
-            assert(contains(content, tag));
+            err_if(not contains(content, tag), "File does not contain \"" + tag + "\" line");
             it = std::find(content.begin(), content.end(), tag);
 
             if (first)

@@ -1,6 +1,21 @@
+a Summer :
+    define integer f of n as
+        let an integer x equal n 
+
+        until x == 0:
+            set x to x - 1
+        end
+        return n
+    end
+end
+
+program:
+
 create integer array called a of length 5
 set element 0 of array a to 10
 set element 1 of array a to 20
 set element 2 of array a to 70
 set element 3 of array a to 40
 set element 4 of array a to 50
+
+end

@@ -1,4 +1,0 @@
-importfile = 0 0
-defines
-source
-from $importfile$ import *

@@ -1,7 +1,0 @@
-type = 0 0
-args = 1
-defines
-header
-throw $type$ (`sep , args`)
-source
-throw $type$ (`sep , args`)

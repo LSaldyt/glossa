@@ -1,0 +1,4 @@
+defines
+source
+__selector__ == $val$:
+`block body`

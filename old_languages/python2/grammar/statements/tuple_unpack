@@ -1,5 +1,0 @@
-identifier wildcard
-many1 inOrder !punctuator , identifier wildcard
-operator =
-link expression
-0 1 sep 3

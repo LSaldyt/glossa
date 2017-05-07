@@ -1,0 +1,6 @@
+defines
+source
+while ($boolexpr$)
+{
+`block body`
+}

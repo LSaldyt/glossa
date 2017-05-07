@@ -1,0 +1,6 @@
+defines
+source
+public $type$ $identifier$ (`sep , args`)
+{
+`block body`
+}

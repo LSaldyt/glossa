@@ -12,4 +12,8 @@ PROGRAM hello
     DO WHILE (1 > 2)
         WRITE(*,*) 'DANG'
     END DO
+
+    DO i = 0, 10, 1
+        WRITE i
+    END DO
 END PROGRAM 

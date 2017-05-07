@@ -1,8 +1,0 @@
-a = 0
-defines
-transform:
-branch nonempty a 
-test
-elsebranch
-test
-end

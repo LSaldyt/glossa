@@ -1,3 +1,11 @@
 defines
 header
+// from $source$ import $import$
+branch nonempty qualifier
+as $qualifier$
+end
 source
+// from $source$ import $import$
+branch nonempty qualifier
+as $qualifier$
+end

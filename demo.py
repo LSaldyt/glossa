@@ -40,7 +40,7 @@ def build(directory, languageargs, verbosity):
                 annotate(inputfile)
 
     print('Running files: %s' % '\n'.join(inputfiles))
-    t = benchmark(run, 1, ['./build/progtran', str(verbosity)] + languageargs + inputfiles)
+    t = benchmark(run, 1, ['./build/glossa', str(verbosity)] + languageargs + inputfiles)
     print('Compilation took roughly: %ss' % t)
 
 def time_run(language, directory, iterations, filename):
@@ -115,7 +115,7 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         directory = l[0]
         languageargs = l[1:]
         build(directory, languageargs, verbosity)
-        if languageargs[0] in ['python2', 'python3', 'auta']:
+        if languageargs[0] in ['python2', 'python3', 'auta', 'fortran']:
             if os.path.exists('output/__pylib__'):
                 shutil.rmtree('output/__pylib__')
             shutil.copytree('std/__pylib__/', 'output/__pylib__')
@@ -134,14 +134,17 @@ def transpile(demoname, demos, verbosity, runcomp=False, runlang=True):
         shutil.rmtree('output')
         shutil.rmtree('input')
 
-def main():
-    structure()
+def build_test():
     # Build the compiler and test it
     os.chdir('build')
     run(['cmake', '..'])
     run(['make'])
     os.chdir('..')
-    run(['./build/progtrantest'])
+    run(['./build/glossatest'])
+
+def main():
+    structure()
+    build_test()
 
     demos = load_demos()
 

@@ -1,0 +1,10 @@
+defines
+source
+__selector__ = $selector$
+if `sep NEWLINEelifSPACE cases @`
+else:
+branch empty default_body
+NEWLINE    pass
+end
+`block default_body`
+del __selector__

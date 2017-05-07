@@ -1,0 +1,6 @@
+defines
+source
+for (auto& $loopvar$ : $loopexpr$)
+{
+`block loopbody`
+}

@@ -1,0 +1,7 @@
+defines
+source
+"""
+Begin interface
+`sep NEWLINE body`
+End interface
+"""
