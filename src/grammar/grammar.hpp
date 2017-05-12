@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #pragma once
 #include "../lex/seperate.hpp"
 #include "../lex/lexmap.hpp"

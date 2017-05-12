@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #pragma once
 #include "../gen/read.hpp"
 #include "../grammar/grammar.hpp"
