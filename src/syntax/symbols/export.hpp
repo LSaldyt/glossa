@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #pragma once
 #include "identifier.hpp"
 #include "literal.hpp"

@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #include "base.hpp"
 #include "io.hpp"
 

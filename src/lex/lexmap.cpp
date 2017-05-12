@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #include "lexmap.hpp"
 
 namespace lex

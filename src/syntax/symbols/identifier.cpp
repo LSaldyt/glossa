@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #include "identifier.hpp"
 
 namespace syntax

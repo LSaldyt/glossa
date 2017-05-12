@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #pragma once
 #include "base/locale.hpp"
 #include "base/templates.hpp"

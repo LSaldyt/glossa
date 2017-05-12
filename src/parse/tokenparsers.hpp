@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #pragma once
 #include "../match/match.hpp"
 #include "../types/symbolictoken.hpp"

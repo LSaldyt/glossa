@@ -1,3 +1,4 @@
+/// Copyright 2017 Lucas Saldyt
 #include "read.hpp"
 #include "../syntax/symbols/export.hpp"
 
