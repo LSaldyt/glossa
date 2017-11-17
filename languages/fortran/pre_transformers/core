@@ -1,6 +1,6 @@
-intent
-conditionalexit
-function
 implicit
-infiniteloop
+intent
 print
+function
+conditionalexit
+infiniteloop
