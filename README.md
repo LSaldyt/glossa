@@ -109,7 +109,7 @@ auto sort (T_array array)
 
 ### Documentation
 
-To generate documentation, run `doxygen Doxyfile` in the home directory of Progtran
+To generate documentation, run `doxygen Doxyfile` in the home directory of glossa
 
 Then, navigate to `docs/doxygen`:
 
