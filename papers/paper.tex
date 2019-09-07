@@ -67,7 +67,7 @@ Ideally, Glossa converts any programming language \textbf{A} to any programming 
 If given an adequate description of each language's grammar, one language can be converted to another if the languages are \textit{isomorphic}.
 If two languages are not \textit{isomorphic}, one can still be converted to another if the non-isomorphisms are solved through an AST transformation.
 
-Additionally, Glossa should provide a famework for creating programming languages.
+Additionally, Glossa should provide a framework for creating programming languages.
 This is done using the translation interface, where syntax of a new language is described with files, and the language is translated either to machine code, or another programming language which will later be compiled.
 
 % ==================================================
@@ -298,7 +298,8 @@ pass: 'pass'
 
 return: 'return' `@expression expression`
 
-assignment: `@lval identifier **` `@op '='` `@rval boolexpression | expression`
+assignment: `@lval identifier **` \
+`@op '='` `@rval boolexpression | expression`
 \end{verbatim}
 
 \subsection{Constructors}
@@ -389,16 +390,20 @@ To transform an AST element, the tag can be changed, or elements within the dict
 A transformer file is just a series of these transformations:
 \begin{verbatim}
 createreg [name]
-// Copy an element from global multisymbol table to a key in a register's multisymbol table
+// Copy an element from global multisymbol table to a 
+//key in a register's multisymbol table
 transfer(-append) [reg-name] [global-key] [reg-key] 
-// Move the multisymbol from a register to the destination key in the multisymbol table. 
-// If a destination_reg is specified, this table is the table of a register. 
+// Move the multisymbol from a register to the destination 
+// key in the multisymbol table. 
+// If a destination_reg is \
+// specified, this table is the table of a register. 
 // Otherwise, it is the global multisymbol table
 pushback(-override) [reg-name] [destination] (optional)[destination_reg]
 // Prefix for performing an operation on a register
 reg [name] {command (any of below)} 
 
-// The following also work with operations on the table of the current multisymbol
+// The following also work with operations on the 
+// table of the current multisymbol
 // In add and append, type might be "identifier" or "literal" 
 //                              and value might be "x" or "2"
 // I.e to add an identifier foo under the key "name", 
@@ -468,11 +473,13 @@ Since Glossa ships with constructor files (Currently for Python3 and C++), a new
 
 For example, adding a function to a particular programming language takes a single line:
 \begin{verbatim}
-function: 'def' `@name identifier **` '(' `@args sep ',' identifier **` ')' ':' `@body *statement` 'end'
+function: 'def' `@name identifier **` '(' `@args sep ',' \
+identifier **` ')' ':' `@body *statement` 'end'
 \end{verbatim}
 To change this Python style function to one in Haskell:
 \begin{verbatim}
-function: `@name identifier **` `@args sep SPACE identifier **` '=' `@body return` 'end'
+function: `@name identifier **` \
+`@args sep SPACE identifier **` '=' `@body return` 'end'
 \end{verbatim}
 Since these two parsers define the same fields (name, args, body), they would be compiled in identical ways.
 
